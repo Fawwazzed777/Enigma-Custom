@@ -1,0 +1,13 @@
+{
+    "repos": [
+        {
+            "url": "https://github.com/Fawwazzed777/Archetype-Project-EdoPro-Custom",
+            "repo_name": "Archetype-Project-EdoPro-Custom",
+            "repo_path": "./repositories/Archetype-Project-EdoPro-Custom",
+            "should_update": true,
+            "should_read": true
+        }
+    ]
+}
+
+
