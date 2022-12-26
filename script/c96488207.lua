@@ -1,4 +1,4 @@
---Chaos-Eyes Spectral Phoenix
+--Enigmation - Spectral Phoenix
 local s,id=GetID()
 function s.initial_effect(c)
 	--fusion material

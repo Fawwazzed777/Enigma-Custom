@@ -1,4 +1,4 @@
---Chaos-Eyes Sinister Wing
+--Enigmation - Sinister Wing
 local s,id=GetID()
 function s.initial_effect(c)
 	--atkdef 0

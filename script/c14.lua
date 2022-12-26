@@ -50,7 +50,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SpecialSummonComplete()
 end
 function s.filter(c)
-	return (c:IsCode(73891874) or aux.IsCodeListed(c,73891874)) and not c:IsCode(id) and c:IsAbleToHand()
+	return (c:IsCode(73891874) or Card.ListsCode(c,73891874)) and not c:IsCode(id) and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil) end
