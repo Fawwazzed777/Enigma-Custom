@@ -40,7 +40,7 @@ end
 function s.actcon(e)
 	local ph=Duel.GetCurrentPhase()
 	return ph>=PHASE_BATTLE_START and ph<=PHASE_BATTLE
-	and Duel.IsExistingMatchingCard(aux.FilterFaceupFunction(Card.IsSetCard,0x309),e:GetHandlerPlayer(),LOCATION_MZONE,0,1,e:GetHandler()) 
+	and Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsSetCard,0x309),e:GetHandlerPlayer(),LOCATION_MZONE,0,1,e:GetHandler()) 
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetFieldGroupCount(tp,LOCATION_PZONE,0) == 1
