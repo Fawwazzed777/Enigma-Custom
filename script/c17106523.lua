@@ -63,7 +63,7 @@ function s.cfilter(c,e,tp)
 	return c:IsSetCard(0x344) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true) 
 end
 function s.ssfilter(c)
-	return (c:GetType()==TYPE_SPELL or c:GetType()==TYPE_SPELL+TYPE_QUICKPLAY) and c:IsSetCard(0x95) and c:IsSSetable() and aux.SpElimFilter(c,true) 
+	return (c:GetType()==TYPE_SPELL or c:GetType()==TYPE_SPELL+TYPE_QUICKPLAY) and c:IsSetCard(0x95) and c:IsSSetable()
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost()
@@ -74,11 +74,11 @@ function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chk==0 then return Duel.IsExistingMatchingCard(aux.NecroValleyFilter(s.ssfilter),tp,LOCATION_REMOVED+LOCATION_GRAVE,0,1,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(aux.NecroValleyFilter(s.ssfilter),tp,LOCATION_REMOVED+LOCATION_GRAVE,0,1,1,e:GetHandler()) end
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SET)
-	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.ssfilter),tp,LOCATION_REMOVED+LOCATION_GRAVE,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.ssfilter),tp,LOCATION_REMOVED+LOCATION_GRAVE,0,1,1,e:GetHandler())
 	local tc=g:GetFirst()
 	if tc then
 		Duel.SSet(tp,tc)
