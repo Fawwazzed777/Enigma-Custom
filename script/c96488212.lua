@@ -1,4 +1,4 @@
---Chaos-Eyes Buster Raven
+--Enigmation - Buster Raven
 local s,id=GetID()
 function s.initial_effect(c)
 	--xyz summon
@@ -64,7 +64,7 @@ function s.eqtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_EQUIP,g,1,0,0)
 end
 function s.equipop(c,e,tp,tc)
-	if not aux.EquipByEffectAndLimitRegister(c,e,tp,tc,id) then return end
+	if not Card.EquipByEffectAndLimitRegister(c,e,tp,tc,id) then return end
 	local atk=tc:GetBaseAttack()/2
 	if atk>0 then
 		local e2=Effect.CreateEffect(c)

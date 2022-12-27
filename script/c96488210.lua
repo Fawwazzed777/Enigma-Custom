@@ -1,4 +1,4 @@
---Chaos-Eyes Rapid Crow
+--Enigmation - Chain Crow
 local s,id=GetID()
 function s.initial_effect(c)
 	--Special summon itself from the hand
@@ -26,7 +26,7 @@ end
 s.listed_series={0x344}
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetFieldGroup(tp,LOCATION_MZONE,0)
-	return #g>0 and g:FilterCount(aux.FilterFaceupFunction(Card.IsSetCard,0x344),nil)==#g
+	return #g>0 and g:FilterCount(aux.FaceupFilter(Card.IsSetCard,0x344),nil)==#g
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
