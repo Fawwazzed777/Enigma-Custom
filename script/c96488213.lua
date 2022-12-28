@@ -24,7 +24,7 @@ function s.initial_effect(c)
 end
 s.listed_series={0x344}
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)==0 and Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)>0
+	return Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)==0
 end
 function s.spfilter1(c,e,tp)
 	return c:IsSetCard(0x344) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
@@ -57,15 +57,15 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP)
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_CANNOT_BE_XYZ_MATERIAL)
+		e1:SetCode(EFFECT_CANNOT_BE_MATERIAL)
 		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-		e1:SetValue(s.xyzlimit)
+		e1:SetValue(s.matlimit)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 		tc:RegisterEffect(e1)
 	end
 	Duel.SpecialSummonComplete()
 end
-function s.xyzlimit(e,c)
+function s.matlimit(e,c)
 	if not c then return false end
 	return not c:IsSetCard(0x344)
 end
