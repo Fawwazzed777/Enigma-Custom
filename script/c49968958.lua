@@ -33,14 +33,14 @@ function s.ffilter(c,fc,sumtype,tp)
 	return c:IsSetCard(0x309,fc,sumtype,tp) and c:GetLevel()>=5
 end
 function s.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local ct=Duel.GetMatchingGroupCount(aux.FilterFaceupFunction(Card.IsSetCard,0x309),tp,LOCATION_PZONE,0,nil)
+	local ct=Duel.GetMatchingGroupCount(aux.FaceupFilter(Card.IsSetCard,0x309),tp,LOCATION_PZONE,0,nil)
 	if chk==0 then return ct>0 end
 	Duel.SetTargetParam(ct*800)
 	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,ct*800)
 	Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,ct*800)
 end
 function s.damop(e,tp,eg,ep,ev,re,r,rp)
-	local ct=Duel.GetMatchingGroupCount(aux.FilterFaceupFunction(Card.IsSetCard,0x309),tp,LOCATION_PZONE,0,nil)
+	local ct=Duel.GetMatchingGroupCount(aux.FaceupFilter(Card.IsSetCard,0x309),tp,LOCATION_PZONE,0,nil)
 	Duel.Damage(1-tp,ct*800,REASON_EFFECT,true)
 	Duel.Recover(tp,ct*800,REASON_EFFECT,true)
 	Duel.RDComplete()

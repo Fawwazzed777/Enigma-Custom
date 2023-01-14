@@ -38,6 +38,15 @@ function s.initial_effect(c)
 	e5:SetTarget(s.eftg)
 	e5:SetLabelObject(e4)
 	c:RegisterEffect(e5)
+	--immune
+	local e6=Effect.CreateEffect(c)
+	e6:SetType(EFFECT_TYPE_EQUIP)
+	e6:SetCode(EFFECT_IMMUNE_EFFECT)
+	e6:SetValue(s.efilter)
+	c:RegisterEffect(e6)
+end
+function s.efilter(e,re)
+	return e:GetHandlerPlayer()~=re:GetOwnerPlayer()
 end
 function s.filter(c)
 	return c:IsFaceup() and c:IsAttribute(ATTRIBUTE_DARK) and c:IsType(TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ)
