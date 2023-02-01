@@ -22,8 +22,8 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 s.listed_names={73891874}
-function s.cfilter(c,e,ft,tp)
-	return ft>0 or (c:IsControler(tp) and c:GetSequence()<5)
+function s.cfilter(c,e,tp)
+	return c:IsMonster()
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
@@ -33,9 +33,6 @@ function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.filter(c,e,tp)
 	return c:IsCode(73891874) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
-end
-function s.thfilter(c)
-	return aux.IsCodeListed(c,73891874) and c:IsAbleToHand()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_HAND+LOCATION_DECK,0,1,nil,e,tp) end
