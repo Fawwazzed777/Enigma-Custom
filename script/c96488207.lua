@@ -1,9 +1,9 @@
---Enigmation - Spectral Phoenix
+--Enigmation - Phantasm Phoenix
 local s,id=GetID()
 function s.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
-	Fusion.AddProcMix(c,true,true,96488199,aux.FilterBoolFunctionEx(Card.IsType,TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ+TYPE_LINK))
+	Fusion.AddProcMix(c,true,true,96488201,aux.FilterBoolFunctionEx(Card.IsType,TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ+TYPE_LINK))
 	--cannot target
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
@@ -42,17 +42,13 @@ function s.initial_effect(c)
 	e4:SetTarget(s.distg)
 	e4:SetOperation(s.disop)
 	c:RegisterEffect(e4)
-	--special summon
+	--Skip Main Phase 1
 	local e5=Effect.CreateEffect(c)
-	e5:SetDescription(aux.Stringid(id,2))
-	e5:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e5:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e5:SetType(EFFECT_TYPE_IGNITION)
-	e5:SetRange(LOCATION_GRAVE)
-	e5:SetCountLimit(1,id+1)
-	e5:SetCost(aux.bfgcost)
-	e5:SetTarget(s.sptg2)
-	e5:SetOperation(s.spop2)
+	e5:SetType(EFFECT_TYPE_FIELD)
+	e5:SetCode(EFFECT_SKIP_M1)
+	e5:SetRange(LOCATION_MZONE)
+	e5:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e5:SetTargetRange(0,1)
 	c:RegisterEffect(e5)
 end
 function s.indval(e,re,tp)
@@ -72,7 +68,7 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.disfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_EFFECT) and not c:IsDisabled()
+	return c:IsFaceup() and not c:IsDisabled()
 end
 function s.distg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.disfilter,tp,0,LOCATION_MZONE,1,nil) end
@@ -95,8 +91,10 @@ local c=e:GetHandler()
 		e2:SetCode(EFFECT_DISABLE_EFFECT)
 		e2:SetReset(RESET_EVENT+RESETS_STANDARD)
 		tc:RegisterEffect(e2)
+		if Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 		Duel.Remove(g,POS_FACEUP,REASON_EFFECT)	
 	end
+end
 end
 function s.spfilter2(c,e,tp)
 	return c:IsFaceup() and c:IsSetCard(0x344) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) 

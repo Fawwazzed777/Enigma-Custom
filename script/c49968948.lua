@@ -71,6 +71,8 @@ end
 function s.penop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
+	local g=Duel.GetMatchingGroup(aux.FaceupFilter(Card.IsType,TYPE_PENDULUM),tp,LOCATION_PZONE,0,nil)
+	local _,ac=g:GetMaxGroup(function(c) return c:GetScale() end)
 	if not c:IsRelateToEffect(e)
 		or not tc:IsFaceup() or not tc:IsRelateToEffect(e)
 		or Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
@@ -88,7 +90,7 @@ function s.penop(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetReset(RESET_EVENT+RESETS_STANDARD)
 		g:GetFirst():RegisterEffect(e2)
 		Duel.BreakEffect()
-		Duel.Destroy(tc,GetAboveScale,REASON_EFFECT)
+		Duel.Destroy(tc,ac,REASON_EFFECT)
 	end
 	Duel.SpecialSummonComplete()
 end

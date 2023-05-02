@@ -88,7 +88,7 @@ function s.filter(c,tp,ged)
 	return (ged or (c:IsFaceup())) and c:IsControlerCanBeChanged()
 end
 function s.target2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	local ged=Duel.IsExistingMatchingCard(aux.FilterFaceupFunction(Card.IsSetCard,0x309),tp,LOCATION_MZONE,0,1,nil)
+	local ged=Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsSetCard,0x309),tp,LOCATION_MZONE,0,1,nil)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and s.filter(chkc,tp,ged) end
 	if chk==0 then return Duel.IsExistingTarget(s.filter,tp,0,LOCATION_MZONE,1,nil,tp,ged) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONTROL)

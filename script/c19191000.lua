@@ -23,17 +23,14 @@ if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) en
 e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then 
-		if Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)<3 then return false end
-		local g=Duel.GetDecktopGroup(tp,3)
-		local result=g:FilterCount(Card.IsAbleToHand,nil)>0
-		return result and Duel.IsPlayerCanDiscardDeck(tp,3)
-	end
+if chk==0 then return Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>3 end
+	Duel.SetPossibleOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)
 end
 function s.filter(c)
-	return c:IsType(TYPE_MONSTER) and c:IsAttribute(ATTRIBUTE_EARTH)
+	return c:IsType(TYPE_MONSTER) and c:IsAttribute(ATTRIBUTE_EARTH) 
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
 	if not Duel.IsPlayerCanDiscardDeck(tp,3) then return end
 	Duel.ConfirmDecktop(tp,3)
 	local g=Duel.GetDecktopGroup(tp,3)
@@ -43,9 +40,8 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 			local sg=g:FilterSelect(tp,s.filter,1,1,nil)
 			if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
-			if sg:GetFirst():IsAbleToHand() then 
-				Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
-				Duel.ConfirmCards(1-tp,sg)
+			if sg:GetFirst() then 
+				Duel.SpecialSummon(sg,0,tp,tp,true,false,POS_FACEUP)
 				g:Sub(sg)
 				Duel.SendtoGrave(g,REASON_EFFECT+REASON_REVEAL)
 			else Duel.SendtoGrave(g,REASON_EFFECT+REASON_REVEAL)
@@ -66,6 +62,6 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterEffect(e1,tp)
 end
 function s.splimit(e,c)
-	return not c:IsAttribute(ATTRIBUTE_EARTH)
+	return not c:IsSetCard(0xabc9)
 end
 

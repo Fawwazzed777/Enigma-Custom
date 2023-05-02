@@ -18,7 +18,7 @@ function s.filter(c)
 	return c:IsCode(73891874) and c:IsAbleToGrave()
 end
 function s.filter2(c)
-	return aux.IsCodeListed(c,73891874) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand()
+	return Card.ListsCode(c,73891874) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand()
 end
 function s.sgtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK,0,1,nil) end

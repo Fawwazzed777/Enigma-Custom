@@ -64,7 +64,7 @@ end
 end
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 local c=e:GetHandler()
-	return c:IsPreviousPosition(POS_FACEUP) and not c:IsLocation(LOCATION_DECK)
+return c:IsPreviousPosition(POS_FACEUP) and not c:IsLocation(LOCATION_DECK)
 end
 function s.thfilter(c,ec)
 	return c:IsSetCard(0x344) and c:IsType(TYPE_SPELL+TYPE_TRAP)

@@ -1,4 +1,4 @@
---Chaos-Eyes Spirit Barrier
+--Enigmation Spirit Barrier
 local s,id=GetID()
 function s.initial_effect(c)
 	--Activate and Special Summon from GY

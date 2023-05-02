@@ -61,10 +61,11 @@ function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 		else
 			Duel.SendtoDeck(g,nil,1,REASON_EFFECT)
 		end
-		Duel.SelectYesNo(tp,aux.Stringid(id,1))
+		if #g>0 and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
 		Duel.BreakEffect()
 		Duel.Draw(tp,1,REASON_EFFECT)
 	end
+end
 end
 function s.filter(c)
 	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x222) and c:IsAbleToHand()

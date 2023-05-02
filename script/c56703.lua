@@ -13,7 +13,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	--to deck
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(id,2))
+	e2:SetDescription(aux.Stringid(id,0))
 	e2:SetCategory(CATEGORY_TODECK)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_GRAVE)
@@ -24,7 +24,7 @@ function s.initial_effect(c)
 end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)==0
-	and Duel.GetLP(tp)<=Duel.GetLP(1-tp)-2000
+	and Duel.GetLP(tp)<=Duel.GetLP(1-tp)-1000
 end
 function s.filter(c,e)
 	return c:IsCanBeEffectTarget(e) and c:IsType(TYPE_MONSTER) and c:IsSetCard(0x344)
