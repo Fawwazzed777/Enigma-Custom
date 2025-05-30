@@ -1,0 +1,95 @@
+--Guardian Gaia Dragon
+local s,id=GetID()
+function s.initial_effect(c)
+	--synchro summon
+	Synchro.AddProcedure(c,nil,1,1,Synchro.NonTunerEx(Card.IsAttribute,ATTRIBUTE_EARTH),1,99)
+	c:EnableReviveLimit()
+	--Toss a coin to Stun Monsters
+	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,1))
+	e1:SetCategory(CATEGORY_COIN)
+	e1:SetType(EFFECT_TYPE_QUICK_O)
+	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetRange(LOCATION_MZONE)
+	e1:SetCountLimit(1,id)
+	e1:SetCost(s.coincost)
+	e1:SetTarget(s.cointg)
+	e1:SetOperation(s.coinop)
+	c:RegisterEffect(e1)
+	--spell/trap indestructable
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_SINGLE)
+	e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e3:SetRange(LOCATION_MZONE)
+	e3:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
+	e3:SetValue(s.indval)
+	c:RegisterEffect(e3)
+end
+--Toss
+s.toss_coin=true
+function s.coincost(e,tp,eg,ep,ev,re,r,rp,chk)
+	local c=e:GetHandler()
+	if chk==0 then return c:IsAttackPos() end
+	Duel.ChangePosition(c,POS_FACEUP_DEFENSE)
+end
+function s.spchkfilter(c,e,tp)
+	return not c:IsType(TYPE_NORMAL)
+end
+function s.cointg(e,tp,eg,ep,ev,re,r,rp,chk)
+	local c=e:GetHandler()
+	if chk==0 then return s.spchkfilter(c,e,tp,tp) or s.spchkfilter(c,e,tp,1-tp) end
+	Duel.SetOperationInfo(0,CATEGORY_COIN,nil,0,tp,1)
+end
+function s.coinop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if not c:IsRelateToEffect(e) then return end
+	local res=Duel.TossCoin(tp,1)
+	if res==COIN_HEADS then
+		local ef=Effect.CreateEffect(e:GetHandler())
+		ef:SetType(EFFECT_TYPE_FIELD)
+		ef:SetCode(EFFECT_DISABLE)
+		ef:SetReset(RESET_PHASE+PHASE_END)
+		ef:SetTargetRange(0,LOCATION_MZONE)
+		ef:SetValue(1)
+		Duel.RegisterEffect(ef,tp)
+		local eff=Effect.CreateEffect(e:GetHandler())
+		eff:SetType(EFFECT_TYPE_FIELD)
+		eff:SetCode(EFFECT_CANNOT_ATTACK)
+		eff:SetReset(RESET_PHASE+PHASE_END)
+		eff:SetTargetRange(0,LOCATION_MZONE)
+		eff:SetValue(1)
+		Duel.RegisterEffect(eff,tp)		
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_FIELD)
+		e1:SetCode(EFFECT_CHANGE_TYPE)
+		e1:SetReset(RESET_PHASE+PHASE_END)
+		e1:SetTargetRange(0,LOCATION_MZONE)
+		e1:SetValue(TYPE_NORMAL+TYPE_MONSTER)
+		Duel.RegisterEffect(e1,tp)
+	elseif res==COIN_TAILS then
+		local ef=Effect.CreateEffect(e:GetHandler())
+		ef:SetType(EFFECT_TYPE_FIELD)
+		ef:SetCode(EFFECT_DISABLE)
+		ef:SetReset(RESET_PHASE+PHASE_END)
+		ef:SetTargetRange(LOCATION_MZONE,0)
+		ef:SetValue(1)
+		Duel.RegisterEffect(ef,tp)
+		local eff=Effect.CreateEffect(e:GetHandler())
+		eff:SetType(EFFECT_TYPE_FIELD)
+		eff:SetCode(EFFECT_CANNOT_ATTACK)
+		eff:SetReset(RESET_PHASE+PHASE_END)
+		eff:SetTargetRange(LOCATION_MZONE,0)
+		eff:SetValue(1)
+		Duel.RegisterEffect(eff,tp)
+		local e2=Effect.CreateEffect(e:GetHandler())
+		e2:SetType(EFFECT_TYPE_FIELD)
+		e2:SetCode(EFFECT_CHANGE_TYPE)
+		e2:SetReset(RESET_PHASE+PHASE_END)
+		e2:SetTargetRange(LOCATION_MZONE,0)
+		e2:SetValue(TYPE_NORMAL+TYPE_MONSTER)
+		Duel.RegisterEffect(e2,tp)
+end
+end
+function s.indval(e,re,rp)
+	return re:IsActiveType(TYPE_SPELL+TYPE_TRAP)
+end

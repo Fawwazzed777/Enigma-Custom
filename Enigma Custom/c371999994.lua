@@ -1,0 +1,118 @@
+--
+Duel.LoadScript("c511001822.lua")
+local s,id=GetID()
+function s.initial_effect(c)
+	c:EnableReviveLimit()
+	Synchro.AddProcedure(c,aux.FilterBoolFunctionEx(s.stfilter),1,1,Synchro.NonTunerEx(s.stfilter1),1,1,s.matfilter)
+	--Synchro summon level
+	local e0=Effect.CreateEffect(c)
+	e0:SetType(EFFECT_TYPE_FIELD)
+	e0:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_SET_AVAILABLE)
+	e0:SetCode(EFFECT_SYNCHRO_LEVEL)
+	e0:SetRange(LOCATION_EXTRA)
+	e0:SetTargetRange(LOCATION_MZONE,0)
+	e0:SetTarget(function(e,c) return (c:IsMonster() and c:IsCode(371991989)) end)
+	e0:SetValue(function(e,c) return 2<<16|c:GetLevel() end) 
+	c:RegisterEffect(e0)
+	--....
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(511010508)
+	e1:SetRange(LOCATION_MZONE)
+	e1:SetTargetRange(LOCATION_ONFIELD,LOCATION_ONFIELD)
+	e1:SetValue(s.val)
+	c:RegisterEffect(e1)
+	--
+	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(id,1))
+	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e3:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
+	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e3:SetCountLimit(1,{id,1})
+	e3:SetCode(EVENT_LEAVE_FIELD)
+	e3:SetCondition(s.c)
+	e3:SetTarget(s.sptg)
+	e3:SetOperation(s.spop)
+	c:RegisterEffect(e3)
+	--
+	local e4=Effect.CreateEffect(c)
+	e4:SetDescription(aux.Stringid(id,0))
+	e4:SetType(EFFECT_TYPE_QUICK_O)
+	e4:SetCode(EVENT_FREE_CHAIN)
+	e4:SetRange(LOCATION_MZONE)
+	e4:SetCountLimit(1)
+	e4:SetTarget(s.rtg)
+	e4:SetOperation(s.rop)
+	c:RegisterEffect(e4)
+end
+s.listed_names={371991989}
+function s.stfilter(c,val,scard,sumtype,tp)
+	return c:IsRace(RACE_MACHINE,scard,sumtype,tp) and c:IsType(TYPE_EFFECT,scard,sumtype,tp)
+end
+
+function s.stfilter1(c,val,scard,sumtype,tp)
+	return c:IsType(TYPE_FUSION,scard,sumtype,tp) and Card.ListsCode(c,371991989,scard,sumtype,tp)
+end
+function s.matfilter(c,scard,sumtype,tp)
+	return c:IsCode(371991989)
+end
+function s.val(e,re,c)
+	return (re:GetCode()==EFFECT_INDESTRUCTABLE_BATTLE or re:GetCode()==EFFECT_INDESTRUCTABLE_COUNT)
+		and (not re:IsHasType(EFFECT_TYPE_SINGLE) or re:GetOwner()==c)
+		and (not re:IsHasType(EFFECT_TYPE_FIELD) or re:GetActivateLocation()>0)
+		and not re:GetHandler():IsHasEffect(EFFECT_CANNOT_DISABLE)
+end
+function s.c(e,tp,eg,ep,ev,re,r,rp)
+local c=e:GetHandler()
+	return c:IsPreviousPosition(POS_FACEUP) and not c:IsLocation(LOCATION_DECK)
+end
+function s.spfilter(c,e,tp)
+	return c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsType(TYPE_FUSION)
+end
+function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+	and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_REMOVED+LOCATION_GRAVE,0,1,nil,e,tp) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_REMOVED+LOCATION_GRAVE)
+end
+function s.spop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if c:IsRelateToEffect(e) then
+		if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+		local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_REMOVED+LOCATION_GRAVE,0,1,1,nil,e,tp)
+		if #g>0 then
+			if Duel.IsExistingMatchingCard(nil,tp,0,LOCATION_MZONE,1,nil)
+			and Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)~=0 and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+			local rg=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_MZONE,nil) 
+			Duel.Destroy(rg,REASON_EFFECT)
+end
+end
+end
+end
+function s.rtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+end
+function s.rop(e,tp,eg,ep,ev,re,r,rp)
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(EFFECT_CHANGE_DAMAGE)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e1:SetTargetRange(1,0)
+	e1:SetValue(s.val)
+	e1:SetReset(RESET_PHASE+PHASE_END)
+	Duel.RegisterEffect(e1,tp)
+	local e2=Effect.CreateEffect(e:GetHandler())
+	e2:SetType(EFFECT_TYPE_FIELD)
+	e2:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
+	e2:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
+	e2:SetTargetRange(LOCATION_MZONE,0)
+	e2:SetReset(RESET_PHASE+PHASE_END)
+	e2:SetValue(1)
+	Duel.RegisterEffect(e2,tp)
+
+end
+function s.val(e,re,val,r,rp,rc)
+	if e:GetHandlerPlayer()~=rp then
+		return 0
+	else return val end
+end
