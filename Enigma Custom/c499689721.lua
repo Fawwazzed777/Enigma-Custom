@@ -23,7 +23,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 s.listed_series={0xbf45}
-function s.rtfilter(c)
+function s.rtfilter(c,e,tp)
 	return c:IsLevelBelow(2) and not c:IsCode(id) and c:IsAttribute(ATTRIBUTE_WIND) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.scfilter(c,e,tp)
