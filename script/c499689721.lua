@@ -50,7 +50,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 	if #g>0 then
 	Duel.SpecialSummonStep(g,0,tp,tp,false,false,POS_FACEUP)
 	if Duel.SpecialSummonComplete()<1 or not Duel.IsExistingMatchingCard(s.scfilter,tp,LOCATION_GRAVE,0,1,nil) then return end
-	local rg=Duel.GetMatchingGroup(Card.IsAbleToHand,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
+	local rg=Duel.IsExistingMatchingCard(Card.IsAbleToHand,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
 	if #rg==0 or not Duel.SelectYesNo(tp,aux.Stringid(id,2)) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
 	local sg=rg:Select(tp,1,1,nil)
