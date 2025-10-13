@@ -39,22 +39,16 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE)
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)==0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,s.rtfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
-	local tc=g:GetFirst()
-	if Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)>0 then
-		local rc1=Duel.IsExistingMatchingCard(aux.FaceupFilter(s.scfilter),tp,LOCATION_MZONE,0,1,nil)
-		local rc2=Duel.IsExistingMatchingCard(Card.IsAbleToHand,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
-		if rc1 and rc2 and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
-			local sg=Duel.SelectMatchingCard(tp,Card.IsAbleToHand,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
-			if #sg>0 then
-				Duel.HintSelection(sg)
-				Duel.SendtoHand(sg,nil,REASON_EFFECT)
-			end
-		end
-	end
+	if #g>0 and Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)>0 and c:IsRelateToEffect(e) then
+	local sg=Duel.SelectMatchingCard(tp,Card.IsAbleToHand,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
+	if #sg>0 then
+		Duel.HintSelection(sg)
+		Duel.SendtoHand(sg,nil,REASON_EFFECT)
+end	
+end
 end
 function s.ntval(c,sc,tp)
 	return sc and sc:IsAttribute(ATTRIBUTE_WIND)
