@@ -51,8 +51,8 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 	and Duel.IsExistingMatchingCard(s.scfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp)
 	and rg and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
 	Duel.BreakEffect()
-		local rg:Select(tp,1,1,nil)
-		Duel.HintSelection(rg)
+		local sg=rg:Select(tp,1,1,nil)
+		Duel.HintSelection(sg)
 		Duel.SendtoHand(rg,nil,REASON_EFFECT)
 end	
 end
