@@ -47,7 +47,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,s.rtfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
 	local rg=Duel.IsExistingMatchingCard(Card.IsAbleToHand,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
 	if #g>0 then
-	if Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)~=0 
+	if Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)~=0 then
 	local rg=Duel.IsExistingMatchingCard(Card.IsAbleToHand,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)&
 	Duel.IsExistingMatchingCard(s.scfilter,tp,LOCATION_GRAVE,0,1,1,nil)
 	if #rg>0 then
