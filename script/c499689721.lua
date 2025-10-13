@@ -44,12 +44,13 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)==0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,s.rtfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
+	local rg=Duel.IsExistingMatchingCard(Card.IsAbleToHand,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
 	if #g>0 then
-	Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
-	local sg=Duel.IsExistingMatchingCard(Card.IsAbleToHand,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
-	local rc=Duel.IsExistingMatchingCard(s.scfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp)
-	local rs=sg:merge(rc)
-	if #rs>0 then
+	if c:IsRelateToEffect(e) and Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)~=0
+	and Duel.IsExistingMatchingCard(s.scfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp)
+	and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
+	Duel.BreakEffect()
+		local sg=rg:Select(tp,1,1,nil)
 		Duel.HintSelection(sg)
 		Duel.SendtoHand(sg,nil,REASON_EFFECT)
 end	
