@@ -9,8 +9,8 @@ function s.initial_effect(c)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetRange(LOCATION_HAND+LOCATION_MZONE)
 	e1:SetCost(s.cost)
-	e1:SetTarget(s.target)
-	e1:SetOperation(s.operation)
+	e1:SetTarget(s.tg)
+	e1:SetOperation(s.op)
 	c:RegisterEffect(e1)
 	--Can be treated as a non-tuner
 	local e2=Effect.CreateEffect(c)
@@ -26,27 +26,28 @@ function s.rtfilter(c,e,tp)
 	return c:IsLevelBelow(2) and not c:IsCode(id) and c:IsAttribute(ATTRIBUTE_WIND) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.scfilter(c)
-	return c:IsMonster() and c:IsType(TYPE_SYNCHRO) and c:IsAttribute(ATTRIBUTE_WIND)
+	return c:IsMonster() and c:IsLevel(2) and c:IsAttribute(ATTRIBUTE_WIND)
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToGraveAsCost() 
 	and Duel.IsExistingMatchingCard(s.rtfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp)end
 	Duel.SendtoGrave(e:GetHandler(),REASON_COST)
 end
-function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
+function s.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsExistingMatchingCard(s.rtfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE)
 end
-function s.operation(e,tp,eg,ep,ev,re,r,rp)
+function s.op(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)==0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,s.rtfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
 	if #g>0 then
 	Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)>0 
-	local sg=Duel.SelectMatchingCard(tp,Card.IsAbleToHand,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
+	local sg=Duel.IsExistingMatchingCard(Card.IsAbleToHand,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
 	local rc=Duel.IsExistingMatchingCard(s.scfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp)
-	if #sg>0 and rc then
+	local rs=sg:merge(rc)
+	if #rs>0 then
 		Duel.HintSelection(sg)
 		Duel.SendtoHand(sg,nil,REASON_EFFECT)
 end	
