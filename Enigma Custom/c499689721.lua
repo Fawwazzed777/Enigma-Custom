@@ -46,11 +46,10 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	if rc=Duel.IsExistingMatchingCard(aux.FaceupFilter(s.scfilter),tp,LOCATION_MZONE,0,1,nil)
 	and Duel.IsExistingMatchingCard(Card.IsAbleToHand,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) then
 	local sg=Duel.SelectMatchingCard(tp,Card.IsAbleToHand,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
-	if #sg>0 and rc and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
+	if rc and #sg>0 and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
 		Duel.HintSelection(sg)
 		Duel.SendtoHand(sg,nil,REASON_EFFECT)
 end	
-end
 end
 end
 end
