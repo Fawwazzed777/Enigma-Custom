@@ -26,7 +26,7 @@ function s.rtfilter(c,e,tp)
 	return c:IsLevelBelow(2) and not c:IsCode(id) and c:IsAttribute(ATTRIBUTE_WIND) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.scfilter(c,e,tp)
-	return c:IsLevelAbove(5) and c:IsMonster and c:IsType(TYPE_SYNCHRO) and c:IsAttribute(ATTRIBUTE_WIND)
+	return c:IsLevelAbove(5) and c:IsMonster() and c:IsType(TYPE_SYNCHRO) and c:IsAttribute(ATTRIBUTE_WIND)
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToGraveAsCost() 
@@ -41,11 +41,11 @@ end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local tc=Duel.SelectMatchingCard(tp,s.rtfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
-	if #tc>0 then
-	Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP,e,tp)>0 
-	if rc=Duel.IsExistingMatchingCard(aux.FaceupFilter(s.scfilter),tp,LOCATION_MZONE,0,1,nil)
-	and Duel.IsExistingMatchingCard(Card.IsAbleToHand,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) then
+	local tc=Duel.SelectMatchingCard(tp,s.rtfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp):GetFirst()
+	if #tc>0 and Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)>0 then 
+	local rc=Duel.IsExistingMatchingCard(aux.FaceupFilter(s.scfilter),tp,LOCATION_MZONE,0,1,nil)
+	and Duel.IsExistingMatchingCard(Card.IsAbleToHand,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
+	if rc then
 	local sg=Duel.SelectMatchingCard(tp,Card.IsAbleToHand,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
 	if #sg>0 and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
 		Duel.HintSelection(sg)
