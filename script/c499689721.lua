@@ -48,7 +48,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 	local rg=Duel.IsExistingMatchingCard(Card.IsAbleToHand,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
 	local ex=Duel.IsExistingMatchingCard(s.scfilter,tp,LOCATION_GRAVE,0,1,1,nil)
 	if #g>0 then
-	if Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)~=0
+	if Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)~=0 
 	local rg=Duel.IsExistingMatchingCard(Card.IsAbleToHand,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil,ex)
 	local rthg=Duel.SelectMatchingCard(tp,Card.IsAbleToHand,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
 			if #rthg==0 then return end
@@ -58,6 +58,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 end
+
 function s.ntval(c,sc,tp)
 	return sc and sc:IsAttribute(ATTRIBUTE_WIND)
 end
