@@ -48,16 +48,14 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 	local rg=Duel.IsExistingMatchingCard(Card.IsAbleToHand,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
 	local ex=Duel.IsExistingMatchingCard(s.scfilter,tp,LOCATION_GRAVE,0,1,1,nil)
 	if #g>0 then
-	Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
-	local rg=Duel.IsExistingMatchingCard(Card.IsAbleToHand,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
-	if #rg==0 or not Duel.SelectYesNo(tp,aux.Stringid(id,1)) then return end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
-	local sg=rg:Select(tp,1,1,nil)
-	if #sg>0 then
-		Duel.HintSelection(sg)
-		Duel.BreakEffect()
-		Duel.SendtoHand(sg,nil,REASON_EFFECT)
-end
+	if Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)~=0
+	local rg=Duel.IsExistingMatchingCard(Card.IsAbleToHand,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil,ex)
+	local rthg=Duel.SelectMatchingCard(tp,Card.IsAbleToHand,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
+			if #rthg==0 then return end
+			Duel.HintSelection(rthg)
+			Duel.BreakEffect()
+			Duel.SendtoHand(rthg,nil,REASON_EFFECT)
+	end
 end
 end
 function s.ntval(c,sc,tp)
