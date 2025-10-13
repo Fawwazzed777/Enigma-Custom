@@ -53,7 +53,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 	Duel.BreakEffect()
 		local sg=rg:Select(tp,1,1,nil)
 		Duel.HintSelection(sg)
-		Duel.SendtoHand(rg,nil,REASON_EFFECT)
+		Duel.SendtoHand(sg,nil,REASON_EFFECT)
 end	
 end
 end
