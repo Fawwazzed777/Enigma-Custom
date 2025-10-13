@@ -25,7 +25,7 @@ s.listed_series={0xbf45}
 function s.rtfilter(c,e,tp)
 	return c:IsLevelBelow(2) and not c:IsCode(id) and c:IsAttribute(ATTRIBUTE_WIND) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
-function s.scfilter(c,e,tp)
+function s.scfilter(c)
 	return c:IsLevelAbove(5) and c:IsMonster() and c:IsType(TYPE_SYNCHRO) and c:IsAttribute(ATTRIBUTE_WIND)
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -43,10 +43,11 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,s.rtfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
 	local tc=g:GetFirst()
-	if tc and Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)>0 then
+	if Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)>0 then
 		local rc1=Duel.IsExistingMatchingCard(aux.FaceupFilter(s.scfilter),tp,LOCATION_MZONE,0,1,nil)
 		local rc2=Duel.IsExistingMatchingCard(Card.IsAbleToHand,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
 		if rc1 and rc2 and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
 			local sg=Duel.SelectMatchingCard(tp,Card.IsAbleToHand,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
 			if #sg>0 then
 				Duel.HintSelection(sg)
