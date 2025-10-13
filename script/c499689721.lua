@@ -25,7 +25,8 @@ function s.initial_effect(c)
 end
 s.listed_series={0xbf45}
 function s.rtfilter(c,e,tp)
-	return c:IsLevelBelow(2) and not c:IsCode(id) and c:IsAttribute(ATTRIBUTE_WIND) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsLevelBelow(2) and not c:IsCode(id) and c:IsAttribute(ATTRIBUTE_WIND) 
+	and c:IsCanBeSpecialSummoned(e,0,tp,false,false) 
 end
 function s.scfilter(c)
 	return c:IsMonster() and c:IsLevel(2) and c:IsAttribute(ATTRIBUTE_WIND)
@@ -48,11 +49,11 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 	if #g>0 then
 	if Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)~=0
 	and Duel.IsExistingMatchingCard(s.scfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp)
-	and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
+	and rg and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
 	Duel.BreakEffect()
-		local sg=rg:Select(tp,1,1,nil)
-		Duel.HintSelection(sg)
-		Duel.SendtoHand(sg,nil,REASON_EFFECT)
+		local rg:Select(tp,1,1,nil)
+		Duel.HintSelection(rg)
+		Duel.SendtoHand(rg,nil,REASON_EFFECT)
 end	
 end
 end
