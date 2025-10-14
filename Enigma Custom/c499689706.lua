@@ -88,7 +88,7 @@ local c=e:GetHandler()
 		tc:RegisterEffect(e2)
 		if Duel.IsExistingMatchingCard(s.desfilter,tp,LOCATION_GRAVE,0,1,nil) and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 		Duel.AdjustInstantly(tc)
-		Duel.SendtoDeck(tc,2,REASON_EFFECT)
+		Duel.SendtoDeck(tc,nil,2,REASON_EFFECT)
 	end
 end
 end

@@ -1,4 +1,4 @@
---Accel Winds Dragon
+--Accel Aero Dragon
 local s,id=GetID()
 function s.initial_effect(c)
 	--synchro summon
