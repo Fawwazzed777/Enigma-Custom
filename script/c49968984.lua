@@ -41,7 +41,7 @@ function s.initial_effect(c)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCountLimit(1)
 	e3:SetCondition(s.atkcon)
-	e3:SetCost(Cost.Detach(1,1,op))
+	e3:SetCost(Cost.DetachFromSelf(1,1,nil))
 	e3:SetOperation(s.atkop)
 	c:RegisterEffect(e3)
 end
