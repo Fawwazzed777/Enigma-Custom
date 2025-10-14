@@ -21,7 +21,8 @@ function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsPlayerCanDiscardDeck(tp,1) end
+	if chk==0 then return Duel.IsPlayerCanDiscardDeck(tp,1) 
+end
 end
 function s.exfilter1(c,e,tp)
 	return c:IsSetCard(0xabc9) and c:IsMonster() and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
@@ -45,7 +46,11 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 		Duel.DisableShuffleCheck()
 		local xg=Duel.SendtoGrave(sg,REASON_EFFECT+REASON_REVEAL)
 		local rg=Duel.SelectMatchingCard(tp,s.exfilter1,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,xg,nil,e,tp)
-		if #rg>0 then 
+		local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+		if ft<=0 then return end
+		if ft>3 then ft=3 end
+		if Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) then ft=1 end
+		if #rg>0 and ft then 
 		Duel.SpecialSummon(rg,0,tp,tp,false,false,POS_FACEUP)
 	end
 	ac=ac-#sg
