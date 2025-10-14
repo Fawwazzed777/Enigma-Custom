@@ -1,4 +1,4 @@
---Aerolizer Riot Troops
+--Aerolizer Primness Wing
 local s,id=GetID()
 function s.initial_effect(c)
 	--synchro summon
@@ -57,14 +57,13 @@ function s.gyop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 local c=e:GetHandler()
-	return c:IsSummonType(SUMMON_TYPE_SYNCHRO)
-	and c:IsPreviousPosition(POS_FACEUP) and not c:IsLocation(LOCATION_DECK)
+	return c:IsPreviousPosition(POS_FACEUP) and not c:IsLocation(LOCATION_DECK)
 end
 function s.disfilter(c)
 	return c:IsFaceup() and not c:IsDisabled()
 end
 function s.desfilter(c)
-	return c:IsSetCard(0xbf45) and c:IsType(TYPE_SYNCHRO)
+	return c:IsCode(49968945)
 end
 function s.distg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.disfilter,tp,0,LOCATION_ONFIELD,1,nil) end
@@ -89,7 +88,7 @@ local c=e:GetHandler()
 		tc:RegisterEffect(e2)
 		if Duel.IsExistingMatchingCard(s.desfilter,tp,LOCATION_GRAVE,0,1,nil) and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 		Duel.AdjustInstantly(tc)
-		Duel.Destroy(tc,REASON_EFFECT)
+		Duel.SendtoDeck(tc,nil,2,REASON_EFFECT)
 	end
 end
 end
