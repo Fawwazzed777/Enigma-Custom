@@ -61,7 +61,7 @@ function s.disfilter(c)
 	return c:IsFaceup() and not c:IsDisabled()
 end
 	local sg=Duel.IsExistingMatchingCard(s.disfilter,tp,0,LOCATION_ONFIELD,1,nil)
-	for tc in aux.Next(sg) do
+	for tc:IsFaceup() in aux.Next(sg) do
 		e:SetProperty(e:GetProperty()|EFFECT_FLAG_IGNORE_IMMUNE)
 		Duel.HintSelection(sg)
 		local e1=Effect.CreateEffect(e:GetHandler())
