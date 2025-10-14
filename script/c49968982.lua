@@ -1,4 +1,4 @@
---Ultimaya
+--Ultimaya Warp
 local s,id=GetID()
 function s.initial_effect(c)
 	--Place 1 "Ultimaya" Pendulum from your Face-up Extra
