@@ -4,7 +4,7 @@ function s.initial_effect(c)
 	--Synchro
 	Synchro.AddProcedure(c,aux.FilterBoolFunctionEx(Card.IsSetCard,0x309),1,1,Synchro.NonTunerEx(Card.IsSetCard,0x309),1,99)
 	c:EnableReviveLimit()
-	--
+	--Banish
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_REMOVE)
