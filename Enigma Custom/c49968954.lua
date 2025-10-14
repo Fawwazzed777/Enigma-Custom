@@ -41,9 +41,6 @@ end
 function s.cfilter(c)
 	return c:IsType(TYPE_MONSTER+TYPE_SPELL+TYPE_TRAP) and c:IsAbleToDeckAsCost()
 end
-function s.disfilter(c)
-	return c:IsFaceup() and not c:IsDisabled()
-end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.rtfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
@@ -60,7 +57,10 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SendtoDeck(g,nil,2,REASON_EFFECT)
 	Duel.BreakEffect()
 end
-	local sg=Duel.SelectMatchingCard(tp,s.disfilter,tp,0,LOCATION_ONFIELD,1,1,nil)
+function s.disfilter(c)
+	return c:IsFaceup() and not c:IsDisabled()
+end
+	local sg=Duel.IsExistingMatchingCard(s.disfilter,tp,0,LOCATION_ONFIELD,1,nil)
 	for tc in aux.Next(sg) do
 		e:SetProperty(e:GetProperty()|EFFECT_FLAG_IGNORE_IMMUNE)
 		Duel.HintSelection(sg)
