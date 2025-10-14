@@ -29,10 +29,10 @@ function s.initial_effect(c)
 	e2:SetValue(400)
 	c:RegisterEffect(e2)
 end
-function s.pfilter(c,e,tp)
+function s.pfilter(c)
 	return c:IsFaceup() and c:IsAbleToRemove()
 end
-function s.tgfilter(c,e,tp)
+function s.tgfilter(c)
 	return c:IsFaceup() and c:IsAbleToRemove()
 end
 function s.rtg(e,tp,eg,ep,ev,re,r,rp,chk)
