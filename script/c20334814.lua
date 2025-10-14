@@ -17,7 +17,6 @@ function s.initial_effect(c)
 	local eq=e1:Clone()
 	eq:SetType(EFFECT_TYPE_QUICK_O)
 	eq:SetCode(EVENT_FREE_CHAIN)
-	eq:SetHintTiming(0,TIMINGS_CHECK_MONSTER_E)
 	eq:SetCondition(s.spquickcon)
 	c:RegisterEffect(eq)
 	--atk 
