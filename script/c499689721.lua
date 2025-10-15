@@ -37,7 +37,8 @@ function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoGrave(e:GetHandler(),REASON_COST)
 end
 function s.tg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+	local c=e:GetHandler()
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 or (c:IsOnField() and Duel.GetLocationCount(tp,LOCATION_MZONE)>1)
 		and Duel.IsExistingMatchingCard(s.rtfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE)
 end
