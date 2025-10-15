@@ -48,7 +48,7 @@ end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc and tc:IsRelateToEffect(e) then
-		Duel.SendtoHand(tc,nil,REASON_EFFECT)
+		Duel.SendtoHand(tc,REASON_RULE,PLAYER_NONE,1-tp)
 	end
 end
 
