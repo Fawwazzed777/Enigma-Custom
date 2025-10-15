@@ -29,7 +29,7 @@ function s.rtfilter(c,e,tp)
 	and c:IsCanBeSpecialSummoned(e,0,tp,false,false) 
 end
 function s.scfilter(c)
-	return c:IsMonster() and c:IsLevel(2) and c:IsSetCard(0xbf45)
+	return c:IsMonster() and c:IsLevel(2) and c:IsSetCard(0xbf45) and (c:IsType(TYPE_SYNCHRO) and c:IsType(TYPE_TUNER))
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToGraveAsCost() 
