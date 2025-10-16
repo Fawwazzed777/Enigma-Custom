@@ -1,4 +1,4 @@
---Enigmation Limit Burst Dragon
+--Enigmation - Over Burst Dragon
 local s,id=GetID()
 function s.initial_effect(c)
 	--Fusion summon procedure
@@ -20,7 +20,7 @@ function s.initial_effect(c)
 	e1:SetTarget(s.indtg)
 	e1:SetValue(s.indval)
 	c:RegisterEffect(e1)
-	--Final Burst
+	--Final Void Burst
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
