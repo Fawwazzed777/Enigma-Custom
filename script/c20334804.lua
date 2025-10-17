@@ -97,7 +97,7 @@ end
 end
 --Xyz
 function s.xyzfilter(c,tp,mg)
-	return c:IsXyzSummonable(nil,mg) and Duel.GetLocationCountFromEx(tp,tp,mg,c)>0
+	return c:IsXyzSummonable(nil,mg) and Duel.GetLocationCountFromEx(tp,tp,mg,c)
 end
 function s.xyzs(c,e,tp)
 	return c:IsSetCard(0x344) and c:IsMonster() and c:IsCanBeXyzMaterial()
