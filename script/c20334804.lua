@@ -76,7 +76,7 @@ function s.scost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 --Synchro
 function s.synfilter(c,tp,hg)
-	return c:IsAttribute(ATTRIBUTE_DARK) and c:IsSynchroSummonable(nil,hg)
+	return c:IsSynchroSummonable(nil,hg)
 end
 function s.syns(c,e,tp)
 	return c:IsSetCard(0x344) and c:IsMonster() and c:IsCanBeSynchroMaterial()
@@ -97,7 +97,7 @@ end
 end
 --Xyz
 function s.xyzfilter(c,tp,mg)
-	return c:IsXyzSummonable(nil,mg) and Duel.GetLocationCountFromEx(tp,tp,mg,c)
+	return c:IsXyzSummonable(nil,mg) 
 end
 function s.xyzs(c,e,tp)
 	return c:IsSetCard(0x344) and c:IsMonster() and c:IsCanBeXyzMaterial()
@@ -109,10 +109,10 @@ function s.xyztg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.xyzop(e,tp,eg,ep,ev,re,r,rp)
 	local mg=Duel.GetMatchingGroup(s.xyzs,tp,LOCATION_MZONE+LOCATION_HAND,0,e:GetHandler(),nil,mg)
-	local xyzg=Duel.GetMatchingGroup(s.xyzfilter,tp,LOCATION_EXTRA,0,nil,tp,mg)
+	local xyzg=Duel.GetMatchingGroup(s.xyzfilter,tp,LOCATION_EXTRA,0,e:GetHandler(),nil,mg)
 	if #xyzg>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local xyz=xyzg:Select(tp,1,1,nil):GetFirst()
-		Duel.XyzSummon(tp,xyz,nil,mg,1)
+		Duel.XyzSummon(tp,xyz,nil,mg)
 end
 end
