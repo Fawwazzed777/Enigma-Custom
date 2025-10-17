@@ -108,8 +108,9 @@ function s.xyztg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.xyzop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
+	local mg=Duel.GetMatchingGroup(s.xyzs,tp,LOCATION_MZONE+LOCATION_HAND,0,e:GetHandler())
 	local xg=Duel.GetMatchingGroup(s.xyzfilter,tp,LOCATION_EXTRA,0,nil)
-	local b1=#rg>0 and Duel.GetCustomActivityCount(id,tp,ACTIVITY_SPSUMMON)>0
+	local b1=#rg>0 and #mg>0 and Duel.GetCustomActivityCount(id,tp,ACTIVITY_SPSUMMON)>0
 	if not b1 then return end
 	if not Duel.SelectYesNo(tp,aux.Stringid(id,4)) then return end
 	local op=Duel.SelectEffect(tp,{b1,aux.Stringid(id,4)})
