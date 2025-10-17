@@ -96,7 +96,7 @@ end
 end
 --Xyz
 function s.xyzfilter(c,tp,mg)
-	return c:IsXyzSummonable(nil,mg) and Duel.GetLocationCountFromEx(tp,tp,mg,c)
+	return c:IsXyzSummonable(nil,mg)
 end
 function s.xyzs(c,e,tp)
 	return c:IsAttribute(ATTRIBUTE_DARK) and c:IsMonster() and c:IsCanBeXyzMaterial()
@@ -107,11 +107,17 @@ function s.xyztg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
 function s.xyzop(e,tp,eg,ep,ev,re,r,rp)
-	local mg=Duel.GetMatchingGroup(s.xyzs,tp,LOCATION_MZONE+LOCATION_HAND,0,e:GetHandler())
-	local xyzg=Duel.GetMatchingGroup(s.xyzfilter,tp,LOCATION_EXTRA,0,nil,tp,mg)
-	if #xyzg>0 then
+	local tc=Duel.GetFirstTarget()
+	local xg=Duel.GetMatchingGroup(s.xyzfilter,tp,LOCATION_EXTRA,0,nil)
+	local b1=#rg>0 and Duel.GetCustomActivityCount(id,tp,ACTIVITY_SPSUMMON)>0
+	if not b1 then return end
+	if not Duel.SelectYesNo(tp,aux.Stringid(id,4)) then return end
+	local op=Duel.SelectEffect(tp,{b1,aux.Stringid(id,4)})
+	if op==1 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local xyz=xyzg:Select(tp,1,1,nil):GetFirst()
-		Duel.XyzSummon(tp,xyz,nil,mg,1)
-end
+		local g=xg:Select(tp,1,1,nil)
+		if #g>0 then
+			Duel.XyzSummon(tp,g:GetFirst())
+		end
+	end
 end
