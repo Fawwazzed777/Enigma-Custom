@@ -4,7 +4,7 @@ function s.initial_effect(c)
 	--xyz summon
 	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(Card.IsSetCard,0x344),12,3,nil,nil,Xyz.InfiniteMats)
 	c:EnableReviveLimit()
-	--With This Soul I Summon Thy
+	--
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_REMOVE)
