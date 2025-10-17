@@ -73,7 +73,7 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local atk=tc:GetTextAttack()
 	if tc then
 		Duel.HintSelection(g)
-		if Duel.Destroy(tc,REASON_EFFECT)~=0 and tc:IsOriginalType(TYPE_MONSTER) then
+		if Duel.Destroy(tc,REASON_EFFECT)~=0 and aux.FilterBoolFunction(Card.IsOriginalType,TYPE_MONSTER) then
 		Duel.BreakEffect()
 		Duel.Damage(1-tp,atk/2,REASON_EFFECT)
 		end
