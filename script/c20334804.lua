@@ -67,7 +67,7 @@ function s.lpop(e,tp,eg,ep,ev,re,r,rp)
 end
 end
 function s.check(c,e)
-	return c:IsMonster() and (c:IsCanBeFusionMaterial() or c:IsCanBeSynchroMaterial() or c:IsCanBeXyzMaterial()) and not c:IsHasEffect(EFFECT_IMMUNE_EFFECT)
+	return c:IsMonster() and c:IsAttribute(ATTRIBUTE_DARK) and (c:IsCanBeFusionMaterial() or c:IsCanBeSynchroMaterial() or c:IsCanBeXyzMaterial()) and not c:IsHasEffect(EFFECT_IMMUNE_EFFECT)
 end
 function s.scost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() end
@@ -75,10 +75,10 @@ function s.scost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 --Synchro
 function s.synfilter(c,tp,hg)
-	return c:IsAttribute(ATTRIBUTE_DARK) and c:IsSynchroSummonable(nil,hg)
+	return c:IsSynchroSummonable(nil,hg)
 end
 function s.syns(c,e,tp)
-	return c:IsSetCard(0x344) and c:IsMonster() and c:IsCanBeSynchroMaterial()
+	return c:IsAttribute(ATTRIBUTE_DARK) and c:IsMonster() and c:IsCanBeSynchroMaterial()
 end
 function s.sctg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local hg=Duel.GetMatchingGroup(s.syns,tp,LOCATION_MZONE+LOCATION_HAND,0,e:GetHandler())
@@ -96,10 +96,10 @@ end
 end
 --Xyz
 function s.xyzfilter(c,tp,mg)
-	return c:IsXyzSummonable(nil,mg) and Duel.GetLocationCountFromEx(tp,tp,mg,c)>0
+	return c:IsXyzSummonable(nil,mg) and Duel.GetLocationCountFromEx(tp,tp,mg,c)
 end
 function s.xyzs(c,e,tp)
-	return c:IsSetCard(0x344) and c:IsMonster() and c:IsCanBeXyzMaterial()
+	return c:IsAttribute(ATTRIBUTE_DARK) and c:IsMonster() and c:IsCanBeXyzMaterial()
 end
 function s.xyztg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local mg=Duel.GetMatchingGroup(s.xyzs,tp,LOCATION_MZONE+LOCATION_HAND,0,e:GetHandler())
@@ -112,6 +112,6 @@ function s.xyzop(e,tp,eg,ep,ev,re,r,rp)
 	if #xyzg>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local xyz=xyzg:Select(tp,1,1,nil):GetFirst()
-		Duel.XyzSummon(tp,xyz,nil,mg,1,99)
+		Duel.XyzSummon(tp,xyz,nil,mg,1)
 end
 end
