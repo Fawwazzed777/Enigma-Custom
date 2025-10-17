@@ -1,4 +1,4 @@
---Enigmation - Revolution Wing
+--Enigmation - Calamitous
 local s,id=GetID()
 function s.initial_effect(c)
 	Pendulum.AddProcedure(c)
@@ -106,7 +106,7 @@ function s.lpop(e,tp,eg,ep,ev,re,r,rp)
 end
 end
 function s.check(c,e)
-	return c:IsMonster() and c:IsSetCard(0x344)
+	return not e:GetHandler() and c:IsMonster() and c:IsSetCard(0x344)
 	and (c:IsCanBeFusionMaterial() or c:IsCanBeSynchroMaterial() or c:IsCanBeXyzMaterial()) and not c:IsHasEffect(EFFECT_IMMUNE_EFFECT)
 end
 function s.scost(e,tp,eg,ep,ev,re,r,rp,chk)
