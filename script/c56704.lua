@@ -10,7 +10,6 @@ function s.initial_effect(c)
 	e1:SetCategory(CATEGORY_TODECK)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_MZONE)
-	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e1:SetCountLimit(1,id)
 	e1:SetTarget(s.tdtg)
 	e1:SetOperation(s.tdop)
@@ -41,6 +40,7 @@ function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 	ct=Duel.SendtoDeck(g,nil,2,REASON_EFFECT)
 	if ct>0 then
 		Duel.Recover(tp,ct*700,REASON_EFFECT)
+		Duel.Damage(1-tp,ct*700,REASON_EFFECT)
 end
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
