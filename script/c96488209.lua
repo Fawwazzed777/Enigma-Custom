@@ -25,7 +25,7 @@ function s.initial_effect(c)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCountLimit(1)
 	e3:SetCondition(s.effcon)
-	e3:SetCost(Cost.Detach(1,1))
+	e3:SetCost(s.cost)
 	e3:SetTarget(s.rtg)
 	e3:SetOperation(s.rop)
 	c:RegisterEffect(e3)
@@ -83,6 +83,10 @@ function s.effcon(e)
 	return e:GetHandler():GetFlagEffect(id)>0
 end
 --
+function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
+	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
+end
 function s.rtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_ATKCHANGE,e:GetHandler(),1,0,0)
