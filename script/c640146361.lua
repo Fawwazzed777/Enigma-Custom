@@ -16,6 +16,7 @@ function s.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_SINGLE)
 	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e2:SetCode(EFFECT_SEND_REPLACE)
+	e2:SetRange(LOCATION_MZONE)
 	e2:SetTarget(s.reptg)
 	c:RegisterEffect(e2)
 end
@@ -28,7 +29,6 @@ end
 function s.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return not e:GetHandler():IsReason(REASON_REPLACE) end
 	if Duel.SelectEffectYesNo(tp,e:GetHandler()) then
-		if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 		Duel.RemoveCards(e:GetHandler())
 		local token=Duel.CreateToken(tp,96488223)
 		Duel.MoveToField(token,tp,tp,LOCATION_MZONE,POS_FACEUP,true)
