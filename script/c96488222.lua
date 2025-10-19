@@ -1,4 +1,4 @@
---Enigmation - Meteo Dark Dragon
+--Enigmation - Dark Meteor Dragon
 local s,id=GetID()
 function s.initial_effect(c)
 	--xyz summon
@@ -58,7 +58,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		tc:RegisterEffect(e1,tp)
 		local dam=math.max(tc:GetTextAttack()//1000,tc:GetTextDefense()//1000)
 		if dam<0 then dam=0 end
-		local rg=Duel.SelectMatchingCard(tp,Card.IsDestructable,0,0,LOCATION_ONFIELD,1,dam,c)
+		local rg=Duel.SelectMatchingCard(tp,Card.IsDestructable,tp,0,LOCATION_ONFIELD,1,dam,c)
 		Duel.SetOperationInfo(0,CATEGORY_DESTROY,rg,#rg,0,0)
 		Duel.HintSelection(rg)
 		if #rg>0 then Duel.Destroy(rg,REASON_EFFECT) end
