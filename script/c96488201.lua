@@ -69,14 +69,14 @@ function s.filter(c)
 	return c:IsFaceup() and c:GetAttack()>0
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsRemoveable,tp,0,LOCATION_MZONE,1,nil) end
-	local g=Duel.GetMatchingGroup(Card.IsRemoveable,tp,0,LOCATION_MZONE,nil)
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,0,LOCATION_MZONE,1,nil) end
+	local g=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,0,LOCATION_MZONE,nil)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,0)
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,Card.IsRemovable,tp,0,LOCATION_MZONE,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,Card.IsAbleToRemove,tp,0,LOCATION_MZONE,1,1,nil)
 	local tc=g:GetFirst()
 	local atk=tc:GetAttack()
 	if tc then
