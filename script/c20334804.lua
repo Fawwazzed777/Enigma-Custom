@@ -75,7 +75,7 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.HintSelection(g)
 		if Duel.Destroy(tc,REASON_EFFECT)~=0 and aux.FilterBoolFunction(Card.IsOriginalType,TYPE_MONSTER) then
 		Duel.BreakEffect()
-		Duel.Damage(1-tp,atk/2,REASON_EFFECT)
+		Duel.Damage(tc:GetPreviousControler(),atk/2,REASON_EFFECT)
 		end
 	end
 end
