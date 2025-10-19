@@ -106,7 +106,8 @@ function s.lpop(e,tp,eg,ep,ev,re,r,rp)
 end
 end
 function s.check(c,e)
-	return not c:IsForbidden() and c:IsMonster() and c:IsSetCard(0x344)
+	local c=e:GetHandler()
+	return not c:IsForbidden() and not c and c:IsMonster() and c:IsSetCard(0x344)
 	and (c:IsCanBeFusionMaterial() or c:IsCanBeSynchroMaterial() or c:IsCanBeXyzMaterial()) and not c:IsHasEffect(EFFECT_IMMUNE_EFFECT)
 end
 function s.scost(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -127,6 +128,7 @@ function s.sctg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.scop(e,tp,eg,ep,ev,re,r,rp)
 	local hg=Duel.GetMatchingGroup(s.syns,tp,LOCATION_MZONE+LOCATION_HAND,0,e:GetHandler())
+	Duel.ConfirmCards(1-tp,hg)
 	local syng=Duel.GetMatchingGroup(s.synfilter,tp,LOCATION_EXTRA,0,e:GetHandler(),nil,hg)
 	if #syng>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
@@ -143,6 +145,7 @@ function s.xyzs(c,e,tp)
 end
 function s.xyztg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local mg=Duel.GetMatchingGroup(s.xyzs,tp,LOCATION_MZONE+LOCATION_HAND,0,e:GetHandler())
+	Duel.ConfirmCards(1-tp,mg)
 	if chk==0 then return #mg>0 and Duel.GetMatchingGroup(s.xyzfilter,tp,LOCATION_EXTRA,0,e:GetHandler(),nil,mg) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
