@@ -58,7 +58,6 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 		sc:RegisterEffect(e1,true)
 		local eb=Effect.CreateEffect(c)
-		eb:SetDescription(3306)
 		eb:SetType(EFFECT_TYPE_FIELD)
 		eb:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 		eb:SetCode(EFFECT_CANNOT_REMOVE)
@@ -75,6 +74,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			sc:RegisterEffect(e2,true)
 		end
 		sc:CompleteProcedure()
+		sc:SetDescription(3306)
 		sc:RegisterFlagEffect(0,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,0))
 	end
 end
