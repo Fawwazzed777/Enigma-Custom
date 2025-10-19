@@ -110,7 +110,7 @@ function s.check(c,e,tp)
 	and (c:IsCanBeFusionMaterial() or c:IsCanBeSynchroMaterial() or c:IsCanBeXyzMaterial()) and not c:IsHasEffect(EFFECT_IMMUNE_EFFECT)
 end
 function s.scost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() and s.check(e) end
+	if chk==0 then return s.check() and e:GetHandler():IsAbleToRemoveAsCost() end
 	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
 end
 --Synchro
