@@ -105,7 +105,7 @@ function s.lpop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Draw(tp,1,REASON_EFFECT)
 end
 end
-function s.check(c,e)
+function s.check(c,e,tp)
 	local c=e:GetHandler()
 	return not c:IsForbidden() and not c and c:IsMonster() and c:IsSetCard(0x344)
 	and (c:IsCanBeFusionMaterial() or c:IsCanBeSynchroMaterial() or c:IsCanBeXyzMaterial()) and not c:IsHasEffect(EFFECT_IMMUNE_EFFECT)
