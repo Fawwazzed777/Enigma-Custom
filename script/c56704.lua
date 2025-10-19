@@ -86,9 +86,11 @@ end
 function s.retop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.ReturnToField(e:GetLabelObject())
 		local g1=Duel.GetFieldGroup(tp,0,LOCATION_HAND):RandomSelect(tp,1)
-		Duel.Remove(g1,POS_FACEUP,REASON_EFFECT)
+		Duel.Remove(g1,POS_FACEDOWN,REASON_EFFECT)
 		local g2=Duel.GetFieldGroup(tp,0,LOCATION_DECK):RandomSelect(tp,1)
-		Duel.Remove(g2,POS_FACEUP,REASON_EFFECT)
+		Duel.Remove(g2,POS_FACEDOWN,REASON_EFFECT)
+		local g3=Duel.GetFieldGroup(tp,0,LOCATION_GRAVE):RandomSelect(tp,1)
+		Duel.Remove(g3,POS_FACEDOWN,REASON_EFFECT)
 end
 function s.discon(e,c)
 	if e:GetLabelObject():IsLocation(LOCATION_REMOVED) then
