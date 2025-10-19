@@ -41,13 +41,13 @@ function s.initial_effect(c)
 	c:RegisterEffect(ef)
 	local esy=ef:Clone()
 	esy:SetDescription(aux.Stringid(id,3))
-	esy:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	esy:SetCategory(CATEGORY_SYNCHRO_SUMMON)
 	esy:SetTarget(s.sctg)
 	esy:SetOperation(s.scop)
 	c:RegisterEffect(esy)
 	local exy=ef:Clone()
 	exy:SetDescription(aux.Stringid(id,4))
-	exy:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	exy:SetCategory(CATEGORY_XYZ_SUMMON)
 	exy:SetTarget(s.xyztg)
 	exy:SetOperation(s.xyzop)
 	c:RegisterEffect(exy)
@@ -110,7 +110,7 @@ function s.check(c,e,tp)
 	and (c:IsCanBeFusionMaterial() or c:IsCanBeSynchroMaterial() or c:IsCanBeXyzMaterial()) and not c:IsHasEffect(EFFECT_IMMUNE_EFFECT)
 end
 function s.scost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return s.check() and e:GetHandler():IsAbleToRemoveAsCost() end
+	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() end
 	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
 end
 --Synchro
