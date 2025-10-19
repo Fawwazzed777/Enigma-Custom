@@ -1,4 +1,4 @@
---Rank-Up-Magic Decisive Chaos
+--Rank-Up-Magic Enigmation of Chaos
 local s,id=GetID()
 function s.initial_effect(c)
 	--Activate
@@ -57,6 +57,14 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetValue(s.atkval)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 		sc:RegisterEffect(e1,true)
+		local eb=Effect.CreateEffect(c)
+		eb:SetType(EFFECT_TYPE_FIELD)
+		eb:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+		eb:SetCode(EFFECT_CANNOT_REMOVE)
+		eb:SetRange(LOCATION_MZONE)
+		eb:SetTargetRange(1,1)
+		eb:SetTarget(s.rmlimit)
+		sc:RegisterEffect(eb,true)
 		if not sc:IsType(TYPE_EFFECT) then
 			local e2=Effect.CreateEffect(c)
 			e2:SetType(EFFECT_TYPE_SINGLE)
@@ -73,5 +81,8 @@ function s.atkfilter(c)
 	return (c:IsLocation(LOCATION_GRAVE) or c:IsFaceup()) and c:IsSetCard(0x344)
 end
 function s.atkval(e,c)
-	return Duel.GetMatchingGroupCount(s.atkfilter,c:GetControler(),LOCATION_GRAVE+LOCATION_REMOVED,LOCATION_GRAVE+LOCATION_REMOVED,nil)*100
+	return Duel.GetMatchingGroupCount(s.atkfilter,c:GetControler(),LOCATION_GRAVE+LOCATION_REMOVED,LOCATION_GRAVE+LOCATION_REMOVED,nil)*200
+end
+function s.rmlimit(e,c,tp,r)
+	return c==e:GetHandler() and r==REASON_EFFECT
 end
