@@ -67,7 +67,6 @@ function s.filter(c)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
-	local ec=eg:GetFirst()
 	if chkc then return chkc~=c and chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and s.filter(chkc) end
 	if chk==0 then return c:GetLevel()>1
 		and Duel.IsExistingTarget(s.filter,tp,LOCATION_MZONE,0,1,c) end
@@ -77,7 +76,16 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetTargetParam(lv)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
 	local ec=Duel.SelectTarget(tp,s.filter,tp,LOCATION_MZONE,0,1,1,c)
-	if ec:IsRelateToEffect(e) and ec:IsFaceup() then
+end
+function s.operation(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local ec=Duel.GetFirstTarget()
+	local lv=Duel.GetChainInfo(0,CHAININFO_TARGET_PARAM)
+	if c:IsFaceup() and c:IsRelateToEffect(e) and c:UpdateLevel(-lv,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)~=0 then
+		local tc=Duel.GetFirstTarget()
+		if tc and tc:IsFaceup() and tc:IsRelateToEffect(e) then
+		tc:UpdateLevel(-lv,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,c)
+		if ec:IsRelateToEffect(e) and ec:IsFaceup() then
 			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_CHANGE_ATTRIBUTE)
@@ -89,14 +97,6 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 			e1:SetReset(RESET_EVENT|RESETS_STANDARD_DISABLE)
 			c:RegisterEffect(e1)
 end
-end
-function s.operation(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	local lv=Duel.GetChainInfo(0,CHAININFO_TARGET_PARAM)
-	if c:IsFaceup() and c:IsRelateToEffect(e) and c:UpdateLevel(-lv,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)~=0 then
-		local tc=Duel.GetFirstTarget()
-		if tc and tc:IsFaceup() and tc:IsRelateToEffect(e) then
-		tc:UpdateLevel(-lv,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,c)
 		end
 	end
 	if tc then return end
@@ -115,6 +115,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	e2:SetTargetRange(1,0)
 	Duel.RegisterEffect(e2,tp)
 end
+
 function s.splimit(e,c)
 	return not c:IsType(TYPE_SYNCHRO)
 end
