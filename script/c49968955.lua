@@ -84,7 +84,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	if c:IsFaceup() and c:IsRelateToEffect(e) and c:UpdateLevel(-lv,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)~=0 then
 		local tc=Duel.GetFirstTarget()
 		if tc and tc:IsFaceup() and tc:IsRelateToEffect(e) then
-		tc:UpdateLevel(-lv,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,c)
+		tc:UpdateLevel(-lv,RESET_EVENT|RESETS_STANDARD|RESET_PHASE|PHASE_END,c)
 		if ec:IsRelateToEffect(e) and ec:IsFaceup() then
 			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_SINGLE)
@@ -94,7 +94,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 			else
 				e1:SetValue(ec:GetAttribute())
 			end
-			e1:SetReset(RESET_EVENT|RESETS_STANDARD_DISABLE)
+			e1:SetReset(RESET_EVENT|RESETS_STANDARD|RESET_PHASE|PHASE_END)
 			c:RegisterEffect(e1)
 end
 		end
