@@ -6,10 +6,9 @@ function s.initial_effect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
 	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
-	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(1,id)
-	e1:SetCondition(s.thcon)
 	e1:SetTarget(s.thtg)
 	e1:SetOperation(s.thop)
 	c:RegisterEffect(e1)
@@ -23,9 +22,6 @@ end
 s.listed_series={0xfc13}
 function s.filter(c,code)
 	return c:IsFaceup() and c:IsCode(code)
-end
-function s.thcon(e,tp,eg,ep,ev,re,r,rp)
-	return re and re:GetHandler():IsSetCard(0xfc13)
 end
 function s.thfilter(c,tp)
 	return c:IsSetCard(0xfc13) and c:IsAbleToHand()
