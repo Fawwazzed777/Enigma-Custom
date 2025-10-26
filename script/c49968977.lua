@@ -1,4 +1,4 @@
---Tyrant Blaze Dragon
+--Raging Blaze Dragon
 local s,id=GetID()
 function s.initial_effect(c)
 	--synchro summon
@@ -16,6 +16,16 @@ function s.initial_effect(c)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.operation)
 	c:RegisterEffect(e1)
+	--Would Leave the Field
+	local er=Effect.CreateEffect(c)
+	er:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_SINGLE)
+	er:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	er:SetCode(EFFECT_SEND_REPLACE)
+	er:SetRange(LOCATION_MZONE)
+	er:SetCountLimit(1,id)
+	er:SetCondition(s.recon)
+	er:SetTarget(s.reptg)
+	c:RegisterEffect(er)
 	--Send to GY
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
@@ -36,6 +46,27 @@ function s.initial_effect(c)
 	e3:SetValue(s.immval)
 	c:RegisterEffect(e3)
 	
+end
+function s.recon(e,tp,eg,ep,ev,re,r,rp)
+	return rp==1-tp and e:GetHandler():IsPreviousControler(tp)
+end
+function s.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	local c=e:GetHandler()
+	if chk==0 then return not c:IsReason(REASON_REPLACE)
+	 and c:IsFaceup() end
+	if Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
+	local g=Duel.SelectMatchingCard(tp,Card.IsFaceup,tp,LOCATION_MZONE,0,1,1,nil)
+	if #g>0 then
+		Duel.HintSelection(g)
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_UPDATE_ATTACK)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+		e1:SetValue(500)
+		g:GetFirst():RegisterEffect(e1)
+	end
+		return true
+	else return false end
 end
 function s.immval(e,te)
 	return te:GetOwner()~=e:GetHandler() and te:IsActiveType(TYPE_MONSTER) and e:GetHandlerPlayer() ~= te:GetHandlerPlayer()
