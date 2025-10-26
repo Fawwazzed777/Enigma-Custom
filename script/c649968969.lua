@@ -17,7 +17,7 @@ function s.initial_effect(c)
 	eq:SetCode(EVENT_FREE_CHAIN)
 	eq:SetCondition(s.quickcon)
 	c:RegisterEffect(eq)
-	--sp
+	--spw
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
