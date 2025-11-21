@@ -143,12 +143,12 @@ function s.xyzs(c,e,tp)
 end
 function s.xyztg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local mg=Duel.GetMatchingGroup(s.xyzs,tp,LOCATION_MZONE+LOCATION_HAND,0,e:GetHandler())
-	if chk==0 then return #mg>0 and Duel.GetMatchingGroup(s.xyzfilter,tp,LOCATION_EXTRA,0,e:GetHandler(),nil,mg) end
+	if chk==0 then return #mg>0 and Duel.GetMatchingGroup(s.xyzfilter,tp,LOCATION_EXTRA,0,nil,nil,mg) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
 function s.xyzop(e,tp,eg,ep,ev,re,r,rp)
 	local mg=Duel.GetMatchingGroup(s.xyzs,tp,LOCATION_MZONE+LOCATION_HAND,0,e:GetHandler())
-	local xyzg=Duel.GetMatchingGroup(s.xyzfilter,tp,LOCATION_EXTRA,0,e:GetHandler(),nil,mg)
+	local xyzg=Duel.GetMatchingGroup(s.xyzfilter,tp,LOCATION_EXTRA,0,nil,nil,mg)
 	if #xyzg>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local xyz=xyzg:Select(tp,1,1,nil):GetFirst()
