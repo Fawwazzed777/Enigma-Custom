@@ -98,7 +98,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,s.pfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,1,nil,e,tp)
 	if #g>0 then
-	if Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)>0 then
+	if Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP_DEFENSE)>0 then
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local gf=Duel.SelectMatchingCard(tp,s.sfilter,tp,LOCATION_DECK+LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil)
 	if #gf>0 then
