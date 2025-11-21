@@ -65,7 +65,6 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp,c)
 	if not g then return end
 	Duel.SendtoDeck(g,nil,1,REASON_COST)
 	g:DeleteGroup()
-	Duel.Recover(tp,800,REASON_EFFECT)
 end
 --
 function s.cfilter(c,e,tp)
