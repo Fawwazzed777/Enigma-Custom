@@ -143,7 +143,7 @@ function s.xyzs(c,e,tp)
 end
 function s.xyztg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local mg=Duel.GetMatchingGroup(s.xyzs,tp,LOCATION_MZONE+LOCATION_HAND,0,e:GetHandler())
-	if chk==0 then return #mg>0 and Duel.GetMatchingGroup(s.xyzfilter,tp,LOCATION_EXTRA,0,nil,nil,mg) end
+	if chk==0 then return #mg>0 and Duel.IsExistingMatchingCard(s.xyzfilter,tp,LOCATION_EXTRA,0,1,nil,nil,mg) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
 function s.xyzop(e,tp,eg,ep,ev,re,r,rp)
