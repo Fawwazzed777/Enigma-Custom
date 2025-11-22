@@ -53,6 +53,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 end
 end
 function s.efcon(e,tp,eg,ep,ev,re,r,rp)
+	local p=e:GetHandler()	
 	return (r&REASON_FUSION+REASON_SYNCHRO+REASON_XYZ)~=0
 		and (p:GetReasonCard():IsAttribute(ATTRIBUTE_DARK) or p:GetReasonCard():IsAttribute(ATTRIBUTE_LIGHT))
 end
