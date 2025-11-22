@@ -1,9 +1,9 @@
 --Enigmation - Buster Raven
 local s,id=GetID()
 function s.initial_effect(c)
+	c:EnableReviveLimit()
 	--xyz summon
 	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(Card.IsSetCard,0x344),4,2,nil,nil,Xyz.InfiniteMats)
-	c:EnableReviveLimit()
 	--equip
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))

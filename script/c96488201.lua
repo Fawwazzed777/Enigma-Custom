@@ -3,7 +3,7 @@ local s,id=GetID()
 function s.initial_effect(c)
 	Duel.EnableGlobalFlag(GLOBALFLAG_DETACH_EVENT)
 	--xyz summon
-	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(Card.IsAttribute,ATTRIBUTE_DARK),6,Xyz.InfiniteMats)
+	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(Card.IsAttribute,ATTRIBUTE_DARK),6,4,nil,nil,Xyz.InfiniteMats)
 	c:EnableReviveLimit()
 	--destroy replace
 	local e1=Effect.CreateEffect(c)

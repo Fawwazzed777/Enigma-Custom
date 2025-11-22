@@ -1,9 +1,9 @@
 --Enigmation Spectre Dragon
 local s,id=GetID()
 function s.initial_effect(c)
+	c:EnableReviveLimit()
 	--Xyz summon
 	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(Card.IsSetCard,0x344),4,2,nil,nil,Xyz.InfiniteMats)
-	c:EnableReviveLimit()
 	--Negate
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
@@ -39,7 +39,6 @@ function s.initial_effect(c)
 	e3:SetTarget(s.revtg)
 	e3:SetOperation(s.revop)
 	c:RegisterEffect(e3)
-
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
