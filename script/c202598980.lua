@@ -60,8 +60,8 @@ function s.ta(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.op(e,sg,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,s.rtfilter,tp,LOCATION_MZONE,0,1,1,e:GetHandler())
+	if #g>0 then
 	if Duel.SendtoDeck(g,nil,1,REASON_EFFECT)~=0 then
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<1 then return end
 	local sg=Duel.SelectMatchingCard(tp,s.tfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
 	if #sg>0 then
 	Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
@@ -71,6 +71,7 @@ function s.op(e,sg,tp,eg,ep,ev,re,r,rp)
 	e1:SetValue(500)
 	e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 	e:GetHandler():RegisterEffect(e1)
+end
 end
 end
 end
