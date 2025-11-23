@@ -56,9 +56,8 @@ function s.tfilter(c,lv,e,tp)
 end
 function s.tt(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and s.ttfilter(chkc,tp) end
-	if chk==0 then return Duel.IsExistingTarget(s.ttfilter,tp,LOCATION_MZONE,0,1,e:GetHandler(),tp) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-	local g=Duel.SelectTarget(tp,s.ttfilter,tp,LOCATION_MZONE,0,1,1,e:GetHandler(),tp)
+	if chk==0 then return Duel.IsExistingMatchingCard(s.ttfilter,tp,LOCATION_MZONE,0,1,e:GetHandler(),tp) end
+	local g=Duel.SelectMatchingCard(tp,s.ttfilter,tp,LOCATION_MZONE,0,1,1,e:GetHandler(),tp)
 	if #g>0 then
 	Duel.SendtoDeck(g,nil,1,REASON_EFFECT)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)	
@@ -66,7 +65,7 @@ end
 function s.ot(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local tc=Duel.GetFirstTarget()
+	local tc=Duel.GetFirst()
 	if not (tc:IsRelateToEffect(e) and tc:IsFaceup()) then return end
 	local tc=Duel.SelectMatchingCard(tp,s.tfilter,tp,LOCATION_DECK,0,1,1,c:GetRace(),e,tp)
 	if #tc>0 then
