@@ -30,6 +30,7 @@ function s.initial_effect(c)
 	e2:SetValue(aux.tgoval)
 	c:RegisterEffect(e2)
 end
+s.listed_series={0x303}
 function s.rtfilter(c,e,tp)
 	return c:IsPreviousLocation(LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_REMOVED) and c:IsReason(REASON_EFFECT)
 end
@@ -37,7 +38,7 @@ function s.rvfilter(c)
 	return c:IsSetCard(0x303)
 end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(s.rtfilter,1,nil,e,tp) and 
+	return (eg:IsExists(s.rtfilter,1,nil,e,tp) or eg:IsExists(s.rtfilter,1,nil,e,1-tp)) and 
 	Duel.IsExistingMatchingCard(s.rvfilter,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,nil) 
 end
 function s.filter(c)
