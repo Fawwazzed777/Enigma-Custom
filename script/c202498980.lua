@@ -104,9 +104,6 @@ end
 function s.rtfilter1(c,ft,tp)
 	return c:IsFaceup() and c:IsSetCard(0x303) and c:IsAbleToDeck()
 end
-function s.spfilter1(c,e,tp)
-	return c:IsRace(RACE_DRAGON) and c:IsLevelBelow(8) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
-end
 function s.t1(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	if chk==0 then return ft>-1 and Duel.IsExistingMatchingCard(s.rtfilter1,tp,LOCATION_ONFIELD+LOCATION_GRAVE,0,1,e:GetHandler()) and
@@ -119,16 +116,11 @@ function s.o1(e,tp,eg,ep,ev,re,r,rp)
 	if #g>0 then
 	Duel.HintSelection(g)
 	if Duel.SendtoDeck(g,nil,1,REASON_EFFECT)~=0 then
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<1 then return end
-	local sg=Duel.SelectMatchingCard(tp,s.spfilter1,tp,LOCATION_DECK+LOCATION_HAND,0,1,1,nil,e,tp)
-	if #sg>0 then	
-	Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
 	--
-	local fg=Duel.SelectMatchingCard(tp,Card.IsMonster,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil,e,tp)
+	local fg=Duel.SelectMatchingCard(tp,Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil,e,tp)
 	if #fg>0 then
 	Duel.HintSelection(fg)
 	fg:GetFirst():UpdateAttack(-1000,RESET_EVENT|RESETS_STANDARD)	
-end
 end
 end
 end
