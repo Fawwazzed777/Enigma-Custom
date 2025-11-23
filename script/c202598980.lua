@@ -47,17 +47,15 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 end
 end
 --
-
+function s.tfilter(c,lv,e,tp)
+	return c:IsMonster() and c:IsAttribute(ATTRIBUTE_LIGHT) and c:GetLevel()==lv and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+end
 function s.ttfilter(c,e,tp)
 	return c:IsFaceup() and c:IsMonster() and c:IsSetCard(0x303) and c:IsAbleToDeck() and c:HasLevel()
 		and Duel.IsExistingMatchingCard(s.tfilter,tp,LOCATION_DECK,0,1,nil,c:GetLevel())
 end
-function s.tfilter(c,lv,e,tp)
-	return c:IsMonster() and c:IsAttribute(ATTRIBUTE_LIGHT) and c:GetLevel()==lv and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
-end
 function s.tt(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.ttfilter,tp,LOCATION_MZONE,0,1,e:GetHandler()) 
-	and Duel.IsExistingMatchingCard(s.tfilter,tp,LOCATION_DECK,0,1,e:GetHandler()) end	
+	if chk==0 then return Duel.IsExistingMatchingCard(s.ttfilter,tp,LOCATION_MZONE,0,1,e:GetHandler()) end	
 end
 function s.ot(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
