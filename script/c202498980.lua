@@ -79,7 +79,7 @@ function s.o(e,tp,eg,ep,ev,re,r,rp)
 	if #g>0 then
 	Duel.HintSelection(g)
 	if Duel.SendtoDeck(g,nil,1,REASON_EFFECT)~=0 then
-	Duel.Draw(tp,2,REASON_EFFECT)
+	Duel.Draw(tp,1,REASON_EFFECT)
 	e:GetHandler():UpdateAttack(400,RESET_EVENT|RESETS_STANDARD)	
 end
 end
