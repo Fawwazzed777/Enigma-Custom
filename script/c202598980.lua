@@ -52,8 +52,7 @@ function s.rtfilter(c,ft)
 	return c:IsFaceup() and c:IsSetCard(0x303) and c:IsAbleToDeck()
 end
 function s.tfilter(c,sg,ft,e,tp)
-	return c:IsMonster() and 
-	c:IsAttribute(ATTRIBUTE_LIGHT) and not c:IsCode(id) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsMonster() and c:IsAttribute(ATTRIBUTE_LIGHT) and not c:IsCode(id) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.ta(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.tfilter,tp,LOCATION_DECK,0,1,nil)
