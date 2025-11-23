@@ -48,12 +48,12 @@ end
 end
 --
 
-function s.rtfilter(c,lv,ft)
-	return c:IsFaceup() and c:IsMonster() and c:HasLevel() and c:IsSetCard(0x303) and c:IsAbleToDeck()
-	and Duel.IsExistingMatchingCard(s.tfilter,tp,LOCATION_DECK,0,1,nil,c:GetLevel())
+function s.rtfilter(c,e,tp)
+	return c:IsFaceup() and c:IsMonster() and c:IsSetCard(0x303) and c:IsAbleToDeck()
+	and Duel.IsExistingMatchingCard(s.tfilter,tp,LOCATION_DECK,0,1,nil)
 end
-function s.tfilter(c,sg,ft,e,lv,tp)
-	return c:IsMonster() and c:IsAttribute(ATTRIBUTE_LIGHT) and not c:IsLevel(lv) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+function s.tfilter(c,e,tp)
+	return c:IsMonster() and c:IsAttribute(ATTRIBUTE_LIGHT) and not c:Iscode(id) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.ta(e,c,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.rtfilter,tp,LOCATION_MZONE,0,1,e:GetHandler()) end	
