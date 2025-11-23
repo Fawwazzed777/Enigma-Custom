@@ -1,4 +1,4 @@
---Imaginary Force - Daylight Dragon
+--Imaginary Force - Gleamdragon
 local s,id=GetID()
 function s.initial_effect(c)
 	--Sp itself
@@ -48,7 +48,8 @@ end
 end
 --
 function s.spfilter(c,e,tp)
-	return c:IsSetCard(0x303) and c:IsRace(RACE_ALL) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0x303) and not Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsRace,c:GetRace()),tp,LOCATION_MZONE,0,1,nil)
+	and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.rtfilter(c,ft,tp)
 	return c:IsFaceup() and c:IsSetCard(0x303) and c:IsAbleToDeck()

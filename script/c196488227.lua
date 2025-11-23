@@ -86,7 +86,7 @@ function s.atkcon(e)
 end
 --
 function s.rpfilter(c)
-	return (c:IsAttribute(ATTRIBUTE_LIGHT) or c:IsAttribute(ATTRIBUTE_DARK)) and (c:IsLevelBelow(5) or c:IsRankBelow(5)) and not c:IsForbidden()
+	return (c:IsSetCard(0x344) or c:IsSetCard(0x303)) and (c:IsLevelBelow(5) or c:IsRankBelow(5)) and not c:IsForbidden()
 end
 function s.tetg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return not e:GetHandler():IsForbidden() and Duel.IsExistingMatchingCard(s.rpfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil,e,tp) end
