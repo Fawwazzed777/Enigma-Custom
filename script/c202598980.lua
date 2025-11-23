@@ -50,7 +50,6 @@ end
 
 function s.rtfilter(c,e,tp)
 	return c:IsFaceup() and c:IsMonster() and c:IsSetCard(0x303) and c:IsAbleToDeck()
-	and Duel.IsExistingMatchingCard(s.tfilter,tp,LOCATION_DECK,0,1,nil)
 end
 function s.tfilter(c,e,tp)
 	return c:IsMonster() and c:IsAttribute(ATTRIBUTE_LIGHT) and not c:Iscode(id) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
@@ -63,7 +62,7 @@ function s.op(e,c,sg,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.SelectMatchingCard(tp,s.rtfilter,tp,LOCATION_MZONE,0,1,1,e:GetHandler(),e,tp):GetFirst()
 	if #tc>0 then
 	if Duel.SendtoDeck(tc,nil,1,REASON_EFFECT)~=0 then
-	local sg=Duel.SelectMatchingCard(tp,s.tfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp,tc:GetLevel())
+	local sg=Duel.SelectMatchingCard(tp,s.tfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
 	if #sg>0 then
 	Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
 	local e1=Effect.CreateEffect(e:GetHandler())
