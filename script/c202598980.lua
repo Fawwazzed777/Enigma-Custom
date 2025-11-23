@@ -76,4 +76,3 @@ function s.ot(e,tp,eg,ep,ev,re,r,rp)
 	e:GetHandler():RegisterEffect(e1)
 end
 end
-end
