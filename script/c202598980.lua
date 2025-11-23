@@ -47,20 +47,18 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 end
 end
 --
-function s.ttfilter(c,e,tp)
-	return c:IsFaceup() and c:IsMonster() and c:IsSetCard(0x303) and c:IsAbleToDeck()
-		and Duel.IsExistingMatchingCard(s.tfilter,tp,LOCATION_DECK,0,1,nil,c:GetRace(),e,tp)
+function s.spfilter(c,e,tp)
+	return c:IsSetCard(0x303) and c:IsRace(RACE_ALL) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
-function s.tfilter(c,lv,e,tp)
-	return c:IsSetCard(0x303) and c:IsMonster() and not c:IsRace(hc:GetRace()) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+function s.rtfilter(c,ft,tp)
+	return c:IsFaceup() and c:IsSetCard(0x303) and c:IsAbleToDeck()
 end
 function s.tt(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.ttfilter,tp,LOCATION_MZONE,0,1,e:GetHandler(),tp) end
-	local g=Duel.SelectMatchingCard(tp,s.ttfilter,tp,LOCATION_MZONE,0,1,1,e:GetHandler(),tp)
-	Duel.HintSelection(g)
-	if #g>0 then
-	Duel.SendtoDeck(g,nil,1,REASON_EFFECT)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)	
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	local c=e:GetHandler()
+	if chk==0 then return ft>-1 and Duel.IsExistingMatchingCard(s.rtfilter,tp,LOCATION_MZONE,0,1,c) and
+	Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK,0,1,nil,e,tp,c:GetRace()) end
+	Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,1,tp,LOCATION_ONFIELD+LOCATION_GRAVE)
 end
 function s.ot(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
