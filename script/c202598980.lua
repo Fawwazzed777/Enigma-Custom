@@ -17,12 +17,12 @@ function s.initial_effect(c)
 	--
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
-	e2:SetCategory(CATEGORY_TODECK+CATEGORY_SPECIAL_SUMMON)
-	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_FIELD)
+	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1,{id,1})
-	e2:SetTarget(s.ta)
-	e2:SetOperation(s.op)
+	e2:SetTarget(s.tt)
+	e2:SetOperation(s.ot)
 	c:RegisterEffect(e2)
 end
 s.listed_series={0x303}
@@ -48,22 +48,22 @@ end
 end
 --
 
-function s.rtfilter(c,e,tp)
+function s.ttfilter(c,tp)
 	return c:IsFaceup() and c:IsMonster() and c:IsSetCard(0x303) and c:IsAbleToDeck() and c:HasLevel()
 		and Duel.IsExistingMatchingCard(s.tfilter,tp,LOCATION_DECK,0,1,nil,c:GetLevel())
 end
-function s.tfilter(c,e,tp,lv)
+function s.tfilter(c,lv)
 	return c:IsMonster() and c:IsAttribute(ATTRIBUTE_LIGHT) and not c:IsLevel(lv) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
-function s.ta(e,c,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.rtfilter,tp,LOCATION_MZONE,0,1,e:GetHandler()) end	
+function s.tt(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(s.ttfilter,tp,LOCATION_MZONE,0,1,e:GetHandler()) end	
 end
-function s.op(e,tp,eg,ep,ev,re,r,rp)
+function s.ot(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local tc=Duel.SelectTarget(tp,s.filter,tp,LOCATION_MZONE,0,1,1,e:GetHandler())
+	local tc=Duel.SelectMatchingCard(tp,s.ttfilter,tp,LOCATION_MZONE,0,1,1,e:GetHandler())
 	if #tc>0 then
 	if Duel.SendtoDeck(tc,nil,1,REASON_EFFECT)~=0 then
-	local sg=Duel.SelectMatchingCard(tp,s.rtfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
+	local sg=Duel.SelectMatchingCard(tp,s.tfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
 	if #sg>0 then
 	Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
 	local e1=Effect.CreateEffect(e:GetHandler())
