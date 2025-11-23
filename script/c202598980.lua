@@ -60,7 +60,6 @@ function s.ta(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.op(e,sg,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,s.rtfilter,tp,LOCATION_MZONE,0,1,1,e:GetHandler())
-	Duel.HintSelection(g)
 	if Duel.SendtoDeck(g,nil,1,REASON_EFFECT)~=0 then
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<1 then return end
 	local sg=Duel.SelectMatchingCard(tp,s.tfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
