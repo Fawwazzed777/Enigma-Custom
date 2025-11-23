@@ -55,9 +55,8 @@ function s.tfilter(c,lv,e,tp)
 	return c:IsSetCard(0x303) and c:IsMonster() and not c:IsRace(hc:GetRace()) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.tt(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and s.ttfilter(chkc,tp) end
 	if chk==0 then return Duel.IsExistingMatchingCard(s.ttfilter,tp,LOCATION_MZONE,0,1,e:GetHandler(),tp) end
-	local g=Duel.SelectMatchingCard(tp,s.ttfilter,tp,LOCATION_MZONE,0,1,1,e:GetHandler(),tp):GetFirst()
+	local g=Duel.SelectMatchingCard(tp,s.ttfilter,tp,LOCATION_MZONE,0,1,1,e:GetHandler(),tp)
 	Duel.HintSelection(g)
 	if #g>0 then
 	Duel.SendtoDeck(g,nil,1,REASON_EFFECT)
