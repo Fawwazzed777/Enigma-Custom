@@ -53,7 +53,7 @@ function s.ttfilter(c,e,tp)
 		and Duel.IsExistingMatchingCard(s.tfilter,tp,LOCATION_DECK,0,1,nil,c:GetLevel())
 end
 function s.tfilter(c,lv,e,tp)
-	return c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsMonster() and not c:IsLevel(lv) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0x303) and c:IsMonster() and not c:IsLevel(lv) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.tt(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and s.ttfilter(chkc,tp) end
