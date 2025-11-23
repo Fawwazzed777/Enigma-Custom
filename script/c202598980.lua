@@ -63,9 +63,9 @@ function s.op(e,sg,tp,eg,ep,ev,re,r,rp)
 	Duel.HintSelection(g)
 	if Duel.SendtoDeck(g,nil,1,REASON_EFFECT)~=0 then
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<1 then return end
-	local g1=Duel.SelectMatchingCard(tp,s.tfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
-	if #g1>0 then
-	Duel.SpecialSummon(g1,0,tp,tp,false,false,POS_FACEUP)
+	local sg=Duel.SelectMatchingCard(tp,s.tfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
+	if #sg>0 then
+	Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(EFFECT_UPDATE_ATTACK)
