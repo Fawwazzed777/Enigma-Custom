@@ -52,12 +52,13 @@ function s.rtfilter(c,ft)
 	return c:IsFaceup() and c:IsSetCard(0x303) and c:IsAbleToDeck()
 end
 function s.tfilter(c,sg,ft,e,tp)
-	return c:IsSetCard(0x303) and sg:GetClassCount(Card.GetRace)==#sg and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsMonster() and 
+	c:IsAttribute(ATTRIBUTE_LIGHT) and sg:GetClassCount(Card.GetRace)==#sg and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.ta(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.rtfilter,tp,LOCATION_MZONE,0,1,e:GetHandler()) end	
 end
-function s.op(e,tp,eg,ep,ev,re,r,rp)
+function s.op(e,sg,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 	local g=Duel.SelectMatchingCard(tp,s.rtfilter,tp,LOCATION_MZONE,0,1,1,nil)
 	Duel.HintSelection(g)
