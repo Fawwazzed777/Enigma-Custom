@@ -80,7 +80,7 @@ function s.o(e,tp,eg,ep,ev,re,r,rp)
 	Duel.HintSelection(g)
 	if Duel.SendtoDeck(g,nil,1,REASON_EFFECT)~=0 then
 	Duel.Draw(tp,2,REASON_EFFECT)
-	e:GetHandler():UpdateAttack(1000,RESET_EVENT|RESETS_STANDARD|RESET_PHASE|PHASE_END|RESET_OPPO_TURN)	
+	e:GetHandler():UpdateAttack(1000,RESET_EVENT|RESETS_STANDARD)	
 end
 end
 end
@@ -105,7 +105,7 @@ function s.rtfilter1(c,ft,tp)
 	return c:IsFaceup() and c:IsSetCard(0x303) and c:IsAbleToDeck()
 end
 function s.spfilter1(c,e,tp)
-	return c:IsRace(RACE_DRAGON) and c:IsLevel(8) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsRace(RACE_DRAGON) and c:IsLevelBelow(8) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.t1(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
@@ -127,7 +127,7 @@ function s.o1(e,tp,eg,ep,ev,re,r,rp)
 	local fg=Duel.SelectMatchingCard(tp,Card.IsMonster,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil,e,tp)
 	if #fg>0 then
 	Duel.HintSelection(fg)
-	fg:GetFirst():UpdateAttack(-1000,RESET_EVENT|RESETS_STANDARD|RESET_PHASE|PHASE_END|RESET_OPPO_TURN)	
+	fg:GetFirst():UpdateAttack(-1000,RESET_EVENT|RESETS_STANDARD)	
 end
 end
 end
