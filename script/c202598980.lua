@@ -63,6 +63,7 @@ function s.op(e,sg,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,s.rtfilter,tp,LOCATION_MZONE,0,1,1,e:GetHandler(),e,tp)
 	if #g>0 then
 	if Duel.SendtoDeck(g,nil,1,REASON_EFFECT)~=0 and c:IsRelateToEffect() then
+	local sg=g:GetClassCount(Card.GetType)
 	local sg=Duel.SelectMatchingCard(tp,s.tfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
 	if #sg>0 then
 	Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
