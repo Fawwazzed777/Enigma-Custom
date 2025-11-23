@@ -49,7 +49,7 @@ end
 --
 function s.ttfilter(c,e,tp)
 	return c:IsFaceup() and c:IsMonster() and c:IsSetCard(0x303) and c:IsAbleToDeck() and c:HasLevel()
-		and Duel.IsExistingMatchingCard(s.tfilter,tp,LOCATION_DECK,0,1,nil,c:GetLevel())
+		and Duel.IsExistingMatchingCard(s.tfilter,tp,LOCATION_DECK,0,1,nil,c:GetLevel(),e,tp)
 end
 function s.tfilter(c,lv,e,tp)
 	return c:IsSetCard(0x303) and c:IsMonster() and not c:IsLevel(lv) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
