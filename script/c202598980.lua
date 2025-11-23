@@ -53,10 +53,11 @@ function s.rtfilter(c,ft)
 end
 function s.tfilter(c,sg,ft,e,tp)
 	return c:IsMonster() and 
-	c:IsAttribute(ATTRIBUTE_LIGHT) and not c:IsCode(e) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	c:IsAttribute(ATTRIBUTE_LIGHT) and not c:IsCode(id) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.ta(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.rtfilter,tp,LOCATION_MZONE,0,1,e:GetHandler()) end	
+	if chk==0 then return Duel.IsExistingMatchingCard(s.tfilter,tp,LOCATION_DECK,0,1,nil)
+	and Duel.IsExistingMatchingCard(s.rtfilter,tp,LOCATION_MZONE,0,1,e:GetHandler()) end	
 end
 function s.op(e,sg,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
