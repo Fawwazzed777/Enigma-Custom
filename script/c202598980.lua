@@ -60,7 +60,7 @@ function s.ta(e,c,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.op(e,c,sg,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local tc=Duel.SelectMatchingCard(tp,s.rtfilter,tp,LOCATION_MZONE,0,1,1,e:GetHandler(),e,tp):GetFirst()
+	local tc=Duel.SelectMatchingCard(tp,s.rtfilter,tp,LOCATION_MZONE,0,1,1,e:GetHandler(),e,tp,GetFirst())
 	if #tc>0 then
 	if Duel.SendtoDeck(tc,nil,1,REASON_EFFECT)~=0 then
 	local sg=Duel.SelectMatchingCard(tp,s.tfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp,tc:GetLevel())
