@@ -63,9 +63,10 @@ end
 function s.ot(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	if not (tc:IsRelateToEffect(e) and tc:IsFaceup()) then return end
-	local tc=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_DECK,0,1,1,c:GetRace(),e,tp):GetFirst()
+	local tc=Duel.SelectMatchingCard(tp,s.rtfilter,tp,LOCATION_MZONE,0,1,1,c:GetRace(),e,tp):GetFirst()
+	local tc1=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_DECK,0,1,1,c:GetRace(),e,tp):GetFirst()
 	if #tc>0 then
+	Duel.SendtoDeck(tc,nil,1,REASON_EFFECT)
 	Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_SINGLE)
