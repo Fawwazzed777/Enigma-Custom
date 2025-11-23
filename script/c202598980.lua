@@ -48,7 +48,7 @@ end
 end
 --
 function s.tfilter(c,lv,e,tp)
-	return c:IsMonster() and c:IsAttribute(ATTRIBUTE_LIGHT) and c:GetLevel()==lv and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsMonster() and c:IsAttribute(ATTRIBUTE_LIGHT) and c:HasLevel() and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.ttfilter(c,e,tp)
 	return c:IsFaceup() and c:IsMonster() and c:IsSetCard(0x303) and c:IsAbleToDeck() and c:HasLevel()
