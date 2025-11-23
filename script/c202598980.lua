@@ -53,18 +53,19 @@ function s.ttfilter(c,e,tp)
 		and Duel.IsExistingMatchingCard(s.tfilter,tp,LOCATION_DECK,0,1,nil,c:GetLevel())
 end
 function s.tfilter(c,lv,e,tp)
-	return c:IsMonster() and c:IsAttribute(ATTRIBUTE_LIGHT) and not c:IsLevel(lv) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsMonster() and not c:IsLevel(lv) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.tt(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and s.ttfilter(chkc,tp) end
-	if chk==0 then return Duel.IsExistingMatchingCard(s.ttfilter,tp,LOCATION_MZONE,0,1,e:GetHandler()) end
-	local g=Duel.SelectMatchingcard(tp,s.tgfilter,tp,LOCATION_MZONE,0,1,1,e:GetHandler(),tp)
+	if chk==0 then return Duel.IsExistingTarget(s.ttfilter,tp,LOCATION_MZONE,0,1,e:GetHandler(),tp) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
+	local g=Duel.SelectTarget(tp,s.tgfilter,tp,LOCATION_MZONE,0,1,1,e:GetHandler(),tp)
 	if #g>0 then
 	Duel.SendtoDeck(g,nil,1,REASON_EFFECT)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)	
 end
 function s.ot(e,tp,eg,ep,ev,re,r,rp)
-	local tc=Duel.GetFirst()
+	local tc=Duel.GetFirstTarget()
 	if not (tc:IsRelateToEffect(e) and tc:IsFaceup()) then return end
 	local tc=Duel.SelectMatchingCard(tp,s.tfilter,tp,LOCATION_DECK,0,1,1,nil,tc:GetLevel(),e,tp)
 	if #tc>0 then
