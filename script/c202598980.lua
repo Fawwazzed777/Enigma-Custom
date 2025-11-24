@@ -48,12 +48,11 @@ end
 end
 --
 function s.spcfilter(c,e,tp)
-	return c:IsSetCard(0x303) and c:IsAbleToDeck() and c:HasLevel() and Duel.GetMZoneCount(tp,c)>0
-	and Duel.IsExistingMatchingCard(s.rtfilter,tp,LOCATION_DECK,0,1,nil,e,tp,c)
+	return c:IsSetCard(0x303) and c:IsAbleToDeck() and Duel.GetMZoneCount(tp,c)>0
+	and Duel.IsExistingMatchingCard(s.rtfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp)
 end
-function s.rtfilter(c,e,tp,tc)
-	return c:IsFaceup() and c:IsSetCard(0x303) and not c:IsLevel(tc:GetLevel())
-		and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP)
+function s.rtfilter(c,e,tp)
+	return c:IsSetCard(0x303) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP)
 end
 function s.tt(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.spcfilter,tp,LOCATION_MZONE,0,1,nil,e,tp) end
