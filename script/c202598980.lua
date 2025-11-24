@@ -21,6 +21,7 @@ function s.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1,{id,1})
+	e2:SetCost(s.deckspcost)
 	e2:SetTarget(s.tt)
 	e2:SetOperation(s.ot)
 	c:RegisterEffect(e2)
@@ -54,27 +55,39 @@ end
 function s.rtfilter(c,ft,tp)
 	return c:IsFaceup() and c:IsSetCard(0x303) and c:IsAbleToDeck()
 end
+--
+function s.deckspcostfilter(c,e,tp)
+	return c:IsAbleToDeckAsCost() and c:IsFaceup() and Duel.GetMZoneCount(tp,c)>0
+		and Duel.IsExistingMatchingCard(s.deckspfilter,tp,LOCATION_DECK,0,1,nil,e,tp,c:GetOriginalLevel())
+end
+function s.deckspfilter(c,e,tp,cod,att,lvl)
+	return not c:IsOriginalCode(cod) and c:IsLevel(lvl)
+		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+end
+function s.deckspcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(s.deckspcostfilter,tp,LOCATION_MZONE,0,1,nil,e,tp) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
+	local sc=Duel.SelectMatchingCard(tp,s.deckspcostfilter,tp,LOCATION_MZONE,0,1,1,nil,e,tp):GetFirst()
+	e:SetLabel(sc:GetOriginalLevel())
+	Duel.SendtoDeck(sc,nil,2,REASON_COST)
+end
+
 function s.tt(e,tp,eg,ep,ev,re,r,rp,chk)
-	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	local c=e:GetHandler()
-	if chk==0 then return ft>-1 and Duel.IsExistingMatchingCard(s.rtfilter,tp,LOCATION_MZONE,0,1,c) and
-	Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK,0,1,c,e,tp) end
-	Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,1,tp,LOCATION_MZONE)
+	if chk==0 then return true end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)
 end
 function s.ot(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	local cod,lvl=e:GetLabel()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local c=e:GetHandler()
-	local tc=Duel.SelectMatchingCard(tp,s.rtfilter,tp,LOCATION_MZONE,0,1,1,c,e,tp):GetFirst()
-	local tc1=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_DECK,0,1,1,c,e,tp,e:GetHandler():GetCode())
-	if tc then
-	if Duel.SendtoDeck(tc,nil,1,REASON_EFFECT)~=0 and tc1 then
-	if Duel.SpecialSummon(tc1,0,tp,tp,false,false,POS_FACEUP)~=0 then return end
+	local g=Duel.SelectMatchingCard(tp,s.deckspfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp,cod,lvl)
+	if #g>0 then
+	Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(EFFECT_UPDATE_ATTACK)
 	e1:SetValue(500)
 	e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-	tc1:GetHandler():RegisterEffect(e1)
-end
+	e:GetHandler():RegisterEffect(e1)
 end
 end
