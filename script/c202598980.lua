@@ -64,7 +64,7 @@ end
 function s.ot(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local tc=Duel.SelectMatchingCard(tp,s.rtfilter,tp,LOCATION_MZONE,0,1,1,re:GetHandler():GetCode(),e,tp):GetFirst()
+	local tc=Duel.SelectMatchingCard(tp,s.rtfilter,tp,LOCATION_MZONE,0,1,1,nil,e,tp):GetFirst()
 	local tc1=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_DECK,0,1,1,re:GetHandler():GetCode(),e,tp):GetFirst()
 	if #tc>0 then
 	Duel.SendtoDeck(tc,nil,1,REASON_EFFECT)
