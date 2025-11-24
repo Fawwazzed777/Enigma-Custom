@@ -66,7 +66,7 @@ function s.ot(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local c=e:GetHandler()
 	local tc=Duel.SelectMatchingCard(tp,s.rtfilter,tp,LOCATION_MZONE,0,1,1,c,e,tp):GetFirst()
-	local tc1=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_DECK,0,1,1,re:GetHandler():GetCode(),e,tp):GetFirst()
+	local tc1=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_DECK,0,1,1,nil,re:GetHandler():GetCode(),e,tp):GetFirst()
 	if tc and tc1 then
 	Duel.SendtoDeck(tc,nil,1,REASON_EFFECT)
 	Duel.SpecialSummon(tc1,0,tp,tp,false,false,POS_FACEUP)
