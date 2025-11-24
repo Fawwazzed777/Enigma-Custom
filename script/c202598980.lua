@@ -67,8 +67,8 @@ function s.ot(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.SelectMatchingCard(tp,s.rtfilter,tp,LOCATION_MZONE,0,1,1,c,e,tp):GetFirst()
 	local tc1=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_DECK,0,1,1,c,e,tp,e:GetHandler():GetCode())
-	if tc and tc1 then
-	Duel.SendtoDeck(tc,nil,1,REASON_EFFECT)
+	if tc then
+	if Duel.SendtoDeck(tc,nil,1,REASON_EFFECT)~=0 and tc1 then
 	Duel.SpecialSummon(tc1,0,tp,tp,false,false,POS_FACEUP)
 	local e1=Effect.CreateEffect(re:GetHandler())
 	e1:SetType(EFFECT_TYPE_SINGLE)
@@ -76,5 +76,6 @@ function s.ot(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetValue(500)
 	e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 	re:GetHandler():RegisterEffect(e1)
+end
 end
 end
