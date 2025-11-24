@@ -66,15 +66,15 @@ function s.ot(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local c=e:GetHandler()
 	local tc=Duel.SelectMatchingCard(tp,s.rtfilter,tp,LOCATION_MZONE,0,1,1,c,e,tp):GetFirst()
-	local tc1=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_DECK,0,1,1,c,e,tp)
+	local tc1=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_DECK,0,1,1,c,e,tp,re:GetHandler():GetCode())
 	if tc and tc1 then
 	Duel.SendtoDeck(tc,nil,1,REASON_EFFECT)
 	Duel.SpecialSummon(tc1,0,tp,tp,false,false,POS_FACEUP)
-	local e1=Effect.CreateEffect(e:GetHandler())
+	local e1=Effect.CreateEffect(re:GetHandler())
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(EFFECT_UPDATE_ATTACK)
 	e1:SetValue(500)
 	e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-	e:GetHandler():RegisterEffect(e1)
+	re:GetHandler():RegisterEffect(e1)
 end
 end
