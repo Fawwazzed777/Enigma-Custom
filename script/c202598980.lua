@@ -47,11 +47,14 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 end
 end
 --
+function s.spcfilter(c,e,tp)
+	return c:IsSetCard(0x303) and c:IsAbletoDeck() and c:HasLevel() and Duel.GetMZoneCount(tp,c)>0
+	and Duel.IsExistingMatchingCard(s.rtfilter,tp,LOCATION_DECK,0,1,nil,e,tp,c)
+end
 function s.rtfilter(c,e,tp)
 	return c:IsFaceup() and c:IsSetCard(0x303) and c:IsAbleToDeck() and not c:IsLevel(tc:GetLevel())
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP)
 end
-
 function s.tt(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.spcfilter,tp,LOCATION_MZONE,0,1,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)
@@ -66,12 +69,12 @@ function s.ot(e,tp,eg,ep,ev,re,r,rp)
 	local sc=Duel.SelectMatchingCard(tp,s.rtfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp,rc):GetFirst()
 	if sc then
 		Duel.ConfirmCards(1-tp,sc)
-			Duel.SpecialSummon(sc,0,tp,tp,false,false,POS_FACEUP)
-			local e1=Effect.CreateEffect(e:GetHandler())
-			e1:SetType(EFFECT_TYPE_SINGLE)
-			e1:SetCode(EFFECT_UPDATE_ATTACK)
-			e1:SetValue(500)
-			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-			sc:RegisterEffect(e1)
+		Duel.SpecialSummon(sc,0,tp,tp,false,false,POS_FACEUP)
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_UPDATE_ATTACK)
+		e1:SetValue(500)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+		sc:RegisterEffect(e1)
 end
 end
