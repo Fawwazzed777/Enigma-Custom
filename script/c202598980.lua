@@ -69,13 +69,14 @@ function s.ot(e,tp,eg,ep,ev,re,r,rp)
 	local tc1=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_DECK,0,1,1,c,e,tp,e:GetHandler():GetCode())
 	if tc then
 	if Duel.SendtoDeck(tc,nil,1,REASON_EFFECT)~=0 and tc1 then
-	Duel.SpecialSummon(tc1,0,tp,tp,false,false,POS_FACEUP)
-	local e1=Effect.CreateEffect(re:GetHandler())
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<1 then return end
+	if Duel.SpecialSummon(tc1,0,tp,tp,false,false,POS_FACEUP)~=0 then return end
+	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(EFFECT_UPDATE_ATTACK)
 	e1:SetValue(500)
 	e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-	re:GetHandler():RegisterEffect(e1)
+	tc1:GetHandler():RegisterEffect(e1)
 end
 end
 end
