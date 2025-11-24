@@ -58,7 +58,7 @@ function s.tt(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	local c=e:GetHandler()
 	if chk==0 then return ft>-1 and Duel.IsExistingMatchingCard(s.rtfilter,tp,LOCATION_MZONE,0,1,c) and
-	Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK,0,1,nil,e,tp):GetHandler():GetCode() end
+	Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK,0,1,c:GetHandler():GetCode(),e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,1,tp,LOCATION_MZONE)
 end
 function s.ot(e,tp,eg,ep,ev,re,r,rp)
@@ -66,7 +66,7 @@ function s.ot(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local c=e:GetHandler()
 	local tc=Duel.SelectMatchingCard(tp,s.rtfilter,tp,LOCATION_MZONE,0,1,1,c,e,tp):GetFirst()
-	local tc1=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp):GetHandler():GetCode()
+	local tc1=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_DECK,0,1,1,c:GetHandler():GetCode(),e,tp)
 	if tc and tc1 then
 	Duel.SendtoDeck(tc,nil,1,REASON_EFFECT)
 	Duel.SpecialSummon(tc1,0,tp,tp,false,false,POS_FACEUP)
