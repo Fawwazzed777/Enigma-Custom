@@ -75,7 +75,7 @@ function s.ot(e,tp,eg,ep,ev,re,r,rp)
 	local rc=e:GetLabelObject()
 	if not rc or Duel.GetLocationCount(tp,LOCATION_MZONE)<1 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local sc=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp,rc):GetFirst()
+	local sc=Duel.SelectMatchingCard(tp,s.rtfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp,rc):GetFirst()
 	if sc then
 		Duel.ConfirmCards(1-tp,sc)
 		Duel.SpecialSummon(sc,0,tp,tp,false,false,POS_FACEUP)
