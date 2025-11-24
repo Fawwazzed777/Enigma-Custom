@@ -52,7 +52,7 @@ function s.spcfilter(c,e,tp)
 	and Duel.IsExistingMatchingCard(s.rtfilter,tp,LOCATION_DECK,0,1,nil,e,tp,c)
 end
 function s.rtfilter(c,e,tp,tc)
-	return c:IsFaceup() and c:IsSetCard(0x303) and c:IsAbleToDeck() and not c:IsLevel(tc:GetLevel())
+	return c:IsFaceup() and c:IsSetCard(0x303) and not c:IsLevel(tc:GetLevel())
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP)
 end
 function s.tt(e,tp,eg,ep,ev,re,r,rp,chk)
