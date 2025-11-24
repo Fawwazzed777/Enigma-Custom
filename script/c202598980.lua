@@ -48,7 +48,7 @@ end
 end
 --
 function s.spcfilter(c,e,tp)
-	return c:IsSetCard(0x303) and c:IsAbletoDeck() and c:HasLevel() and Duel.GetMZoneCount(tp,c)>0
+	return c:IsSetCard(0x303) and c:IsAbletoDeckAsCost() and c:HasLevel() and Duel.GetMZoneCount(tp,c)>0
 	and Duel.IsExistingMatchingCard(s.rtfilter,tp,LOCATION_DECK,0,1,nil,e,tp,c)
 end
 function s.rtfilter(c,e,tp,tc)
