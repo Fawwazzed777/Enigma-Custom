@@ -56,14 +56,6 @@ function s.rtfilter(c,ft,tp)
 	return c:IsFaceup() and c:IsSetCard(0x303) and c:IsAbleToDeck() and not c:IsLevel(tc:GetLevel())
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP)
 end
-{function s.deckspcostfilter(c,e,tp)
-	return c:IsAbleToDeckAsCost() and c:IsFaceup() and Duel.GetMZoneCount(tp,c)>0
-		and Duel.IsExistingMatchingCard(s.deckspfilter,tp,LOCATION_DECK,0,1,nil,e,tp,c:GetOriginalLevel())
-end
-function s.deckspfilter(c,e,tp,cod,lvl)
-	return not c:IsOriginalCode(cod) and c:IsLevel(lvl)
-		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
-end}
 function s.tt(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.spcfilter,tp,LOCATION_MZONE,0,1,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)
