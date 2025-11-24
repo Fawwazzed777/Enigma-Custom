@@ -60,7 +60,7 @@ function s.deckspcostfilter(c,e,tp)
 	return c:IsAbleToDeckAsCost() and c:IsFaceup() and Duel.GetMZoneCount(tp,c)>0
 		and Duel.IsExistingMatchingCard(s.deckspfilter,tp,LOCATION_DECK,0,1,nil,e,tp,c:GetOriginalLevel())
 end
-function s.deckspfilter(c,e,tp,cod,att,lvl)
+function s.deckspfilter(c,e,tp,cod,lvl)
 	return not c:IsOriginalCode(cod) and c:IsLevel(lvl)
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
@@ -68,7 +68,7 @@ function s.deckspcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.deckspcostfilter,tp,LOCATION_MZONE,0,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 	local sc=Duel.SelectMatchingCard(tp,s.deckspcostfilter,tp,LOCATION_MZONE,0,1,1,nil,e,tp):GetFirst()
-	e:SetLabel(sc:GetOriginalLevel())
+	e:SetLabel(sc:GetOriginalCode(),sc:GetOriginalLevel())
 	Duel.SendtoDeck(sc,nil,2,REASON_COST)
 end
 
