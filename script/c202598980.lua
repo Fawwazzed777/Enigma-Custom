@@ -62,14 +62,12 @@ function s.tt(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,1,tp,LOCATION_MZONE)
 end
 function s.ot(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local c=e:GetHandler()
 	local tc=Duel.SelectMatchingCard(tp,s.rtfilter,tp,LOCATION_MZONE,0,1,1,c,e,tp):GetFirst()
 	local tc1=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_DECK,0,1,1,c,e,tp,e:GetHandler():GetCode())
 	if tc then
 	if Duel.SendtoDeck(tc,nil,1,REASON_EFFECT)~=0 and tc1 then
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<1 then return end
 	if Duel.SpecialSummon(tc1,0,tp,tp,false,false,POS_FACEUP)~=0 then return end
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_SINGLE)
