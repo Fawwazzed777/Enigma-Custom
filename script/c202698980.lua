@@ -35,3 +35,4 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.DiscardDeck(rvc,tp,1,REASON_EFFECT)
 end
 end
+end
