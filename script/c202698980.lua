@@ -28,11 +28,12 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ConfirmCards(1-tp,g)
 		Duel.ShuffleDeck(tp)
 		Duel.BreakEffect()
-		local tc=g:GetMinGroup(Card.GetSequence):GetFirst()
+		local sg=Duel.GetFieldGroup(tp,LOCATION_DECK,0)
+		local tc=sg:GetMinGroup(Card.GetSequence):GetFirst()
 		Duel.ConfirmCards(tp,tc)
 		Duel.ConfirmCards(1-tp,tc)
 		if tc:IsMonster() then
-		Duel.DiscardDeck(tc,tp,1,REASON_EFFECT)
+		Duel.DiscardDeck(tp,1,REASON_EFFECT)
 end
 end
 end
