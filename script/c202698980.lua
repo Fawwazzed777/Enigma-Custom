@@ -48,12 +48,13 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		end
 		if Duel.IsExistingMatchingCard(s.amire,tp,LOCATION_MZONE,0,1,nil) 
 		and Duel.SelectYesNo(tp,aux.Stringid(id,1))then
-		local am=Duel.SelectMatchingCard(tp,s.rth,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
-		if #am>0 then return end
+		local am=Duel.SelectMatchingCard(tp,s.rth,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil):GetFirst()
+		if #am>0 then 
 			Duel.HintSelection(am)
 			Duel.SendtoDeck(am,nil,1,REASON_EFFECT)
 		
 
+end
 end
 end
 end
