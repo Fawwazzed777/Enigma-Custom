@@ -33,5 +33,5 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ConfirmCards(tp,tc)
 		Duel.ConfirmCards(1-tp,tc)
 		Duel.DiscardDeck(tc,tp,1,REASON_EFFECT)
-	end
+end
 end
