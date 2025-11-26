@@ -31,8 +31,9 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local sg=Duel.GetFieldGroup(tp,LOCATION_DECK,0)
 	if #sg==0 then return end
 	local tc=sg:GetMinGroup(Card.GetSequence):GetFirst()
+	Duel.MoveSequence(tc,0)
 	Duel.ConfirmDecktop(tp,1)
-	if tc:IsAbleToGrave(tp) and tc:IsMonster() then
+	if tc:IsAbleToGrave() and tc:IsMonster() then
 		Duel.DisableShuffleCheck()
 		Duel.SendtoGrave(tc,nil,REASON_EFFECT)
 end
