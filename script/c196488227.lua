@@ -16,15 +16,19 @@ Pendulum.AddProcedure(c)
 	local e2=e1:Clone()
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e2)
-	--effect gain
+	--Place in Pendulum Zone
 	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
-	e3:SetCode(EVENT_BE_MATERIAL)
-	e3:SetCondition(s.efcon)
-	e3:SetOperation(s.efop)
+	e3:SetDescription(aux.Stringid(id,2))
+	e3:SetType(EFFECT_TYPE_IGNITION)
+	e3:SetRange(LOCATION_EXTRA)
+	e3:SetCountLimit(1,id)
+	e3:SetCondition(s.pencon)
+	e3:SetTarget(s.pentg)
+	e3:SetOperation(s.penop)
 	c:RegisterEffect(e3)
 	--To Bottom
 	local e4=Effect.CreateEffect(c)
+	e4:SetDescription(aux.Stringid(id,1))
 	e4:SetType(EFFECT_TYPE_IGNITION)
 	e4:SetRange(LOCATION_PZONE)
 	e4:SetCountLimit(1,{id,1})
@@ -52,37 +56,21 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ConfirmCards(1-tp,g)
 end
 end
-function s.efcon(e,tp,eg,ep,ev,re,r,rp)
-	local p=e:GetHandler()	
-	return (r&REASON_FUSION+REASON_SYNCHRO+REASON_XYZ)~=0
-		and (p:GetReasonCard():IsAttribute(ATTRIBUTE_DARK) or p:GetReasonCard():IsAttribute(ATTRIBUTE_LIGHT))
+function s.penconfilter(c)
+	return c:IsFaceup() and c:IsMonster() and (c:IsSetCard(0x303) or c:IsSetCard(0x344))
 end
-function s.efop(e,tp,eg,ep,ev,re,r,rp)
+function s.pencon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingMatchingCard(s.penconfilter,tp,LOCATION_MZONE,0,1,nil) 
+end
+function s.pentg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.CheckPendulumZones(tp) end
+end
+function s.penop(e,tp,eg,ep,ev,re,r,rp)
+	if not Duel.CheckPendulumZones(tp) then return end
 	local c=e:GetHandler()
-	local rc=c:GetReasonCard()
-	local e1=Effect.CreateEffect(rc)
-	e1:SetDescription(aux.Stringid(id,2))
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CLIENT_HINT)
-	e1:SetCode(EFFECT_UPDATE_ATTACK)
-	e1:SetRange(LOCATION_MZONE)
-	e1:SetCondition(s.atkcon)
-	e1:SetValue(800)
-	e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-	rc:RegisterEffect(e1,true)
-		if not rc:IsType(TYPE_EFFECT) then
-		local e2=Effect.CreateEffect(c)
-		e2:SetType(EFFECT_TYPE_SINGLE)
-		e2:SetCode(EFFECT_ADD_TYPE)
-		e2:SetValue(TYPE_EFFECT)
-		e2:SetReset(RESET_EVENT+RESETS_STANDARD)
-		rc:RegisterEffect(e2,true)
+	if c:IsRelateToEffect(e) and s.pentg(e,tp,eg,ep,ev,re,r,rp,0) then
+		Duel.MoveToField(c,tp,tp,LOCATION_PZONE,POS_FACEUP,true)
 	end
-end
-function s.atkcon(e)
-	local ph=Duel.GetCurrentPhase()
-	local bc=e:GetHandler():GetBattleTarget()
-	return (ph==PHASE_DAMAGE or ph==PHASE_DAMAGE_CAL) and bc
 end
 --
 function s.rpfilter(c)
