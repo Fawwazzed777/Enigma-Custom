@@ -19,7 +19,7 @@ function s.amire(c)
 	return c:IsFaceup() and c:IsSetCard(0x6789) and c:IsMonster()
 end
 function s.rth(c)
-	return c:IsAbletoDeck() and c:IsMonster()
+	return c:IsAbleToDeck() and c:IsMonster()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return (Duel.IsPlayerCanDiscardDeck(tp,1) and Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)~=0)
