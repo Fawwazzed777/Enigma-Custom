@@ -16,7 +16,7 @@ function s.filter(c)
 	return c:IsSetCard(0x303) and c:IsMonster() and c:IsAbleToHand()
 end
 function s.amire(c)
-	return c:IsFaceuo() and c:IsSetCard(0x6789) and c:IsMonster()
+	return c:IsFaceup() and c:IsSetCard(0x6789) and c:IsMonster()
 end
 function s.rth(c)
 	return c:IsAbletoDeck() and c:IsMonster()
