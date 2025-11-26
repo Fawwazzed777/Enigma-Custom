@@ -21,7 +21,7 @@ Pendulum.AddProcedure(c)
 	e3:SetDescription(aux.Stringid(id,2))
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetRange(LOCATION_EXTRA)
-	e3:SetCountLimit(1,{id,1}
+	e3:SetCountLimit(1,{id,1})
 	e3:SetCondition(s.pencon)
 	e3:SetTarget(s.pentg)
 	e3:SetOperation(s.penop)
