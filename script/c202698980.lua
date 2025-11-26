@@ -35,7 +35,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	Duel.ConfirmDecktop(tp,1)
 	if tc:IsAbleToGrave() and tc:IsMonster() then
 		Duel.DisableShuffleCheck()
-		Duel.SendtoGrave(tc,nil,REASON_EFFECT)
+		Duel.SendtoGrave(tc,REASON_EFFECT)
 end
 end
 end
