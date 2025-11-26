@@ -1,4 +1,4 @@
---Imaginary Force - Arrival
+--Imaginary Force - Amire Wish
 local s,id=GetID()
 function s.initial_effect(c)
 	--Activate
@@ -14,6 +14,12 @@ end
 s.listed_series={0x303}
 function s.filter(c)
 	return c:IsSetCard(0x303) and c:IsMonster() and c:IsAbleToHand()
+end
+function s.amire(c)
+	return c:IsFaceuo() and c:IsSetCard(0x6789) and c:IsMonster()
+end
+function s.rth(c)
+	return c:IsAbletoDeck() and c:IsMonster()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return (Duel.IsPlayerCanDiscardDeck(tp,1) and Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)~=0)
@@ -39,8 +45,16 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	elseif (tc:IsSpell() or tc:IsTrap()) and tc:IsSSetable() then
 		Duel.DisableShuffleCheck()
 		Duel.SSet(tp,tc)
+		if Duel.IsExistingMatchingCard(s.amire,tp,LOCATION_MZONE,0,1,nil) 
+		and Duel.SelectYesNo(tp,aux.Stringid(id,1))then
+		local am=Duel.SelectMatchingCard(tp,s.rth,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
+		if #am==0 then return end
+			Duel.HintSelection(rthg)
+			Duel.BreakEffect()
+			Duel.SendtoHand(am,nil,REASON_EFFECT)
+		
 end
 end
 end
-
+end
 
