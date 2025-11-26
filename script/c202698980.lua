@@ -10,9 +10,9 @@ function s.initial_effect(c)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
 end
-s.listed_series={SET_SYNCHRON}
+s.listed_series={0x303}
 function s.filter(c)
-	return c:IsSetCard(SET_SYNCHRON) and c:IsType(TYPE_TUNER) and c:IsAbleToHand()
+	return c:IsSetCard(0x303) and c:IsMonster() and c:IsAbleToHand()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDiscardDeck(tp,1)
