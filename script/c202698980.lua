@@ -49,7 +49,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		and Duel.SelectYesNo(tp,aux.Stringid(id,1))then
 		local am=Duel.SelectMatchingCard(tp,s.rth,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
 		if #am==0 then return end
-			Duel.HintSelection(rthg)
+			Duel.HintSelection(am)
 			Duel.BreakEffect()
 			Duel.SendtoHand(am,nil,REASON_EFFECT)
 		
