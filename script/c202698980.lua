@@ -13,7 +13,7 @@ function s.initial_effect(c)
 end
 s.listed_series={0x303,0x6789}
 function s.filter(c)
-	return c:IsSetCard(0x303) and c:IsAbleToHand()
+	return c:IsSetCard(0x303) and c:IsAbleToHand() and not c:IsCode(id)
 end
 function s.amire(c)
 	return c:IsFaceup() and c:IsSetCard(0x6789) and c:IsMonster()
