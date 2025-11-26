@@ -32,8 +32,8 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		if #g==0 then return end
 		local tc=g:GetMinGroup(Card.GetSequence):GetFirst()
 		Duel.ConfirmDecktop(tp,1)
-		if rvc:IsMonster() then
-		Duel.DiscardDeck(rvc,tp,1,REASON_EFFECT)
+		if tc:IsMonster() then
+		Duel.DiscardDeck(tc,tp,1,REASON_EFFECT)
 end
 end
 end
