@@ -52,7 +52,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		if #am==0 then return end
 			Duel.HintSelection(am)
 			Duel.BreakEffect()
-			Duel.SendtoHand(am,nil,REASON_EFFECT)
+			Duel.SendtoDeck(am,nil,1,REASON_EFFECT)
 		
 
 end
