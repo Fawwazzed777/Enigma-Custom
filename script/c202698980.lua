@@ -28,15 +28,19 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ConfirmCards(1-tp,g)
 		Duel.ShuffleDeck(tp)
 		Duel.BreakEffect()
-	local sg=Duel.GetFieldGroup(tp,LOCATION_DECK,0)
-	if #sg==0 then return end
-	local tc=sg:GetMinGroup(Card.GetSequence):GetFirst()
-	Duel.MoveSequence(tc,0)
+	Duel.DisableShuffleCheck()
 	Duel.ConfirmDecktop(tp,1)
-	if tc:IsAbleToGrave() and tc:IsMonster() then
-		Duel.DisableShuffleCheck()
+	local g=Duel.GetDecktopGroup(tp,1)
+	local tc=g:GetFirst()
+	if not tc then return end
+	local opt=Duel.GetChainInfo(0,CHAININFO_TARGET_PARAM)
+	if (tc:IsMonster() and tc:IsAbleToGrave()) then
 		Duel.SendtoGrave(tc,REASON_EFFECT)
+	elseif (tc:IsSpell() or tc:IsTrap()) and tc:IsSSetable() then
+		Duel.DisableShuffleCheck()
+		Duel.SSet(tp,tc)
 end
 end
 end
+
 
