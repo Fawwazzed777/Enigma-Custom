@@ -30,8 +30,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.DisableShuffleCheck()
 		local g=Duel.GetFieldGroup(tp,LOCATION_DECK,0)
 		if #g==0 then return end
-		local tc=g:GetMinGroup(Card.GetSequence):GetFirst()
-		Duel.ConfirmDecktop(tp,1)
+		local tc=Duel.ConfirmDecktop(tp,1)
 		if tc:IsMonster() then
 		Duel.DiscardDeck(tc,tp,1,REASON_EFFECT)
 end
