@@ -80,7 +80,7 @@ function s.adop(e,tp,eg,ep,ev,re,r,rp)
 		local e3=Effect.CreateEffect(c)
 		e3:SetType(EFFECT_TYPE_SINGLE)
 		e3:SetCode(EFFECT_CHANGE_BATTLE_DAMAGE)
-		e3:SetValue(aux.ChangeBattleDamage(1,300))
+		e3:SetValue(aux.ChangeBattleDamage(1,500))
 		e3:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 		tc:RegisterEffect(e3)
 	end
