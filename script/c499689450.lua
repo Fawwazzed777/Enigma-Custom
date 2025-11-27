@@ -16,14 +16,13 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	--
 	local e5=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(id,0))
+	e2:SetDescription(aux.Stringid(id,2))
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetCountLimit(1,id)
 	e2:SetCost(aux.bfgcost)
 	e2:SetTarget(s.sptg)
 	e2:SetOperation(s.spop)
-	e2:SetHintTiming(0,TIMING_END_PHASE)
 	c:RegisterEffect(e2)
 end
 s.listed_names={49968945}
