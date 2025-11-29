@@ -26,7 +26,7 @@ function s.initial_effect(c)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1,{id,1})
 	e2:SetCondition(s.wcon)
-	e2:SetCost(aux.dxmcostgen(1,1,op))
+	e2:SetCost(Cost.DetachFromSelf)
 	e2:SetTarget(s.wtg)
 	e2:SetOperation(s.wop)
 	c:RegisterEffect(e2)
@@ -40,6 +40,7 @@ function s.initial_effect(c)
 	end)
 end
 s.listed_names={889981100}
+--Condition
 function s.filter(c,sc)
 	return c:IsMonster() and c:IsCode(889981100) and c:IsFaceup()
 end
