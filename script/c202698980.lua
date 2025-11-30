@@ -42,9 +42,9 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local opt=Duel.GetChainInfo(0,CHAININFO_TARGET_PARAM)
 	if (tc:IsMonster() and tc:IsAbleToGrave()) then
 		Duel.SendtoGrave(tc,REASON_EFFECT)
-	elseif (tc:IsSpellTrap()) and tc:IsSSetable() then
+	elseif (tc:IsSpellTrap()) and tc:IsAbleToHand() then
 		Duel.DisableShuffleCheck()
-		Duel.SSet(tp,tc)
+		Duel.SendtoHand(tc,nil,REASON_EFFECT)
 		end
 		if Duel.IsExistingMatchingCard(s.amire,tp,LOCATION_MZONE,0,1,nil) 
 		and Duel.SelectYesNo(tp,aux.Stringid(id,1))then
