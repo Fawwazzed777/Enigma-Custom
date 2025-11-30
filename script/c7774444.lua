@@ -10,7 +10,7 @@ function s.initial_effect(c)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
 end
-0x1c0101=RACE_VIRTUOUS
+RACE_VIRTUOUS=0x1c0101
 function s.filter(c)
 	return c:IsRace(RACE_VIRTUOUS) and c:IsMonster() and c:IsAbleToHand()
 end
