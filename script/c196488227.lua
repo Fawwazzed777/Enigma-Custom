@@ -57,14 +57,14 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 end
 end
 function s.penconfilter(c)
-	return c:IsFaceup() and (c:IsSetCard(0x303) or c:IsSetCard(0x344))
+	return c:IsFaceup() and c:IsMonster() and (c:IsSetCard(0x303) or c:IsSetCard(0x344))
 end
 function s.pencon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(s.penconfilter,tp,LOCATION_ONFIELD,0,1,nil) 
+	return Duel.IsExistingMatchingCard(s.penconfilter,tp,LOCATION_MZONE,0,1,nil) 
 end
 function s.pentg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return (Duel.CheckLocation(tp,LOCATION_PZONE,0) or Duel.CheckLocation(tp,LOCATION_PZONE,1))
-		and Duel.IsExistingMatchingCard(s.penfilter,tp,LOCATION_MZONE,0,1,nil)  end
+		and Duel.IsExistingMatchingCard(s.penconfilter,tp,LOCATION_MZONE,0,1,nil)  end
 end
 function s.penop(e,tp,eg,ep,ev,re,r,rp)
 	if not Duel.CheckLocation(tp,LOCATION_PZONE,0) and not Duel.CheckLocation(tp,LOCATION_PZONE,1) then return end
