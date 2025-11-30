@@ -10,9 +10,9 @@ function s.initial_effect(c)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
 end
-
+0x1c0101=RACE_VIRTUOUS
 function s.filter(c)
-	return c:IsRace(0x1c0101) and c:IsMonster() and c:IsAbleToHand()
+	return c:IsRace(RACE_VIRTUOUS) and c:IsMonster() and c:IsAbleToHand()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK,0,1,nil) end
