@@ -19,15 +19,15 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	--Fairy: Fairy Draw
 	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e2:SetCondition(s.fcon)
 	e2:SetOperation(s.fop)
 	e2:SetLabelObject(e1)
 	c:RegisterEffect(e2)
-	--Dragon: Level 8 Dragon Summon
+	--Dragon: Debuff
 	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e3:SetCondition(s.dcon)
 	e3:SetOperation(s.dop)
