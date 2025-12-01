@@ -43,9 +43,7 @@ function s.valcheck(e,c)
 	local g=c:GetMaterial()
 	local tpe=0
 	for tc in g:Iter() do
-		if not tc:IsCode(200298980) then
 			tpe=(tpe|tc:GetOriginalRace())
-		end
 	end
 	e:SetLabel(tpe)
 end
