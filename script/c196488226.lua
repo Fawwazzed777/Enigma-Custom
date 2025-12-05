@@ -35,7 +35,7 @@ function s.initial_effect(c)
 end
 s.listed_series={0x303,0x344}
 function s.spcfilter(c)
-	return (c:IsSetCard(0x303) or c:IsSetCard(0x344)) and c:IsAbleToHandAsCost()	
+	return not c:IsGetHandler() and (c:IsSetCard(0x303) or c:IsSetCard(0x344)) and c:IsAbleToHandAsCost()
 end
 function s.thcon(e,c)
 	if c==nil then return true end
