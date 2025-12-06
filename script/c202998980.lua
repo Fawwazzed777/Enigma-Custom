@@ -21,24 +21,24 @@ function s.ffilter(c,fc,sumtype,tp)
 	return c:IsSetCard(0x303) or c:IsSetCard(0x344)
 end
 function s.banish(c)
-	return c:IsFaceup() and c:IsAbleToRemove() and (c:IsSetCard(0x303) or c:IsSetCard(0x344))
+	return c:IsAbleToRemove() and (c:IsSetCard(0x303) or c:IsSetCard(0x344))
 end
 function s.rfilter(c)
 	return c:IsLocation(LOCATION_REMOVED)
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.banish,tp,LOCATION_ONFIELD+LOCATION_GRAVE,0,1,1,e:GetHandler())
+	if chk==0 then return Duel.IsExistingMatchingCard(s.banish,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,1,e:GetHandler())
 	and e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
 	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.banish,tp,LOCATION_ONFIELD+LOCATION_GRAVE,0,1,1,e:GetHandler()) end
-	local g=Duel.GetMatchingGroup(s.banish,tp,LOCATION_ONFIELD+LOCATION_GRAVE,0,e:GetHandler())
+	if chk==0 then return Duel.IsExistingMatchingCard(s.banish,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,1,e:GetHandler()) end
+	local g=Duel.GetMatchingGroup(s.banish,tp,LOCATION_GRAVE,0,e:GetHandler())
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,0,0)
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,s.banish,tp,LOCATION_ONFIELD+LOCATION_GRAVE,0,1,1,e:GetHandler())
+	local g=Duel.SelectMatchingCard(tp,s.banish,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,1,e:GetHandler())
 	local tc=g:GetFirst()
 	--
 	if tc then
