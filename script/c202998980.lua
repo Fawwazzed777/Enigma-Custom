@@ -20,14 +20,20 @@ s.listed_series={0x303,0x344}
 function s.ffilter(c,fc,sumtype,tp)
 	return c:IsSetCard(0x303) or c:IsSetCard(0x344)
 end
+function s.banish(c,fc,sumtype,tp)
+	return c:IsFaceup() and (c:IsSetCard(0x303) or c:IsSetCard(0x344))
+end
+function s.rfilter(c)
+	return c:IsLocation(LOCATION_REMOVED)
+end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,LOCATION_MZONE,0,1,1,nil) end
-	local g=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,0,LOCATION_MZONE,nil)
+	if chk==0 then return Duel.IsExistingMatchingCard(s.banish,tp,LOCATION_ONFIELD+LOCATION_GRAVE,0,1,1,e:GetHandler()) end
+	local g=Duel.GetMatchingGroup(s.banish,tp,LOCATION_ONFIELD+LOCATION_GRAVE,0,e:GetHandler())
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,0,0)
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,Card.IsAbleToRemove,tp,LOCATION_MZONE,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,s.banish,tp,LOCATION_ONFIELD+LOCATION_GRAVE,0,1,1,e:GetHandler())
 	local tc=g:GetFirst()
 	if tc then
 		Duel.HintSelection(g)
@@ -36,6 +42,21 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 		if sg then
 		if Duel.SendtoDeck(sg,1,nil,REASON_EFFECT)>0 then
 		Duel.Draw(1,tp,REASON_EFFECT)
+	else if tc:IsSetCard(0x344) then
+	local rg=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_MZONE,e:GetHandler())
+	local val=Duel.GetMatchingGroupCount(s.dfilter,c:GetControler(),LOCATION_REMOVED,0,nil)*500
+	for tc in aux.Next(rg) do
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_UPDATE_ATTACK)
+		e1:SetValue(-val)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+		rc:RegisterEffect(e1)
+		local e2=e1:Clone()
+		e2:SetCode(EFFECT_UPDATE_DEFENSE)
+		rc:RegisterEffect(e2)
+end
+end
 end
 end
 end
