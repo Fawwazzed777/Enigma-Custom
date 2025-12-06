@@ -42,13 +42,22 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=g:GetFirst()
 	--
 	if tc then
-		if Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)>0 and (tc:IsSetCard(0x303) or tc:IsSetCard(0x344)) then
+		if Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)>0 then
+		local e2=Effect.CreateEffect(e:GetHandler())
+		e2:SetType(EFFECT_TYPE_FIELD)
+		e2:SetCode(EFFECT_UPDATE_ATTACK)
+		e2:SetReset(RESET_PHASE+PHASE_END)
+		e2:SetTargetRange(0,LOCATION_MZONE)
+		e2:SetValue(-800)
+		Duel.RegisterEffect(e2,tp)
+		if (tc:IsSetCard(0x303) or tc:IsSetCard(0x344)) then
 		local sg=Duel.SelectMatchingCard(tp,Card.IsAbleToDeck,tp,0,LOCATION_ONFIELD,1,1,nil)
 		if sg then
 		Duel.HintSelection(sg)
 		if Duel.SendtoDeck(sg,nil,1,REASON_EFFECT)>0 then
 		Duel.BreakEffect()
 		Duel.Draw(tp,1,REASON_EFFECT)
+end
 end
 end
 end
