@@ -11,7 +11,7 @@ function s.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(1)
-	e1:SetCost(Cost.DetachFromSelf(1,1,nil),s.banish)
+	e1:SetCost(s.cost)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.operation)
 	c:RegisterEffect(e1)
@@ -20,11 +20,15 @@ s.listed_series={0x303,0x344}
 function s.ffilter(c,fc,sumtype,tp)
 	return c:IsSetCard(0x303) or c:IsSetCard(0x344)
 end
-function s.banish(c,tp)
+function s.banish(c)
 	return c:IsFaceup() and c:IsAbleToRemove() and (c:IsSetCard(0x303) or c:IsSetCard(0x344))
 end
 function s.rfilter(c)
 	return c:IsLocation(LOCATION_REMOVED)
+end
+function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return s.banish(chk) and e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
+	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.banish,tp,LOCATION_ONFIELD+LOCATION_GRAVE,0,1,1,e:GetHandler()) end
@@ -35,7 +39,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=Duel.SelectMatchingCard(tp,s.banish,tp,LOCATION_ONFIELD+LOCATION_GRAVE,0,1,1,e:GetHandler())
 	local tc=g:GetFirst()
-	--Imaginary Force
+	--
 	if tc then
 		if Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)>0 and tc:IsSetCard(0x303) then
 		local sg=Duel.SelectMatchingCard(tp,Card.IsAbleToDeck,tp,0,LOCATION_ONFIELD,1,1,nil)
@@ -44,16 +48,6 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 		if Duel.SendtoDeck(sg,nil,1,REASON_EFFECT)>0 then
 		Duel.BreakEffect()
 		Duel.Draw(tp,1,REASON_EFFECT)
-	--Enigmation
-	if tc then
-		if Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)>0 and tc:IsSetCard(0x344) then
-		local rg=Duel.SelectMatchingCard(tp,Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,1,1,nil)
-		if rg then
-		Duel.HintSelection(rg)
-		Duel.Remove(rg,nil,1,REASON_EFFECT)
-end
-end
-end
 end
 end
 end
