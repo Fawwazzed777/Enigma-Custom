@@ -27,7 +27,8 @@ function s.rfilter(c)
 	return c:IsLocation(LOCATION_REMOVED)
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return s.banish(chk) and e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.banish,tp,LOCATION_ONFIELD+LOCATION_GRAVE,0,1,1,e:GetHandler())
+	and e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
 	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
