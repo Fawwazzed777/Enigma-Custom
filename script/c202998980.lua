@@ -43,12 +43,15 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	--
 	if tc then
 		if Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)>0 then
-		local e2=Effect.CreateEffect(e:GetHandler())
-		e2:SetType(EFFECT_TYPE_FIELD)
-		e2:SetCode(EFFECT_UPDATE_ATTACK)
-		e2:SetReset(RESET_PHASE+PHASE_END)
-		e2:SetTargetRange(0,LOCATION_MZONE)
-		e2:SetValue(-800)
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_FIELD)
+		e1:SetCode(EFFECT_UPDATE_ATTACK)
+		e1:SetReset(RESET_PHASE+PHASE_END)
+		e1:SetTargetRange(0,LOCATION_MZONE)
+		e1:SetValue(-800)
+		Duel.RegisterEffect(e1,tp)
+		local e2=e1:Clone()
+		e2:SetCode(EFFECT_UPDATE_DEFENSE)
 		Duel.RegisterEffect(e2,tp)
 		if (tc:IsSetCard(0x303) or tc:IsSetCard(0x344)) then
 		local sg=Duel.SelectMatchingCard(tp,Card.IsAbleToDeck,tp,0,LOCATION_ONFIELD,1,1,nil)
