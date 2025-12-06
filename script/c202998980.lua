@@ -35,6 +35,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=Duel.SelectMatchingCard(tp,s.banish,tp,LOCATION_ONFIELD+LOCATION_GRAVE,0,1,1,e:GetHandler())
 	local tc=g:GetFirst()
+	--Imaginary Force
 	if tc then
 		Duel.HintSelection(g)
 		if Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)>0 and tc:IsSetCard(0x303) then
@@ -42,16 +43,13 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 		if sg then
 		if Duel.SendtoDeck(sg,nil,1,REASON_EFFECT)>0 then
 		Duel.Draw(1,tp,REASON_EFFECT)
-
-end
-	if Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)>0 and tc:IsSetCard(0x344) then
+	--Enigmation
 	local rg=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_MZONE,nil)
-	local val=Duel.GetMatchingGroupCount(nil,c:GetControler(),LOCATION_REMOVED,0,nil)*500
-	if rg then
+	if rg and Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)>0 and tc:IsSetCard(0x344) then
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
-		e1:SetValue(-val)
+		e1:SetValue(-1500)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 		rg:RegisterEffect(e1)
 		local e2=e1:Clone()
