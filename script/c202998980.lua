@@ -42,10 +42,12 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 		if sg then
 		if Duel.SendtoDeck(sg,nil,1,REASON_EFFECT)>0 then
 		Duel.Draw(1,tp,REASON_EFFECT)
-	else if tc:IsSetCard(0x344) then
+
+end
+	if Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)>0 and tc:IsSetCard(0x344) then
 	local rg=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_MZONE,e:GetHandler())
 	local val=Duel.GetMatchingGroupCount(s.dfilter,c:GetControler(),LOCATION_REMOVED,0,nil)*500
-	for tc in aux.Next(rg) do
+	if rg then
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
@@ -55,7 +57,6 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 		local e2=e1:Clone()
 		e2:SetCode(EFFECT_UPDATE_DEFENSE)
 		rg:RegisterEffect(e2)
-end
 end
 end
 end
