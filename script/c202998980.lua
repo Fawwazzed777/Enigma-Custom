@@ -20,7 +20,7 @@ s.listed_series={0x303,0x344}
 function s.ffilter(c,fc,sumtype,tp)
 	return c:IsSetCard(0x303) or c:IsSetCard(0x344)
 end
-function s.banish(c,fc,sumtype,tp)
+function s.banish(c,tp)
 	return c:IsFaceup() and (c:IsSetCard(0x303) or c:IsSetCard(0x344))
 end
 function s.rfilter(c)
@@ -51,10 +51,10 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
 		e1:SetValue(-val)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-		rc:RegisterEffect(e1)
+		rg:RegisterEffect(e1)
 		local e2=e1:Clone()
 		e2:SetCode(EFFECT_UPDATE_DEFENSE)
-		rc:RegisterEffect(e2)
+		rg:RegisterEffect(e2)
 end
 end
 end
