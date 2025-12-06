@@ -42,7 +42,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=g:GetFirst()
 	--
 	if tc then
-		if Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)>0 and tc:IsSetCard(0x303) then
+		if Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)>0 and (tc:IsSetCard(0x303) or tc:IsSetCard(0x344)) then
 		local sg=Duel.SelectMatchingCard(tp,Card.IsAbleToDeck,tp,0,LOCATION_ONFIELD,1,1,nil)
 		if sg then
 		Duel.HintSelection(sg)
