@@ -11,7 +11,7 @@ function s.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(1)
-	e1:SetCost(Cost.DetachFromSelf(1,1,nil))
+	e1:SetCost(Cost.DetachFromSelf(1,1,nil),s.banish)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.operation)
 	c:RegisterEffect(e1)
@@ -21,7 +21,7 @@ function s.ffilter(c,fc,sumtype,tp)
 	return c:IsSetCard(0x303) or c:IsSetCard(0x344)
 end
 function s.banish(c,tp)
-	return c:IsFaceup() and (c:IsSetCard(0x303) or c:IsSetCard(0x344))
+	return c:IsFaceup() and c:IsAbleToRemove() and (c:IsSetCard(0x303) or c:IsSetCard(0x344))
 end
 function s.rfilter(c)
 	return c:IsLocation(LOCATION_REMOVED)
@@ -37,19 +37,19 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=g:GetFirst()
 	--Imaginary Force
 	if tc then
-		Duel.HintSelection(g)
 		if Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)>0 and tc:IsSetCard(0x303) then
 		local sg=Duel.SelectMatchingCard(tp,Card.IsAbleToDeck,tp,0,LOCATION_ONFIELD,1,1,nil)
 		if sg then
+		Duel.HintSelection(sg)
 		if Duel.SendtoDeck(sg,nil,1,REASON_EFFECT)>0 then
 		Duel.BreakEffect()
 		Duel.Draw(tp,1,REASON_EFFECT)
 	--Enigmation
 	if tc then
-		Duel.HintSelection(g)
 		if Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)>0 and tc:IsSetCard(0x344) then
 		local rg=Duel.SelectMatchingCard(tp,Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,1,1,nil)
 		if rg then
+		Duel.HintSelection(rg)
 		Duel.Remove(rg,nil,1,REASON_EFFECT)
 end
 end
