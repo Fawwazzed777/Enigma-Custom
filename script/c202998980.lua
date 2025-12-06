@@ -45,8 +45,8 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 
 end
 	if Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)>0 and tc:IsSetCard(0x344) then
-	local rg=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_MZONE,e:GetHandler())
-	local val=Duel.GetMatchingGroupCount(s.dfilter,c:GetControler(),LOCATION_REMOVED,0,nil)*500
+	local rg=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_MZONE,nil)
+	local val=Duel.GetMatchingGroupCount(nil,c:GetControler(),LOCATION_REMOVED,0,nil)*500
 	if rg then
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
