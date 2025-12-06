@@ -40,7 +40,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 		if Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)>0 and tc:IsSetCard(0x303) then
 		local sg=Duel.SelectMatchingCard(tp,Card.IsAbleToDeck,tp,0,LOCATION_ONFIELD,1,1,nil)
 		if sg then
-		if Duel.SendtoDeck(sg,1,nil,REASON_EFFECT)>0 then
+		if Duel.SendtoDeck(sg,nil,1,REASON_EFFECT)>0 then
 		Duel.Draw(1,tp,REASON_EFFECT)
 	else if tc:IsSetCard(0x344) then
 	local rg=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_MZONE,e:GetHandler())
