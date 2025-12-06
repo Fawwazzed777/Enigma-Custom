@@ -42,19 +42,18 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 		local sg=Duel.SelectMatchingCard(tp,Card.IsAbleToDeck,tp,0,LOCATION_ONFIELD,1,1,nil)
 		if sg then
 		if Duel.SendtoDeck(sg,nil,1,REASON_EFFECT)>0 then
-		Duel.Draw(1,tp,REASON_EFFECT)
+		Duel.BreakEffect()
+		Duel.Draw(tp,1,REASON_EFFECT)
 	--Enigmation
-	local rg=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_MZONE,nil)
-	if rg and Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)>0 and tc:IsSetCard(0x344) then
-		local e1=Effect.CreateEffect(e:GetHandler())
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_UPDATE_ATTACK)
-		e1:SetValue(-1500)
-		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-		rg:RegisterEffect(e1)
-		local e2=e1:Clone()
-		e2:SetCode(EFFECT_UPDATE_DEFENSE)
-		rg:RegisterEffect(e2)
+		Duel.HintSelection(rg)
+		if Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)>0 and tc:IsSetCard(0x344) then
+		local rg=Duel.SelectMatchingCard(tp,Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,1,1,nil)
+		if rg then
+		if Duel.Remove(rg,nil,1,REASON_EFFECT)>0 then
+		Duel.BreakEffect()
+		Duel.Draw(tp,1,REASON_EFFECT)
+end
+end
 end
 end
 end
