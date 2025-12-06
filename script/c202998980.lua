@@ -47,7 +47,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	else 
 	--Enigmation
 	if tc:IsSetCard(0x344) then
-		Duel.HintSelection(rg)
+		Duel.HintSelection(g)
 		if Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)>0 then
 		local rg=Duel.SelectMatchingCard(tp,Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,1,1,nil)
 		if rg then
