@@ -35,12 +35,12 @@ function s.initial_effect(c)
 end
 s.listed_series={0x303,0x344}
 function s.spcfilter(c)
-	return not c:IsGetHandler() and (c:IsSetCard(0x303) or c:IsSetCard(0x344)) and c:IsAbleToDeckAsCost()
+	return (c:IsSetCard(0x303) or c:IsSetCard(0x344)) and c:IsAbleToDeckAsCost()
 end
 function s.thcon(e,c)
 	if c==nil then return true end
 	local tp=e:GetHandlerPlayer()
-	local rg=Duel.GetMatchingGroup(s.spcfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,nil)
+	local rg=Duel.GetMatchingGroup(s.spcfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,e:GetHandler())
 	local eff={c:GetCardEffect(EFFECT_NECRO_VALLEY)}
 	for _,te in ipairs(eff) do
 		local op=te:GetOperation()
@@ -51,7 +51,7 @@ function s.thcon(e,c)
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,c)
 	local c=e:GetHandler()
-	local rg=Duel.GetMatchingGroup(s.spcfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,nil)
+	local rg=Duel.GetMatchingGroup(s.spcfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,e:GetHandler())
 	local g=aux.SelectUnselectGroup(rg,e,tp,1,1,aux.ChkfMMZ(1),1,tp,HINTMSG_TODECK,nil,nil,true)
 	if #g>0 then
 		g:KeepAlive()
