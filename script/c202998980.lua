@@ -44,13 +44,15 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 		if Duel.SendtoDeck(sg,nil,1,REASON_EFFECT)>0 then
 		Duel.BreakEffect()
 		Duel.Draw(tp,1,REASON_EFFECT)
+	else 
 	--Enigmation
-	elseif tc:IsSetCard(0x344) then
+	if tc:IsSetCard(0x344) then
 		Duel.HintSelection(rg)
 		if Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)>0 then
 		local rg=Duel.SelectMatchingCard(tp,Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,1,1,nil)
 		if rg then
 		Duel.Remove(rg,nil,1,REASON_EFFECT)
+end
 end
 end
 end
