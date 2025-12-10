@@ -78,10 +78,11 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,s.banish,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,1,e:GetHandler())
 	local tc=g:GetFirst()
 	--
-	if tc then val=tc:GetRank()*200
-		else val=tc:GetLevel()*200 end
+	if tc then
 		if Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)>0 then
 		local val=0
+		local val=tc:GetRank()*200
+		else val=tc:GetLevel()*200
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_FIELD)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
@@ -92,4 +93,4 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Damage(1-tp,val,REASON_EFFECT)
 end
 end
-
+end
