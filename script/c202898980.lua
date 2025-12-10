@@ -62,9 +62,6 @@ end
 function s.banish(c)
 	return c:IsAbleToRemove() and (c:GetLevel()>0 or c:GetRank()>0) and c:IsAttribute(ATTRIBUTE_LIGHT|ATTRIBUTE_DARK)
 end
-function s.rfilter(c)
-	return c:IsLocation(LOCATION_REMOVED)
-end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.banish,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,1,e:GetHandler()) end
 	local g=Duel.GetMatchingGroup(s.banish,tp,LOCATION_GRAVE,0,nil)
