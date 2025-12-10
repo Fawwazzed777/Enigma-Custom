@@ -80,17 +80,18 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	--
 	if tc then
 		if Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)>0 then
-		local val=0
-		local val=tc:GetRank()*200
-		else val=tc:GetLevel()*200
+		local lv=tc:GetOriginalLevel()
+		if tc:IsType(TYPE_XYZ) then
+			lv=tc:GetOriginalRank()
+		end
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_FIELD)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
 		e1:SetReset(RESET_PHASE+PHASE_END)
 		e1:SetTargetRange(0,LOCATION_MZONE)
-		e1:SetValue(-val)
+		e1:SetValue(-lv)
 		Duel.RegisterEffect(e1,tp)
-		Duel.Damage(1-tp,val,REASON_EFFECT)
+		Duel.Damage(1-tp,lv,REASON_EFFECT)
 end
 end
 end
