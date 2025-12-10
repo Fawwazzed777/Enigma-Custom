@@ -52,10 +52,10 @@ function s.hdtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.hdop(e,tp,eg,ep,ev,re,r,rp)
 	local g1=Duel.GetDecktopGroup(tp,1)
-	if #g==0 then return end
-	Duel.DisableShuffleCheck()
 	local g2=Duel.GetDecktopGroup(1-tp,1)
 	g1:Merge(g2)
+	if #g1==0 then return end
+	Duel.DisableShuffleCheck()
 	Duel.Remove(g1,POS_FACEUP,REASON_EFFECT)
 end
 --
