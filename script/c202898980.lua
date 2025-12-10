@@ -88,6 +88,9 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetTargetRange(0,LOCATION_MZONE)
 		e1:SetValue(-lv*300)
 		Duel.RegisterEffect(e1,tp)
+		local e2=e1:Clone()
+		e2:SetCode(EFFECT_UPDATE_DEFENSE)
+		Duel.RegisterEffect(e2,tp)
 		Duel.Damage(1-tp,lv*200,REASON_EFFECT)
 end
 end
