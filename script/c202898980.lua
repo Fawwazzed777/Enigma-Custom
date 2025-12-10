@@ -89,9 +89,9 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
 		e1:SetReset(RESET_PHASE+PHASE_END)
 		e1:SetTargetRange(0,LOCATION_MZONE)
-		e1:SetValue(-lv)
+		e1:SetValue(-lv*300)
 		Duel.RegisterEffect(e1,tp)
-		Duel.Damage(1-tp,lv,REASON_EFFECT)
+		Duel.Damage(1-tp,lv*200,REASON_EFFECT)
 end
 end
 end
