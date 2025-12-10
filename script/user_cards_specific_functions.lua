@@ -5,4 +5,4 @@ end
 --NOTE: Use this 'Duel.LoadScript("user_cards_specific_functions.lua")' in every script to connect all function on this script
 
 ATTRIBUTE_RADIANT= 0xf50
-RACE_VIRTUOUS    = 0x1c000000
+RACE_VIRTUOUS    = 0x1c01010

@@ -11,7 +11,7 @@ function s.initial_effect(c)
 	attribute:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CANNOT_NEGATE)
 	attribute:SetCode(EFFECT_CHANGE_RACE)
 	attribute:SetRange(0x7)
-	attribute:SetValue(0x1c000000)
+	attribute:SetValue(0x1c01010)
 	c:RegisterEffect(attribute)
 	--replace
 	local e1=Effect.CreateEffect(c)
