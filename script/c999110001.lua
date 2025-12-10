@@ -3,7 +3,7 @@ if not GenerateEffect then
 	
 	end
 --Additional ATTRIBUTE
-ATTRIBUTE_RADIANT= 0xf50
+ATTRIBUTE_RADIANT= 0x94
 
 --Additional Types
-RACE_VIRTUOUS    = 0x1c000000
+RACE_VIRTUOUS    = 0x1c0101
