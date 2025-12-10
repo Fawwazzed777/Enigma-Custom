@@ -138,7 +138,99 @@ local function cost_replace_getvalideffs(replacecode,extracon,e,tp,eg,ep,ev,re,r
 	end
 	return t
 end
+---
+function Auxiliary.DecToHex(num)
+    local hexstr = '0123456789abcdef'
+    local s = ''
+    while num > 0 do
+        local mod = math.fmod(num, 16)
+        s = string.sub(hexstr, mod+1, mod+1) .. s
+        num = math.floor(num / 16)
+    end
+    if s == '' then s = '0' end
+    return s
+end
+function Auxiliary.Dec2Hex(num)
+    return Auxiliary.DecToHex(num)
+end
 
+function Auxiliary.HexToDec(num)
+    return tonumber("0x"..num)
+end
+function Auxiliary.Hex2Dec(num)
+    return tonumber("0x"..num)
+end
+
+function Auxiliary.GetSubId(id, add)
+    return aux.HexToDec(aux.DecToHex(id)..add)
+end
+
+local ATTRIBUTES = {}
+ATTRIBUTES[ATTRIBUTE_EARTH] = "EARTH"
+ATTRIBUTES[ATTRIBUTE_WATER] = "WATER"
+ATTRIBUTES[ATTRIBUTE_FIRE] = "FIRE"
+ATTRIBUTES[ATTRIBUTE_WIND] = "WIND"
+ATTRIBUTES[ATTRIBUTE_LIGHT] = "LIGHT"
+ATTRIBUTES[ATTRIBUTE_DARK] = "DARK"
+ATTRIBUTES[ATTRIBUTE_DIVINE] = "DIVINE"
+ATTRIBUTES[ATTRIBUTE_RADIANT] = "RADIANT"
+function Auxiliary.DecodeAttribute(attr)
+    local out
+    for k,v in pairs(ATTRIBUTES) do
+        if k&attr==k then
+            if out then out = out.."|"..v
+            else out = v end
+        end
+    end
+    return out or "NONE"
+end
+
+local RACES = {}
+RACES[RACE_WARRIOR] = "WARRIOR"
+RACES[RACE_SPELLCASTER] = "SPELLCASTER"
+RACES[RACE_FAIRY] = "FAIRY"
+RACES[RACE_FIEND] = "FIEND"
+RACES[RACE_ZOMBIE] = "ZOMBIE"
+RACES[RACE_MACHINE] = "MACHINE"
+RACES[RACE_AQUA] = "AQUA"
+RACES[RACE_PYRO] = "PYRO"
+RACES[RACE_ROCK] = "ROCK"
+RACES[RACE_WINGEDBEAST] = "WINGEDBEAST"
+RACES[RACE_PLANT] = "PLANT"
+RACES[RACE_INSECT] = "INSECT"
+RACES[RACE_THUNDER] = "THUNDER"
+RACES[RACE_DRAGON] = "DRAGON"
+RACES[RACE_BEAST] = "BEAST"
+RACES[RACE_BEASTWARRIOR] = "BEASTWARRIOR"
+RACES[RACE_DINOSAUR] = "DINOSAUR"
+RACES[RACE_FISH] = "FISH"
+RACES[RACE_SEASERPENT] = "SEASERPENT"
+RACES[RACE_REPTILE] = "REPTILE"
+RACES[RACE_PSYCHIC] = "PSYCHIC"
+RACES[RACE_DIVINE] = "DIVINE"
+RACES[RACE_CREATORGOD] = "CREATORGOD"
+RACES[RACE_WYRM] = "WYRM"
+RACES[RACE_CYBERSE] = "CYBERSE"
+RACES[RACE_ILLUSION] = "ILLUSION"
+RACES[RACE_CYBORG] = "CYBORG"
+RACES[RACE_MAGICALKNIGHT] = "MAGICALKNIGHT"
+RACES[RACE_HIGHDRAGON] = "HIGHDRAGON"
+RACES[RACE_OMEGAPSYCHIC] = "OMEGAPSYCHIC"
+RACES[RACE_CELESTIALWARRIOR] = "CELESTIALWARRIOR"
+RACES[RACE_GALAXY] = "GALAXY"
+RACES[RACE_YOKAI] = "YOKAI"
+function Auxiliary.DecodeRace(race)
+    local out
+    for k,v in pairs(RACES) do
+        if k&race==k then
+            if out then out = out.."|"..v
+            else out = v end
+        end
+    end
+    return out or "NONE"
+end
+
+--
 function Auxiliary.CostWithReplace(base,replacecode,extracon,alwaysexecute)
 	return function(e,tp,eg,ep,ev,re,r,rp,chk)
 		if alwaysexecute and not alwaysexecute(e,tp,eg,ep,ev,re,r,rp,0) then return false end
