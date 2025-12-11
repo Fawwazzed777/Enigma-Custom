@@ -84,5 +84,8 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.drop(e,tp,eg,ep,ev,re,r,rp)
 	local rc=re:GetHandler()
-	Duel.Destroy(rc,REASON_EFFECT) 
+	if Duel.Destroy(rc,REASON_EFFECT)>0 then
+	Duel.BreakEffect()
+	Duel.Recover(tp,1000,REASON_EFFECT)
+end
 end
