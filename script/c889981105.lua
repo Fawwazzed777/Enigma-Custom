@@ -83,6 +83,7 @@ function s.drg(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function s.drop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
 	if re:GetHandler():IsRelateToEffect(re) then
 		c:UpdateAttack(1000)
 		c:UpdateDefense(1000)
