@@ -62,7 +62,7 @@ function s.dtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.dop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local g1=Duel.GetFieldGroup(1-tp,0,LOCATION_GRAVE):RandomSelect(tp,1)
+	local g1=Duel.GetFieldGroup(1-tp,0,LOCATION_GRAVE):RandomSelect(1-tp,1)
 	local g2=Duel.GetFieldGroup(tp,LOCATION_GRAVE,0):RandomSelect(tp,1)
 	g1:Merge(g2)
 	Duel.SendtoHand(g1,c:GetControler()~=c:GetOwner(),REASON_EFFECT)
