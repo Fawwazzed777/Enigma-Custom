@@ -7,7 +7,7 @@ function s.initial_effect(c)
 	es:SetDescription(aux.Stringid(id,0))
 	es:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	es:SetType(EFFECT_TYPE_FIELD|EFFECT_TYPE_TRIGGER_F)
-	es:SetCode(EVENT_PHASE|PHASE_DRAW)
+	es:SetCode(EVENT_PHASE|PHASE_END)
 	es:SetRange(LOCATION_HAND|LOCATION_REMOVED)
 	es:SetCountLimit(1,{id,0})
 	es:SetTarget(s.sptg)
@@ -61,45 +61,29 @@ function s.dtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,0,1-tp,1)
 end
 function s.dop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
 	local g1=Duel.GetFieldGroup(tp,0,LOCATION_GRAVE):RandomSelect(tp,1)
 	local g2=Duel.GetFieldGroup(tp,LOCATION_GRAVE,0):RandomSelect(tp,1)
 	g1:Merge(g2)
-	Duel.Sendtohand(g1,c:GetControler()~=c:GetOwner(),REASON_EFFECT)
+	Duel.Sendtohand(g1,c:GetOwner(),REASON_EFFECT)
 end
 function s.dtcon(e,tp,eg,ep,ev,re,r,rp)
 	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED)
-		and ep~=tp and re:GetHandler():IsLocation(LOCATION_ONFIELD) and re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsSpellTrapEffect()
+		and ep~=tp and re:GetHandler():IsLocation(LOCATION_ONFIELD) and re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsMonsterEffect()
 end
 function s.posfilter(c)
 	return c:IsCanChangePosition()
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.posfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
-	local g=Duel.GetMatchingGroup(s.posfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
-	Duel.SetOperationInfo(0,CATEGORY_POSITION,g,#g,0,0)
+	if chk==0 then return true end
+	local rc=re:GetHandler()
+	Duel.SetOperationInfo(0,CATEGORY_TODECK,eg,1,tp,0)
+	if rc:IsAbleToDeck() and rc:IsRelateToEffect(re) then
+		Duel.SetOperationInfo(0,CATEGORY_TODECK,eg,1,tp,0)
+	end
 end
 function s.drop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroup(s.posfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
-	Duel.ChangePosition(g,0,0,POS_FACEUP_ATTACK,POS_FACEUP_ATTACK,true)
-	if #g==0 then return end
-	local c=e:GetHandler()
-	for tc in g:Iter() do
-		--Cannot be destroyed
-		local e1=Effect.CreateEffect(c)
-		e1:SetDescription(3000)
-		e1:SetProperty(EFFECT_FLAG_CLIENT_HINT)
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
-		e1:SetValue(1)
-		e1:SetReset(RESET_EVENT|RESETS_STANDARD|RESET_PHASE|PHASE_END,2)
-		tc:RegisterEffect(e1)
-		local e2=Effect.CreateEffect(c)
-		e2:SetDescription(3001)
-		e2:SetProperty(EFFECT_FLAG_CLIENT_HINT)
-		e2:SetType(EFFECT_TYPE_SINGLE)
-		e2:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
-		e2:SetValue(1)
-		e2:SetReset(RESET_EVENT|RESETS_STANDARD|RESET_PHASE|PHASE_END,2)
-		tc:RegisterEffect(e2)
-end
+	if re:GetHandler():IsRelateToEffect(re) then
+		Duel.SendtoDeck(eg,1,REASON_EFFECT)
+	end
 end
