@@ -65,7 +65,7 @@ function s.dop(e,tp,eg,ep,ev,re,r,rp)
 	local g1=Duel.GetFieldGroup(tp,0,LOCATION_GRAVE):RandomSelect(tp,1)
 	local g2=Duel.GetFieldGroup(tp,LOCATION_GRAVE,0):RandomSelect(tp,1)
 	g1:Merge(g2)
-	Duel.Sendtohand(g1,c:GetOwner(),REASON_EFFECT)
+	Duel.SendtoHand(g1,c:GetOwner(),REASON_EFFECT)
 end
 function s.dtcon(e,tp,eg,ep,ev,re,r,rp)
 	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED)
