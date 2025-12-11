@@ -77,12 +77,8 @@ function s.posfilter(c)
 	return c:IsCanChangePosition()
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chk==0 then return true end
-	local rc=re:GetHandler()
+	if chk==0 then return re:GetHandler():IsAbleToDeck() end
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,eg,1,tp,0)
-	if rc:IsAbleToDeck() and rc:IsRelateToEffect(re) then
-		Duel.SetOperationInfo(0,CATEGORY_TODECK,eg,1,tp,0)
-	end
 end
 function s.drop(e,tp,eg,ep,ev,re,r,rp)
 	if re:GetHandler():IsRelateToEffect(re) then
