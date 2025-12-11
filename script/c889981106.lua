@@ -68,8 +68,6 @@ function s.dop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Draw(p,d,REASON_EFFECT)
 end
 function s.ord(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.NegateAttack()>0 then
-	Duel.BreakEffect()
+	Duel.NegateAttack()
 	Duel.Damage(1-tp,1600,REASON_EFFECT)
-end
 end
