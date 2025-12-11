@@ -1,4 +1,4 @@
---Enigmatic Lord - Omega
+--Enigmatic Lord – Pyrocratus
 local s,id=GetID()
 function s.initial_effect(c)
 	c:SetUniqueOnField(1,0,id)
@@ -13,12 +13,6 @@ function s.initial_effect(c)
 	es:SetTarget(s.sptg)
 	es:SetOperation(s.spop)
 	c:RegisterEffect(es)
-	local er=es:Clone()
-	er:SetCode(EVENT_PHASE|PHASE_STANDBY)
-	c:RegisterEffect(er)
-	local et=es:Clone()
-	et:SetCode(EVENT_PHASE|PHASE_END)
-	c:RegisterEffect(et)
 	--
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,1))

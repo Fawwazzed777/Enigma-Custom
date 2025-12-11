@@ -1,4 +1,4 @@
---Enigmatic Lord - Alpha
+--Enigmatic Lord - Gale Arbiter
 local s,id=GetID()
 function s.initial_effect(c)
 	c:SetUniqueOnField(1,0,id)
@@ -7,7 +7,7 @@ function s.initial_effect(c)
 	es:SetDescription(aux.Stringid(id,0))
 	es:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	es:SetType(EFFECT_TYPE_FIELD|EFFECT_TYPE_TRIGGER_F)
-	es:SetCode(EVENT_PHASE|PHASE_STANDBY)
+	es:SetCode(EVENT_PHASE|PHASE_END)
 	es:SetRange(LOCATION_HAND|LOCATION_REMOVED)
 	es:SetCountLimit(1,{id,0})
 	es:SetTarget(s.sptg)
@@ -64,22 +64,32 @@ function s.dop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,nil,tp,0,LOCATION_ONFIELD,1,1,nil)
 	if #g>0 then
 		Duel.HintSelection(g)
-		Duel.Destroy(g,REASON_EFFECT)
+		Duel.SendtoHand(g,nil,REASON_EFFECT)
 	end
 end
+function s.filter(c,att)
+	return c:IsFaceup() and c:IsAttribute(att)
+end
 function s.dtcon(e,tp,eg,ep,ev,re,r,rp)
-	return rp~=tp and re:GetHandler():IsLocation(LOCATION_ONFIELD)
+	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED)
+		and ep~=tp and re:IsActiveType(TYPE_SPELL+TYPE_TRAP) and re:GetHandler():IsLocation(LOCATION_ONFIELD)
+end
+function s.spfilter(c,e,tp)
+	return c:IsLevel(10) and c:IsRace(RACE_ROCK) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	and not Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_MZONE,0,1,nil,c:GetAttribute())
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_ONFIELD) and not chkc:IsControler(tp) end
-	local rc=re:GetHandler()
-	if chk==0 then return rc:IsOnField() and rc:IsControler(1-tp) end
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,rc,1,0,LOCATION_ONFIELD)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND)
 end
 function s.drop(e,tp,eg,ep,ev,re,r,rp)
 	local rc=re:GetHandler()
-	if Duel.Destroy(rc,REASON_EFFECT)>0 then
-	Duel.BreakEffect()
-	Duel.Recover(tp,1000,REASON_EFFECT)
-end
+	local c=e:GetHandler()
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
+	if #g>0 then
+		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+	end
 end
