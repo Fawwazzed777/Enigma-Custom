@@ -77,10 +77,11 @@ function s.dtcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.drop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if re:GetHandler():IsRelateToEffect(re) and c:IsFaceup() then
+	if re:GetHandler():IsRelateToEffect(re) then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
+		e1:SetRange(LOCATION_MZONE)
 		e1:SetProperty(EFFECT_FLAG_COPY_INHERIT)
 		e1:SetValue(1000)
 		e1:SetReset(RESET_EVENT|RESETS_STANDARD_DISABLE)
