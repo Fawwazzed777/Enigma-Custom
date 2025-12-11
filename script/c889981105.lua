@@ -11,15 +11,9 @@ function s.initial_effect(c)
 	e1:SetCode(EVENT_PHASE+PHASE_STANDBY+PHASE_BATTLE_START+PHASE_END)
 	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
 	e1:SetRange(LOCATION_HAND|LOCATION_REMOVED)
-	e1:SetCondition(s.spcon)
 	e1:SetTarget(s.sptg)
 	e1:SetOperation(s.spop)
 	c:RegisterEffect(e1)
-end
-function s.spcon(e,c)
-	if c==nil then return Duel.IsPhase(PHASE_STANDBY+PHASE_BATTLE_START+PHASE_END) end
-	local tp=c:GetControler()
-	return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
