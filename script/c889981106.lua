@@ -38,14 +38,12 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 	--
 	local e4=Effect.CreateEffect(c)
-	e4:SetDescription(aux.Stringid(id,2))
-	e4:SetCategory(CATEGORY_REMOVE+CATEGORY_DAMAGE)
-	e4:SetType(EFFECT_TYPE_SINGLE|EFFECT_TYPE_TRIGGER_F)
+	e4:SetDescription(aux.Stringid(id,1))
+	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
 	e4:SetCode(EVENT_ATTACK_ANNOUNCE)
 	e4:SetRange(LOCATION_MZONE)
-	e4:SetCondition(function(e,tp) return Duel.GetAttacker():IsControler(1-tp) end)
-	e4:SetTarget(s.tr)
-	e4:SetOperation(s.op)
+	e4:SetCountLimit(1,{id,2})
+	e4:SetOperation(s.ord)
 	c:RegisterEffect(e4)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -69,17 +67,8 @@ function s.dop(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.Draw(p,d,REASON_EFFECT)
 end
-function s.tr(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
-	local bc=Duel.GetAttacker()
-	e:SetLabelObject(bc)
-	bc:CreateEffectRelation(e)
-	Duel.SetOperationInfo(0,CATEGORY_REMOVE,bc,1,tp,0)
-	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,1000)
+function s.ord(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.NegateAttack()>0 then
+	Duel.Damage(1-tp,1600,REASON_EFFECT)
 end
-function s.op(e,tp,eg,ep,ev,re,r,rp)
-	local bc=e:GetLabelObject()
-	if bc:IsRelateToEffect(e) and bc:IsMonster() and Duel.Remove(bc,POS_FACEUP,REASON_EFFECT)>0 then
-		Duel.Damage(1-tp,1000,REASON_EFFECT)
-	end
 end
