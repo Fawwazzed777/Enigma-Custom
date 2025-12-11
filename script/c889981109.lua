@@ -72,8 +72,6 @@ function s.dtcon(e,tp,eg,ep,ev,re,r,rp)
 	return rp~=tp and re:GetHandler():IsLocation(LOCATION_ONFIELD)
 end
 function s.drop(e,tp,eg,ep,ev,re,r,rp)
-	if re:GetHandler():IsRelateToEffect(re) then
-	Duel.BreakEffect()
 	local sg=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,0,nil)
 	local tc=sg:GetFirst()
 	for tc in aux.Next(sg) do
@@ -86,6 +84,5 @@ function s.drop(e,tp,eg,ep,ev,re,r,rp)
 		local e2=e1:Clone()
 		e2:SetCode(EFFECT_UPDATE_DEFENSE)
 		tc:RegisterEffect(e2)
-end
 end
 end
