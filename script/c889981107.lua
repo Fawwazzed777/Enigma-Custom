@@ -72,7 +72,7 @@ function s.filter(c,att)
 end
 function s.dtcon(e,tp,eg,ep,ev,re,r,rp)
 	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED)
-		and rp~=tp and re:GetHandler():IsLocation(LOCATION_ONFIELD) and re:IsActiveType(TYPE_SPELL+TYPE_TRAP)
+		and ep~=tp and re:GetHandler():IsLocation(LOCATION_ONFIELD) and re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsSpellTrapEffect()
 end
 function s.spfilter(c,e,tp)
 	return c:IsLevel(10) and c:IsRace(RACE_ROCK) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
@@ -84,9 +84,9 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND)
 end
 function s.drop(e,tp,eg,ep,ev,re,r,rp)
-	local rc=re:GetHandler()
 	local c=e:GetHandler()
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	if re:GetHandler():IsRelateToEffect(re)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
 	if #g>0 then
