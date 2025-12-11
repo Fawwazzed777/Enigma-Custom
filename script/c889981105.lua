@@ -51,6 +51,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e4)
 	local e5=e4:Clone()
 	e5:SetCode(EVENT_ATTACK_ANNOUNCE)
+	e5:SetCondition(s.condition)
 	c:RegisterEffect(e5)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -88,4 +89,7 @@ end
 function s.drop(e,tp,eg,ep,ev,re,r,rp)
 	local rc=re:GetHandler()
 	Duel.Destroy(rc,REASON_EFFECT) 
+end
+function s.condition(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsTurnPlayer(1-tp)
 end
