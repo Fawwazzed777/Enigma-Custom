@@ -71,7 +71,7 @@ function s.dop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.dtcon(e,tp,eg,ep,ev,re,r,rp)
 	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED)
-		and ep~=tp and re:GetHandler():IsLocation(LOCATION_ONFIELD) and re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsMonsterEffect()
+		and ep~=tp and re:GetHandler():IsLocation(LOCATION_ONFIELD) and re:IsMonsterEffect()
 end
 function s.posfilter(c)
 	return c:IsCanChangePosition()
