@@ -80,7 +80,7 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.drop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(s.posfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
-	Duel.ChangePosition(g,0,0,POS_FACEUP_ATTACK,POS_FACEUP_ATTACK,true)
+	Duel.ChangePosition(g,POS_FACEUP_ATTACK,0,POS_FACEUP_ATTACK,0)
 	if #g==0 then return end
 	local c=e:GetHandler()
 	for tc in g:Iter() do
