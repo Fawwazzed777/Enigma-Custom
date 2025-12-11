@@ -83,8 +83,6 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,rc,1,0,LOCATION_ONFIELD)
 end
 function s.drop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if re:GetHandler():IsRelateToEffect(re) then
-		Duel.Destroy(re,REASON_EFFECT)
-end
+	local rc=re:GetHandler()
+	Duel.Destroy(rc,REASON_EFFECT) 
 end
