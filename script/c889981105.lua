@@ -52,7 +52,7 @@ function s.filter(c,e,tp)
 	return c:IsDestructable() and not c:IsImmuneToEffect(e)
 end
 function s.dtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(,tp,0,LOCATION_ONFIELD,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,0,LOCATION_ONFIELD,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 function s.dop(e,tp,eg,ep,ev,re,r,rp)
