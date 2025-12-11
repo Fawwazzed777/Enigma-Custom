@@ -51,7 +51,8 @@ function s.initial_effect(c)
 	c:RegisterEffect(e4)
 	local e5=e4:Clone()
 	e5:SetCode(EVENT_ATTACK_ANNOUNCE)
-	e5:SetCondition(s.condition)
+	e5:SetCondition(s.cond)
+	e5:SetOperation(s.cto)
 	c:RegisterEffect(e5)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -93,7 +94,7 @@ end
 function s.cond(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsTurnPlayer(1-tp)
 end
-function s.ctg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+function s.cto(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local tc=Duel.GetAttacker()
 	if not tc or not tc:IsRelateToBattle() then return end
 	if tc then
