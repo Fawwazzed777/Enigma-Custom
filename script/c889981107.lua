@@ -33,7 +33,7 @@ function s.initial_effect(c)
 	--
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(id,1))
-	e4:SetCategory(CATEGORY_DESTROY)
+	e4:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e4:SetType(EFFECT_TYPE_FIELD|EFFECT_TYPE_TRIGGER_F)
 	e4:SetCode(EVENT_CHAINING)
 	e4:SetCountLimit(1,{id,2})
@@ -60,7 +60,7 @@ function s.dtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return #g>0 end
 end
 function s.dop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
 	local g=Duel.SelectMatchingCard(tp,nil,tp,0,LOCATION_ONFIELD,1,1,nil)
 	if #g>0 then
 		Duel.HintSelection(g)
@@ -72,7 +72,7 @@ function s.filter(c,att)
 end
 function s.dtcon(e,tp,eg,ep,ev,re,r,rp)
 	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED)
-		and ep~=tp and re:IsActiveType(TYPE_SPELL+TYPE_TRAP) and re:GetHandler():IsLocation(LOCATION_ONFIELD)
+		and rp~=tp and re:GetHandler():IsLocation(LOCATION_ONFIELD) and re:IsActiveType(TYPE_SPELL+TYPE_TRAP)
 end
 function s.spfilter(c,e,tp)
 	return c:IsLevel(10) and c:IsRace(RACE_ROCK) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
