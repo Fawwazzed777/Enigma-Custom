@@ -81,7 +81,7 @@ function s.drg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.drop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if re:GetHandler():IsRelateToEffect(re) and c:IsFaceup() and c:IsRelateToEffect(e)  then
+	if re:GetHandler():IsRelateToEffect(re) and c:IsFaceup() then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
