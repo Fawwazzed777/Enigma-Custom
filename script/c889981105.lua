@@ -49,11 +49,6 @@ function s.initial_effect(c)
 	e4:SetTarget(s.destg)
 	e4:SetOperation(s.drop)
 	c:RegisterEffect(e4)
-	local e5=e4:Clone()
-	e5:SetCode(EVENT_ATTACK_ANNOUNCE)
-	e5:SetCondition(s.cond)
-	e5:SetOperation(s.cto)
-	c:RegisterEffect(e5)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -90,14 +85,4 @@ end
 function s.drop(e,tp,eg,ep,ev,re,r,rp)
 	local rc=re:GetHandler()
 	Duel.Destroy(rc,REASON_EFFECT) 
-end
-function s.cond(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsTurnPlayer(1-tp)
-end
-function s.cto(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	local tc=Duel.GetAttacker()
-	if not tc or not tc:IsRelateToBattle() then return end
-	if tc then
-	Duel.Destroy(tc,REASON_EFFECT)
-end
 end
