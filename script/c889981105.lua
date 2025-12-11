@@ -61,17 +61,18 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP_ATTACK)
 	end
 end
-function s.filter(c)
-	return c:IsDestructable()
+function s.dfilter(c)
+	return c:IsDestructable() and c:IsOnField()
 end
 function s.dtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,0,LOCATION_ONFIELD,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.dfilter,tp,0,LOCATION_ONFIELD,1,nil) end
 end
 function s.dop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.SelectMatchingCard(tp,s.filter,tp,0,LOCATION_ONFIELD,1,1,nil)
-	if #g>0 then
-		Duel.HintSelection(g)
-		Duel.Destroy(g,REASON_EFFECT)
+	if not tc:IsOnField() then return false end
+	local tc=Duel.SelectMatchingCard(tp,s.dfilter,tp,0,LOCATION_ONFIELD,1,1,nil)
+	if tc then
+		Duel.HintSelection(tc)
+		Duel.Destroy(tc,REASON_EFFECT)
 	end
 end
 function s.dtcon(e,tp,eg,ep,ev,re,r,rp)
