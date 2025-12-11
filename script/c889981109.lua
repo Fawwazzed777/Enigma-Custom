@@ -81,7 +81,17 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,eg,1,tp,0)
 end
 function s.drop(e,tp,eg,ep,ev,re,r,rp)
-	if re:GetHandler():IsRelateToEffect(re) then
-		Duel.SendtoDeck(eg,1,REASON_EFFECT)
+	if re:GetHandler():IsRelateToEffect(re) and Duel.SendtoDeck(eg,nil,1,REASON_EFFECT)~=0 then
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_FIELD)
+		e1:SetCode(EFFECT_UPDATE_ATTACK)
+		e1:SetTargetRange(LOCATION_MZONE,0)
+		e1:SetValue(eg:GetOriginalLevel()*200)
+		e1:SetReset(RESET_PHASE|PHASE_END)
+		Duel.RegisterEffect(e1,tp)
+		local e2=e1:Clone()
+		e2:SetCode(EFFECT_UPDATE_DEFENSE)
+		Duel.RegisterEffect(e2,tp)
+	end
 	end
 end
