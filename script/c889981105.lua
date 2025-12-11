@@ -62,13 +62,12 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.dfilter(c)
-	return c:IsDestructable() and c:IsOnField()
+	return c:IsDestructable()
 end
 function s.dtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.dfilter,tp,0,LOCATION_ONFIELD,1,nil) end
 end
 function s.dop(e,tp,eg,ep,ev,re,r,rp)
-	if not tc:IsOnField() then return false end
 	local tc=Duel.SelectMatchingCard(tp,s.dfilter,tp,0,LOCATION_ONFIELD,1,1,nil)
 	if tc then
 		Duel.HintSelection(tc)
