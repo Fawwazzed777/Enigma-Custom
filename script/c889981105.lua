@@ -74,7 +74,7 @@ function s.dop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.dtcon(e,tp,eg,ep,ev,re,r,rp)
-	return rp~=tp and not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED)
+	return rp~=tp
 end
 function s.drg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -85,8 +85,9 @@ function s.drop(e,tp,eg,ep,ev,re,r,rp)
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
+		e1:SetProperty(EFFECT_FLAG_COPY_INHERIT)
 		e1:SetValue(1000)
-		e1:SetReset(RESETS_STANDARD_DISABLE)
+		e1:SetReset(RESET_EVENT|RESETS_STANDARD_DISABLE)
 		c:RegisterEffect(e1)
 		local e2=e1:Clone()
 		e2:SetCode(EFFECT_UPDATE_DEFENSE)
