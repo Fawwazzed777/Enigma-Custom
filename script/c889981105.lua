@@ -90,6 +90,13 @@ function s.drop(e,tp,eg,ep,ev,re,r,rp)
 	local rc=re:GetHandler()
 	Duel.Destroy(rc,REASON_EFFECT) 
 end
-function s.condition(e,tp,eg,ep,ev,re,r,rp)
+function s.cond(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsTurnPlayer(1-tp)
+end
+function s.ctg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	local tc=Duel.GetAttacker()
+	if not tc or not tc:IsRelateToBattle() then return end
+	if tc then
+	Duel.Destroy(tc,REASON_EFFECT)
+end
 end
