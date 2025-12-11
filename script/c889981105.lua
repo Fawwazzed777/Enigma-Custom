@@ -39,7 +39,7 @@ function s.initial_effect(c)
 	--
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(id,1))
-	e4:SetCategory(CATEGORY_DESTROY)
+	e4:SetCategory(CATEGORY_ATKCHANGE)
 	e4:SetType(EFFECT_TYPE_FIELD|EFFECT_TYPE_TRIGGER_F)
 	e4:SetCode(EVENT_CHAINING)
 	e4:SetCountLimit(1,{id,2})
@@ -78,13 +78,13 @@ function s.dtcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.drg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,1,0,0)
-	if re:GetHandler():IsDestructable() and re:GetHandler():IsRelateToEffect(re) then
-		Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,1,0,0)
+	if re:GetHandler():IsRelateToEffect(re) then
+		Duel.SetOperationInfo(0,CATEGORY_ATKCHANGE,eg,1,0,0)
 	end
 end
 function s.drop(e,tp,eg,ep,ev,re,r,rp)
 	if re:GetHandler():IsRelateToEffect(re) then
-		Duel.Destroy(eg,REASON_EFFECT)
+		c:UpdateAttack(1000)
+		c:UpdateDefense(1000)
 	end
 end
