@@ -1,7 +1,6 @@
 --Enigmatic Lord - Alpha
 local s,id=GetID()
 function s.initial_effect(c)
-	c:EnableReviveLimit()
 	c:SetUniqueOnField(1,0,id)
 	--special summon
 	local e1=Effect.CreateEffect(c)
