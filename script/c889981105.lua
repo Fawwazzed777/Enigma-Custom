@@ -46,6 +46,7 @@ function s.initial_effect(c)
 	e4:SetProperty(EFFECT_FLAG_DAMAGE_STEP|EFFECT_FLAG_DAMAGE_CAL)
 	e4:SetRange(LOCATION_MZONE)
 	e4:SetCondition(s.dtcon)
+	e4:SetTarget(s.destg)
 	e4:SetOperation(s.drop)
 	c:RegisterEffect(e4)
 end
@@ -74,6 +75,12 @@ function s.dop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.dtcon(e,tp,eg,ep,ev,re,r,rp)
 	return rp~=tp
+end
+function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_ONFIELD) and not chkc:IsControler(tp) end
+	local rc=re:GetHandler()
+	if chk==0 then return rc:IsOnField() and rc:IsControler(1-tp) end
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,rc,1,0,LOCATION_ONFIELD)
 end
 function s.drop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
