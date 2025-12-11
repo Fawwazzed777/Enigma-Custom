@@ -52,7 +52,7 @@ end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) then
-		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP_ATTACK)
+		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
 	end
 end
 function s.dtg(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -62,10 +62,8 @@ function s.dtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.dop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local g1=Duel.GetFieldGroup(1-tp,0,LOCATION_GRAVE):RandomSelect(1-tp,1)
-	local g2=Duel.GetFieldGroup(tp,LOCATION_GRAVE,0):RandomSelect(tp,1)
-	g1:Merge(g2)
-	Duel.SendtoHand(g1,c:GetControler()~=c:GetOwner(),REASON_EFFECT)
+	local g1=Duel.GetFieldGroup(tp,0,LOCATION_GRAVE):RandomSelect(tp,1)
+	Duel.SendtoHand(g1,nil,REASON_EFFECT)
 end
 function s.dtcon(e,tp,eg,ep,ev,re,r,rp)
 	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED)
