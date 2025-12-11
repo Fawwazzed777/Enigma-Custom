@@ -80,7 +80,6 @@ end
 function s.op(e,tp,eg,ep,ev,re,r,rp)
 	local bc=e:GetLabelObject()
 	if bc:IsRelateToEffect(e) and bc:IsMonster() and Duel.Remove(bc,POS_FACEUP,REASON_EFFECT)>0 then
-		Duel.BreakEffect()
 		Duel.Damage(1-tp,1000,REASON_EFFECT)
 	end
 end
