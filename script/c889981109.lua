@@ -94,4 +94,3 @@ function s.drop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.RegisterEffect(e2,tp)
 	end
 	end
-end
