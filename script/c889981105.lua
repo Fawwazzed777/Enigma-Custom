@@ -46,7 +46,6 @@ function s.initial_effect(c)
 	e4:SetProperty(EFFECT_FLAG_DAMAGE_STEP|EFFECT_FLAG_DAMAGE_CAL)
 	e4:SetRange(LOCATION_MZONE)
 	e4:SetCondition(s.dtcon)
-	e4:SetTarget(s.drg)
 	e4:SetOperation(s.drop)
 	c:RegisterEffect(e4)
 end
@@ -75,9 +74,6 @@ function s.dop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.dtcon(e,tp,eg,ep,ev,re,r,rp)
 	return rp~=tp
-end
-function s.drg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
 end
 function s.drop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
