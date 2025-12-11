@@ -49,6 +49,9 @@ function s.initial_effect(c)
 	e4:SetTarget(s.destg)
 	e4:SetOperation(s.drop)
 	c:RegisterEffect(e4)
+	local e5=e4:Clone()
+	e5:SetCode(EVENT_ATTACK_ANNOUNCE)
+	c:RegisterEffect(e5)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
