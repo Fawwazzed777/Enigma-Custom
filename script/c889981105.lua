@@ -46,8 +46,8 @@ function s.initial_effect(c)
 	e4:SetProperty(EFFECT_FLAG_DAMAGE_STEP|EFFECT_FLAG_DAMAGE_CAL)
 	e4:SetRange(LOCATION_MZONE)
 	e4:SetCondition(s.dtcon)
-	e4:SetTarget(s.dtg)
-	e4:SetOperation(s.dop)
+	e4:SetTarget(s.drg)
+	e4:SetOperation(s.drop)
 	c:RegisterEffect(e4)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -76,14 +76,14 @@ end
 function s.dtcon(e,tp,eg,ep,ev,re,r,rp)
 	return rp~=tp and not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) and Duel.IsChainNegatable(ev)
 end
-function s.dtg(e,tp,eg,ep,ev,re,r,rp,chk)
+function s.drg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,1,0,0)
 	if re:GetHandler():IsDestructable() and re:GetHandler():IsRelateToEffect(re) then
 		Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,1,0,0)
 	end
 end
-function s.dop(e,tp,eg,ep,ev,re,r,rp)
+function s.drop(e,tp,eg,ep,ev,re,r,rp)
 	if re:GetHandler():IsRelateToEffect(re) then
 		Duel.Destroy(eg,REASON_EFFECT)
 	end
