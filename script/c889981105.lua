@@ -78,10 +78,6 @@ function s.dtcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.drg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
-	local c=e:GetHandler()
-	if re:GetHandler():IsRelateToEffect(re) then
-		Duel.SetOperationInfo(0,CATEGORY_ATKCHANGE,c,1,0,0)
-	end
 end
 function s.drop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
