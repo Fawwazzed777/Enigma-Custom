@@ -86,6 +86,6 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.drop(e,tp,eg,ep,ev,re,r,rp)
 	if re:GetHandler():IsRelateToEffect(re) then
-		Duel.SendtoDeck(eg,1,REASON_EFFECT)
+		Duel.SendtoDeck(rc,1,REASON_EFFECT)
 	end
 end
