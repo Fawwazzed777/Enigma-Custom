@@ -56,16 +56,16 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.exist(c)
-	return not (c:IsType(TYPE_EXTRA) or c:GetOriginalType(ORIGINAL_TYPE_EXTRA))
+	return not (c:IsType(TYPE_EXTRA) or c:GetOriginalType(ORIGINAL_TYPE_EXTRA)) and c:IsAbleToHand()
 end
 function s.dtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.exist,tp,0,LOCATION_GRAVE,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,0,tp,1)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,0,1-tp,1)
 end
 function s.dop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local tc=Duel.GetFieldGroup(s.exist,tp,0,LOCATION_GRAVE):RandomSelect(tp,1)
+	local tc=Duel.GetFieldGroup(tp,0,LOCATION_GRAVE):RandomSelect(tp,1)
 	Duel.SendtoHand(tc,tp,REASON_EFFECT)
 	Duel.ConfirmCards(1-tp,tc)
 end
