@@ -88,9 +88,8 @@ function s.drop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetValue(1000)
 		e1:SetReset(RESETS_STANDARD_DISABLE)
 		c:RegisterEffect(e1)
-		local e2=e1:Clone
+		local e2=e1:Clone()
 		e2:SetCode(EFFECT_UPDATE_DEFENSE)
-		e2:SetValue(1000)
 		c:RegisterEffect(e2)
 end
 end
