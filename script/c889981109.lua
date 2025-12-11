@@ -40,7 +40,6 @@ function s.initial_effect(c)
 	e4:SetProperty(EFFECT_FLAG_DAMAGE_STEP|EFFECT_FLAG_DAMAGE_CAL)
 	e4:SetRange(LOCATION_MZONE)
 	e4:SetCondition(s.dtcon)
-	e4:SetTarget(s.destg)
 	e4:SetOperation(s.drop)
 	c:RegisterEffect(e4)
 end
@@ -72,11 +71,9 @@ end
 function s.dtcon(e,tp,eg,ep,ev,re,r,rp)
 	return rp~=tp and re:GetHandler():IsLocation(LOCATION_ONFIELD)
 end
-function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chk==0 then return true end
-end
 function s.drop(e,tp,eg,ep,ev,re,r,rp)
 	if re:GetHandler():IsRelateToEffect(re) then
+	Duel.BreakEffect()
 	local sg=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,0,nil)
 	local tc=sg:GetFirst()
 	for tc in aux.Next(sg) do
