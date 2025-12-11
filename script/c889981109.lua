@@ -70,27 +70,26 @@ function s.dop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.ConfirmCards(1-tp,tc)
 end
 function s.dtcon(e,tp,eg,ep,ev,re,r,rp)
-	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED)
-		and ep~=tp and re:GetHandler():IsLocation(LOCATION_ONFIELD) and re:IsMonsterEffect()
-end
-function s.posfilter(c)
-	return c:IsCanChangePosition()
+	return rp~=tp and re:GetHandler():IsLocation(LOCATION_ONFIELD)
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chk==0 then return re:GetHandler():IsAbleToDeck() end
-	Duel.SetOperationInfo(0,CATEGORY_TODECK,eg,1,tp,0)
+	if chk==0 then return true end
 end
 function s.drop(e,tp,eg,ep,ev,re,r,rp)
-	if re:GetHandler():IsRelateToEffect(re) and Duel.SendtoDeck(eg,nil,1,REASON_EFFECT)~=0 then
+	if re:GetHandler():IsRelateToEffect(re) then
+	Duel.BreakEffect()
+	local sg=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,0,nil)
+	local tc=sg:GetFirst()
+	for tc in aux.Next(sg) do
 		local e1=Effect.CreateEffect(e:GetHandler())
-		e1:SetType(EFFECT_TYPE_FIELD)
+		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
-		e1:SetTargetRange(LOCATION_MZONE,0)
-		e1:SetValue(eg:GetOriginalLevel()*200)
-		e1:SetReset(RESET_PHASE|PHASE_END)
-		Duel.RegisterEffect(e1,tp)
+		e1:SetValue(500)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+		tc:RegisterEffect(e1)
 		local e2=e1:Clone()
 		e2:SetCode(EFFECT_UPDATE_DEFENSE)
-		Duel.RegisterEffect(e2,tp)
-	end
-	end
+		tc:RegisterEffect(e2)
+end
+end
+end
