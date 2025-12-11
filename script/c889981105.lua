@@ -39,7 +39,7 @@ function s.initial_effect(c)
 	--
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(id,1))
-	e4:SetCategory(CATEGORY_ATKCHANGE)
+	e4:SetCategory(CATEGORY_DESTROY)
 	e4:SetType(EFFECT_TYPE_FIELD|EFFECT_TYPE_TRIGGER_F)
 	e4:SetCode(EVENT_CHAINING)
 	e4:SetCountLimit(1,{id,2})
@@ -74,7 +74,7 @@ function s.dop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.dtcon(e,tp,eg,ep,ev,re,r,rp)
-	return rp~=tp
+	return rp~=tp and re:GetHandler():IsLocation(LOCATION_ONFIELD)
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_ONFIELD) and not chkc:IsControler(tp) end
