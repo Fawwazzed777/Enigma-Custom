@@ -62,8 +62,9 @@ function s.dtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.dop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local g1=Duel.GetFieldGroup(tp,0,LOCATION_GRAVE):RandomSelect(tp,1)
-	Duel.SendtoHand(g1,nil,REASON_EFFECT)
+	local tc=Duel.GetFieldGroup(tp,0,LOCATION_GRAVE):RandomSelect(tp,1)
+	Duel.SendtoHand(tc,tp,REASON_EFFECT)
+	Duel.ConfirmCards(1-tp,tc)
 end
 function s.dtcon(e,tp,eg,ep,ev,re,r,rp)
 	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED)
