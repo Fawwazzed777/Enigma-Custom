@@ -1,4 +1,4 @@
---Enigmatic Lord - Alpha
+--Enigmatic Lord - Omega
 local s,id=GetID()
 function s.initial_effect(c)
 	c:SetUniqueOnField(1,0,id)
@@ -69,6 +69,7 @@ function s.dop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.ord(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.NegateAttack()>0 then
+	Duel.BreakEffect()
 	Duel.Damage(1-tp,1600,REASON_EFFECT)
 end
 end
