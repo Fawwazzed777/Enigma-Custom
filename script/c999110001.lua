@@ -1,8 +1,8 @@
 if not GenerateEffect then
 	GenerateEffect={}
 	--Additional ATTRIBUTE
-	ATTRIBUTE_RADIANT= 0x94
+	ATTRIBUTE_RADIANT= 0x100
 
 	--Additional Types
-	RACE_VIRTUOUS    = 0x1c0101
+	RACE_VIRTUOUS    = 0x4000000
 	end
