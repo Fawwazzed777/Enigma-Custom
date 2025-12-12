@@ -1,5 +1,5 @@
 --Radiant Call
-Duel.LoadScript("user_cards_specific_functions.lua")
+Duel.LoadScript("c999110001.lua")
 local s,id=GetID()
 function s.initial_effect(c)
 	--Activate
