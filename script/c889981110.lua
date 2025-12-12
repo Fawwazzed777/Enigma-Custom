@@ -78,9 +78,9 @@ function s.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.op(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local token1={889981111}
-	local tc=Duel.CreateToken(tp,token1)
-	if tc:IsRelateToEffect(e) and tc:IsAbleToHand() then
+	local token={889981111}
+	local tc=Duel.CreateToken(tp,token)
+	if tc:IsAbleToHand() then
 		Duel.SendtoHand(tc,tp,0,REASON_EFFECT)
 end
 end
