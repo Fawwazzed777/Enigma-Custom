@@ -35,7 +35,7 @@ function s.initial_effect(c)
 	e4:SetDescription(aux.Stringid(id,2))
 	e4:SetCategory(CATEGORY_TOHAND)
 	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
-	e4:SetCode(EVENT_DESTROYED+EVENT_REMOVE)
+	e4:SetCode(EVENT_DESTROYED)
 	e4:SetRange(LOCATION_MZONE)
 	e4:SetCondition(s.con)
 	e4:SetTarget(s.tg)
@@ -81,6 +81,6 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 	local token1={889981111}
 	local tc=Duel.CreateToken(tp,token1)
 	if tc:IsRelateToEffect(e) and tc:IsAbleToHand() then
-		Duel.SendtoHand(tc,nil,REASON_EFFECT)
+		Duel.SendtoHand(tc,tp,0,REASON_EFFECT)
 end
 end
