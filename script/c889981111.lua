@@ -25,16 +25,16 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		for i=1,2 do
 			local token=Duel.CreateToken(tp,889981112)
 			Duel.SpecialSummonStep(token,0,tp,tp,false,false,POS_FACEUP_ATTACK)
-			Duel.BreakEffect()
-			Duel.Draw(tp,1,REASON_EFFECT)
 			--cannot be summon material
 			local e0=Effect.CreateEffect(c)
 			e0:SetType(EFFECT_TYPE_SINGLE)
 			e0:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 			e0:SetCode(EFFECT_CANNOT_BE_MATERIAL)
 			e0:SetValue(1)
-			c:RegisterEffect(e0)
+			token:RegisterEffect(e0)
 			Duel.Remove(e:GetHandler(),REASON_EFFECT)
+			Duel.BreakEffect()
+			Duel.Draw(tp,1,REASON_EFFECT)
 		end
 		Duel.SpecialSummonComplete()
 end
