@@ -22,7 +22,7 @@ end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsPlayerCanSpecialSummonMonster(tp,889981112,nil,TYPES_TOKEN,3000,3000,10,RACE_ROCK,ATTRIBUTE_DARK) then
-		for i=1 do
+		for i=1,2 do
 			local token=Duel.CreateToken(tp,889981112)
 			Duel.SpecialSummonStep(token,0,tp,tp,false,false,POS_FACEUP_ATTACK)
 			Duel.BreakEffect()
