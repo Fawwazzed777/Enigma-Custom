@@ -2,7 +2,26 @@
 Duel.LoadScript("user_cards_specific_functions.lua")
 local s,id=GetID()
 function s.initial_effect(c)
-
+	local ex=Effect.CreateEffect(c)
+	ex:SetDescription(aux.Stringid(id,0))
+	ex:SetType(EFFECT_TYPE_SINGLE)
+	ex:SetProperty(EFFECT_FLAG_SINGLE_RANGE|EFFECT_FLAG_CANNOT_DISABLE|EFFECT_FLAG_CANNOT_NEGATE)
+	ex:SetCode(EFFECT_CHANGE_ATTRIBUTE)
+	ex:SetRange(0x7)
+	ex:SetValue(Card.IsRadiant)
+	c:RegisterEffect(ex)
+	local ev=Effect.CreateEffect(c)
+	ev:SetDescription(aux.Stringid(id,0))
+	ev:SetType(EFFECT_TYPE_SINGLE)
+	ev:SetProperty(EFFECT_FLAG_SINGLE_RANGE|EFFECT_FLAG_CANNOT_DISABLE|EFFECT_FLAG_CANNOT_NEGATE)
+	ev:SetCode(EFFECT_CHANGE_RACE)
+	ev:SetRange(0x7)
+	ev:SetValue(Card.IsVirtuous)
+	c:RegisterEffect(ev)
 end
-attribute2=ATTRIBUTE_RADIANT
-race2=RACE_VIRTUOUS
+function Card.IsRadiant(c)
+    return c:IsAttribute(ATTRIBUTE_RADIANT)
+end
+function Card.IsVirtuous(c)
+    return c:IsRace(RACE_VIRTUOUS)
+end
