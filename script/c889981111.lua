@@ -34,7 +34,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			e0:SetValue(1)
 			e0:SetReset(RESET_EVENT|RESETS_STANDARD)
 			token:RegisterEffect(e0)
-			Duel.Remove(re:GetHandler(),REASON_EFFECT)
+			Duel.Remove(re:GetHandler(),POS_FACEUP,REASON_EFFECT)
 			Duel.BreakEffect()
 			Duel.Draw(tp,1,REASON_EFFECT)
 		end
