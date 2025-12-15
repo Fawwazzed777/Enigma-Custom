@@ -41,7 +41,7 @@ function s.sfilter(c,val,scard,sumtype,tp)
 	return c:IsAttribute(ATTRIBUTE_WATER,scard,sumtype,tp) and c:IsType(TYPE_SYNCHRO,scard,sumtype,tp)
 end
 function s.ffilter(c)
-	return c:IsFaceup() and (c:IsFieldSpell or c:IsContinuousTrap) and c:IsAbleToRemoveAsCost()
+	return c:IsFaceup() and (c:IsFieldSpell() or c:IsContinuousTrap()) and c:IsAbleToRemoveAsCost()
 end
 function s.atlimit(e,c)
 	return c:IsFaceup() and c:IsAttribute(ATTRIBUTE_WATER)
