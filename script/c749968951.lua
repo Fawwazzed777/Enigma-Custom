@@ -38,16 +38,13 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function s.sfilter(c,val,scard,sumtype,tp)
-	return c:IsAttribute(ATTRIBUTE_WATER,scard,sumtype,tp) and c:IsType(TYPE_SYNCHRO,scard,sumtype,tp)
+	return c:IsAttribute(ATTRIBUTE_WATER,scard,sumtype,tp)
 end
 function s.ffilter(c)
 	return c:IsFaceup() and (c:IsFieldSpell() or c:IsContinuousTrap()) and c:IsAbleToRemoveAsCost()
 end
 function s.atlimit(e,c)
 	return c:IsFaceup() and c:IsAttribute(ATTRIBUTE_WATER)
-end
-function s.efilter(e,re)
-	return e:GetHandler()~=re:GetOwner()
 end
 function s.reccost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.ffilter,tp,LOCATION_ONFIELD,0,1,nil) end
