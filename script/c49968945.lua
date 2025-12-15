@@ -4,18 +4,17 @@ function s.initial_effect(c)
 	--synchro summon
 	Synchro.AddProcedure(c,nil,1,1,Synchro.NonTunerEx(Card.IsAttribute,ATTRIBUTE_WIND),1,99)
 	c:EnableReviveLimit()
-	--to hand
+	--Must return
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_TOHAND)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_RECOVER)
 	e1:SetRange(LOCATION_MZONE)
-	e1:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
+	e1:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
 	e1:SetCountLimit(1)
-	e1:SetCondition(s.thcon)
-	e1:SetTarget(s.thtg)
-	e1:SetOperation(s.thop)
+	e1:SetCondition(s.rulecon)
+	e1:SetOperation(s.ruleop)
 	c:RegisterEffect(e1)
 	--Change battle positions of 1 monster on the field
 	local e2=Effect.CreateEffect(c)
@@ -32,24 +31,18 @@ function s.initial_effect(c)
 	e2:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
 	c:RegisterEffect(e2)
 end
-function s.thcon(e,tp,eg,ep,ev,re,r,rp)
+function s.rulecon(e,tp,eg,ep,ev,re,r,rp)
 	return ep==tp
 end
 function s.thfilter(c)
-	return c:IsType(TYPE_MONSTER+TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand()
+	return c:IsOnfield() and c:IsAbleToHand()
 end
-function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) and s.thfilter(chkc) end
-	if chk==0 then return ep==tp and e:GetHandler():IsRelateToEffect(e) and Duel.IsExistingTarget(s.thfilter,tp,0,LOCATION_ONFIELD,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
-	local g=Duel.SelectTarget(tp,s.thfilter,tp,0,LOCATION_ONFIELD,1,1,nil)
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,#g,0,0)
-end
-function s.thop(e,tp,eg,ep,ev,re,r,rp)
-	local tc=Duel.GetFirstTarget()
-	if tc and tc:IsRelateToEffect(e) then
-		Duel.SendtoHand(tc,REASON_RULE,PLAYER_NONE,1-tp)
-	end
+function s.ruleop(e,tp,eg,ep,ev,re,r,rp)
+    local g=Duel.GetMatchingGroup(aux.TRUE,1-tp,LOCATION_MZONE,0,nil)
+    if #g==0 then return end
+    Duel.Hint(HINT_SELECTMSG,1-tp,HINTMSG_RTOHAND)
+    local sg=g:Select(1-tp,1,1,nil)
+    Duel.SendtoHand(sg,nil,REASON_RULE)
 end
 
 function s.poscond(e,tp,eg,ep,ev,re,r,rp)
