@@ -71,3 +71,6 @@ function s.opice(e,tp,eg,ep,ev,re,r,rp)
 			c:RegisterEffect(e2)
 end
 end
+function s.efilter(e,re)
+	return e:GetHandler()~=re:GetOwner()
+end
