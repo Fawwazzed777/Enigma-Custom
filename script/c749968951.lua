@@ -2,7 +2,7 @@
 local s,id=GetID()
 function s.initial_effect(c)
 	--synchro summon
-	Synchro.AddProcedure(c,aux.FilterBoolFunctionEx(Card.IsType,TYPE_SYNCHRO),1,1,Synchro.NonTunerEx(s.sfilter),1,1)
+	Synchro.AddProcedure(c,aux.FilterBoolFunctionEx(s.sfilter1),1,1,Synchro.NonTunerEx(s.sfilter),1,1)
 	c:EnableReviveLimit()
 	--Eternal Ice Prison
 	local e0=Effect.CreateEffect(c)
@@ -38,7 +38,10 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function s.sfilter(c,val,scard,sumtype,tp)
-	return c:IsAttribute(ATTRIBUTE_WATER,scard,sumtype,tp)
+	return c:IsAttribute(ATTRIBUTE_WATER,scard,sumtype,tp) and c:IsType(TYPE_SYNCHRO,scard,sumtype,tp)
+end
+function s.sfilter1(c,val,scard,sumtype,tp)
+	return c:IsAttribute(ATTRIBUTE_WATER,scard,sumtype,tp) 
 end
 function s.ffilter(c)
 	return c:IsFaceup() and (c:IsFieldSpell() or c:IsContinuousTrap()) and c:IsAbleToRemoveAsCost()
