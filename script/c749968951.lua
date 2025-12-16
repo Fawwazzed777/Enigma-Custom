@@ -46,6 +46,9 @@ end
 function s.ffilter(c)
 	return c:IsFaceup() and (c:IsFieldSpell() or c:IsContinuousTrap()) and c:IsAbleToRemoveAsCost()
 end
+function s.efilter(c)
+	return c~=e:GetHandler()
+end
 function s.atlimit(e,c)
 	return c:IsFaceup() and c:IsAttribute(ATTRIBUTE_WATER)
 end
