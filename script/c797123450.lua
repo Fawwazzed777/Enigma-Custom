@@ -41,9 +41,10 @@ function s.initial_effect(c)
 	e5:SetDescription(aux.Stringid(id,0))
 	e5:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e5:SetCategory(CATEGORY_TOGRAVE)
-	e5:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
-	e5:SetCode(EVENT_DAMAGE_STEP_END)
-	e5:SetCondition(s.effcon1)
+	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
+	e5:SetCode(EVENT_PHASE|PHASE_BATTLE)
+	e5:SetRange(LOCATION_MZONE)
+	e5:SetCondition(s.battled)
 	e5:SetTarget(s.tgtg)
 	e5:SetOperation(s.tgop)
 	c:RegisterEffect(e5)
@@ -74,8 +75,8 @@ end
 function s.effcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetFlagEffect(id)~=0
 end
-function s.effcon1(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetFlagEffect(id)~=0 and Duel.GetAttacker()==e:GetHandler()
+function s.battled(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():GetBattledGroupCount()>0
 end
 function s.rdcon(e)
 	local tp=e:GetHandlerPlayer()
