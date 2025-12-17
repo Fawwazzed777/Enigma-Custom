@@ -17,7 +17,7 @@ function s.initial_effect(c)
 end
 s.listed_series={0x994}
 function s.sprfilter(c,e)
-	return c:IsFaceup() and c:GetLevel() and not c:IsImmuneToEffect(e)
+	return c:IsFaceup() and c:GetLevel()
 end
 function s.sprfilter1(c,tp,g,sc)
 	local lv=c:GetLevel()
@@ -31,7 +31,7 @@ end
 function s.sprcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	local g=Duel.GetMatchingGroup(s.sprfilter,tp,LOCATION_MZONE,0,nil,e)
+	local g=Duel.GetMatchingGroup(s.sprfilter,tp,LOCATION_MZONE,0,nil)
 	return g:IsExists(s.sprfilter1,1,nil,tp,g,c)
 end
 function s.sprtg(e,tp,eg,ep,ev,re,r,rp,c)
