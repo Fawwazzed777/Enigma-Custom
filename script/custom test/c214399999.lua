@@ -15,6 +15,7 @@ function s.initial_effect(c)
 	e0:SetOperation(s.sprop)
 	c:RegisterEffect(e0)
 end
+s.listed_series={0x994}
 function s.sprfilter(c,e)
 	return c:IsFaceup() and c:GetLevel() and not c:IsImmuneToEffect(e)
 end
