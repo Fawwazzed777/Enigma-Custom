@@ -45,10 +45,11 @@ function s.sprop(e,tp,eg,ep,ev,re,r,rp,c)
 		local mg2=aux.SelectUnselectGroup(g2,e,tp,1,1,nil,1,tp,HINTMSG_XMATERIAL,nil,nil,false)
 		mg1:Merge(mg2)
 	end
-		if not g then return end
 	if #mg1==2 then
-	c:SetMaterial(g)
-	Duel.Overlay(c,g)
+		mg1:KeepAlive()
+		e:SetLabelObject(mg1)
+	c:SetMaterial(mg1)
+	Duel.Overlay(c,mg1)
 	Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 	c:CompleteProcedure()
 		return true
