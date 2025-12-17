@@ -1,4 +1,4 @@
---Eternity Ace  - Chrono Zereya 
+--Eternity Ace - Chrono Zereya
 local s,id=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()
@@ -17,7 +17,7 @@ function s.initial_effect(c)
 end
 s.listed_series={0x994}
 function s.sprfilter(c,e)
-	return c:IsFaceup() and c:GetLevel()
+	return c:IsFaceup() and c:GetLevel()>0
 end
 function s.sprfilter1(c,tp,g,sc)
 	local lv=c:GetLevel()
@@ -26,7 +26,8 @@ function s.sprfilter1(c,tp,g,sc)
 end
 function s.sprfilter2(c,tp,mc,sc,lv)
 	local sg=Group.FromCards(c,mc)
-	return ((c:GetLevel()+mc:GetRank())==7) and Duel.GetLocationCountFromEx(tp,tp,sg,sc)>0
+	local rk=e:GetHandler():GetRank()
+	return ((c:GetLevel()+mc:GetRank())==rk) and Duel.GetLocationCountFromEx(tp,tp,sg,sc)>0
 end
 function s.sprcon(e,c)
 	if c==nil then return true end
