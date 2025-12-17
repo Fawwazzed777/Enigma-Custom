@@ -26,7 +26,7 @@ function s.sprfilter1(c,tp,g,sc)
 end
 function s.sprfilter2(c,tp,mc,sc,lv)
 	local sg=Group.FromCards(c,mc)
-	return (math.abs((c:GetLevel()+mc:GetRank()))==3) and Duel.GetLocationCountFromEx(tp,tp,sg,sc)>0
+	return (c:GetLevel()+mc:GetRank())==3 and Duel.GetLocationCountFromEx(tp,tp,sg,sc)>0
 end
 function s.sprcon(e,c)
 	if c==nil then return true end
