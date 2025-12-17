@@ -44,7 +44,7 @@ function s.tgfilter(c)
 end
 function s.drcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.tgfilter1,tp,LOCATION_HAND|LOCATION_MZONE,0,1,nil) end
-	local g=Duel.SelectMathingCard(tp,s.tgfilter1,tp,LOCATION_HAND|LOCATION_MZONE,0,1,1,nil,tp)
+	local g=Duel.SelectMatchingCard(tp,s.tgfilter1,tp,LOCATION_HAND|LOCATION_MZONE,0,1,1,nil,tp)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function s.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
