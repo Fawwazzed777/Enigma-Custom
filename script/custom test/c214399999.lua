@@ -47,7 +47,7 @@ end
 function s.sprop(e,tp,eg,ep,ev,re,r,rp,c)
 	local c=e:GetHandler()
 	if not c:IsRelateToEffect(e) or not c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false) then return end
-	local g=eg:Filter(s.cfilter,nil,e,tp,c)
+	local g=eg:Filter(s.sprfilter1,nil,e,tp,c)
 	local pg=aux.GetMustBeMaterialGroup(tp,g,tp,nil,nil,REASON_XYZ)
 	if #g>0 and #pg<=0 and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0 then
 		c:SetMaterial(g)
