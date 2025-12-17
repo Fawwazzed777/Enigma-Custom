@@ -11,6 +11,7 @@ function s.initial_effect(c)
 	e0:SetCode(EFFECT_SPSUMMON_PROC)
 	e0:SetRange(LOCATION_EXTRA)
 	e0:SetCondition(s.sprcon)
+	e0:SetTarget(s.sprtg)
 	e0:SetOperation(s.sprop)
 	c:RegisterEffect(e0)
 end
@@ -33,9 +34,9 @@ function s.sprcon(e,c)
 	local g=Duel.GetMatchingGroup(s.sprfilter,tp,LOCATION_MZONE,0,nil)
 	return g:IsExists(s.sprfilter1,1,nil,tp,g,c)
 end
-function s.sprop(e,tp,eg,ep,ev,re,r,rp,c)
-	local c=e:GetHandler()
+function s.sprtg(e,tp,eg,ep,ev,re,r,rp,c)
 	if not c:IsRelateToEffect(e) or not c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false) then return end
+	local c=e:GetHandler()
 	local g=Duel.GetMatchingGroup(s.sprfilter,tp,LOCATION_MZONE,0,nil)
 	local g1=g:Filter(s.sprfilter1,nil,tp,g,c)
 	local mg1=aux.SelectUnselectGroup(g1,e,tp,1,1,nil,1,tp,HINTMSG_XMATERIAL,nil,nil,false)
@@ -48,12 +49,13 @@ function s.sprop(e,tp,eg,ep,ev,re,r,rp,c)
 	if #mg1==2 then
 		mg1:KeepAlive()
 		e:SetLabelObject(mg1)
-	c:SetMaterial(mg1)
-	Duel.Overlay(c,mg1)
-	Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
-	c:CompleteProcedure()
 		return true
 	end
 	return false
 end
-
+function s.sprop(e,tp,eg,ep,ev,re,r,rp,c)
+	c:SetMaterial(mg1)
+	Duel.Overlay(c,mg1)
+	Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
+	c:CompleteProcedure()
+end
