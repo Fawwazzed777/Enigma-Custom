@@ -27,7 +27,7 @@ end
 function s.sprfilter2(c,tp,mc,sc,lv)
 	local sg=Group.FromCards(c,mc)
 	local rk=e:GetLabel()
-	if chk==0 then rk=e:GetHandler():GetLevel() end
+	if chk==0 then rk=e:GetHandler():GetRank() end
 	return ((c:GetLevel()+mc:GetRank())==rk) and Duel.GetLocationCountFromEx(tp,tp,sg,sc)>0
 end
 function s.sprcon(e,c)
