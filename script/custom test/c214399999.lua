@@ -3,7 +3,7 @@ local s,id=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()
 	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(Card.IsSetCard,0x994),7,2,nil,nil,Xyz.InfiniteMats)
-	--Must first be special summoned by its own method
+	--Special summoned by its own method
 	local e0=Effect.CreateEffect(c)
 	e0:SetDescription(aux.Stringid(id,0))
 	e0:SetType(EFFECT_TYPE_FIELD)
@@ -58,5 +58,6 @@ function s.sprop(e,tp,eg,ep,ev,re,r,rp,c)
 	if not g then return end
 	c:SetMaterial(g)
 	Duel.Overlay(c,g)
+	Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 	c:CompleteProcedure()
 end
