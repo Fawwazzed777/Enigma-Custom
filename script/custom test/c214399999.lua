@@ -119,7 +119,7 @@ function s.drop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.pfilter),tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,e:GetHandler(),tp):GetFirst()
 	if tc then
 		if Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)>0 then
-		local g=Duel.GetMatchingGroup(aux.FaceupFilter(Card.IsRace,RACE_DINOSAUR),tp,LOCATION_REMOVED,0,nil)
+		local g=Duel.GetMatchingGroup(aux.FaceupFilter(Card.IsSetCard,0x993),tp,LOCATION_REMOVED,0,nil)
 		if #g>0 then
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_FIELD)
