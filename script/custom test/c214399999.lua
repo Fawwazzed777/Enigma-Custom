@@ -19,7 +19,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.sprfilter(c)
-	return c:IsFaceup() and c:HasRank() and c:IsAbleToGraveAsCost()
+	return c:IsFaceup() and c:HasLevel() and c:IsAbleToGraveAsCost()
 end
 function s.sprfilter1(c,tp,g,sc)
 	local rk=c:GetRank()
