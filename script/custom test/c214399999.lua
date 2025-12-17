@@ -54,9 +54,17 @@ function s.sprtg(e,tp,eg,ep,ev,re,r,rp,c)
 end
 function s.sprop(e,tp,eg,ep,ev,re,r,rp,c)
 	local g=e:GetLabelObject()
-	local c=e:GetHandler()
 	if not g then return end
-	c:SetMaterial(g)
+	local og=Group.CreateGroup()
+	for tc in aux.Next(g) do
+		if tc:IsType(TYPE_XYZ) then
+			og:Merge(tc:GetOverlayGroup())
+		end
+	end
+	if #og>0 then
+		Duel.Overlay(c,og)
+	end
 	Duel.Overlay(c,g)
+	c:SetSummonType(SUMMON_TYPE_XYZ)
 	c:CompleteProcedure()
 end
