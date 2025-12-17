@@ -1,7 +1,7 @@
 --Eternity Ace - Chrono Zereya
 local s,id=GetID()
 function s.initial_effect(c)
-	Xyz.AddProcedure(c,nil,7,2,s.sprfilter1,aux.Stringid(id,0),2,s.xyzop)
+	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(Card.IsSetCard,0x994),7,2,function(c) return s.sprcon end,aux.Stringid(id,0),Xyz.InfiniteMats)
 	c:EnableReviveLimit()
 	--Special summoned by its own method
 	local e0=Effect.CreateEffect(c)
@@ -16,11 +16,6 @@ function s.initial_effect(c)
 	c:RegisterEffect(e0)
 end
 s.listed_series={0x994}
-function s.xyzop(e,tp,chk)
-	if chk==0 then return true end
-	e:GetHandler():RegisterFlagEffect(id,RESET_EVENT|(RESETS_STANDARD_PHASE_END&~RESET_TOFIELD),0,1)
-	return true
-end
 function s.sprfilter(c,e)
 	return c:IsFaceup() and c:GetLevel()>0
 end
