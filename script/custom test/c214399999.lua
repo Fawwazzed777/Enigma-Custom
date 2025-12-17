@@ -53,10 +53,13 @@ function s.sprtg(e,tp,eg,ep,ev,re,r,rp,c)
 	return false
 end
 function s.sprop(e,tp,eg,ep,ev,re,r,rp,c)
-	local mg1=e:GetLabelObject()
+	local g=e:GetLabelObject()
 	local c=e:GetHandler()
-	if not mg1 then return end
-	c:SetMaterial(mg1)
+	if not g then return end
+	local pg=aux.GetMustBeMaterialGroup(tp,g,tp,nil,nil,REASON_XYZ)
+	if #g>0 and #pg<=0 and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0 then
+	c:SetMaterial(g)
 	Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 	c:CompleteProcedure()
+end
 end
