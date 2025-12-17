@@ -35,6 +35,7 @@ function s.sprcon(e,c)
 end
 function s.sprop(e,tp,eg,ep,ev,re,r,rp,c)
 	local c=e:GetHandler()
+	if not c:IsRelateToEffect(e) or not c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false) then return end
 	local g=Duel.GetMatchingGroup(s.sprfilter,tp,LOCATION_MZONE,0,nil)
 	local g1=g:Filter(s.sprfilter1,nil,tp,g,c)
 	local mg1=aux.SelectUnselectGroup(g1,e,tp,1,1,nil,1,tp,HINTMSG_XMATERIAL,nil,nil,false)
@@ -44,10 +45,8 @@ function s.sprop(e,tp,eg,ep,ev,re,r,rp,c)
 		local mg2=aux.SelectUnselectGroup(g2,e,tp,1,1,nil,1,tp,HINTMSG_XMATERIAL,nil,nil,false)
 		mg1:Merge(mg2)
 	end
+		if not g then return end
 	if #mg1==2 then
-		mg1:KeepAlive()
-		e:SetLabelObject(mg1)
-	if not g then return end
 	c:SetMaterial(g)
 	Duel.Overlay(c,g)
 	Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
