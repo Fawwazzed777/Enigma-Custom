@@ -26,8 +26,7 @@ function s.sprfilter1(c,tp,g,sc)
 end
 function s.sprfilter2(c,tp,mc,sc,lv)
 	local sg=Group.FromCards(c,mc)
-	return (c:GetLevel()+mc:GetRank())==7 and c:IsCanBeXyzMaterial(xyz,tp) and (not e or c:IsRelateToEffect(e))
-	and Duel.GetLocationCountFromEx(tp,tp,sg,sc)>0
+	return (c:GetLevel()+mc:GetRank())==7 and Duel.GetLocationCountFromEx(tp,tp,sg,sc)>0
 end
 function s.sprcon(e,c)
 	if c==nil then return true end
@@ -36,24 +35,29 @@ function s.sprcon(e,c)
 	return g:IsExists(s.sprfilter1,1,nil,tp,g,c)
 end
 function s.sprtg(e,tp,eg,ep,ev,re,r,rp,c)
-	local g=eg:Filter(s.sprfilter1,nil,nil,tp,e:GetHandler())
-	if chk==0 then
-		local c=e:GetHandler()
-		local pg=aux.GetMustBeMaterialGroup(tp,g,tp,nil,nil,REASON_XYZ)
-		return #pg<=0 and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0 and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false)
+	local c=e:GetHandler()
+	local g=Duel.GetMatchingGroup(s.sprfilter,tp,LOCATION_MZONE,0,nil)
+	local g1=g:Filter(s.sprfilter1,nil,tp,g,c)
+	local mg1=aux.SelectUnselectGroup(g1,e,tp,1,1,nil,1,tp,HINTMSG_XMATERIAL,nil,nil,true)
+	if #mg1>0 then
+		local mc=mg1:GetFirst()
+		local g2=g:Filter(s.sprfilter2,mc,tp,mc,c,mc:GetLevel())
+		local mg2=aux.SelectUnselectGroup(g2,e,tp,1,1,nil,1,tp,HINTMSG_XMATERIAL,nil,nil,true)
+		mg1:Merge(mg2)
 	end
-	Duel.SetTargetCard(g)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
+	if #mg1==2 then
+		mg1:KeepAlive()
+		e:SetLabelObject(mg1)
+		return true
+	end
+	return false
 end
 function s.sprop(e,tp,eg,ep,ev,re,r,rp,c)
+	local g=e:GetLabelObject()
 	local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) or not c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false) then return end
-	local g=eg:Filter(s.sprfilter1,nil,e,tp,c)
-	local pg=aux.GetMustBeMaterialGroup(tp,g,tp,nil,nil,REASON_XYZ)
-	if #g>0 and #pg<=0 and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0 then
-		c:SetMaterial(g)
-		Duel.Overlay(c,g)
-		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
-		c:CompleteProcedure()
-	end
+	if not g then return end
+	c:SetMaterial(g)
+	Duel.Overlay(c,g)
+	Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
+	c:CompleteProcedure()
 end
