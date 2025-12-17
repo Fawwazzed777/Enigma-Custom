@@ -20,10 +20,9 @@ function s.ovfilter(c,tp,xyzc)
 	return c:IsSummonCode(xyzc,SUMMON_TYPE_XYZ,tp,15799999) and c:IsFaceup()
 end
 function s.eafilter(c,tp)
-	return c:IsSetCard(0x993) and c:IsFaceup() and c:IsCanBeXyzMaterial
+	return c:IsSetCard(0x993) and c:IsFaceup() and c:IsCanBeXyzMaterial()
 end
 function s.xyzop(e,tp,chk,mc)
-	local og=Group.CreateGroup()
 	local c=e:GetHandler()
 	if chk==0 then return not Duel.HasFlagEffect(tp,id) and Duel.IsExistingMatchingCard(s.eafilter,tp,LOCATION_SZONE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
