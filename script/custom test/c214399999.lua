@@ -37,8 +37,7 @@ end
 function s.sprtg(e,tp,eg,ep,ev,re,r,rp,c)
 	if chk==0 then
 		local c=e:GetHandler()
-		local pg=aux.GetMustBeMaterialGroup(tp,nil,tp,nil,nil,REASON_XYZ)
-		return #pg<=0 and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0 and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false)
+		return Duel.GetLocationCountFromEx(tp,tp,nil,c)>0 and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false)
 	end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
