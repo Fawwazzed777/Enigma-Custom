@@ -16,16 +16,16 @@ function s.initial_effect(c)
 	c:RegisterEffect(e0)
 end
 function s.sprfilter(c)
-	return c:IsFaceup() and c:GetLevel() and c:IsAbleToGraveAsCost()
+	return c:IsFaceup() and c:GetLevel() and not c:IsImmuneToEffect(e)
 end
 function s.sprfilter1(c,tp,g,sc)
 	local lv=c:GetLevel()
 	local g=Duel.GetMatchingGroup(s.sprfilter,tp,LOCATION_MZONE,0,nil)
-	return (c:IsFaceup() and c:IsMonster()) and g:IsExists(s.sprfilter2,1,c,tp,c,sc,lv)
+	return (c:IsFaceup() and not c:IsType(TYPE_TOKEN)) and c:IsType(TYPE_XYZ) and g:IsExists(s.sprfilter2,1,c,tp,c,sc,lv)
 end
 function s.sprfilter2(c,tp,mc,sc,lv)
 	local sg=Group.FromCards(c,mc)
-	return (math.abs((c:GetLevel()-mc:GetLevel()))==3) and Duel.GetLocationCountFromEx(tp,tp,sg,sc)>0
+	return (math.abs((c:GetLevel()-mc:GetRank()))==3) and Duel.GetLocationCountFromEx(tp,tp,sg,sc)>0
 end
 function s.sprcon(e,c)
 	if c==nil then return true end
