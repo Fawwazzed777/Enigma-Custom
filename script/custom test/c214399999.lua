@@ -1,9 +1,9 @@
 --Eternity Ace - Chrono Zereya
 local s,id=GetID()
 function s.initial_effect(c)
-	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(Card.IsSetCard,0x994),7,2,nil,nil,Xyz.InfiniteMats)
 	c:EnableReviveLimit()
-	--Special summoned by its own method
+	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(Card.IsSetCard,0x994),7,2,nil,nil,Xyz.InfiniteMats)
+	--Must first be special summoned by its own method
 	local e0=Effect.CreateEffect(c)
 	e0:SetDescription(aux.Stringid(id,0))
 	e0:SetType(EFFECT_TYPE_FIELD)
@@ -22,8 +22,7 @@ end
 function s.sprfilter1(c,tp,g,sc)
 	local lv=c:GetLevel()
 	local g=Duel.GetMatchingGroup(s.sprfilter,tp,LOCATION_MZONE,0,nil)
-	return (c:IsFaceup() and not c:IsType(TYPE_TOKEN)) and c:IsType(TYPE_XYZ) 
-	and g:IsExists(s.sprfilter2,1,c,tp,c,sc,lv)
+	return (c:IsFaceup() and not c:IsType(TYPE_TOKEN)) and c:IsType(TYPE_XYZ) and g:IsExists(s.sprfilter2,1,c,tp,c,sc,lv)
 end
 function s.sprfilter2(c,tp,mc,sc,lv)
 	local sg=Group.FromCards(c,mc)
@@ -33,7 +32,7 @@ function s.sprcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
 	local g=Duel.GetMatchingGroup(s.sprfilter,tp,LOCATION_MZONE,0,nil)
-	return g:IsExists(s.sprfilter1,1,nil,tp,g,c) 
+	return g:IsExists(s.sprfilter1,1,nil,tp,g,c)
 end
 function s.sprtg(e,tp,eg,ep,ev,re,r,rp,c)
 	local c=e:GetHandler()
