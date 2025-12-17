@@ -19,16 +19,16 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.sprfilter(c)
-	return c:IsFaceup() and c:HasLevel() and c:IsAbleToGraveAsCost()
+	return c:IsFaceup() and c:GetLevel()>7 and c:IsAbleToGraveAsCost()
 end
 function s.sprfilter1(c,tp,g,sc)
-	local rk=c:GetRank()
+	local lv=c:GetLevel()
 	local g=Duel.GetMatchingGroup(s.sprfilter,tp,LOCATION_MZONE,0,nil)
-	return c:IsType(TYPE_EFFECT) and g:IsExists(s.sprfilter2,1,c,tp,c,sc,rk)
+	return c:IsType(TYPE_TUNER) and g:IsExists(s.sprfilter2,1,c,tp,c,sc,lv)
 end
-function s.sprfilter2(c,tp,mc,sc,rk)
+function s.sprfilter2(c,tp,mc,sc,lv)
 	local sg=Group.FromCards(c,mc)
-	return (math.abs((c:GetLevel()-mc:GetLevel()))==4) and not c:IsType(TYPE_XYZ) and Duel.GetLocationCountFromEx(tp,tp,sg,sc)>0
+	return (math.abs((c:GetLevel()-mc:GetLevel()))==3) and Duel.GetLocationCountFromEx(tp,tp,sg,sc)>0
 end
 function s.sprcon(e,c)
 	if c==nil then return true end
@@ -37,6 +37,7 @@ function s.sprcon(e,c)
 	return g:IsExists(s.sprfilter1,1,nil,tp,g,c)
 end
 function s.sprtg(e,tp,eg,ep,ev,re,r,rp,c)
+	local c=e:GetHandler()
 	local g=Duel.GetMatchingGroup(s.sprfilter,tp,LOCATION_MZONE,0,nil)
 	local g1=g:Filter(s.sprfilter1,nil,tp,g,c)
 	local mg1=aux.SelectUnselectGroup(g1,e,tp,1,1,nil,1,tp,HINTMSG_TOGRAVE,nil,nil,true)
@@ -57,4 +58,5 @@ function s.sprop(e,tp,eg,ep,ev,re,r,rp,c)
 	local g=e:GetLabelObject()
 	if not g then return end
 	Duel.SendtoGrave(g,REASON_COST)
+	g:DeleteGroup()
 end
