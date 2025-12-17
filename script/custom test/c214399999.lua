@@ -39,6 +39,7 @@ function s.sprtg(e,tp,eg,ep,ev,re,r,rp,c)
 		local c=e:GetHandler()
 		return Duel.GetLocationCountFromEx(tp,tp,nil,c)>0 and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false)
 	end
+	Duel.SetTargetCard(g)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
 function s.sprop(e,tp,eg,ep,ev,re,r,rp,c)
@@ -57,6 +58,7 @@ function s.sprop(e,tp,eg,ep,ev,re,r,rp,c)
 		mg1:KeepAlive()
 		e:SetLabelObject(mg1)
 	if not g then return end
+	c:SetMaterial(g)
 	Duel.Overlay(c,g)
 	Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 	c:CompleteProcedure()
