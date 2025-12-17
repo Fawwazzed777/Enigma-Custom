@@ -15,7 +15,7 @@ function s.initial_effect(c)
 	e0:SetOperation(s.sprop)
 	c:RegisterEffect(e0)
 end
-function s.sprfilter(c)
+function s.sprfilter(c,e)
 	return c:IsFaceup() and c:GetLevel() and not c:IsImmuneToEffect(e)
 end
 function s.sprfilter1(c,tp,g,sc)
