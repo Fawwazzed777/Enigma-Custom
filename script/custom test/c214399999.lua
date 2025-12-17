@@ -24,11 +24,11 @@ end
 function s.sprfilter1(c,tp,g,sc)
 	local rk=c:GetRank()
 	local g=Duel.GetMatchingGroup(s.sprfilter,tp,LOCATION_MZONE,0,nil)
-	return c:IsType(TYPE_XYZ) and g:IsExists(s.sprfilter2,1,c,tp,c,sc,rk)
+	return c:IsType(TYPE_EFFECT) and g:IsExists(s.sprfilter2,1,c,tp,c,sc,rk)
 end
 function s.sprfilter2(c,tp,mc,sc,rk)
 	local sg=Group.FromCards(c,mc)
-	return (math.abs((c:GetRank()-mc:GetLevel()))==4) and not c:IsType(TYPE_XYZ) and Duel.GetLocationCountFromEx(tp,tp,sg,sc)>0
+	return (math.abs((c:GetLevel()-mc:GetLevel()))==4) and not c:IsType(TYPE_XYZ) and Duel.GetLocationCountFromEx(tp,tp,sg,sc)>0
 end
 function s.sprcon(e,c)
 	if c==nil then return true end
