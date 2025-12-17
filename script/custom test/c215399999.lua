@@ -39,15 +39,12 @@ function s.initial_effect(c)
 	e4:SetOperation(s.sop)
 	c:RegisterEffect(e4)
 end
-function s.tgfilter1(c)
-	return c:IsSetCard(0x994) and c:IsMonster() and c:IsAbleToRemove()
-end
-function s.tgfilter2(c)
+function s.tgfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x994) and c:IsMonster() and c:IsAbleToRemove()
 end
 function s.drcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return (Duel.IsExistingMatchingCard(s.tgfilter1,tp,LOCATION_HAND,0,1,nil) or 
-	Duel.IsExistingMatchingCard(s.tgfilter2,tp,LOCATION_MZONE,0,1,nil)) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.tgfilter1,tp,LOCATION_HAND|LOCATION_MZONE,0,1,nil) end
+	local g=Duel.SelectMathingCard(tp,s.tgfilter1,tp,LOCATION_HAND|LOCATION_MZONE,0,1,1,nil,tp)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function s.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
