@@ -2,7 +2,7 @@
 local s,id=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()
-	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(Card.IsSetCard,0x994),7,2,s.ovfilter,aux.Stringid(id,0),2,Xyz.InfiniteMats,s.xyzop)
+	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(Card.IsSetCard,0x994),7,3,s.ovfilter,aux.Stringid(id,0),3,s.xyzop,Xyz.InfiniteMats)
 	--Special summoned by its own method
 	local e0=Effect.CreateEffect(c)
 	e0:SetDescription(aux.Stringid(id,0))
