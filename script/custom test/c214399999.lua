@@ -54,6 +54,9 @@ function s.sprtg(e,tp,eg,ep,ev,re,r,rp,c)
 	return false
 end
 function s.sprop(e,tp,eg,ep,ev,re,r,rp,c)
+	local mg1=e:GetLabelObject()
+	local c=e:GetHandler()
+	if not mg1 then return end
 	c:SetMaterial(mg1)
 	Duel.Overlay(c,mg1)
 	Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
