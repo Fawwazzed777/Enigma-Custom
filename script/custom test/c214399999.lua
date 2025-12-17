@@ -57,5 +57,6 @@ function s.sprop(e,tp,eg,ep,ev,re,r,rp,c)
 	local c=e:GetHandler()
 	if not g then return end
 	c:SetMaterial(g)
+	Duel.Overlay(c,g)
 	c:CompleteProcedure()
 end
