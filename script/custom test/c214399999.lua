@@ -1,7 +1,7 @@
 --Eternity Ace - Chrono Zereya
 local s,id=GetID()
 function s.initial_effect(c)
-	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(Card.IsSetCard,0x994),7,2,function(c) return s.sprcon end,aux.Stringid(id,0),Xyz.InfiniteMats)
+	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(Card.IsSetCard,0x994),7,2,nil,nil,Xyz.InfiniteMats)
 	c:EnableReviveLimit()
 	--Special summoned by its own method
 	local e0=Effect.CreateEffect(c)
