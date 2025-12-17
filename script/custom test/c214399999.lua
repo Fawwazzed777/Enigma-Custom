@@ -26,7 +26,7 @@ function s.xyzop(e,tp,chk,mc)
 	if chk==0 then return not Duel.HasFlagEffect(tp,id) and Duel.IsExistingMatchingCard(s.eafilter,tp,LOCATION_ONFIELD,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISCARD)
 	local sc=Duel.GetMatchingGroup(s.eafilter,tp,LOCATION_ONFIELD,0,nil):SelectUnselect(Group.CreateGroup(),tp,false,Xyz.ProcCancellable)
-	if sc and Duel.SendtoGrave(sc,POS_FACEUP,REASON_COST)>0 then
+	if sc and Duel.Remove(sc,POS_FACEUP,REASON_COST)>0 then
 		return Duel.RegisterFlagEffect(tp,id,RESET_PHASE|PHASE_END,EFFECT_FLAG_OATH,1)
 	else
 		return false
