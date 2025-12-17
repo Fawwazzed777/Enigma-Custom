@@ -26,7 +26,8 @@ function s.sprfilter1(c,tp,g,sc)
 end
 function s.sprfilter2(c,tp,mc,sc,lv)
 	local sg=Group.FromCards(c,mc)
-	return (c:GetLevel()+mc:GetRank())==7 and Duel.GetLocationCountFromEx(tp,tp,sg,sc)>0
+	return (c:GetLevel()+mc:GetRank())==7 and c:IsCanBeXyzMaterial(xyz,tp) and (not e or c:IsRelateToEffect(e))
+	and Duel.GetLocationCountFromEx(tp,tp,sg,sc)>0
 end
 function s.sprcon(e,c)
 	if c==nil then return true end
@@ -35,11 +36,13 @@ function s.sprcon(e,c)
 	return g:IsExists(s.sprfilter1,1,nil,tp,g,c)
 end
 function s.sprtg(e,tp,eg,ep,ev,re,r,rp,c)
+	local g=eg:Filter(s.sprfilter1,nil,nil,tp,e:GetHandler())
 	if chk==0 then
 		local c=e:GetHandler()
 		local pg=aux.GetMustBeMaterialGroup(tp,g,tp,nil,nil,REASON_XYZ)
 		return #pg<=0 and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0 and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false)
 	end
+	Duel.SetTargetCard(g)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
 function s.sprop(e,tp,eg,ep,ev,re,r,rp,c)
