@@ -2,22 +2,38 @@
 local s,id=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()
-	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(Card.IsSetCard,0x994),7,2,nil,nil,Xyz.InfiniteMats)
+	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(Card.IsSetCard,0x994),7,2,nil,nil,Xyz.InfiniteMats,s.xyzop)
 	--Special summoned by its own method
 	local e0=Effect.CreateEffect(c)
 	e0:SetDescription(aux.Stringid(id,0))
 	e0:SetType(EFFECT_TYPE_FIELD)
 	e0:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e0:SetCode(EFFECT_SPSUMMON_PROC)
-	e0:SetRange(LOCATION_EXTRA)
+	e0:SetRange(LOCATION_GRAVE)
 	e0:SetCondition(s.sprcon)
 	e0:SetTarget(s.sprtg)
 	e0:SetOperation(s.sprop)
 	c:RegisterEffect(e0)
 end
-s.listed_series={0x994}
+s.listed_series={0x993,0x994,15799999}
+function s.ovfilter(c,tp,xyzc)
+	return c:IsSummonCode(xyzc,SUMMON_TYPE_XYZ,tp,15799999) and c:IsFaceup()
+end
+function s.xyzop(e,tp,chk,mc)
+	local og=Group.CreateGroup()
+	local c=e:GetHandler()
+	if chk==0 then return not Duel.HasFlagEffect(tp,id) and Duel.IsExistingMatchingCard(Card.IsCanBeXyzMaterial,tp,LOCATION_MZONE,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISCARD)
+	local sc=Duel.GetMatchingGroup(Card.IsCanBeXyzMaterial,tp,LOCATION_SZONE,0,nil):SelectUnselect(Group.CreateGroup(),tp,false,Xyz.ProcCancellable)
+	if #og>0 then
+		Duel.Overlay(c,og)
+		return Duel.RegisterFlagEffect(tp,id,RESET_PHASE|PHASE_END,EFFECT_FLAG_OATH,1)
+	else
+		return false
+	end
+end
 function s.sprfilter(c,e)
-	return c:IsFaceup() and c:GetLevel()
+	return c:IsFaceup() and c:IsSetCard(0x993) and c:IsCanBeXyzMaterial()
 end
 function s.sprfilter1(c,tp,g,sc)
 	local lv=c:GetLevel()
@@ -38,11 +54,11 @@ function s.sprtg(e,tp,eg,ep,ev,re,r,rp,c)
 	local c=e:GetHandler()
 	local g=Duel.GetMatchingGroup(s.sprfilter,tp,LOCATION_MZONE,0,nil)
 	local g1=g:Filter(s.sprfilter1,nil,tp,g,c)
-	local mg1=aux.SelectUnselectGroup(g1,e,tp,1,1,nil,1,tp,HINTMSG_XMATERIAL,nil,nil,true)
+	local mg1=aux.SelectUnselectGroup(g1,e,tp,1,1,nil,1,tp,HINTMSG_XMATERIAL,nil,nil,false)
 	if #mg1>0 then
 		local mc=mg1:GetFirst()
 		local g2=g:Filter(s.sprfilter2,mc,tp,mc,c,mc:GetLevel())
-		local mg2=aux.SelectUnselectGroup(g2,e,tp,1,1,nil,1,tp,HINTMSG_XMATERIAL,nil,nil,true)
+		local mg2=aux.SelectUnselectGroup(g2,e,tp,1,1,nil,1,tp,HINTMSG_XMATERIAL,nil,nil,false)
 		mg1:Merge(mg2)
 	end
 	if #mg1==2 then
@@ -65,6 +81,5 @@ function s.sprop(e,tp,eg,ep,ev,re,r,rp,c)
 		Duel.Overlay(c,og)
 	end
 	Duel.Overlay(c,g)
-	c:SetSummonType(SUMMON_TYPE_XYZ)
 	c:CompleteProcedure()
 end
