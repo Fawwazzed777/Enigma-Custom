@@ -24,12 +24,12 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.sprfilter(c)
-	return c:IsFaceup() and c:GetLevel()>7 and c:IsAbleToGraveAsCost()
+	return c:IsFaceup() and c:GetLevel() and c:IsAbleToGraveAsCost()
 end
 function s.sprfilter1(c,tp,g,sc)
 	local lv=c:GetLevel()
 	local g=Duel.GetMatchingGroup(s.sprfilter,tp,LOCATION_MZONE,0,nil)
-	return c:IsType(TYPE_EFFECT) and g:IsExists(s.sprfilter2,1,c,tp,c,sc,lv)
+	return (c:IsMonster and c:IsType(TYPE_EFFECT)) and g:IsExists(s.sprfilter2,1,c,tp,c,sc,lv)
 end
 function s.sprfilter2(c,tp,mc,sc,lv)
 	local sg=Group.FromCards(c,mc)
