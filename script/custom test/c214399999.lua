@@ -25,8 +25,9 @@ function s.sprfilter1(c,tp,g,sc)
 	return (c:IsFaceup() and not c:IsType(TYPE_TOKEN)) and c:IsType(TYPE_XYZ) and g:IsExists(s.sprfilter2,1,c,tp,c,sc,lv)
 end
 function s.sprfilter2(c,tp,mc,sc,lv)
+	local sum=0
 	local sg=Group.FromCards(c,mc)
-	return (c:GetLevel()+mc:GetRank()):GetSum(Card.GetLevel)>=8 and Duel.GetLocationCountFromEx(tp,tp,sg,sc)>0
+	return (c:GetLevel()+mc:GetRank()):GetSum(8) and Duel.GetLocationCountFromEx(tp,tp,sg,sc)>0
 end
 function s.sprcon(e,c)
 	if c==nil then return true end
