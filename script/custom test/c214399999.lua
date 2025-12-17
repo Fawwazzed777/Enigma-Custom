@@ -133,7 +133,7 @@ end
 end
 end
 function s.atkup(e,c)
-	return Duel.GetMatchingGroupCount(aux.FaceupFilter(Card.IsSetCard,0x993),c:GetControler(),LOCATION_REMOVED,0,nil)*300
+	return Duel.GetMatchingGroupCount(aux.FaceupFilter(Card.IsSetCard(0x993)),e:GetHandlerPlayer(),LOCATION_REMOVED,0,nil)*300
 end
 function s.pencon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
