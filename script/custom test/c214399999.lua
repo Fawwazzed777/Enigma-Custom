@@ -10,7 +10,7 @@ s.listed_series={0x994}
 function s.sprfilter(c,e)
 	return c:IsFaceup() and c:GetLevel()
 end
-function s.sprfilter1(c,tp,g,sc)
+function s.sprfilter1(c,tp,g,sc,lv)
 	local lv=c:GetLevel()
 	local g=Duel.GetMatchingGroup(s.sprfilter,tp,LOCATION_MZONE,0,nil)
 	return (c:IsFaceup() and not c:IsType(TYPE_TOKEN)) and c:IsType(TYPE_XYZ) and g:IsExists(s.sprfilter2,1,c,tp,c,sc,lv)
@@ -19,7 +19,7 @@ function s.sprfilter2(c,tp,mc,sc,lv)
 	local sg=Group.FromCards(c,mc)
 	return (c:GetLevel()+mc:GetRank())==7 and Duel.GetLocationCountFromEx(tp,tp,sg,sc)>0
 end
-function s.xyzop(e,tp,chk,mc)
+function s.xyzop(e,tp,chk,mc,sc,lv)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.sprfilter1,tp,LOCATION_MZONE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
 	local g=eg:Filter(s.sprfilter1,nil,e,tp,c)
