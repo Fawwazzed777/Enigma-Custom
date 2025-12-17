@@ -35,6 +35,7 @@ function s.sprcon(e,c)
 	return g:IsExists(s.sprfilter1,1,nil,tp,g,c)
 end
 function s.sprtg(e,tp,eg,ep,ev,re,r,rp,c)
+	local g=eg:Filter(s.sprfilter1,nil,nil,tp,e:GetHandler())
 	if chk==0 then
 		local c=e:GetHandler()
 		local pg=aux.GetMustBeMaterialGroup(tp,g,tp,nil,nil,REASON_XYZ)
@@ -59,7 +60,6 @@ function s.sprop(e,tp,eg,ep,ev,re,r,rp,c)
 		mg1:KeepAlive()
 		e:SetLabelObject(mg1)
 	if not g then return end
-	c:SetMaterial(g)
 	Duel.Overlay(c,g)
 	Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 	c:CompleteProcedure()
