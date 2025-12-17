@@ -53,6 +53,8 @@ function s.sprtg(e,tp,eg,ep,ev,re,r,rp,c)
 end
 function s.sprop(e,tp,eg,ep,ev,re,r,rp,c)
 	local g=e:GetLabelObject()
+	local c=e:GetHandler()
 	if not g then return end
-	Duel.SendtoGrave(g,REASON_COST)
+	c:SetMaterial(g)
+	Duel.Overlay(c,g)
 end
