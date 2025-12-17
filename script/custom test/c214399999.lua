@@ -19,14 +19,16 @@ s.listed_series={0x993,0x994,15799999}
 function s.ovfilter(c,tp,xyzc)
 	return c:IsSummonCode(xyzc,SUMMON_TYPE_XYZ,tp,15799999) and c:IsFaceup()
 end
+function s.eafilter(c,tp)
+	return c:IsSetCard(0x993) and c:IsFaceup() and c:IsCanBeXyzMaterial
+end
 function s.xyzop(e,tp,chk,mc)
 	local og=Group.CreateGroup()
 	local c=e:GetHandler()
-	if chk==0 then return not Duel.HasFlagEffect(tp,id) and Duel.IsExistingMatchingCard(Card.IsCanBeXyzMaterial,tp,LOCATION_MZONE,0,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISCARD)
-	local sc=Duel.GetMatchingGroup(Card.IsCanBeXyzMaterial,tp,LOCATION_SZONE,0,nil):SelectUnselect(Group.CreateGroup(),tp,false,Xyz.ProcCancellable)
-	if #og>0 then
-		Duel.Overlay(c,og)
+	if chk==0 then return not Duel.HasFlagEffect(tp,id) and Duel.IsExistingMatchingCard(s.eafilter,tp,LOCATION_SZONE,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
+	local sc=Duel.GetMatchingGroup(s.eafilter,tp,LOCATION_SZONE,0,nil):SelectUnselect(Group.CreateGroup(),tp,false,Xyz.ProcCancellable)
+	if sc and Duel.Overlay(c,sc) then	
 		return Duel.RegisterFlagEffect(tp,id,RESET_PHASE|PHASE_END,EFFECT_FLAG_OATH,1)
 	else
 		return false
