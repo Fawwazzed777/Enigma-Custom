@@ -27,7 +27,7 @@ end
 function s.sprfilter2(c,tp,mc,sc,lv)
 	local sum=0
 	local sg=Group.FromCards(c,mc)
-	return (c:GetLevel()+mc:GetRank()):GetSum(8) and Duel.GetLocationCountFromEx(tp,tp,sg,sc)>0
+	return (c:GetLevel()+mc:GetRank()):GetSum()>=8 and Duel.GetLocationCountFromEx(tp,tp,sg,sc)>0
 end
 function s.sprcon(e,c)
 	if c==nil then return true end
