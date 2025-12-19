@@ -64,7 +64,6 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 	local ct=Duel.GetMatchingGroupCount(aux.TRUE,tp,LOCATION_REMOVED,LOCATION_REMOVED,nil)
 	if tc then
 	local tc=Duel.GetFirstTarget()
-	local atk=tc:GetAttack()
 	if tc:IsRelateToEffect(e) and tc:IsFaceup() then
 		--Decrease ATK
 		local e1=Effect.CreateEffect(c)
@@ -73,7 +72,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetValue(-ct*300)
 		e1:SetReset(RESET_EVENT|RESETS_STANDARD)
 		tc:RegisterEffect(e1)
-		if atk~=0 and tc:IsAttack(0) then 
+		if tc:IsAttack(0) then 
 			Duel.BreakEffect()
 			Duel.Destroy(tc,REASON_EFFECT) 
 		end
