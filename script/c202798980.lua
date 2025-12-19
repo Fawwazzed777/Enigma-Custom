@@ -62,7 +62,6 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local ct=Duel.GetMatchingGroupCount(aux.TRUE,tp,LOCATION_REMOVED,LOCATION_REMOVED,nil)
 	local tc=Duel.SelectMatchingCard(tp,s.desfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,c) 
-	local atk=tc:GetAttack()
 	if tc then
 	Duel.HintSelection(tc)
 		--Decrease ATK
@@ -72,7 +71,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetValue(-ct*300)
 		e1:SetReset(RESET_EVENT|RESETS_STANDARD)
 		tc:RegisterEffect(e1)
-		if atk~=0 and tc:IsAttack(0) then 
+		if tc:IsAttack(0) then 
 			Duel.BreakEffect()
 			Duel.Destroy(tc,REASON_EFFECT) 
 		end
