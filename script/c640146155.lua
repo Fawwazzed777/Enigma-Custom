@@ -8,7 +8,7 @@ function s.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetRange(LOCATION_HAND)
-	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
+	e1:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
 	e1:SetCountLimit(1,{id,0})
 	e1:SetCondition(s.spcon)
 	e1:SetTarget(s.sptg)
@@ -41,9 +41,9 @@ end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP_DEFENSE)>0 and Duel.IsPlayerCanDraw(tp,2)
-	and	Duel.SelectEffectYesNo(tp,aux.Stringid(id,2))and Duel.IsExistingMatchingCard(s.drconfilter,tp,LOCATION_MZONE,0,1,nil) then
+	and Duel.IsExistingMatchingCard(s.drconfilter,tp,LOCATION_MZONE,0,1,nil) and Duel.SelectEffectYesNo(tp,aux.Stringid(id,2))then
 		Duel.BreakEffect()
-		Duel.Draw(2,REASON_EFFECT)
+		Duel.Draw(tp,2,REASON_EFFECT)
 		--You cannot Special Summon for the rest of this turn, except "Enigmation" monsters
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetDescription(aux.Stringid(id,2))
