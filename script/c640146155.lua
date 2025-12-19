@@ -42,6 +42,10 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP_DEFENSE)>0 and Duel.IsPlayerCanDraw(tp,2)
 		and Duel.IsExistingMatchingCard(s.drconfilter,tp,LOCATION_MZONE,0,1,nil) then
+		Duel.BreakEffect()
+		Duel.SetTargetPlayer(tp)
+		Duel.SetTargetParam(2)
+		Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,2)
 		local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 		Duel.Draw(p,d,REASON_EFFECT)
 		--You cannot Special Summon for the rest of this turn, except "Enigmation" monsters
