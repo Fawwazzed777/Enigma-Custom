@@ -71,7 +71,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
 		e1:SetValue(-ct*300)
 		e1:SetReset(RESET_EVENT|RESETS_STANDARD)
-		Duel.RegisterEffect(e1,tp)
+		tc:RegisterEffect(e1)
 		if atk~=0 and tc:IsAttack(0) then 
 			Duel.BreakEffect()
 			Duel.Destroy(tc,REASON_EFFECT) 
