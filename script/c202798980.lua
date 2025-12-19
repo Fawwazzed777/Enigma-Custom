@@ -30,14 +30,14 @@ function s.enigma(c)
 end
 function s.tb(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(aux.FaceupFilter(s.enigma),tp,LOCATION_REMOVED,0,1,e:GetHandler())
-		and Duel.IsExistingMatchingCard(Card.IsAbleToGrave,tp,0,LOCATION_SZONE,1,nil) end 
+		and Duel.IsExistingMatchingCard(Card.IsAbleToGrave,tp,LOCATION_SZONE,LOCATION_SZONE,1,nil) end 
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,1-tp,LOCATION_SZONE)
 end
 function s.tbo(e,tp,eg,ep,ev,re,r,rp,chk)
 	local max_ct=Duel.GetMatchingGroupCount(aux.FaceupFilter(s.enigma),tp,LOCATION_REMOVED,0,nil,e:GetHandler())
 	if max_ct==0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g=Duel.SelectMatchingCard(tp,Card.IsAbleToGrave,tp,0,LOCATION_SZONE,1,max_ct,nil)
+	local g=Duel.SelectMatchingCard(tp,Card.IsAbleToGrave,tp,LOCATION_SZONE,LOCATION_SZONE,1,max_ct,nil)
 	if #g>0 then
 		Duel.HintSelection(g)
 		Duel.SendtoGrave(g,REASON_EFFECT)
