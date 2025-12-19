@@ -69,7 +69,7 @@ function s.tbo(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
 		local rg=Duel.GetMatchingGroup(Card.IsSpell,tp,LOCATION_REMOVED,0,nil)
-		ct=Duel.SendtoGrave(g,REASON_EFFECT)
+		ct=Duel.SendtoGrave(rg,REASON_EFFECT)
 		if ct>0 then
 		Duel.Recover(tp,ct*500,REASON_EFFECT)
 		end
