@@ -61,9 +61,8 @@ end
 function s.op(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local ct=Duel.GetMatchingGroupCount(aux.TRUE,tp,LOCATION_REMOVED,LOCATION_REMOVED,nil)
-	local tc=Duel.SelectMatchingCard(tp,s.desfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,c) 
-	if tc:IsFaceup() then
-	Duel.HintSelection(tc)
+	local tc=Duel.SelectTarget(tp,s.desfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,c) 
+	if tc then
 	local atk=tc:GetAttack()
 		--Decrease ATK
 		local e1=Effect.CreateEffect(c)
