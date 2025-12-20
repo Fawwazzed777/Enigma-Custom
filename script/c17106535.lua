@@ -9,7 +9,7 @@ function s.initial_effect(c)
 	local f0=Fusion.AddProcMixRep(c,true,true,aux.FilterBoolFunctionEx(Card.IsAttribute,ATTRIBUTE_DARK),2,99,s.mfilter)[1]
 	f0:SetDescription(aux.Stringid(id,2))
 	--Fusion Summon procedure (3 "Blue-Eyes" monsters)
-	local f1=Fusion.AddProcMixRep(c,true,true,aux.FilterBoolFunctionEx(Card.IsAttribute,ATTRIBUTE_DARK),2,99,aux.FilterBoolFunctionEx(Card.IsCode,96488201),1)[1]
+	local f1=Fusion.AddProcMixN(c,true,true,aux.FilterBoolFunctionEx(Card.IsAttribute,ATTRIBUTE_DARK),2,99,96488201,1)[1]
 	f1:SetDescription(aux.Stringid(id,3))
 	--cannot be fusion material
 	local e0=Effect.CreateEffect(c)
