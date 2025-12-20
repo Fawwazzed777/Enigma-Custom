@@ -6,7 +6,7 @@ function s.initial_effect(c)
 	c:SetSPSummonOnce(id)
 	--fusion material
 	c:EnableReviveLimit()
-	Fusion.AddProcMixRep(c,true,true,aux.FilterBoolFunctionEx(Card.IsAttribute,ATTRIBUTE_DARK),2,99,s.mfilter)
+	Fusion.AddProcMixRep(c,true,true,aux.FilterBoolFunctionEx(Card.IsAttribute,ATTRIBUTE_DARK),1,99,s.mfilter)
 	--cannot be fusion material
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_SINGLE)
