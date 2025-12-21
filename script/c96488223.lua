@@ -2,7 +2,7 @@
 local s,id=GetID()
 function s.initial_effect(c)
 	--xyz summon
-	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(s.xp),12,3,nil,nil,Xyz.InfiniteMats)
+	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(s.xp),12,3,s.ovfilter,aux.Stringid(id,1),1,Xyz.InfiniteMats,s.xyzop)
 	c:EnableReviveLimit()
 	--
 	local e1=Effect.CreateEffect(c)
@@ -54,6 +54,15 @@ s.listed_names={640146361}
 s.listed_series={0x344,0x145}
 function s.xp(c,fc,sumtype,tp)
 	return c:IsSetCard(0x344) or c:IsSetCard(0x145)
+end
+function s.ovfilter(c,tp,lc)
+	return c:IsFaceup() and c:IsSetCard(0x145,lc,SUMMON_TYPE_XYZ,tp)
+end
+function s.xyzop(e,tp,chk)
+	if chk==0 then return Duel.GetFlagEffect(tp,id)==0 and 
+	Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsType,TYPE_MONSTER),tp,LOCATION_REMOVED,0,3,nil) end
+	Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
+	return true
 end
 function s.discon(e,tp,eg,ep,ev,re,r,rp)
 	local loc=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION)
