@@ -1,6 +1,6 @@
 aux.XyzUnified=aux.XyzUnified or {}
 local XyzUnified=aux.XyzUnified
-
+Debug.Message("proc_xyz_unified loaded")
 -- normal_filter : filter normal material
 -- normal_level  : level normal material
 -- normal_count  : minimal jumlah
