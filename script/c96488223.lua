@@ -6,7 +6,7 @@ end
 local s,id=GetID()
 function s.initial_effect(c)
 	--xyz summon
-	aux.XyzPhantasm.AddProcedure(c,function(c) return c:IsFaceup() and c:IsSetCard(0x145) and c:IsType(TYPE_XYZ) end,4,aux.Stringid(id,2))
+	aux.XyzPhantasm.AddProcedure(c,function(c) return c:IsFaceup() and c:IsSetCard(0x145) and c:IsType(TYPE_XYZ) end,5,aux.Stringid(id,2))
 	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(s.xp),12,3,nil,nil,3,Xyz.InfiniteMats)
 	c:EnableReviveLimit()
 	--
