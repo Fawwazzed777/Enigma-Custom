@@ -2,10 +2,31 @@
 Duel.LoadScript("proc_xyz_phantasm.lua")
 local s,id=GetID()
 function s.initial_effect(c)
-	--Alt xyz summon
-	aux.XyzPhantasm.AddProcedure(c,function(c) return c:IsFaceup() and c:IsSetCard(0x145) and c:IsType(TYPE_XYZ) end,2,aux.Stringid(id,2))
-	--Normal Xyz Summon
-	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(s.xp),12,3,nil,nil,3,Xyz.InfiniteMats)
+	--xyz summon
+	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(s.xp),12,3, function(e,tp,chk)
+		-- alternative condition
+		if chk==0 then
+			return Duel.IsExistingMatchingCard(
+				function(c) return c:IsFaceup() and c:IsSetCard(0x145) and c:IsType(TYPE_XYZ) end,
+				tp,LOCATION_MZONE,0,1,nil
+			)
+			and Duel.GetMatchingGroupCount(Card.IsFaceup,tp,LOCATION_REMOVED,0,nil)>=2
+		end
+		-- alt cost
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
+		local tc=Duel.SelectMatchingCard(
+			tp,
+			function(c) return c:IsFaceup() and c:IsSetCard(0x145) and c:IsType(TYPE_XYZ) end,
+			tp,LOCATION_MZONE,0,1,1,nil
+		):GetFirst()
+		local mg=tc:GetOverlayGroup()
+		if #mg>0 then
+			Duel.Overlay(c,mg)
+		end
+		Duel.Overlay(c,Group.FromCards(tc))
+		return true
+	end,
+	nil,3,Xyz.InfiniteMats)
 	c:EnableReviveLimit()
 	--
 	local e1=Effect.CreateEffect(c)
