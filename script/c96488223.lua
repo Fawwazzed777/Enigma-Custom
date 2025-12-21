@@ -7,7 +7,7 @@ function s.initial_effect(c)
 	aux.XyzUnified.AddProcedure(c,
 	-- NORMAL
 	function(tc)
-		return tc:IsSetCard(0x344) or tc:IsSetCard(0x145)end,12,3,
+		return aux.FilterBoolFunctionEx(s.xp) end,12,3,
 	-- ALT
 	function(tc,tp)
 		return tc:IsFaceup()and tc:IsSetCard(0x145)and tc:IsType(TYPE_XYZ)end,5,aux.Stringid(id,2))
