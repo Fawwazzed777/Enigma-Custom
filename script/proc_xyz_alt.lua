@@ -1,9 +1,8 @@
--- proc_xyz_alt.lua
 aux.XyzAlt = aux.XyzAlt or {}
 local XyzAlt = aux.XyzAlt
--- filter: monster yang boleh dipakai sebagai ALT material
--- banishcount: minimal kartu banish
--- desc: stringid
+--filter: monster yang boleh dipakai sebagai ALT material
+--banishcount: minimal kartu banish
+--desc: stringid
 function XyzAlt.AddProcedure(c,filter,banishcount,desc)
 	Xyz.AddProcedure(
 		c,
