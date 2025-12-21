@@ -62,7 +62,7 @@ function s.cfilter(c)
 	return c:IsFaceup() and c:IsMonster() and c:IsAbleToGrave()
 end
 function s.xyzop(e,tp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_REMOVED,0,2,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_REMOVED,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 	local tc=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_REMOVED,0,nil):SelectUnselect(Group.CreateGroup(),tp,false,Xyz.ProcCancellable)
 	if tc then
