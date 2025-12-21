@@ -7,7 +7,7 @@ local s,id=GetID()
 function s.initial_effect(c)
 	--Phantasm Xyz Summon
 	aux.XyzPhantasm.AddProcedure(c,function(c) return c:IsFaceup() and c:IsSetCard(0x145) 
-	and c:IsType(TYPE_XYZ) and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_REMOVED,0,2,nil)end,2,aux.Stringid(id,2))
+	and c:IsType(TYPE_XYZ) and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_REMOVED,0,1,nil)end,2,aux.Stringid(id,2))
 	--Normal Xyz summon
 	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(s.xp),12,3,nil,nil,3,Xyz.InfiniteMats)
 	c:EnableReviveLimit()
