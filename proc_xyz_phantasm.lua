@@ -14,6 +14,7 @@ function XyzPhantasm.AddProcedure(c,filter,banishcount,desc)
 	end
 	c:RegisterEffect(e)
 end
+
 function XyzPhantasm.con(filter,banishcount)
 	return function(e,c)
 		if c==nil then return true end
@@ -23,6 +24,7 @@ function XyzPhantasm.con(filter,banishcount)
 			and Duel.GetMatchingGroupCount(Card.IsFaceup,tp,LOCATION_REMOVED,0,nil)>=banishcount
 	end
 end
+
 function XyzPhantasm.op(filter)
 	return function(e,tp,eg,ep,ev,re,r,rp,c)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
