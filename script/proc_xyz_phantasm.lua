@@ -42,6 +42,6 @@ function XyzPhantasm.op(filter)
 		c:SetMaterial(Group.FromCards(tc))
 		Duel.Overlay(c,Group.FromCards(tc))
 		Duel.XyzSummonComplete(c)
-		--return true--
+		return true
 	end
 end
