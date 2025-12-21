@@ -3,8 +3,18 @@ Duel.LoadScript("proc_xyz_alt.lua")
 local s,id=GetID()
 function s.initial_effect(c)
 	--Xyz Summon
-	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(s.xp),12,3,s.ovfilter,s.xyzop,aux.Stringid(id,2),nil,Xyz.InfiniteMats)
+	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(s.xp),12,3,Xyz.InfiniteMats)
 	c:EnableReviveLimit()
+	--Alternative Xyz Summon
+	local e0=Effect.CreateEffect(c)
+	e0:SetType(EFFECT_TYPE_FIELD)
+	e0:SetCode(EFFECT_SPSUMMON_PROC)
+	e0:SetProperty(EFFECT_FLAG_UNCOPYABLE)
+	e0:SetRange(LOCATION_EXTRA)
+	e0:SetValue(SUMMON_TYPE_XYZ)
+	e0:SetCondition(s.altcon)
+	e0:SetOperation(s.altop)
+	c:RegisterEffect(e0)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_REMOVE)
@@ -47,23 +57,27 @@ s.listed_series={0x344,0x145}
 function s.xp(c,fc,sumtype,tp)
 	return c:IsSetCard(0x344) or c:IsSetCard(0x145)
 end
-function s.ovfilter(c,tp,lc)
-	return c:IsFaceup() and c:IsSetCard(0x145)
-	and c:IsType(TYPE_XYZ) and Duel.GetMatchingGroupCount(Card.IsFaceup,tp,LOCATION_REMOVED,0,nil)>=5
+function s.altcon(e,c)
+	if c==nil then return true end
+	local tp=c:GetControler()
+	return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.IsExistingMatchingCard(s.altmatfilter,tp,LOCATION_MZONE,0,1,nil)
+		and Duel.GetMatchingGroupCount(Card.IsFaceup,tp,LOCATION_REMOVED,0,nil)>=5
 end
-function s.xyzop(e,tp,chk,lc)
-	if chk==0 then return Duel.GetMatchingGroupCount(Card.IsFaceup,tp,LOCATION_REMOVED,0,nil)>=5 end
+function s.altmatfilter(c)
+	return c:IsFaceup() and c:IsSetCard(0x145)
+		and c:IsType(TYPE_XYZ)
+end
+function s.altop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
-	local tc=Duel.SelectMatchingCard(tp,s.ovfilter,tp,LOCATION_MZONE,0,1,1,nil,tp,lc):GetFirst()
-	if not tc then return false end
-	local c=e:GetHandler()
+	local tc=Duel.SelectMatchingCard(tp,s.altmatfilter,tp,LOCATION_MZONE,0,1,1,nil):GetFirst()
+	if not tc then return end
 	local mg=tc:GetOverlayGroup()
 	if #mg>0 then
 		Duel.Overlay(c,mg)
 	end
 	c:SetMaterial(Group.FromCards(tc))
 	Duel.Overlay(c,Group.FromCards(tc))
-	return true
 end
 function s.discon(e,tp,eg,ep,ev,re,r,rp)
 	local loc=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION)

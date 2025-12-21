@@ -1,8 +1,5 @@
 aux.XyzAlt = aux.XyzAlt or {}
 local XyzAlt = aux.XyzAlt
---filter: monster yang boleh dipakai sebagai ALT material
---banishcount: minimal kartu banish
---desc: stringid
 function XyzAlt.AddProcedure(c,filter,banishcount,desc)
 	Xyz.AddProcedure(
 		c,
@@ -31,6 +28,5 @@ function XyzAlt.AddProcedure(c,filter,banishcount,desc)
 			Duel.Overlay(c,Group.FromCards(tc))
 			return true
 		end,
-		desc
 	)
 end
