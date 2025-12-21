@@ -1,18 +1,18 @@
 --Enigmation - Draconic Phantasm
-Duel.LoadScript("proc_xyz_alt.lua")
+Duel.LoadScript("proc_xyz_unified.lua")
 local s,id=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()
 	--Xyz Summon
-	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(s.xp),12,3,nil,nil,Xyz.InfiniteMats)
-	--Alternative Xyz Summon
-	aux.XyzAlt.AddProcedure(
+	aux.XyzUnified.AddProcedure(
 	c,
+	-- NORMAL
+	function(tc)
+		return tc:IsSetCard(0x344) or tc:IsSetCard(0x145)end,12,3,
+	-- ALT
 	function(tc,tp)
-		return tc:IsFaceup()
-			and tc:IsSetCard(0x145)
-			and tc:IsType(TYPE_XYZ)
-	end,5,aux.Stringid(id,2))
+		return tc:IsFaceup()and tc:IsSetCard(0x145)and tc:IsType(TYPE_XYZ)end,5,aux.Stringid(id,2))
+	--
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_REMOVE)
