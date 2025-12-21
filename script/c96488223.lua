@@ -4,7 +4,7 @@ local s,id=GetID()
 function s.initial_effect(c)
 	--xyz summon
 	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(s.xp),12,3, function(e,tp,chk)
-		-- alternative condition
+		--alternative condition
 		if chk==0 then
 			return Duel.IsExistingMatchingCard(
 				function(c) return c:IsFaceup() and c:IsSetCard(0x145) and c:IsType(TYPE_XYZ) end,
@@ -12,7 +12,6 @@ function s.initial_effect(c)
 			)
 			and Duel.GetMatchingGroupCount(Card.IsFaceup,tp,LOCATION_REMOVED,0,nil)>=5
 		end
-		-- alt cost
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
 		local tc=Duel.SelectMatchingCard(
 			tp,
