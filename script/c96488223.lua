@@ -4,8 +4,7 @@ local s,id=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()
 	--Xyz Summon
-	aux.XyzUnified.AddProcedure(
-	c,
+	aux.XyzUnified.AddProcedure(c,
 	-- NORMAL
 	function(tc)
 		return tc:IsSetCard(0x344) or tc:IsSetCard(0x145)end,12,3,
