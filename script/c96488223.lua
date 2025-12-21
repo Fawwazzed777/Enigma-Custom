@@ -4,13 +4,18 @@ local s,id=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()
 	--Xyz Summon
-	aux.XyzUnified.AddProcedure(c,
-	-- NORMAL
-	function(tc)
-		return aux.FilterBoolFunctionEx(s.xp) end,12,3,
-	-- ALT
-	function(tc,tp)
-		return tc:IsFaceup()and tc:IsSetCard(0x145)and tc:IsType(TYPE_XYZ)end,5,aux.Stringid(id,2))
+	aux.XyzUnified.AddProcedure(
+	c,
+	12,
+	aux.FilterBoolFunctionEx(s.xp), -- normal material
+	function(tc,tp,lc)             -- ALT material
+		return tc:IsFaceup()
+			and tc:IsSetCard(0x145)
+			and tc:IsType(TYPE_XYZ)
+	end,
+	5,
+	aux.Stringid(id,2)
+)
 	--
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
