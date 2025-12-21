@@ -2,8 +2,9 @@
 Duel.LoadScript("proc_xyz_phantasm.lua")
 local s,id=GetID()
 function s.initial_effect(c)
-	--xyz summon
-	aux.XyzPhantasm.AddProcedure(c,function(c) return c:IsFaceup() and c:IsSetCard(0x145) and c:IsType(TYPE_XYZ) end,2,aux.Stringid(id,2))
+	--Alt xyz summon
+	aux.XyzPhantasm.AddProcedure(c,function(c) return c:IsFaceup() and c:IsSetCard(0x145) and c:IsType(TYPE_XYZ) end,5,aux.Stringid(id,2))
+	--Normal Xyz Summon
 	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(s.xp),12,3,nil,nil,3,Xyz.InfiniteMats)
 	c:EnableReviveLimit()
 	--
@@ -23,7 +24,7 @@ function s.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)
 	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e2:SetCode(EFFECT_SPSUMMON_CONDITION)
-	e2:SetValue(aux.xyzlimit)
+	e2:SetValue(function(e,se,sp,st) return st==SUMMON_TYPE_XYZ end)
 	c:RegisterEffect(e2)
 	--Summon success
 	local e3=Effect.CreateEffect(c)
