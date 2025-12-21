@@ -37,7 +37,6 @@ function s.initial_effect(c)
 		end
 	end)
 	c:RegisterEffect(e0)
-end
 	--
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
