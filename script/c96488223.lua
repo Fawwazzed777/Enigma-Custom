@@ -62,7 +62,8 @@ function s.altcon(e,c)
 if c==nil then return true end
 	local tp=c:GetControler()
 	return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(function(tc)return tc:IsFaceup()and tc:IsSetCard(0x145)and tc:IsType(TYPE_XYZ)end,tp,LOCATION_MZONE,0,1,nil)
+		and Duel.IsExistingMatchingCard(function(tc)
+		return tc:IsFaceup()and tc:IsSetCard(0x145)and tc:IsType(TYPE_XYZ)end,tp,LOCATION_MZONE,0,1,nil)
 		and Duel.GetMatchingGroupCount(Card.IsFaceup,tp,LOCATION_REMOVED,0,nil)>=5
 end
 function s.altmatfilter(c)
@@ -71,7 +72,8 @@ function s.altmatfilter(c)
 end
 function s.altop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
-	local tc=Duel.SelectMatchingCard(tp,function(tc)return tc:IsFaceup()and tc:IsSetCard(0x145)and tc:IsType(TYPE_XYZ)end,tp,LOCATION_MZONE,0,1,1,nil):GetFirst()
+	local tc=Duel.SelectMatchingCard(tp,
+	function(tc)return tc:IsFaceup()and tc:IsSetCard(0x145)and tc:IsType(TYPE_XYZ)end,tp,LOCATION_MZONE,0,1,1,nil):GetFirst()
 	if not tc then return end
 	local mg=tc:GetOverlayGroup()
 	if #mg>0 then
