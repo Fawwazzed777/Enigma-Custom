@@ -64,8 +64,9 @@ function s.ovfilter(c,tp,lc)
 end
 function s.xyzop(e,tp,chk)
 	if chk==0 then return true end
-Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
-local tc=Duel.SelectMatchingCard(tp,function(c) return c:IsFaceup() and c:IsSetCard(0x145) and c:IsType(TYPE_XYZ) end,tp,LOCATION_MZONE,0,1,1,nil):GetFirst()
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
+	local tc=Duel.SelectMatchingCard(tp,function(c) return c:IsFaceup() and c:IsSetCard(0x145) 
+	and c:IsType(TYPE_XYZ) end,tp,LOCATION_MZONE,0,1,1,nil):GetFirst()
 	if not tc then return false end
 	local c=e:GetHandler()
 	local mg=tc:GetOverlayGroup()
