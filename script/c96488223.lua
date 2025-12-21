@@ -65,7 +65,7 @@ function s.xyzop(e,tp,chk)
 	if tc then
 		Duel.SendtoGrave(tc,REASON_COST)
 		return true
-	else return false end
+end
 end
 function s.discon(e,tp,eg,ep,ev,re,r,rp)
 	local loc=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION)
