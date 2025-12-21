@@ -1,5 +1,5 @@
-aux.XyzAlt = aux.XyzAlt or {}
-local XyzAlt = aux.XyzAlt
+aux.XyzAlt=aux.XyzAlt or {}
+local XyzAlt=aux.XyzAlt
 function XyzAlt.AddProcedure(c,filter,banishcount,desc)
 	Xyz.AddProcedure(
 		c,
