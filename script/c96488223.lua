@@ -59,13 +59,13 @@ function s.xp(c,fc,sumtype,tp)
 	return c:IsSetCard(0x344) or c:IsSetCard(0x145)
 end
 function s.ovfilter(c,tp,lc)
-	return c:IsFaceup()and c:IsSetCard(0x145)
+	return c:IsFaceup() and c:IsSetCard(0x145)
 	and c:IsType(TYPE_XYZ) and Duel.GetMatchingGroupCount(Card.IsFaceup,tp,LOCATION_REMOVED,0,nil)>=5
 end
-function s.altop(e,tp,eg,ep,ev,re,r,rp,c)
-if chk==0 then return true end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
-	local tc=Duel.SelectMatchingCard(tp,function(c) return c:IsFaceup() and c:IsSetCard(0x145) and c:IsType(TYPE_XYZ) end,tp,LOCATION_MZONE,0,1,1,nil):GetFirst()
+function s.xyzop(e,tp,chk)
+	if chk==0 then return true end
+Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
+local tc=Duel.SelectMatchingCard(tp,function(c) return c:IsFaceup() and c:IsSetCard(0x145) and c:IsType(TYPE_XYZ) end,tp,LOCATION_MZONE,0,1,1,nil):GetFirst()
 	if not tc then return false end
 	local c=e:GetHandler()
 	local mg=tc:GetOverlayGroup()
