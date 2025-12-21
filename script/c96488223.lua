@@ -58,14 +58,17 @@ end
 function s.ovfilter(c,tp,lc)
 	return c:IsFaceup() and c:IsSetCard(0x145,lc,SUMMON_TYPE_XYZ,tp)
 end
+function s.cfilter(c)
+	return c:IsMonster() and c:IsAbleToGrave()
+end
 function s.xyzop(e,tp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsType,TYPE_MONSTER),tp,LOCATION_REMOVED,0,2,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_REMOVED,0,2,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local tc=Duel.GetMatchingGroup(aux.FaceupFilter(Card.IsType,TYPE_MONSTER),tp,LOCATION_REMOVED,0,nil):SelectUnselect(Group.CreateGroup(),tp,false,Xyz.ProcCancellable)
+	local tc=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_REMOVED,0,nil):SelectUnselect(Group.CreateGroup(),tp,false,Xyz.ProcCancellable)
 	if tc then
 		Duel.SendtoGrave(tc,REASON_COST)
 		return true
-end
+	else return false end
 end
 function s.discon(e,tp,eg,ep,ev,re,r,rp)
 	local loc=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION)
