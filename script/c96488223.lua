@@ -4,7 +4,7 @@ local s,id=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()
 	-- NORMAL XYZ
-	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(s.xp),12,3,nil,nil,3,Xyz.InfiniteMats)
+	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(s.xp),12,3,nil,nil,Xyz.InfiniteMats)
 	-- ALT XYZ (UNIFIED)
 	aux.XyzUnified.AddProcedure(
 		c,
