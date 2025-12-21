@@ -28,12 +28,12 @@ end
 
 function XyzPhantasm.op(filter)
 	return function(e,tp,eg,ep,ev,re,r,rp,c)
-	if not Duel.SelectYesNo(tp,aux.Stringid(c:GetCode(),0)) then
+		if not Duel.SelectYesNo(tp,aux.Stringid(c:GetCode(),0)) then
 			return false
 		end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
 		local g=Duel.SelectMatchingCard(tp,filter,tp,LOCATION_MZONE,0,1,1,nil,true)
-		if not g or #g==0 then return false end
+		if #g==0 then return false end
 		local tc=g:GetFirst()
 		local mg=tc:GetOverlayGroup()
 		if #mg>0 then
@@ -42,5 +42,6 @@ function XyzPhantasm.op(filter)
 		c:SetMaterial(Group.FromCards(tc))
 		Duel.Overlay(c,Group.FromCards(tc))
 		Duel.XyzSummonComplete(c)
+		--return true --
 	end
 end
