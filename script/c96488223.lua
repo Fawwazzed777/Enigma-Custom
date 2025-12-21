@@ -3,7 +3,7 @@ Duel.LoadScript("proc_xyz_phantasm.lua")
 local s,id=GetID()
 function s.initial_effect(c)
 	--Xyz Summon
-	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(s.xp),12,3,nil,nil,3,Xyz.InfiniteMats)
+	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(s.xp),12,3,s.ovfilter,s.xyzop,aux.Stringid(id,2),3,Xyz.InfiniteMats)
 	c:EnableReviveLimit()
 	--Alternative Xyz Summon
 	local e0=Effect.CreateEffect(c)
@@ -58,28 +58,22 @@ s.listed_series={0x344,0x145}
 function s.xp(c,fc,sumtype,tp)
 	return c:IsSetCard(0x344) or c:IsSetCard(0x145)
 end
-function s.altfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x145)
-		and c:IsType(TYPE_XYZ)
-end
-function s.altcon(e,c)
-	if c==nil then return true end
-	local tp=c:GetControler()
-	return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.IsExistingMatchingCard(s.altfilter,tp,LOCATION_MZONE,0,1,nil)
-		and Duel.GetMatchingGroupCount(Card.IsFaceup,tp,LOCATION_REMOVED,0,nil)>=5
+function s.ovfilter(c,tp,lc)
+	return c:IsFaceup()and c:IsSetCard(0x145)
+	and c:IsType(TYPE_XYZ) and Duel.GetMatchingGroupCount(Card.IsFaceup,tp,LOCATION_REMOVED,0,nil)>=5
 end
 function s.altop(e,tp,eg,ep,ev,re,r,rp,c)
-	if not Duel.SelectYesNo(tp,aux.Stringid(id,2)) then return false end
+if chk==0 then return true end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
-	local tc=Duel.SelectMatchingCard(tp,s.altfilter,tp,LOCATION_MZONE,0,1,1,nil):GetFirst()
+	local tc=Duel.SelectMatchingCard(tp,function(c) return c:IsFaceup() and c:IsSetCard(0x145) and c:IsType(TYPE_XYZ) end,tp,LOCATION_MZONE,0,1,1,nil):GetFirst()
 	if not tc then return false end
+	local c=e:GetHandler()
 	local mg=tc:GetOverlayGroup()
 	if #mg>0 then
 		Duel.Overlay(c,mg)
 	end
-	c:SetMaterial(tc)
-	Duel.Overlay(c,tc)
-	c:CompleteProcedure()
+	c:SetMaterial(Group.FromCards(tc))
+	Duel.Overlay(c,Group.FromCards(tc))
 	return true
 end
 function s.discon(e,tp,eg,ep,ev,re,r,rp)
