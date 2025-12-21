@@ -1,7 +1,9 @@
 --Enigmation - Draconic Phantasm
+Duel.LoadScript("proc_xyz_phantasm.lua")
 local s,id=GetID()
 function s.initial_effect(c)
 	--xyz summon
+	XyzPhantasm.AddProcedure(c,function(c) return c:IsFaceup() and c:IsSetCard(0xPHAN) and c:IsType(TYPE_XYZ) end,2,aux.Stringid(id,2)
 	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(s.xp),12,3,s.ovfilter,aux.Stringid(id,1),3,Xyz.InfiniteMats,s.xyzop)
 	c:EnableReviveLimit()
 	--
@@ -101,6 +103,7 @@ function s.filter(c)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToRemove() end
+	Duel.SetOperationInfo(0,CATEGORY_REMOVE,e:GetHandler(),1,0,0)
 	Duel.SetChainLimit(s.chlimit)
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
