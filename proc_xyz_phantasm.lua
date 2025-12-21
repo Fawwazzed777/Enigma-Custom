@@ -1,4 +1,5 @@
-XyzPhantasm = {}
+aux.XyzPhantasm = aux.XyzPhantasm or {}
+local XyzPhantasm = aux.XyzPhantasm
 
 function XyzPhantasm.AddProcedure(c,filter,banishcount,desc)
 	local e=Effect.CreateEffect(c)
