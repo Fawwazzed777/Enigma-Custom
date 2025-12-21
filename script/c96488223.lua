@@ -3,7 +3,7 @@ Duel.LoadScript("proc_xyz_alt.lua")
 local s,id=GetID()
 function s.initial_effect(c)
 	--Xyz Summon
-	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(s.xp),12,3,Xyz.InfiniteMats)
+	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(s.xp),12,3,nil,nil,Xyz.InfiniteMats)
 	c:EnableReviveLimit()
 	--Alternative Xyz Summon
 	local e0=Effect.CreateEffect(c)
