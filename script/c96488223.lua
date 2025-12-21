@@ -59,8 +59,7 @@ function s.ovfilter(c,tp,lc)
 	return c:IsFaceup() and c:IsSetCard(0x145,lc,SUMMON_TYPE_XYZ,tp)
 end
 function s.xyzop(e,tp,chk)
-	if chk==0 then return Duel.GetFlagEffect(tp,id)==0 and 
-	Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsType,TYPE_MONSTER),tp,LOCATION_REMOVED,0,3,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsType,TYPE_MONSTER),tp,LOCATION_REMOVED,0,2,nil) end
 	Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
 	return true
 end
