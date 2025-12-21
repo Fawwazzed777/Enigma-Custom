@@ -10,7 +10,7 @@ function s.initial_effect(c)
 				function(c) return c:IsFaceup() and c:IsSetCard(0x145) and c:IsType(TYPE_XYZ) end,
 				tp,LOCATION_MZONE,0,1,nil
 			)
-			and Duel.GetMatchingGroupCount(Card.IsFaceup,tp,LOCATION_REMOVED,0,nil)>=2
+			and Duel.GetMatchingGroupCount(Card.IsFaceup,tp,LOCATION_REMOVED,0,nil)>=5
 		end
 		-- alt cost
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
