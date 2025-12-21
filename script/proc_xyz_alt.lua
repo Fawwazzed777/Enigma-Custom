@@ -27,5 +27,5 @@ function XyzAlt.AddProcedure(c,filter,banishcount,desc)
 			c:SetMaterial(Group.FromCards(tc))
 			Duel.Overlay(c,Group.FromCards(tc))
 			return true
-		end,)
+		end)
 end
