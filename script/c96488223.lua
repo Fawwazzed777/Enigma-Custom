@@ -1,4 +1,7 @@
 --Enigmation - Draconic Phantasm
+if not XyzPhantasm then
+	XyzPhantasm = {}
+end
 Duel.LoadScript("proc_xyz_phantasm.lua")
 local s,id=GetID()
 function s.initial_effect(c)
