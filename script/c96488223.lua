@@ -60,7 +60,7 @@ function s.ovfilter(c,tp,lc)
 end
 function s.xyzop(e,tp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsType,TYPE_MONSTER),tp,LOCATION_REMOVED,0,2,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 	local tc=Duel.GetMatchingGroup(aux.FaceupFilter(Card.IsType,TYPE_MONSTER),tp,LOCATION_REMOVED,0,nil):SelectUnselect(Group.CreateGroup(),tp,false,Xyz.ProcCancellable)
 	if tc then
 		Duel.SendtoGrave(tc,REASON_COST)
