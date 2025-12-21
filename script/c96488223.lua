@@ -5,10 +5,8 @@ if not XyzPhantasm then
 end
 local s,id=GetID()
 function s.initial_effect(c)
-	--Phantasm Xyz
-	aux.XyzPhantasm.AddProcedure(c,function(c) return c:IsFaceup() and c:IsSetCard(0x145) 
-	and c:IsType(TYPE_XYZ) and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_REMOVED,0,1,nil)end,2,aux.Stringid(id,2))
-	--Normal Xyz
+	--xyz summon
+	aux.XyzPhantasm.AddProcedure(c,function(c) return c:IsFaceup() and c:IsSetCard(0x145) and c:IsType(TYPE_XYZ) end,2,aux.Stringid(id,2))
 	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(s.xp),12,3,nil,nil,3,Xyz.InfiniteMats)
 	c:EnableReviveLimit()
 	--
@@ -61,6 +59,9 @@ s.listed_names={640146361}
 s.listed_series={0x344,0x145}
 function s.xp(c,fc,sumtype,tp)
 	return c:IsSetCard(0x344) or c:IsSetCard(0x145)
+end
+function s.ovfilter(c,tp,lc)
+	return c:IsFaceup() and c:IsSetCard(0x145,lc,SUMMON_TYPE_XYZ,tp)
 end
 function s.cfilter(c)
 	return c:IsFaceup() and c:IsMonster() and c:IsAbleToGrave()
