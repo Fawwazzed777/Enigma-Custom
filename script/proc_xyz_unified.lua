@@ -1,4 +1,5 @@
 aux.XyzUnified=aux.XyzUnified or {}
+Debug.Message("proc_xyz_unified loaded")
 local XU=aux.XyzUnified
 
 -- altconds = {
