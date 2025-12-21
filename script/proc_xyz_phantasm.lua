@@ -7,6 +7,7 @@ function XyzPhantasm.AddProcedure(c,filter,banishcount,desc)
 	e:SetCode(EFFECT_SPSUMMON_PROC)
 	e:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SPSUM_PARAM)
 	e:SetRange(LOCATION_EXTRA)
+	e:SetValue(SUMMON_TYPE_XYZ)
 	e:SetCondition(XyzPhantasm.con(filter,banishcount))
 	e:SetOperation(XyzPhantasm.op(filter))
 	if desc then
@@ -27,14 +28,19 @@ end
 
 function XyzPhantasm.op(filter)
 	return function(e,tp,eg,ep,ev,re,r,rp,c)
+	if not Duel.SelectYesNo(tp,aux.Stringid(c:GetCode(),0)) then
+			return false
+		end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
 		local g=Duel.SelectMatchingCard(tp,filter,tp,LOCATION_MZONE,0,1,1,nil,true)
+		if not g or #g==0 then return false end
 		local tc=g:GetFirst()
-		if not tc then return end
 		local mg=tc:GetOverlayGroup()
 		if #mg>0 then
 			Duel.Overlay(c,mg)
 		end
+		c:SetMaterial(Group.FromCards(tc))
 		Duel.Overlay(c,Group.FromCards(tc))
+		Duel.XyzSummonComplete(c)
 	end
 end
