@@ -1,23 +1,17 @@
 --Enigmation - Draconic Phantasm
-Duel.LoadScript("proc_xyz_unified.lua")
 local s,id=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()
 	-- NORMAL XYZ
 	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(s.xp),12,3,nil,nil,Xyz.InfiniteMats)
-	-- ALT XYZ (UNIFIED)
-	aux.XyzUnified.AddProcedure(
-		c,
-		aux.FilterBoolFunctionEx(s.xp),
-		12,3,
-		{
-			filter=function(tc,tp)
-				return tc:IsSetCard(0x145) and tc:IsType(TYPE_XYZ)
-			end,
-			banish=5,
-			desc=aux.Stringid(id,2)
-		}
-	)
+	-- Alternative Xyz Summon
+	local e0=Effect.CreateEffect(c)
+	e0:SetDescription(aux.Stringid(id,2))
+	e0:SetType(EFFECT_TYPE_IGNITION)
+	e0:SetRange(LOCATION_EXTRA)
+	e0:SetCondition(s.altcon)
+	e0:SetOperation(s.altop)
+	c:RegisterEffect(e0)
 	--
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
@@ -60,6 +54,32 @@ s.listed_names={640146361}
 s.listed_series={0x344,0x145}
 function s.xp(c,fc,sumtype,tp)
 	return c:IsSetCard(0x344) or c:IsSetCard(0x145)
+end
+function s.altfilter(c,tp)
+	return c:IsFaceup()
+		and c:IsSetCard(0x145)
+		and c:IsType(TYPE_XYZ)
+		and Duel.GetLocationCountFromEx(tp,tp,c)>0
+end
+function s.altcon(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	return Duel.IsExistingMatchingCard(s.altfilter,tp,LOCATION_MZONE,0,1,nil,tp)
+		and Duel.GetMatchingGroupCount(Card.IsFaceup,tp,LOCATION_REMOVED,0,nil)>=5
+end
+function s.altop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
+	local tc=Duel.SelectMatchingCard(tp,s.altfilter,tp,LOCATION_MZONE,0,1,1,nil,tp):GetFirst()
+	if not tc then return end
+	local mg=tc:GetOverlayGroup()
+	if #mg>0 then
+		Duel.Overlay(c,mg)
+	end
+	c:SetMaterial(Group.FromCards(tc))
+	Duel.Overlay(c,Group.FromCards(tc))
+	if Duel.SpecialSummon(c,SUMMON_TYPE_XYZ,tp,tp,false,false,POS_FACEUP)>0 then
+		c:CompleteProcedure()
+	end
 end
 function s.discon(e,tp,eg,ep,ev,re,r,rp)
 	local loc=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION)
