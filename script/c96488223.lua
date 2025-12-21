@@ -2,7 +2,7 @@
 local s,id=GetID()
 function s.initial_effect(c)
 	--xyz summon
-	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(s.xp),12,3,s.ovfilter,aux.Stringid(id,1),1,Xyz.InfiniteMats,s.xyzop)
+	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(s.xp),12,3,s.ovfilter,aux.Stringid(id,1),3,Xyz.InfiniteMats,s.xyzop)
 	c:EnableReviveLimit()
 	--
 	local e1=Effect.CreateEffect(c)
@@ -59,7 +59,7 @@ function s.ovfilter(c,tp,lc)
 	return c:IsFaceup() and c:IsSetCard(0x145,lc,SUMMON_TYPE_XYZ,tp)
 end
 function s.cfilter(c)
-	return c:IsMonster() and c:IsAbleToGrave()
+	return c:IsFaceup() and c:IsMonster() and c:IsAbleToGrave()
 end
 function s.xyzop(e,tp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_REMOVED,0,2,nil) end
