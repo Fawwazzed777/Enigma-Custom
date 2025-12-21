@@ -5,17 +5,39 @@ function s.initial_effect(c)
 	c:EnableReviveLimit()
 	--Xyz Summon
 	aux.XyzUnified.AddProcedure(
-	c,
-	12,
-	aux.FilterBoolFunctionEx(s.xp), -- normal material
-	function(tc,tp,lc)             -- ALT material
-		return tc:IsFaceup()
-			and tc:IsSetCard(0x145)
-			and tc:IsType(TYPE_XYZ)
-	end,
-	5,
-	aux.Stringid(id,2)
-)
+		c,
+		12,
+		aux.FilterBoolFunctionEx(s.xp),
+		3,
+		{
+			{
+				filter=function(tc,tp,lc)
+					return tc:IsFaceup()
+						and tc:IsSetCard(0x145)
+						and tc:IsType(TYPE_XYZ)
+				end,
+				banish=5,
+				label=1,
+				desc=aux.Stringid(id,2)
+			}
+		}
+	)
+	-- summon success check
+	local e0=Effect.CreateEffect(c)
+	e0:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e0:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e0:SetCondition(function(e)
+		return e:GetHandler():IsSummonType(SUMMON_TYPE_XYZ)
+	end)
+	e0:SetOperation(function(e)
+		if e:GetLabel()==1 then
+			-- ALT XYZ SUCCESS
+		else
+			-- NORMAL XYZ SUCCESS
+		end
+	end)
+	c:RegisterEffect(e0)
+end
 	--
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
