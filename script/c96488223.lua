@@ -3,7 +3,7 @@ Duel.LoadScript("proc_xyz_alt.lua")
 local s,id=GetID()
 function s.initial_effect(c)
 	--Xyz Summon
-	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(s.xp),12,3,s.ovfilter,s.xyzop,aux.Stringid(id,2),3,Xyz.InfiniteMats)
+	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(s.xp),12,3,s.ovfilter,s.xyzop,aux.Stringid(id,2),nil,Xyz.InfiniteMats)
 	c:EnableReviveLimit()
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
@@ -54,8 +54,7 @@ end
 function s.xyzop(e,tp,chk,lc)
 	if chk==0 then return Duel.GetMatchingGroupCount(Card.IsFaceup,tp,LOCATION_REMOVED,0,nil)>=5 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
-	local tc=Duel.SelectMatchingCard(tp,function(c) return c:IsFaceup() and c:IsSetCard(0x145) 
-	and c:IsType(TYPE_XYZ) end,tp,LOCATION_MZONE,0,1,1,nil):GetFirst()
+	local tc=Duel.SelectMatchingCard(tp,s.ovfilter,tp,LOCATION_MZONE,0,1,1,nil,tp,lc):GetFirst()
 	if not tc then return false end
 	local c=e:GetHandler()
 	local mg=tc:GetOverlayGroup()
