@@ -1,7 +1,7 @@
 --Droga The Phantasm Retriever
 local s,id=GetID()
 function s.initial_effect(c)
-	--
+	--Add 1 "Phantasm" Spell/Trap
 	local e0=Effect.CreateEffect(c)
 	e0:SetDescription(aux.Stringid(id,0))
 	e0:SetCategory(CATEGORY_SEARCH)
@@ -12,7 +12,7 @@ function s.initial_effect(c)
 	e0:SetTarget(s.stg)
 	e0:SetOperation(s.sop)
 	c:RegisterEffect(e0)
-	--
+	--SP
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,1))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
