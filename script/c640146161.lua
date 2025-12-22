@@ -14,7 +14,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e0)
 	--
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(id,2))
+	e1:SetDescription(aux.Stringid(id,1))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e1:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
@@ -38,7 +38,7 @@ function s.rumfilter(c)
 	return c:IsSetCard(0x95) and c:IsSpell()
 end
 function s.ex(c)
-	return c:IsSetCard(0x145) and c:IsMonster() and c:IsAbleToGrave()
+	return (c:IsSetCard(0x145) or c:IsSetCard(0x344)) and c:IsMonster() and c:IsAbleToGrave()
 end
 function s.stg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil) end
