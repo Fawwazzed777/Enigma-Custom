@@ -5,11 +5,12 @@ function s.initial_effect(c)
 	c:EnableReviveLimit()
 	-- NORMAL XYZ
 	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(s.xp),12,3,nil,nil,Xyz.InfiniteMats)
-	-- Alternative Xyz Summon
+	--Alternative Xyz Summon
 	local e0=Effect.CreateEffect(c)
 	e0:SetDescription(aux.Stringid(id,2))
 	e0:SetType(EFFECT_TYPE_IGNITION)
 	e0:SetRange(LOCATION_EXTRA)
+	e0:SetCountLimit(1,id)
 	e0:SetCondition(s.altcon)
 	e0:SetOperation(s.altop)
 	c:RegisterEffect(e0)
