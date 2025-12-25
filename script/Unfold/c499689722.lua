@@ -10,7 +10,7 @@ function s.initial_effect(c)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetHintTiming(TIMING_DAMAGE_STEP)
 	e1:SetCountLimit(1,id,EFFECT_COUNT_CODE_OATH)
-	e1:SetCost(Cost.PayLP(2000))
+	e1:SetCost(Cost.PayLP(1000))
 	e1:SetCondition(s.con)
 	e1:SetTarget(s.tg)
 	e1:SetOperation(s.op)
@@ -38,7 +38,7 @@ function s.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,g,math.min(ct-1,#g),0,0)
 end
 function s.op(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroup(s.tgfilter,tp,0,LOCATION_MZONE,nil,1-tp):GetMinGroup(Card.GetAttack)
+	local g=Duel.GetMatchingGroup(s.tgfilter,tp,0,LOCATION_MZONE,nil,1-tp):GetMaxGroup(Card.GetAttack)
 	local ct=Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)
 	if ct<=1 or #g==0 then return end
 	Duel.Hint(HINT_SELECTMSG,1-tp,HINTMSG_TOGRAVE)
@@ -49,7 +49,9 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		local tc=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_GRAVE+LOCATION_EXTRA,0,1,1,nil,e,tp)
 		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,tc,1,0,0)
 		if tc then
-		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
+		Duel.BreakEffect()
+		Duel.SpecialSummon(tc,SUMMON_TYPE_SYNCHRO,tp,tp,false,false,POS_FACEUP)
+		tc:CompleteProcedure()
 end
 end
 end
