@@ -24,7 +24,7 @@ function s.spfilter(c,e,tp)
 	and c:IsCanBeEffectTarget(e) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	local sg=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_GRAVE|LOCATION_REMOVED,0,nil,e,tp):aux.dncheck
+	local sg=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_GRAVE|LOCATION_REMOVED,0,nil,e,tp,aux.dncheck)
 	local ct=math.min(#sg,Duel.GetLocationCount(tp,LOCATION_MZONE))
 	if chk==0 then return ct>0 and Duel.CheckLPCost(tp,1000) end
 	if Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) then ct=1 end
