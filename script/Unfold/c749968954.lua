@@ -35,9 +35,6 @@ s.synchro_nt_required=1
 function s.sfilter1(c,val,scard,sumtype,tp)
 	return c:IsAttribute(ATTRIBUTE_WIND,scard,sumtype,tp) and c:IsType(TYPE_SYNCHRO,scard,sumtype,tp)
 end
-function s.sfilter(c,val,scard,sumtype,tp)
-	return c:IsCode(RACE_DRAGON,scard,sumtype,tp) and c:IsAttribute(ATTRIBUTE_WIND,scard,sumtype,tp) and c:IsType(TYPE_SYNCHRO,scard,sumtype,tp)
-end
 function s.rtfilter(c)
 	return c:IsType(TYPE_SYNCHRO) and (c:IsAbleToDeckAsCost() or c:IsAbleToExtraAsCost())
 end
