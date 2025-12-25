@@ -153,7 +153,7 @@ function s.xyzop(e,tp,eg,ep,ev,re,r,rp)
 		local xyz=xyzg:Select(tp,1,1,nil):GetFirst()
 		Duel.XyzSummon(tp,xyz,nil,mg)
 		if mg:IsPreviousLocation(LOCATION_HAND) then
-		Duel.ShuffleHand(tp)
+		Duel.ShuffleHand(tp,true)
 end
 end
 end
