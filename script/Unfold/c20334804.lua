@@ -152,7 +152,8 @@ function s.xyzop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local xyz=xyzg:Select(tp,1,1,nil):GetFirst()
 		if Duel.XyzSummon(tp,xyz,nil,mg)~=0 then
-		Duel.ShuffleHand(tp)
+
 end
+		Duel.ShuffleHand(tp)
 end
 end
