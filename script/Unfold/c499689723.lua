@@ -2,7 +2,7 @@
 local s,id=GetID()
 function s.initial_effect(c)
 	--synchro summon
-	Synchro.AddProcedure(c,aux.FilterBoolFunctionEx(499689705),1,1,Synchro.NonTunerEx(Card.IsAttribute,ATTRIBUTE_WIND),1,99)
+	Synchro.AddProcedure(c,s.tfilter,1,1,Synchro.NonTunerEx(Card.IsAttribute,ATTRIBUTE_WIND),1,99)
 	c:EnableReviveLimit()
 	--
 	local e1=Effect.CreateEffect(c)
@@ -19,7 +19,7 @@ function s.initial_effect(c)
 end
 s.material={499689705}
 s.listed_names={499689705}
-function s.tunerfilter(c,lc,stype,tp)
+function s.tfilter(c,lc,stype,tp)
 	return c:IsSummonCode(lc,stype,tp,499689705)
 end
 function s.spfilter(sg,c,e,tp)
