@@ -46,8 +46,9 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 	if #tg>0 then
 		Duel.HintSelection(tg,true)
 		if Duel.SendtoGrave(tg,REASON_RULE,PLAYER_NONE,1-tp)>0 and Duel.SelectYesNo(tp,aux.Stringid(id,1))then
-		local tc=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_GRAVE+LOCATION_EXTRA,0,1,1,nil,e,tp)
+		local tc=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_GRAVE+LOCATION_EXTRA,0,1,1,nil,e,tp):GetFirst()
 		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,tc,1,0,0)
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		if tc then
 		Duel.BreakEffect()
 		Duel.SpecialSummon(tc,SUMMON_TYPE_SYNCHRO,tp,tp,false,false,POS_FACEUP)
