@@ -39,7 +39,7 @@ function s.stg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,e:GetHandler(),1,0,0)
 end
 function s.sop(e,tp,eg,ep,ev,re,r,rp)
- if Duel.SendtoHand(e:GetHandler(),REASON_EFFECT)~=0 then
+ if Duel.SendtoHand(e:GetHandler(),REASON_EFFECT)>0 then
 	Duel.BreakEffect()
 	Duel.Draw(tp,1,REASON_EFFECT)
 	end
