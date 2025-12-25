@@ -20,10 +20,11 @@ end
 s.material={499689705}
 s.listed_names={499689705}
 function s.tfilter(c,lc,stype,tp)
-	return c:IsSummonCode(lc,stype,tp,499689705)
+	return c:IsSummonCode(499689705)
 end
-function s.spfilter(sg,c,e,tp)
-	return c:IsType(TYPE_SYNCHRO) and c:GetClassCount(Card.GetCode)>=#sg and c:IsFaceup() 
+function s.spfilter(c,sg,e,tp,mg)
+	return c:IsType(TYPE_SYNCHRO) and aux.ChkfMMZ(1)(sg,e,tp,mg) 
+	and sg:GetClassCount(Card.GetCode)==#sg,sg:GetClassCount(Card.GetCode)~=#sg and c:IsFaceup() 
 	and c:IsCanBeEffectTarget(e) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
