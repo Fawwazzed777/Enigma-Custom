@@ -2,7 +2,7 @@
 local s,id=GetID()
 function s.initial_effect(c)
 	--synchro summon
-	Synchro.AddProcedure(c,aux.FilterBoolFunctionEx(Card.IsAttribute,ATTRIBUTE_WATER),1,1,Synchro.NonTuner(nil),1,1)
+	Synchro.AddProcedure(c,aux.FilterBoolFunctionEx(Card.IsSetCard,0xfc13),1,1,Synchro.NonTuner(nil),1,1)
 	c:EnableReviveLimit()
 	--Token
 	local e1=Effect.CreateEffect(c)
