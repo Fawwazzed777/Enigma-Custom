@@ -38,8 +38,8 @@ function s.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,g,math.min(ct-1,#g),0,0)
 end
 function s.op(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroup(s.tgfilter,tp,0,LOCATION_MZONE,nil,1-tp)
-	local ct=Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE):GetMinGroup(Card.GetAttack)
+	local g=Duel.GetMatchingGroup(s.tgfilter,tp,0,LOCATION_MZONE,nil,1-tp):GetMinGroup(Card.GetAttack)
+	local ct=Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)
 	if ct<=1 or #g==0 then return end
 	Duel.Hint(HINT_SELECTMSG,1-tp,HINTMSG_TOGRAVE)
 	local tg=g:Select(1-tp,ct-1,ct-1,nil)
