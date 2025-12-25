@@ -23,8 +23,8 @@ function s.spfilter(c,sg,e,tp,mg)
 	return c:IsType(TYPE_SYNCHRO) and c:IsFaceup() 
 	and c:IsCanBeEffectTarget(e) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
-function s.spcheck(sg,e,tp)
-	return sg:GetClassCount(Card.GetCode)==ct
+function s.spcheck(ct,sg,e,tp)
+	return sg:GetClassCount(Card.GetCode)>=#sg
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local sg=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_GRAVE|LOCATION_REMOVED,0,nil,e,tp)
@@ -45,7 +45,7 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	local ct=e:GetLabel()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local sg=Duel.SelectTarget(tp,s.spfilter,tp,LOCATION_GRAVE|LOCATION_REMOVED,0,ct,ct,s.spcheck,e,tp)
+	local sg=Duel.SelectTarget(tp,s.spfilter,tp,LOCATION_GRAVE|LOCATION_REMOVED,0,ct,ct,nil,e,tp)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,sg,#sg,tp,0)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
