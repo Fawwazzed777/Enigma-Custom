@@ -24,7 +24,7 @@ function s.spfilter(c,e,tp)
 	and c:IsCanBeEffectTarget(e) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	local sg=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_GRAVE|LOCATION_REMOVED,0,nil,e,tp)
+	local sg=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_GRAVE|LOCATION_REMOVED,0,nil,e,tp):aux.dncheck
 	local ct=math.min(#sg,Duel.GetLocationCount(tp,LOCATION_MZONE))
 	if chk==0 then return ct>0 and Duel.CheckLPCost(tp,1000) end
 	if Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) then ct=1 end
@@ -51,14 +51,14 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	for sc in g:Iter() do
 		if Duel.SpecialSummonStep(sc,0,tp,tp,false,false,POS_FACEUP_DEFENSE) then
-			--Place it on the bottom of the Deck if it leaves the field
+			--Place it to the Extra Deck if it leaves the field
 			local e1=Effect.CreateEffect(c)
 			e1:SetDescription(3301)
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_LEAVE_FIELD_REDIRECT)
 			e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CLIENT_HINT)
 			e1:SetReset(RESET_EVENT|RESETS_REDIRECT)
-			e1:SetValue(LOCATION_DECKBOT)
+			e1:SetValue(LOCATION_EXTRA)
 			sc:RegisterEffect(e1,true)
 		end
 	end
