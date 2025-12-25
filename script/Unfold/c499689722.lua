@@ -1,7 +1,7 @@
 --Aerolizer Chip Away
 local s,id=GetID()
 function s.initial_effect(c)
-	--Pay 2000 LP
+	--Pay 2300 LP
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_TOGRAVE)
