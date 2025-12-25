@@ -26,9 +26,9 @@ function s.initial_effect(c)
 	e2:SetOperation(s.spop)
 	c:RegisterEffect(e2)
 end
-s.listed_names={49968945}
+s.listed_names={749968945}
 function s.atkfilter(c)
-	return c:IsCode(49968945) or (c:IsType(TYPE_SYNCHRO) and c:ListsCode(49968945))
+	return c:IsCode(749968945) or (c:IsType(TYPE_SYNCHRO) and c:ListsCode(749968945))
 end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(aux.FaceupFilter(s.atkfilter),tp,LOCATION_MZONE,0,1,nil)
@@ -47,7 +47,7 @@ end
 end
 end
 function s.spfilter(c,e,tp)
-	return c:IsCode(49968945) or (c:IsType(TYPE_SYNCHRO) and c:ListsCode(49968945))
+	return c:IsCode(749968945) or (c:IsType(TYPE_SYNCHRO) and c:ListsCode(749968945))
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE+LOCATION_REMOVED) and s.spfilter(chkc,e,tp) end
