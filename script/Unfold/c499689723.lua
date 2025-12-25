@@ -24,7 +24,7 @@ function s.spfilter(c,e,tp)
 	and c:IsCanBeEffectTarget(e) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	local sg=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_GRAVE|LOCATION_REMOVED,0,nil,e,tp,aux.dncheck)
+	local sg=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_GRAVE|LOCATION_REMOVED,0,nil,e,tp)
 	local ct=math.min(#sg,Duel.GetLocationCount(tp,LOCATION_MZONE))
 	if chk==0 then return ct>0 and Duel.CheckLPCost(tp,1000) end
 	if Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) then ct=1 end
@@ -41,9 +41,18 @@ end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	local ct=e:GetLabel()
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local sg=Duel.SelectTarget(tp,s.spfilter,tp,LOCATION_GRAVE|LOCATION_REMOVED,0,ct,ct,nil,e,tp,aux.dncheck)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,sg,#sg,tp,0)
+	local g=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_GRAVE|LOCATION_REMOVED,0,nil,e,tp)
+	local sg=Group.CreateGroup()
+	for i=1,ct do
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+		local tc=g:Select(tp,1,1,nil):GetFirst()
+		if not tc then break end
+		sg:AddCard(tc)
+		g:Remove(Card.IsCode,nil,tc:GetCode())
+	end
+	Duel.SetTargetCard(sg)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,sg,#sg,tp,0
+end
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetTargetCards(e)
