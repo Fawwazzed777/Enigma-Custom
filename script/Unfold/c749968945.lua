@@ -14,6 +14,7 @@ function s.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
 	e1:SetCountLimit(1,{id,0})
 	e1:SetCondition(s.rulecon)
+	e1:SetTarget(s.ruletg)
 	e1:SetOperation(s.ruleop)
 	c:RegisterEffect(e1)
 	--Change battle positions of 1 monster on the field
@@ -34,8 +35,10 @@ end
 function s.rulecon(e,tp,eg,ep,ev,re,r,rp)
 	return ep==tp
 end
-function s.thfilter(c)
-	return c:IsOnfield() and c:IsAbleToHand()
+function s.ruletg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	local c=e:GetHandler()
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc~=c end
+	if chk==0 then return Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_MZONE,nil) end
 end
 function s.ruleop(e,tp,eg,ep,ev,re,r,rp)
     local g=Duel.GetMatchingGroup(aux.TRUE,1-tp,LOCATION_MZONE,0,nil)
