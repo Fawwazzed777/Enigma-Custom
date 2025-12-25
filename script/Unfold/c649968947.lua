@@ -36,14 +36,12 @@ function s.scon(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.stg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
-	Duel.SetOperationInfo(0,CATEGORY_RTOHAND,e:GetHandler(),1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,e:GetHandler(),1,0,0)
 end
 function s.sop(e,tp,eg,ep,ev,re,r,rp)
-	if e:GetHandler():IsRelateToEffect(e) then
-		if Duel.SendtoHand(e:GetHandler(),REASON_EFFECT)~=0 then
-		Duel.BreakEffect()
-		Duel.Draw(tp,1,REASON_EFFECT)
-		end
+ if Duel.SendtoHand(e:GetHandler(),REASON_EFFECT)~=0 then
+	Duel.BreakEffect()
+	Duel.Draw(tp,1,REASON_EFFECT)
 	end
 end
 function s.nfilter(c)
