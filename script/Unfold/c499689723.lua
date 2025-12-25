@@ -19,6 +19,9 @@ function s.initial_effect(c)
 end
 s.material={499689705}
 s.listed_names={499689705}
+function s.tunerfilter(c,lc,stype,tp)
+	return c:IsSummonCode(lc,stype,tp,499689705)
+end
 function s.spfilter(sg,c,e,tp)
 	return c:IsType(TYPE_SYNHCRO) and sg:GetClassCount(Card.GetCode)>=#sg and c:IsFaceup() 
 	and c:IsCanBeEffectTarget(e) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
