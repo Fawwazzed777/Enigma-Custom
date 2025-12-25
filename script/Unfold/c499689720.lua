@@ -26,7 +26,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 s.listed_series={0xbf45}
-s.listed_names={49968945}
+s.listed_names={749968945}
 function s.tdfilter(c)
 	return c:IsLevelBelow(5) and c:IsType(TYPE_SYNCHRO) and c:IsAttribute(ATTRIBUTE_WIND) and c:IsAbleToExtra() and c:IsMonster()
 end
@@ -52,7 +52,7 @@ function s.adcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetCurrentPhase()~=PHASE_DAMAGE or not Duel.IsDamageCalculated()
 end
 function s.filter(c)
-	return c:IsFaceup() and c:IsCode(49968945) or (c:IsType(TYPE_SYNCHRO) and c:IsSetCard(0xbf45) and c:IsLevelAbove(5))
+	return c:IsFaceup() and c:IsCode(749968945) or (c:IsType(TYPE_SYNCHRO) and c:IsSetCard(0xbf45) and c:IsLevelAbove(5))
 end
 function s.adtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and s.filter(chkc) end

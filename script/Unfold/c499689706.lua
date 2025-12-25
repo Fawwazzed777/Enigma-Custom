@@ -38,7 +38,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 s.listed_series={0xbf45}
-s.listed_names={49968945}
+s.listed_names={749968945}
 function s.gycon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_SYNCHRO)
 end
@@ -72,7 +72,7 @@ function s.disfilter(c)
 	return c:IsFaceup() and not c:IsDisabled()
 end
 function s.desfilter(c)
-	return c:IsCode(49968945)
+	return c:IsCode(749968945)
 end
 function s.distg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.disfilter,tp,0,LOCATION_ONFIELD,1,nil) end

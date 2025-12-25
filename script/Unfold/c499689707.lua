@@ -39,7 +39,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 s.listed_series={0xbf45}
-s.listed_names={49968945}
+s.listed_names={749968945}
 s.synchro_nt_required=1
 function s.matfilter(c,val,scard,sumtype,tp)
 	return c:IsAttribute(ATTRIBUTE_WIND,scard,sumtype,tp) and 
@@ -69,7 +69,7 @@ function s.filter(c,g,mc)
 	return (g:IsContains(c) or c==mc)
 end
 function s.spfilter(c,e,tp)
-	return (c:IsCode(49968945) or c:IsSetCard(0xbf45) and c:IsType(TYPE_SYNCHRO)) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return (c:IsCode(749968945) or c:IsSetCard(0xbf45) and c:IsType(TYPE_SYNCHRO)) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
