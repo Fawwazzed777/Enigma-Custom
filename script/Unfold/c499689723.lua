@@ -20,7 +20,7 @@ end
 s.material={499689705}
 s.listed_names={499689705}
 function s.spfilter(c,e,tp)
-	return c:IsMonster() and c:IsSummonType(SUMMON_TYPE_SYNCHRO) and c:IsFaceup() 
+	return c:IsMonster() and c:IsType(TYPE_SYNCHRO) and c:IsFaceup() 
 	and c:IsCanBeEffectTarget(e) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
