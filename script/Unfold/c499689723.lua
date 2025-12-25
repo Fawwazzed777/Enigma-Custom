@@ -20,11 +20,8 @@ end
 s.material={499689705}
 s.listed_names={499689705}
 function s.spfilter(c,sg,e,tp,mg)
-	return c:IsSummonType(SUMMON_TYPE_SYNCHRO) and c:IsFaceup() 
+	return c:IsMonster() and c:IsType(TYPE_SYNCHRO) and c:IsFaceup() 
 	and c:IsCanBeEffectTarget(e) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
-end
-function s.spcheck(ct,sg,e,tp)
-	return sg:GetClassCount(Card.GetCode)>=#sg
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local sg=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_GRAVE|LOCATION_REMOVED,0,nil,e,tp)
