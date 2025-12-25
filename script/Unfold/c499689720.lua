@@ -1,4 +1,4 @@
---Cluster Winds Dragon
+--Cluster Aero Dragon
 local s,id=GetID()
 function s.initial_effect(c)
 	--sp summon
