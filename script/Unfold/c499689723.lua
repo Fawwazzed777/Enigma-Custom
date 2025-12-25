@@ -51,8 +51,7 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 		g:Remove(Card.IsCode,nil,tc:GetCode())
 	end
 	Duel.SetTargetCard(sg)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,sg,#sg,tp,0
-end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,sg,#sg,tp,0)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetTargetCards(e)
