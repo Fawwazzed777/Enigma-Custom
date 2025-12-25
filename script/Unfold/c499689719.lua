@@ -43,7 +43,7 @@ function s.slevel(e,c)
 end
 function s.eftg(e,c)
 	local g=e:GetHandler()
-	return c:IsSetCard(0xbf45) 
+	return c:IsSetCard(0xbf45) and not c:IsType(TYPE_SYNCHRO)
 end
 function s.rcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()~=tp
