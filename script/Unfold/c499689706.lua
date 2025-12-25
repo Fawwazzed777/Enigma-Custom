@@ -28,6 +28,14 @@ function s.initial_effect(c)
 	e2:SetTarget(s.distg)
 	e2:SetOperation(s.disop)
 	c:RegisterEffect(e2)
+	--Can be treated as a tuner
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_SINGLE)
+	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetCode(30765615)
+	e2:SetValue(s.ntval)
+	c:RegisterEffect(e2)
 end
 s.listed_series={0xbf45}
 s.listed_names={49968945}
@@ -92,4 +100,7 @@ local c=e:GetHandler()
 		Duel.SendtoDeck(tc,nil,2,REASON_EFFECT)
 	end
 end
+end
+function s.ntval(c,sc,tp)
+	return sc and sc:IsAttribute(ATTRIBUTE_WIND)
 end
