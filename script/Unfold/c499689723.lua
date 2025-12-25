@@ -23,7 +23,7 @@ function s.tfilter(c,lc,stype,tp)
 	return c:IsSummonCode(lc,stype,tp,499689705)
 end
 function s.spfilter(sg,c,e,tp)
-	return c:IsType(TYPE_SYNHCRO) and c:GetClassCount(Card.GetCode)>=#c and c:IsFaceup() 
+	return c:IsType(TYPE_SYNCHRO) and c:GetClassCount(Card.GetCode)>=#c and c:IsFaceup() 
 	and c:IsCanBeEffectTarget(e) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
