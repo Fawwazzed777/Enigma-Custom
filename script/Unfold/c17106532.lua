@@ -67,10 +67,10 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.tgval(e,c,re,te,rp)
-	return re:IsActiveType(TYPE_EFFECT) and not c:IsSetCard(0x344)
+	return re:IsActiveType(TYPE_EFFECT) and not re:IsSetCard(0x344)
 end
 function s.efilter(e,c,re,te)
-	return re:IsActiveType(TYPE_EFFECT) and not c:IsSetCard(0x344)
+	return re:IsActiveType(TYPE_EFFECT) and not re:IsSetCard(0x344)
 end
 
 function s.cfilter(c,e,tp)
