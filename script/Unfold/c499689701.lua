@@ -1,4 +1,4 @@
---Aerolizer Blade Wing
+--Aerolizer Razor Wing
 local s,id=GetID()
 function s.initial_effect(c)
 	--synchro level
