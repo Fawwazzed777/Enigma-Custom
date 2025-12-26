@@ -36,8 +36,7 @@ function s.rulecon(e,tp,eg,ep,ev,re,r,rp)
 	return ep==tp
 end
 function s.ruletg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chk==0 then return Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)>0 end
-	Duel.SetOperationInfo(0,CATEGORY_RTOHAND,nil,1,0,LOCATION_MZONE)
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsMonster,tp,0,LOCATION_MZONE,1,nil,e,tp) end
 end
 function s.ruleop(e,tp,eg,ep,ev,re,r,rp)
     local g=Duel.GetMatchingGroup(aux.TRUE,1-tp,LOCATION_MZONE,0,nil)
