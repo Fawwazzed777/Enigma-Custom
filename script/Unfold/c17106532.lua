@@ -66,11 +66,11 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
-function s.tgval(e,re,rp)
-	return re:IsActiveType(TYPE_EFFECT)
+function s.tgval(e,re,te,rp)
+	return not te:GetOwner():IsSetCard(0x344) and re:IsActiveType(TYPE_EFFECT)
 end
-function s.efilter(e,re)
-	return re:IsActiveType(TYPE_EFFECT)
+function s.efilter(e,re,te)
+	return not te:GetOwner():IsSetCard(0x344) and re:IsActiveType(TYPE_EFFECT)
 end
 
 function s.cfilter(c,e,tp)
