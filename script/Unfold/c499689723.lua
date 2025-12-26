@@ -63,7 +63,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		sc:RegisterEffect(e0)
 			--Place it on the Extra Deck if it leaves the field
 			local e0=Effect.CreateEffect(e:GetHandler())
-			e0:SetDescription(aux.Stringid(id,3))
+			e0:SetDescription(aux.Stringid(id,4))
 			e0:SetType(EFFECT_TYPE_SINGLE)
 			e0:SetCode(EFFECT_LEAVE_FIELD_REDIRECT)
 			e0:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CLIENT_HINT)
