@@ -26,7 +26,7 @@ function s.initial_effect(c)
 	--Todeck
 	local e4=Effect.CreateEffect(c)
 	e4:SetCategory(CATEGORY_TODECK)
-	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
+	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
 	e4:SetRange(LOCATION_GRAVE)
 	e4:SetCountLimit(1)
 	e4:SetCode(EVENT_PHASE+PHASE_END)
@@ -48,7 +48,7 @@ function s.rcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()~=tp
 end
 function s.rtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
+	if chk==0 then return e:GetHandler():IsAbleToDeck() end
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,e:GetHandler(),1,0,0)
 end
 function s.rop(e,tp,eg,ep,ev,re,r,rp)
