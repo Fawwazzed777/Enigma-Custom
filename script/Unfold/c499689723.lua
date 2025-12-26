@@ -80,7 +80,6 @@ function s.desfilter(c,atk)
 end
 function s.cttg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and s.desfilter(chkc,c:GetAttack()) end
 	if chk==0 then return Duel.IsExistingMatchingCard(s.desfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil,c:GetAttack()) end
 end
 function s.ctop(e,tp,eg,ep,ev,re,r,rp)
@@ -94,7 +93,6 @@ function s.ctop(e,tp,eg,ep,ev,re,r,rp)
 	if	c:RegisterEffect(e0)>0 and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 	local g=Duel.SelectMatchingCard(tp,s.desfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil,c:GetAttack())
 	if #g>0 and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,#g,0,0)
 	Duel.HintSelection(sg)
 	Duel.Destroy(sg,REASON_EFFECT)
 end
