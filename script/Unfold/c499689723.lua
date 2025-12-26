@@ -94,7 +94,7 @@ function s.ctop(e,tp,eg,ep,ev,re,r,rp)
 	if	c:RegisterEffect(e0)>0 and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 	local g=Duel.SelectMatchingCard(tp,s.desfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,2,nil,c:GetAttack())
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,#g,0,0)
-	local sg=g:Filter(s.desfilter,nil,e,c:GetAttack())
+	local sg=g:Filter(s.desfilter,nil,e,c:GetAttack()):GetFirst()
 	Duel.HintSelection(sg)
 	Duel.Destroy(sg,REASON_EFFECT)
 end
