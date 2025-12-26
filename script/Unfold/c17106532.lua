@@ -69,7 +69,7 @@ end
 function s.tgval(e,re,te,rp)
 	return re:IsActiveType(TYPE_EFFECT) not te:GetHandler():IsSetCard(0x344)
 end
-function s.efilter(e,re)
+function s.efilter(e,re,te)
 	return re:IsActiveType(TYPE_EFFECT) not te:GetHandler():IsSetCard(0x344)
 end
 
