@@ -1,4 +1,4 @@
---Aerolizer Blessing Wing
+--Aerolizer Bllissful Wing - Karti
 local s,id=GetID()
 function s.initial_effect(c)
 	--synchro summon
