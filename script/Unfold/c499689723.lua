@@ -24,19 +24,25 @@ function s.spfilter(c,e,tp)
 	and c:IsCanBeEffectTarget(e) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	local sg=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_GRAVE|LOCATION_REMOVED,0,nil,e,tp)
-	local ct=math.min(#sg,Duel.GetLocationCount(tp,LOCATION_MZONE))
-	if chk==0 then return ct>0 and Duel.CheckLPCost(tp,1000) end
-	if Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) then ct=1 end
-	local lp=Duel.GetLP(tp)
-	local max=math.min(ct,lp//1000)
-	local t={}
-	for i=1,max do
-		t[i]=i*1000
+	local g=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_GRAVE,0,nil,e,tp)
+	--hitung nama unik
+	local codes={}
+	local uniq=0
+	for tc in g:Iter() do
+		local code=tc:GetCode()
+		if not codes[code] then
+			codes[code]=true
+			uniq=uniq+1
+		end
 	end
-	local ac=Duel.AnnounceNumber(tp,table.unpack(t))
-	Duel.PayLPCost(tp,ac)
-	e:SetLabel(ac//1000)
+	if chk==0 then
+		--minimal 1 monster, LP cukup
+		return uniq>0 and Duel.CheckLPCost(tp,uniq*1000)
+	end
+	--pilih berapa monster (1 s/d uniq)
+	local ct=Duel.AnnounceNumber(tp,table.unpack(aux.GetNumberTable(1,uniq)))
+	e:SetLabel(ct)
+	Duel.PayLPCost(tp,ct*1000)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
