@@ -92,9 +92,9 @@ function s.ctop(e,tp,eg,ep,ev,re,r,rp)
 		e0:SetReset(RESET_EVENT+RESETS_STANDARD)
 	if	c:RegisterEffect(e0)>0 and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 	local g=Duel.SelectMatchingCard(tp,s.desfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil,c:GetAttack())
-	if #g>0 and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
-	Duel.HintSelection(sg)
-	Duel.Destroy(sg,REASON_EFFECT)
+	if #g>0 then
+	Duel.HintSelection(g)
+	Duel.Destroy(g,REASON_EFFECT)
 end
 end
 end
