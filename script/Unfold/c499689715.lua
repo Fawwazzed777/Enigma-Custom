@@ -70,25 +70,28 @@ function s.tkop(e,tp,eg,ep,ev,re,r,rp)
 		local c=e:GetHandler()
 		local token=Duel.CreateToken(tp,499689716)
 		Duel.SpecialSummonStep(token,0,tp,tp,false,false,POS_FACEUP)
-		--Cannot be tributed for a tribute summon
-		local e1=Effect.CreateEffect(e:GetHandler())
-		e1:SetDescription(3304)
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_UNRELEASABLE_SUM)
-		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CLIENT_HINT)
-		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-		e1:SetValue(1)
-		token:RegisterEffect(e1,true)
+		--Cannot be used for a summon except for Synchro
+		local eff=Effect.CreateEffect(c)
+		eff:SetType(EFFECT_TYPE_SINGLE)
+		eff:SetCode(EFFECT_CANNOT_BE_MATERIAL)
+		eff:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+		eff:SetValue(s.matlimit)
+		eff:SetReset(RESET_EVENT+RESETS_STANDARD)
+		token:RegisterEffect(eff)
 		--synchro level
 		local e2=Effect.CreateEffect(e:GetHandler())
 		e2:SetType(EFFECT_TYPE_SINGLE)
-		e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+		e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 		e2:SetCode(EFFECT_SYNCHRO_LEVEL)
 		e2:SetValue(s.slevel)
 		e2:SetReset(RESET_EVENT+RESETS_STANDARD)
 		token:RegisterEffect(e2,true)
 	end
 	Duel.SpecialSummonComplete()
+end
+function s.matlimit(e,c)
+	if not c then return false end
+	return not c:IsType(TYPE_SYNCHRO)
 end
 function s.slevel(e,c)
 	local lv=e:GetHandler():GetLevel()
