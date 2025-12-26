@@ -36,9 +36,8 @@ function s.rulecon(e,tp,eg,ep,ev,re,r,rp)
 	return ep==tp
 end
 function s.ruletg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	local c=e:GetHandler()
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc~=c end
-	if chk==0 then return Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_MZONE,nil) end
+	if chk==0 then return Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)>0 end
+	Duel.SetOperationInfo(0,CATEGORY_RTOHAND,nil,1,0,LOCATION_MZONE)
 end
 function s.ruleop(e,tp,eg,ep,ev,re,r,rp)
     local g=Duel.GetMatchingGroup(aux.TRUE,1-tp,LOCATION_MZONE,0,nil)
