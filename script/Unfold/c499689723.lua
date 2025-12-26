@@ -49,7 +49,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		e0:SetReset(RESET_EVENT+RESETS_STANDARD)
 		sc:RegisterEffect(e0)
 			--Place it on the bottom of the Deck if it leaves the field
-			local e1=Effect.CreateEffect(c)
+			local e1=Effect.CreateEffect(e:GetHandler())
 			e1:SetDescription(3301)
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_LEAVE_FIELD_REDIRECT)
