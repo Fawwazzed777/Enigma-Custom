@@ -5,15 +5,27 @@ function s.initial_effect(c)
 	Synchro.AddProcedure(c,aux.FilterSummonCode(499689705),1,1,Synchro.NonTuner(Card.IsAttribute,ATTRIBUTE_WIND),1,99)
 	c:EnableReviveLimit()
 	--Pay LP to Special Summon Synchro from GY or Banished
+	local e0=Effect.CreateEffect(c)
+	e0:SetDescription(aux.Stringid(id,0))
+	e0:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e0:SetType(EFFECT_TYPE_IGNITION)
+	e0:SetRange(LOCATION_MZONE)
+	e0:SetCountLimit(1,id)
+	e0:SetCost(s.lpcost)
+	e0:SetTarget(s.sptg)
+	e0:SetOperation(s.spop)
+	c:RegisterEffect(e0)
+	--Send to GY
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
-	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e1:SetType(EFFECT_TYPE_IGNITION)
+	e1:SetCategory(CATEGORY_TOGRAVE)
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e1:SetRange(LOCATION_MZONE)
-	e1:SetCountLimit(1,id)
-	e1:SetCost(s.lpcost)
-	e1:SetTarget(s.sptg)
-	e1:SetOperation(s.spop)
+	e1:SetCode(EVENT_RECOVER)
+	e1:SetCountLimit(1)
+	e1:SetCondition(s.ctcon)
+	e1:SetTarget(s.cttg)
+	e1:SetOperation(s.ctop)
 	c:RegisterEffect(e1)
 end
 s.material={499689705}
@@ -49,14 +61,31 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		e0:SetReset(RESET_EVENT+RESETS_STANDARD)
 		sc:RegisterEffect(e0)
 			--Place it on the bottom of the Deck if it leaves the field
-			local e1=Effect.CreateEffect(e:GetHandler())
-			e1:SetDescription(3301)
-			e1:SetType(EFFECT_TYPE_SINGLE)
-			e1:SetCode(EFFECT_LEAVE_FIELD_REDIRECT)
-			e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CLIENT_HINT)
-			e1:SetReset(RESET_EVENT|RESETS_REDIRECT)
-			e1:SetValue(LOCATION_DECKBOT)
-			sc:RegisterEffect(e1,true)
+			local e0=Effect.CreateEffect(e:GetHandler())
+			e0:SetDescription(3301)
+			e0:SetType(EFFECT_TYPE_SINGLE)
+			e0:SetCode(EFFECT_LEAVE_FIELD_REDIRECT)
+			e0:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CLIENT_HINT)
+			e0:SetReset(RESET_EVENT|RESETS_REDIRECT)
+			e0:SetValue(LOCATION_DECKBOT)
+			sc:RegisterEffect(e0,true)
 	end
 	Duel.SpecialSummonComplete()
+end
+function s.ctcon(e,tp,eg,ep,ev,re,r,rp)
+	return ep==tp
+end
+function s.cttg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsMonster,tp,0,LOCATION_MZONE,1,nil,e,tp) end
+end
+function s.ctop(e,tp,eg,ep,ev,re,r,rp)
+    local c=e:GetHandler()
+	if c:IsFaceup() then
+		local e0=Effect.CreateEffect(c)
+		e0:SetType(EFFECT_TYPE_SINGLE)
+		e0:SetCode(EFFECT_UPDATE_ATTACK)
+		e0:SetValue(600)
+		e0:SetReset(RESET_EVENT+RESETS_STANDARD)
+		c:RegisterEffect(e0)
+end
 end
