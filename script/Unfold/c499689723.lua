@@ -78,6 +78,9 @@ end
 function s.cttg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsMonster,tp,0,LOCATION_MZONE,1,nil,e,tp) end
 end
+function s.desfilter(c,atk)
+	return c:IsFaceup() and c:IsAttackBelow(atk-1)
+end
 function s.ctop(e,tp,eg,ep,ev,re,r,rp)
     local c=e:GetHandler()
 	if c:IsFaceup() then
@@ -86,6 +89,12 @@ function s.ctop(e,tp,eg,ep,ev,re,r,rp)
 		e0:SetCode(EFFECT_UPDATE_ATTACK)
 		e0:SetValue(600)
 		e0:SetReset(RESET_EVENT+RESETS_STANDARD)
-		c:RegisterEffect(e0)
+	if	c:RegisterEffect(e0)>0 and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+	local g=Duel.SelectMatchingCard(tp,s.desfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,2,nil,c:GetAttack())
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,#g,0,0)
+	local sg=g:Filter(s.desfilter,nil,e,c:GetAttack())
+	Duel.HintSelection(sg)
+	Duel.Destroy(sg,REASON_EFFECT)
+end
 end
 end
