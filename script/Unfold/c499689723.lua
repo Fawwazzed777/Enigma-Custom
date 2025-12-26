@@ -76,12 +76,12 @@ end
 function s.ctcon(e,tp,eg,ep,ev,re,r,rp)
 	return ep==tp
 end
-function s.desfilter(c,atk)
+function s.ctfilter(c,atk)
 	return c:IsFaceup() and c:IsAttackBelow(atk-1)
 end
 function s.cttg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
-	if chk==0 then return Duel.IsExistingMatchingCard(s.desfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil,c:GetAttack()) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.ctfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil,c:GetAttack()) end
 end
 function s.ctop(e,tp,eg,ep,ev,re,r,rp)
     local c=e:GetHandler()
@@ -92,7 +92,7 @@ function s.ctop(e,tp,eg,ep,ev,re,r,rp)
 		e0:SetValue(600)
 		e0:SetReset(RESET_EVENT+RESETS_STANDARD)
 	if	c:RegisterEffect(e0)>0 and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
-	local g=Duel.SelectMatchingCard(tp,s.desfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil,c:GetAttack())
+	local g=Duel.SelectMatchingCard(tp,s.ctfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil,c:GetAttack())
 	if #g>0 then
 	Duel.HintSelection(g)
 	Duel.SendtoGrave(g,REASON_EFFECT)
