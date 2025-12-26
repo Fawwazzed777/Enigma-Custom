@@ -35,9 +35,9 @@ function s.spfilter(c,e,tp)
 	and c:IsCanBeEffectTarget(e) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.lpcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckLPCost(tp,800) end
+	if chk==0 then return Duel.CheckLPCost(tp,1000) end
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,1))
-	local lp=Duel.AnnounceNumber(tp,800,1600,2400)
+	local lp=Duel.AnnounceNumber(tp,1000,2000,3000)
 	Duel.PayLPCost(tp,lp)
 	e:SetLabel(lp)
 end
@@ -53,7 +53,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	if not sc then return end
 	if Duel.SpecialSummon(sc,0,tp,tp,false,false,POS_FACEUP_ATTACK)>0 then
 		--ATK gain
-		local atk=lp/800*600
+		local atk=lp/1000*600
 		local e0=Effect.CreateEffect(e:GetHandler())
 		e0:SetType(EFFECT_TYPE_SINGLE)
 		e0:SetCode(EFFECT_UPDATE_ATTACK)
@@ -94,7 +94,7 @@ function s.ctop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,s.desfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil,c:GetAttack())
 	if #g>0 then
 	Duel.HintSelection(g)
-	Duel.Destroy(g,REASON_EFFECT)
+	Duel.SendtoGrave(g,REASON_EFFECT)
 end
 end
 end
