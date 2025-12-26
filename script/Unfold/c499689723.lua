@@ -17,7 +17,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e0)
 	--Send to GY
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(id,0))
+	e1:SetDescription(aux.Stringid(id,3))
 	e1:SetCategory(CATEGORY_TOGRAVE)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e1:SetRange(LOCATION_MZONE)
@@ -92,11 +92,12 @@ function s.ctop(e,tp,eg,ep,ev,re,r,rp)
 		e0:SetValue(600)
 		e0:SetReset(RESET_EVENT+RESETS_STANDARD)
 	if	c:RegisterEffect(e0)>0 and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
-	local g=Duel.SelectMatchingCard(tp,s.desfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,2,nil,c:GetAttack())
+	local g=Duel.SelectMatchingCard(tp,s.desfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil,c:GetAttack())
+	if #g>0 and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,#g,0,0)
-	local sg=g:Filter(s.desfilter,nil,e,c:GetAttack()):GetFirst()
-	Duel.HintSelection(sg)
+	Duel.HintSeleection(sg)
 	Duel.Destroy(sg,REASON_EFFECT)
+end
 end
 end
 end
