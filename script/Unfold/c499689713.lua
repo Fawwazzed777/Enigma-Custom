@@ -50,7 +50,7 @@ function s.rmcon(e)
 	return Duel.IsExistingMatchingCard(s.rmfilter,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,e:GetHandler()) 
 end
 function s.rmtg(e,c)
-	return c:IsLocation(LOCATION_ONFIELD) or (c:GetOriginalType()&TYPE_MONSTER+TYPE_SPELL+TYPE_TRAP)~=0
+	return c:IsLocation(LOCATION_ONFIELD) and (c:GetOriginalType()&TYPE_SPELL+TYPE_TRAP)~=0
 end
 function s.sccon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()~=tp and (Duel.GetCurrentPhase()==PHASE_MAIN1 or Duel.GetCurrentPhase()==PHASE_MAIN2)
