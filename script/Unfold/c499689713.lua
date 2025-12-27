@@ -102,9 +102,9 @@ function s.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) and s.filter(chkc) end
 	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToHand,tp,LOCATION_SZONE,LOCATION_SZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,1,0,0)
 end
 function s.op(e,tp,eg,ep,ev,re,r,rp,chk)
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,tc,1,0,0)
 	local tc=Duel.SelectMatchingCard(tp,Card.IsAbleToHand,tp,LOCATION_SZONE,LOCATION_SZONE,1,1,nil)
 	if tc then
 	Duel.HintSelection(tc)
