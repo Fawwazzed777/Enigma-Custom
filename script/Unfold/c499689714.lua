@@ -126,8 +126,9 @@ function s.atktg1(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.atkop1(e,tp,eg,ep,ev,re,r,rp)
 	Duel.NegateAttack() 
-	if Duel.IsExistingMatchingCard(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) and Duel.SelectYesNo(tp,aux.Stringid(id,2))then
-	local sg=Duel.SelectMatchingCard(tp,aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,e:GetHandler())
+	if Duel.IsExistingMatchingCard(Card.IsAbleToGrave,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,e:GetHandler()) 
+	and Duel.SelectYesNo(tp,aux.Stringid(id,2))then
+	local sg=Duel.SelectMatchingCard(tp,Card.IsAbleToGrave,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,e:GetHandler())
 	if #sg>0 then
 		Duel.HintSelection(sg)
 		Duel.SendtoGrave(sg,REASON_EFFECT)	
