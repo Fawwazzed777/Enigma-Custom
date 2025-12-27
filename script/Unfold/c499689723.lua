@@ -78,7 +78,7 @@ function s.ctcon(e,tp,eg,ep,ev,re,r,rp)
 	return ep==tp
 end
 function s.ctfilter(c,atk)
-	return c:IsFaceup() and c:IsAttackBelow(atk-1)
+	return c:IsFaceup() and c:IsAttackBelow(atk-1) and c:IsAbleToGrave()
 end
 function s.cttg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
