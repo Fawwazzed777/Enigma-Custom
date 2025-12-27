@@ -40,10 +40,6 @@ function s.slevel(e,c)
 	local lv=e:GetHandler():GetLevel()
 	return 1*65536+lv
 end
-function s.eftg(e,c)
-	local g=e:GetHandler()
-	return c:IsSetCard(0xbf45) 
-end
 function s.rcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()~=tp
 end
@@ -60,11 +56,15 @@ end
 function s.add(c)
 	return c:IsSpellTrap() and c:IsSetCard(0xbf45) and c:IsAbleToHand()
 end
+function s.eftg(e,c)
+	local g=e:GetHandler()
+	return c:IsSetCard(0xbf45) 
+end
 function s.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.add,tp,LOCATION_DECK,0,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.add,tp,LOCATION_DECK+LOCATION_REMOVED,0,1,nil) end
 end
 function s.op(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.SelectMatchingCard(tp,s.add,tp,LOCATION_DECK,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,s.add,tp,LOCATION_DECK+LOCATION_REMOVED,0,1,1,nil)
 	if #g>0 then
 	if Duel.SendtoHand(g,nil,REASON_EFFECT)~=0 then
 	Duel.ConfirmCards(1-tp,g)
