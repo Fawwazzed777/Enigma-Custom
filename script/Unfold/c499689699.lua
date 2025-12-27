@@ -14,7 +14,6 @@ function s.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetCountLimit(1,id)
 	e2:SetRange(LOCATION_MZONE)
-	e2:SetCondition(s.con)
 	e2:SetTarget(s.tg)
 	e2:SetOperation(s.op)
 	local e3=Effect.CreateEffect(c)
@@ -71,18 +70,5 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 	Duel.ConfirmCards(1-tp,g)
 	Duel.Recover(tp,500,REASON_EFFECT)
 end
-end
-end
-function s.rcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnPlayer()~=tp
-end
-function s.rtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsAbleToDeck() end
-	Duel.SetOperationInfo(0,CATEGORY_TODECK,e:GetHandler(),1,0,0)
-end
-function s.rop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) and c:IsAbleToDeck() then
-	Duel.SendtoDeck(c,nil,2,REASON_EFFECT)
 end
 end
