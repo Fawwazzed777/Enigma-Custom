@@ -65,5 +65,7 @@ function s.rtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.rop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
+	if c:IsRelateToEffect(e) and c:IsAbleToDeck() then
 	Duel.SendtoDeck(c,nil,2,REASON_EFFECT)
+end
 end

@@ -53,7 +53,9 @@ function s.rtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.rop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
+	if c:IsRelateToEffect(e) and c:IsAbleToDeck() then
 	Duel.SendtoDeck(c,nil,2,REASON_EFFECT)
+end
 end
 function s.lvfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0xbf45) and c:HasLevel() and not c:IsLevel(4)
