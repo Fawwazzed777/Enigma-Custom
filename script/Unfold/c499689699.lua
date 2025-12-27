@@ -58,7 +58,7 @@ function s.rop(e,tp,eg,ep,ev,re,r,rp)
 end
 end
 function s.add(c)
-	return c:IsSpellTrap() and c:IsSetCard(0xbf45) and c:IsIsAbleToHand()
+	return c:IsSpellTrap() and c:IsSetCard(0xbf45) and c:IsAbleToHand()
 end
 function s.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.add,tp,LOCATION_DECK,0,1,nil) end
