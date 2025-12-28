@@ -14,7 +14,7 @@ function s.initial_effect(c)
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetTargetRange(LOCATION_MZONE,0)
 	e2:SetTarget(aux.TargetBoolFunction(Card.IsType,TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ))
-	e2:SetValue(1)
+	e2:SetValue(aux.NOT(aux.TargetBoolFunction(Card.IsSetCard,0x344)))
 	c:RegisterEffect(e2)
 	local e3=e2:Clone()
 	e3:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
@@ -23,7 +23,6 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 	local e4=e2:Clone()
 	e4:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
-	e4:SetValue(s.efilter)
 	c:RegisterEffect(e4)
 	--spsummon
 	local e5=Effect.CreateEffect(c)
@@ -66,11 +65,8 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
-function s.tgval(e,c,te)
-	return not te:GetOwner():IsSetCard(0x344) and re:IsActiveType(TYPE_EFFECT)
-end
-function s.efilter(e,c,te)
-	return not te:GetOwner():IsSetCard(0x344) and re:IsActiveType(TYPE_EFFECT)
+function s.tgval(e,re,rp)
+	return re:IsActiveType(TYPE_EFFECT)
 end
 
 function s.cfilter(c,e,tp)
