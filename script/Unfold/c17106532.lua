@@ -14,7 +14,7 @@ function s.initial_effect(c)
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetTargetRange(LOCATION_MZONE,0)
 	e2:SetTarget(aux.TargetBoolFunction(Card.IsType,TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ))
-	e2:SetValue(aux.NOT(aux.TargetBoolFunction(Card.IsSetCard,0x344)))
+	e2:SetValue(1)
 	c:RegisterEffect(e2)
 	local e3=e2:Clone()
 	e3:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
@@ -67,10 +67,10 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.tgval(e,re,rp)
-	return re:IsActiveType(TYPE_EFFECT)
+	return re:IsActiveType(TYPE_EFFECT) and re:IsSetCard(0x344)
 end
 function s.efilter(e,re)
-	return re:IsActiveType(TYPE_EFFECT)
+	return re:IsActiveType(TYPE_EFFECT) and re:IsSetCard(0x344)
 end
 
 function s.cfilter(c,e,tp)
