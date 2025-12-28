@@ -47,6 +47,7 @@ function s.filter2(c,tp)
 		and Duel.IsExistingMatchingCard(s.filter1,tp,LOCATION_MZONE,0,1,c)
 end
 function s.lvtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	local g1=Duel.GetMatchingGroup(s.filter1,tp,LOCATION_MZONE,0,nil)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE+LOCATION_GRAVE) and s.filter(chkc,e:GetHandler():GetLevel()) end
 	if chk==0 then return Duel.IsExistingTarget(s.filter2,tp,LOCATION_MZONE,0,1,nil,tp) and g1:GetClassCount(Card.GetLevel)>1 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
