@@ -66,7 +66,10 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.tgval(e,re,rp)
-	return re:IsActiveType(TYPE_EFFECT)
+	return function(e)
+		local ct=Duel.GetMatchingGroupCount(aux.FaceupFilter(Card.IsSetCard,0x344),e:GetHandlerPlayer(),LOCATION_ONFIELD,0,nil)
+		return re:IsActiveType(TYPE_EFFECT)
+	end
 end
 
 function s.cfilter(c,e,tp)
