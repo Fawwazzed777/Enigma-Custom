@@ -27,6 +27,14 @@ function s.initial_effect(c)
 	e2:SetTarget(s.tg)
 	e2:SetOperation(s.op)
 	c:RegisterEffect(e2)
+	--Can be treated as a tuner
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_SINGLE)
+	e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e3:SetRange(LOCATION_MZONE)
+	e3:SetCode(30765615)
+	e3:SetValue(s.ntval)
+	c:RegisterEffect(e3)
 end
 s.listed_series={0xbf45}
 function s.gycon(e,tp,eg,ep,ev,re,r,rp)
@@ -73,4 +81,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SendtoGrave(sg,REASON_EFFECT)
 end
 end
+end
+function s.ntval(c,sc,tp)
+	return sc and sc:IsAttribute(ATTRIBUTE_WIND)
 end
