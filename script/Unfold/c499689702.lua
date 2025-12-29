@@ -1,4 +1,4 @@
---Aerolizer Aura Wing
+--Aerolizer Recipro Wing
 local s,id=GetID()
 function s.initial_effect(c)
 	--synchro level
