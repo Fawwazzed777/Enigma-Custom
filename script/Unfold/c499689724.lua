@@ -22,8 +22,8 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 s.listed_series={0xbf45}
-function s.cfilter(c,ft,tp)
-	return c:IsAttribute(ATTRIBUTE_WIND)
+function s.cfilter(c,ft,e,tp)
+	return c:IsAttribute(ATTRIBUTE_WIND) and Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_HAND|LOCATION_GRAVE,0,1,nil,e,tp)
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
@@ -32,7 +32,7 @@ function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Release(g,REASON_COST)
 end
 function s.filter(c,e,tp)
-	return c:IsType(TYPE_TUNER) or (c:IsType(TYPE_SYNCHRO) and c:IsSetCard(0xbf45)) and c:IsLevelBelow(4) 
+	return c:IsType(TYPE_TUNER) or (c:IsType(TYPE_SYNCHRO) and c:IsSetCard(0xbf45)) and c:IsLevelBelow(5) 
 	and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
