@@ -30,7 +30,7 @@ function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return ft>-1 and Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_HAND|LOCATION_GRAVE,0,1,nil,e,tp)
 	and Duel.CheckReleaseGroupCost(tp,s.cfilter,1,true,nil,nil) end
 	local g=Duel.SelectReleaseGroupCost(tp,s.cfilter,1,1,true,nil,nil)
-	Duel.Release(g,REASON_COST)
+	Duel.Release(tp,g,REASON_COST)
 	Duel.ShuffleHand(tp)
 end
 function s.filter(c,e,tp)
