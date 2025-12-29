@@ -25,7 +25,7 @@ function s.initial_effect(c)
 end
 s.listed_series={0xbf45}
 function s.cfilter(c,ft,tp)
-	return ft>0 or (c:IsControler(tp) and c:GetSequence()<5) and c:IsAttribute(ATTRIBUTE_WIND)
+	return c:IsAttribute(ATTRIBUTE_WIND)
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckReleaseGroupCost(tp,s.cfilter,1,true,nil,nil) end
