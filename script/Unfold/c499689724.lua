@@ -30,7 +30,9 @@ function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return ft>-1 and Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_HAND|LOCATION_GRAVE,0,1,nil,e,tp)
 	and Duel.CheckReleaseGroupCost(tp,s.cfilter,1,true,nil,nil) end
 	local g=Duel.SelectReleaseGroupCost(tp,s.cfilter,1,1,true,nil,nil)
+	Duel.SetTargetCard(Duel.GetOperatedGroup():GetFirst())
 	Duel.Release(g,REASON_COST)
+	Duel.ShuffleHand(tp)
 end
 function s.filter(c,e,tp)
 	return c:IsType(TYPE_TUNER) or (c:IsType(TYPE_SYNCHRO) and c:IsSetCard(0xbf45)) and c:IsLevelBelow(5) 
@@ -42,8 +44,10 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	local tc=Duel.GetFirstTarget()
+	local exc=tc:IsRelateToEffect(e) and tc or nil
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,1,nil,e,tp)
+	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.filter),tp,LOCATION_HAND+LOCATION_GRAVE,0,1,1,exc,e,tp)
 	if #g>0 then
 	Duel.SpecialSummon(g:GetFirst(),0,tp,tp,false,false,POS_FACEUP)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
