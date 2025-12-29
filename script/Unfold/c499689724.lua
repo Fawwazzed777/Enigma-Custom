@@ -1,4 +1,4 @@
---Aerolizer Valor Dance
+--Aerolizer Valor Call
 local s,id=GetID()
 function s.initial_effect(c)
 	--SP
@@ -13,8 +13,6 @@ function s.initial_effect(c)
 	--
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,0))
-	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetCountLimit(1,id)
