@@ -46,6 +46,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,1,nil,e,tp)
 	if #g>0 and Duel.SpecialSummonStep(g:GetFirst(),0,tp,tp,false,false,POS_FACEUP) then
 		if not e:GetHandler():IsRelateToEffect(e) then return end
+		Duel.BreakEffect()
 		Duel.Recover(tp,g:GetLevel()*400,REASON_EFFECT)
 	end
 	Duel.SpecialSummonComplete()
