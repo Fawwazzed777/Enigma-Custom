@@ -45,11 +45,11 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,1,nil,e,tp)
-	if #g>0 and Duel.SpecialSummonStep(g:GetFirst(),0,tp,tp,false,false,POS_FACEUP) then
-		Duel.BreakEffect()
-		Duel.Recover(tp,g:GetLevel()*400,REASON_EFFECT)
-	end
-	Duel.SpecialSummonComplete()
+	if #g>0 then
+	Duel.SpecialSummon(g:GetFirst(),0,tp,tp,false,false,POS_FACEUP)
+	if not e:GetHandler():IsRelateToEffect(e) then return end
+	Duel.Recover(tp,g:GetLevel()*400,REASON_EFFECT)
+end
 end
 function s.lvfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0xbf45) and c:HasLevel() and not c:IsLevel(4)
