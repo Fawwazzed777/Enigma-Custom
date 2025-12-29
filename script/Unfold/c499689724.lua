@@ -48,7 +48,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if #g>0 then
 	Duel.SpecialSummon(g:GetFirst(),0,tp,tp,false,false,POS_FACEUP)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
-	Duel.Recover(tp,g:GetLevel()*400,REASON_EFFECT)
+	Duel.Recover(tp,g:GetFirst():GetLevel()*400,REASON_EFFECT)
 end
 end
 function s.lvfilter(c)
