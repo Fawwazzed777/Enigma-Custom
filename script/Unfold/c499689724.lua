@@ -31,7 +31,6 @@ function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	and Duel.CheckReleaseGroupCost(tp,s.cfilter,1,true,nil,nil) end
 	local g=Duel.SelectReleaseGroupCost(tp,s.cfilter,1,1,true,nil,nil)
 	Duel.Release(tp,g,REASON_COST)
-	Duel.ShuffleHand(tp)
 end
 function s.filter(c,e,tp)
 	return c:IsType(TYPE_TUNER) or (c:IsType(TYPE_SYNCHRO) and c:IsSetCard(0xbf45)) and c:IsLevelBelow(5) 
