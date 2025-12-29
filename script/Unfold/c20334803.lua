@@ -33,7 +33,7 @@ function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetCurrentPhase()~=PHASE_DAMAGE or not Duel.IsDamageCalculated()
 end
 function s.atkfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:GetBaseAttack()~=c:GetAttack()
+	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:GetAttack()~=c:GetBaseAttack()
 end
 function s.atktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and s.atkfilter(chkc) end
