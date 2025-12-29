@@ -79,7 +79,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
-	if Duel.SpecialSummonStep(g,0,tp,tp,false,false,POS_FACEUP)~=0 then
+	if Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)~=0 then
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
@@ -91,7 +91,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local e2=e1:Clone()
 	e2:SetCode(EFFECT_CANNOT_SUMMON)
 	Duel.RegisterEffect(e2,tp)
-  aux.RegisterClientHint(e:GetHandler(),nil,tp,1,0,aux.Stringid(id,2),nil)
+	aux.RegisterClientHint(e:GetHandler(),nil,tp,1,0,aux.Stringid(id,2),nil)
 end
 end
 function s.splimit(e,c)
