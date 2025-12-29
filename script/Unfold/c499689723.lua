@@ -90,7 +90,7 @@ function s.ctop(e,tp,eg,ep,ev,re,r,rp)
 		local e0=Effect.CreateEffect(c)
 		e0:SetType(EFFECT_TYPE_SINGLE)
 		e0:SetCode(EFFECT_UPDATE_ATTACK)
-		e0:SetValue(600)
+		e0:SetValue(800)
 		e0:SetReset(RESET_EVENT+RESETS_STANDARD)
 	if	c:RegisterEffect(e0)>0 and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 	local g=Duel.SelectMatchingCard(tp,s.ctfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil,c:GetAttack())
