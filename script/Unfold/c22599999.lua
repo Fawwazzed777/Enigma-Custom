@@ -96,7 +96,7 @@ function s.atkval(e,c)
     return Duel.GetMatchingGroupCount(aux.FaceupFilter(s.att),c:GetControler(),LOCATION_MZONE,LOCATION_MZONE,c)*500 
  end
  function s.rtfilter(c)
-	return c:IsMonster() and c:IsSetCard(0x994) and c:IsAbleToRemoveAsCost()
+	return c:IsMonster() and c:IsSetCard(0x994) and c:IsAbleToDeckAsCost()
 end
  function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.rtfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,e:GetHandler()) end
