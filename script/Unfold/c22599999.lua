@@ -108,7 +108,7 @@ end
 function s.disfilter(c)
 	return c:IsFaceup() and not c:IsDisabled()
 end
- --Rule this one
+ --Ignore
 function s.t(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.disfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
 end
