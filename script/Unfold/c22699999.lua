@@ -68,7 +68,6 @@ function s.rtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.IsExistingMatchingCard(nil,tp,0,LOCATION_ONFIELD,1,nil) end
 end
 function s.rop(e,tp,eg,ep,ev,re,r,rp)
-	local rg=Duel.GetTargetCards(e)
 	local ct=e:GetLabel()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
 	local rg=Duel.SelectMatchingCard(tp,nil,tp,0,LOCATION_ONFIELD,ct,ct,nil)
