@@ -48,18 +48,17 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Overlay(sc,Group.FromCards(tc))
 		Duel.SpecialSummon(sc,SUMMON_TYPE_XYZ,tp,tp,false,false,POS_FACEUP)
 		sc:CompleteProcedure()
-		local tc=e:GetHandler()
 		if tc:IsRelateToEffect(e) then
-		local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_MZONE,nil)
+		local sg=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_MZONE,nil)
 		local ct=Duel.GetMatchingGroupCount(Card.IsAttribute,tp,LOCATION_GRAVE,0,nil,ATTRIBUTE_DARK)
-		tc=g:GetFirst()
-		for tc in aux.Next(g) do
-			local e1=Effect.CreateEffect(e:GetHandler())
+		rc=sg:GetFirst()
+		for rc in aux.Next(g) do
+			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_UPDATE_ATTACK)
 			e1:SetValue(ct*-800)
 			e1:SetReset(RESETS_STANDARD)
-			tc:RegisterEffect(e1)
+			rc:RegisterEffect(e1)
 	end
 	end
 	end
