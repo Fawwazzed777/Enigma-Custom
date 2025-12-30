@@ -2,7 +2,7 @@
 local s,id=GetID()
 function s.initial_effect(c)
 --fusion material
-	Fusion.AddProcMixN(c,true,true,aux.FilterBoolFunctionEx(Card.IsSetCard,0x344),3)
+	Fusion.AddProcMixN(c,true,true,s.ffilter,3)
 	c:EnableReviveLimit()
 	--disable
 	local e1=Effect.CreateEffect(c)
@@ -41,6 +41,15 @@ function s.initial_effect(c)
 	e4:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
 	e4:SetValue(aux.tgoval)
 	c:RegisterEffect(e4)
+end
+s.listed_series={0x344}
+s.material_setcode={0x344}
+s.listed_names={96488218}
+function s.ffilter(c,fc,sumtype,tp,sub,mg,sg)
+	return c:IsSetCard(0x344,fc,0,tp) and (not sg or not sg:IsExists(s.fusfilter,1,c,c:GetCode(fc,0,tp),fc,0,tp))
+end
+function s.fusfilter(c,code,fc,sumtype,tp)
+	return c:IsSummonCode(fc,0,tp,code) and not c:IsHasEffect(511002961)
 end
 function s.spcond(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsMainPhase()
@@ -90,7 +99,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_SET_ATTACK)
-		e1:SetValue(4500)
+		e1:SetValue(4000)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 		tc:RegisterEffect(e1)
 		local e2=e1:Clone()
