@@ -26,6 +26,16 @@ c:SetUniqueOnField(1,0,id)
 	e1:SetTarget(s.rtg)
 	e1:SetOperation(s.rop)
 	c:RegisterEffect(e1)
+	--recycle
+	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(id,1))
+	e2:SetCategory(CATEGORY_TOHAND)
+	e2:SetType(EFFECT_TYPE_IGNITION)
+	e2:SetCountLimit(1)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetTarget(s.ttg)
+	e2:SetOperation(s.top)
+	c:RegisterEffect(e2)
 end
 function s.ffilter1(c,fc,sumtype,tp)
 	return c:IsCode(16399999)
@@ -67,5 +77,19 @@ function s.rop(e,tp,eg,ep,ev,re,r,rp)
 	if #rg>0 then
 		Duel.HintSelection(rg)
 		Duel.SendtoHand(rg,nil,REASON_EFFECT)
+	end
+end
+function s.filter(c)
+	return c:IsFaceup() and c:IsSetCard(0x993) and c:IsAbleToGrave()
+end
+function s.ttg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_REMOVED,0,1,nil) end
+	local g=Duel.GetMatchingGroup(s.filter,tp,LOCATION_REMOVED,0,nil)
+	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,g,#g,0,0)
+end
+function s.top(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.GetMatchingGroup(s.filter,tp,LOCATION_REMOVED,0,nil)
+	if #g>0 then
+		Duel.SendtoGrave(g,REASON_EFFECT)
 	end
 end
