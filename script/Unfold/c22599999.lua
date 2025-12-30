@@ -110,10 +110,10 @@ function s.disfilter(c)
 end
  --Ignore
 function s.t(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.disfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.disfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,e:GetHandler()) end
 end
 function s.o(e,tp,eg,ep,ev,re,r,rp)
-	local sg=Duel.SelectMatchingCard(tp,s.disfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
+	local sg=Duel.SelectMatchingCard(tp,s.disfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,e:GetHandler())
 	for tc in aux.Next(sg) do
 		e:SetProperty(e:GetProperty()|EFFECT_FLAG_IGNORE_IMMUNE)
 		Duel.HintSelection(sg)
