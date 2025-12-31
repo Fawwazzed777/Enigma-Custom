@@ -12,7 +12,7 @@ function s.initial_effect(c)
 	e2:SetDescription(aux.Stringid(id,0))
 	e2:SetCategory(CATEGORY_REMOVE+CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
-	e2:SetProperty(EFFECT_FLAG_DELAY)
+	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetCountLimit(1,id)
 	e2:SetCost(s.cost)
@@ -23,7 +23,7 @@ end
 s.listed_series={0x994}
 function s.costfilter(c)
 	return c:IsSetCard(0x994) and c:IsMonster() and c:GetOriginalAttribute()~=att
-	and (c:IsFaceup() or c:IsLocation(LOCATION_HAND))
+	and (c:IsFaceup() and c:IsLocation(LOCATION_MZONE) or c:IsLocation(LOCATION_HAND))
 		and c:IsAbleToRemoveAsCost()
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
