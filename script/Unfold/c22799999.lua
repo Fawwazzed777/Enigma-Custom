@@ -55,7 +55,7 @@ function s.cfilter(c)
 end
 function s.ssfilter(c,e,tp)
 	return c:IsSetCard(0x994) and c:IsAbleToGrave() and c:IsPendulumMonster() and c:IsFaceup()
-	and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP)
+	and c:IsCanBeSpecialSummoned(e,0,tp,true,false,POS_FACEUP)
 end
 function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_DECK,0,1,nil) end
