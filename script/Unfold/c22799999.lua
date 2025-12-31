@@ -1,4 +1,4 @@
---Eternity Ace - Blast Dragon Varel
+--Eternity Ace - Chrono Dragon Varel
 local s,id=GetID()
 function s.initial_effect(c)
 	c:SetSPSummonOnce(id)
