@@ -70,7 +70,8 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	if e:GetHandler():IsAbleToHand() then
 		Duel.SendtoHand(e:GetHandler(),nil,REASON_EFFECT)
-		if Duel.ConfirmCards(1-tp,e:GetHandler())~=0 and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+		if Duel.ConfirmCards(1-tp,e:GetHandler())~=0 and Duel.SelectYesNo(tp,aux.Stringid(id,2)) 
+		and Duel.IsExistingMatchingCard(aux.NecroValleyFilter(s.ssfilter),tp,LOCATION_EXTRA,0,1,nil) then
 	local loc=LOCATION_EXTRA
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then loc=loc end
 	if loc==0 then return end
