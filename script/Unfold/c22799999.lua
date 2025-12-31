@@ -53,8 +53,8 @@ function s.cfilter(c)
 	return c:IsSetCard(0x993) and c:IsAbleToRemoveAsCost()
 end
 function s.ssfilter(c)
-	if c:IsLocation(LOCATION_EXTRA) and Duel.GetLocationCountFromEx(tp,tp,nil,c)==0 then return false end
-	return c:IsSetCard(0x994) and c:IsAbleToGrave() and c:IsType(TYPE_PENDULUM) and c:IsFaceup()
+	return c:IsSetCard(0x994) and c:IsAbleToGrave() and c:IsPendulumMonster() and c:IsFaceup()
+	and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP)
 end
 function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_DECK,0,1,nil) end
@@ -68,14 +68,13 @@ end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	if e:GetHandler():IsAbleToHand() then
-		Duel.SendtoHand(e:GetHandler(),nil,REASON_EFFECT)
-		if Duel.ConfirmCards(1-tp,e:GetHandler())~=0 and Duel.SelectYesNo(tp,aux.Stringid(id,2)) 
-		and Duel.IsExistingMatchingCard(aux.NecroValleyFilter(s.ssfilter),tp,LOCATION_EXTRA,0,1,nil) then
-	local loc=LOCATION_EXTRA
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then loc=loc end
-	if loc==0 then return end
+	Duel.SendtoHand(e:GetHandler(),nil,REASON_EFFECT)
+	if Duel.ConfirmCards(1-tp,e:GetHandler())~=0 and Duel.GetLocationCountFromEx(tp,tp,nil)>0
+	and Duel.IsExistingMatchingCard(s.exspfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp) and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local tc=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.ssfilter),tp,loc,0,1,1,nil,e,tp)
+	local ft=math.min(Duel.GetLocationCountFromEx(tp),1)
+	if ft==0 then return end
+	local tc=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.ssfilter),tp,LOCATION_EXTRA,0,1,ft,nil,e,tp)
 	if tc then
 		if Duel.SendtoGrave(tc,REASON_EFFECT)~=0 and tc:IsCanBeSpecialSummoned(e,0,tp,false,false) then
 		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
