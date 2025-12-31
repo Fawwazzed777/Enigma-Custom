@@ -23,7 +23,8 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 s.listed_series={0x994}
-function s.costfilter(c)
+function s.costfilter(c,e,tp,att)
+	local att=e:GetLabel()
 	return c:IsSetCard(0x994) and c:IsMonster()
 		and ((c:IsFaceup() and c:IsLocation(LOCATION_MZONE)) or c:IsLocation(LOCATION_HAND))
 		and c:IsAbleToRemoveAsCost() and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil,e,tp,att)
