@@ -17,25 +17,16 @@ function s.initial_effect(c)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetCountLimit(1,id)
-	e2:SetCost(s.cost)
 	e2:SetTarget(s.target)
 	e2:SetOperation(s.operation)
 	c:RegisterEffect(e2)
 end
 s.listed_series={0x994}
-function s.costfilter(c,e,tp,att)
+function s.refilter(c,e,tp,att)
 	return c:IsSetCard(0x994) and c:IsMonster()
 		and ((c:IsFaceup() and c:IsLocation(LOCATION_MZONE)) or c:IsLocation(LOCATION_HAND))
-		and c:IsAbleToRemoveAsCost()
+		and c:IsAbleToRemove()
 end
-function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.costfilter,tp,LOCATION_HAND+LOCATION_MZONE,0,1,nil)
-	and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil,e,tp)	end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,s.costfilter,tp,LOCATION_HAND+LOCATION_MZONE,0,1,1,nil)
-	local tc=g:GetFirst()
-	e:SetLabel(tc:GetOriginalAttribute())
-	Duel.Remove(tc,POS_FACEUP,REASON_COST)
 end
 function s.spfilter(c,e,tp,att)
 	return c:IsSetCard(0x994) and c:IsMonster()
@@ -50,9 +41,11 @@ end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	local att=e:GetLabel()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil,e,tp,att)
+	local g=Duel.SelectMatchingCard(tp,s.refilter,tp,LOCATION_HAND+LOCATION_MZONE,0,1,1,nil)
 	local tc=g:GetFirst()
+	if Duel.Remove(tc:GetOriginalAttribute(),POS_FACEUP,REASON_EFFECT)~=0 then
+	local tc=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil,e,tp,att)
 	if tc then
 		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
-	end
+end
 end
