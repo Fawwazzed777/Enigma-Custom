@@ -55,7 +55,6 @@ end
 function s.ssfilter(c)
 	if c:IsLocation(LOCATION_EXTRA) and Duel.GetLocationCountFromEx(tp,tp,nil,c)==0 then return false end
 	return c:IsSetCard(0x994) and c:IsAbleToGrave() and c:IsType(TYPE_PENDULUM) and c:IsFaceup()
-		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_DECK,0,1,nil) end
@@ -78,7 +77,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local tc=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.ssfilter),tp,loc,0,1,1,nil,e,tp)
 	if tc then
-		if Duel.SendtoGrave(tc,REASON_EFFECT)~=0 then
+		if Duel.SendtoGrave(tc,REASON_EFFECT)~=0 and tc:IsCanBeSpecialSummoned(e,0,tp,false,false) then
 		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 end
 end
