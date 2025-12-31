@@ -52,6 +52,9 @@ end
 function s.cfilter(c)
 	return c:IsSetCard(0x993) and c:IsAbleToRemoveAsCost()
 end
+function s.ssfilter(c)
+	return c:IsSetCard(0x994) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+end
 function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_DECK,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
@@ -65,7 +68,18 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	if e:GetHandler():IsAbleToHand() then
 		Duel.SendtoHand(e:GetHandler(),nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,e:GetHandler())
+		if Duel.ConfirmCards(1-tp,e:GetHandler())~=0 and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+	local loc=LOCATION_EXTRA
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then loc=loc|LOCATION_GRAVE end
+	if loc==0 then return end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.ssfilter),tp,loc,0,1,1,nil,e,tp)
+	if #g>0 then
+		if Duel.SendtoHand(g,nil,REASON_EFFECT):GetFirst()~=0 then
+		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+end
+end
+end
 end
 end
 function s.thfilter(c,tp)
