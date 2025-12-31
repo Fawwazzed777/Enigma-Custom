@@ -66,7 +66,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	if e:GetHandler():IsAbleToHand() then
 		Duel.SendtoHand(e:GetHandler(),nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,tc)
+		Duel.ConfirmCards(1-tp,e:GetHandler())
 end
 end
 function s.thfilter(c,tp)
