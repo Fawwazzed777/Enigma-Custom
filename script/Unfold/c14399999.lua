@@ -56,9 +56,6 @@ end
 function s.atktg(e,c)
 	return c:IsSetCard(0x994)
 end
-function s.thcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD)
-end
 function s.thfilter(c)
 	return c:IsSetCard(0x993) and not c:IsCode(id) and c:IsAbleToHand()
 end
