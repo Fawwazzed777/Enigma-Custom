@@ -70,8 +70,8 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	if e:GetHandler():IsAbleToHand() then
 	Duel.SendtoHand(e:GetHandler(),nil,REASON_EFFECT)
-	if Duel.ConfirmCards(1-tp,e:GetHandler())~=0 and Duel.GetLocationCountFromEx(tp,tp,nil)>0
-	and Duel.IsExistingMatchingCard(s.ssfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp) and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+	if Duel.ConfirmCards(1-tp,e:GetHandler())~=0 and Duel.IsExistingMatchingCard(s.ssfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp) 
+	and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local ft=math.min(Duel.GetLocationCountFromEx(tp),1)
 	if ft==0 then return end

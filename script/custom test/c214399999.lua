@@ -55,7 +55,7 @@ function s.xyzop(e,tp,chk,mc)
 	end
 end
 function s.sprfilter(c,e)
-	return c:IsFaceup() and c:IsMonster() and c:IsCanBeXyzMaterial()
+	return c:IsFaceup() and c:IsMonster() and c:GetLevel() and c:IsCanBeXyzMaterial()
 end
 function s.sprfilter1(c,tp,g,sc)
 	local lv=c:GetLevel()
@@ -64,7 +64,7 @@ function s.sprfilter1(c,tp,g,sc)
 end
 function s.sprfilter2(c,tp,mc,sc,lv)
 	local sg=Group.FromCards(c,mc)
-	return (c:GetLevel()+mc:GetLevel())==7 
+	return c:GetLevel()+mc:GetLevel()==7 
 end
 function s.sprcon(e,c)
 	if c==nil then return true end
@@ -95,7 +95,7 @@ function s.sprop(e,tp,eg,ep,ev,re,r,rp,c)
 	if not g then return end
 	local og=Group.CreateGroup()
 	for tc in aux.Next(g) do
-		if tc:IsType(TYPE_XYZ) then
+		if tc:IsCanBeXyzMaterial() then
 			og:Merge(tc:GetOverlayGroup())
 		end
 	end
