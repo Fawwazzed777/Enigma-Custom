@@ -52,7 +52,7 @@ end
 function s.cfilter(c)
 	return c:IsSetCard(0x993) and c:IsAbleToRemoveAsCost()
 end
-function s.ssfilter(c)
+function s.ssfilter(c,e,tp)
 	return c:IsSetCard(0x994) and c:IsAbleToGrave() and c:IsPendulumMonster() and c:IsFaceup()
 	and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP)
 end
