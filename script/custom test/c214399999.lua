@@ -1,9 +1,9 @@
 --Eternity Ace - Chrono Zereya 
 local s,id=GetID()
 function s.initial_effect(c)
-	c:EnableReviveLimit()
 	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(Card.IsSetCard,0x994),7,3,s.ovfilter,aux.Stringid(id,0),3,s.xyzop,Xyz.InfiniteMats)
 	Pendulum.AddProcedure(c,false)
+	c:EnableReviveLimit()
 	--Special summon by its own method
 	local e0=Effect.CreateEffect(c)
 	e0:SetDescription(aux.Stringid(id,0))
