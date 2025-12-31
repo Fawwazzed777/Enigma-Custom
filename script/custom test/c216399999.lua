@@ -23,7 +23,7 @@ end
 s.listed_series={0x993,0x994}
 function s.cfilter(c,tp)
 	return (c:IsFaceup() or c:IsLocation(LOCATION_HAND)) and c:IsMonster() and c:IsAbleToRemove() and c:IsSetCard(0x994)
-		and Duel.IsExistingMatchingCard(s.tgfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil,c:GetAttribute())
+		and Duel.IsExistingMatchingCard(s.tgfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil,c:GetAttribute(),e,tp)
 end
 function s.tgfilter(c,att)
 	return c:IsSetCard(0x994) and not c:IsAttribute(att) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP)
