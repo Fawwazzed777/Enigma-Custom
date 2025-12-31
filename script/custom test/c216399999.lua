@@ -22,7 +22,8 @@ function s.initial_effect(c)
 end
 s.listed_series={0x994}
 function s.costfilter(c)
-	return c:IsSetCard(0x994) and c:IsMonster() and (c:IsFaceup() or c:IsLocation(LOCATION_HAND))
+	return c:IsSetCard(0x994) and c:IsMonster() and c:GetOriginalAttribute()~=att
+	and (c:IsFaceup() or c:IsLocation(LOCATION_HAND))
 		and c:IsAbleToRemoveAsCost()
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
