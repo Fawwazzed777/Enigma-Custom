@@ -7,36 +7,48 @@ function s.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	c:RegisterEffect(e1)
-	--banish "Eternity Ace" Monster
+	--Banish 1 "Eternity Ace"; SS different Attribute
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,0))
-	e2:SetCategory(CATEGORY_REMOVE)
+	e2:SetCategory(CATEGORY_REMOVE+CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetCountLimit(1,{id,0})
-	e2:SetCost(s.ttcost)
-	e2:SetOperation(s.top)
+	e2:SetCost(s.cost)
+	e2:SetTarget(s.target)
+	e2:SetOperation(s.operation)
 	c:RegisterEffect(e2)
-
 end
-s.listed_series={0x993,0x994}
-function s.cfilter(c,tp)
-	return (c:IsFaceup() or c:IsLocation(LOCATION_HAND)) and c:IsMonster() and c:IsAbleToRemove() and c:IsSetCard(0x994)
-		and Duel.IsExistingMatchingCard(s.tgfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil,c:GetAttribute(),e,tp)
+s.listed_series={0x994}
+function s.costfilter(c)
+	return c:IsSetCard(0x994) and c:IsMonster() and (c:IsFaceup() or c:IsLocation(LOCATION_HAND))
+		and c:IsAbleToRemoveAsCost()
 end
-function s.tgfilter(c,att)
-	return c:IsSetCard(0x994) and not c:IsAttribute(att) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP)
-end
-function s.ttcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_HAND|LOCATION_MZONE,0,1,nil) end
-	local g=Duel.SelectMatchingCard(tp,s.cfilter,tp,LOCATION_HAND|LOCATION_MZONE,0,1,1,nil,tp)
+function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(s.costfilter,tp,LOCATION_HAND+LOCATION_MZONE,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	local g=Duel.SelectMatchingCard(tp,s.costfilter,tp,LOCATION_HAND+LOCATION_MZONE,0,1,1,nil)
+	local att=g:GetFirst():GetOriginalAttribute()
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
-	e:SetLabel(Duel.GetOperatedGroup():GetFirst():GetAttribute())
+	e:SetLabel(att)
 end
-function s.top(e,tp,eg,ep,ev,re,r,rp)
-	local tc=Duel.SelectMatchingCard(tp,s.tgfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil,e:GetLabel(),e,tp):GetFirst()
-	if tc and tc:IsLocation(LOCATION_GRAVE+LOCATION_REMOVED) then
+function s.spfilter(c,e,tp,att)
+	return c:IsSetCard(0x994) and c:IsMonster()
+		and c:GetOriginalAttribute()~=att
+		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+end
+function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	local att=e:GetLabel()
+	if chk==0 then return Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil,e,tp,att) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE+LOCATION_REMOVED)
+end
+function s.operation(e,tp,eg,ep,ev,re,r,rp)
+	local att=e:GetLabel()
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil,e,tp,att)
+	local tc=g:GetFirst()
+	if tc then
 		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
