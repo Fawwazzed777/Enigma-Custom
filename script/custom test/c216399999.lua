@@ -43,7 +43,7 @@ function s.spfilter(c,e,tp,att)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local att=e:GetLabel()
-	if chk==0 then return Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil,e,tp,att) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE+LOCATION_REMOVED)
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
