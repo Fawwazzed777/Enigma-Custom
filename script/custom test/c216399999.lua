@@ -15,7 +15,7 @@ function s.initial_effect(c)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetHintTiming(0,TIMINGS_CHECK_MONSTER_E)
-	e2:SetCountLimit(1,id)
+	e2:SetCountLimit(1)
 	e2:SetCost(s.cost)
 	e2:SetTarget(s.target)
 	e2:SetOperation(s.operation)
@@ -25,7 +25,7 @@ s.listed_series={0x994}
 function s.costfilter(c)
 	return c:IsSetCard(0x994) and c:IsMonster()
 		and ((c:IsFaceup() and c:IsLocation(LOCATION_MZONE)) or c:IsLocation(LOCATION_HAND))
-		and c:IsAbleToRemoveAsCost()
+		and c:IsAbleToRemoveAsCost() and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil,e,tp,att)
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
