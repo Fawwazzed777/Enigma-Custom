@@ -35,7 +35,7 @@ function s.recfilter(c)
 	and (c:IsLocation(LOCATION_GRAVE) or c:IsFaceup()) and c:IsAbleToDeck()
 end
 function s.monfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x344) and c:IsType(TYPE_EXTRA)
+	return c:IsFaceup() and (c:IsCode(96488218,96488216,96488199) or c:ListsCode(96488218,96488216,96488199)) and c:IsType(TYPE_EXTRA)
 	and s.effect_map[c:GetCode()]~=nil
 end
 --Really make you wonder...
