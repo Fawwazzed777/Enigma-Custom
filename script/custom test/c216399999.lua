@@ -25,7 +25,7 @@ s.listed_series={0x994}
 function s.refilter(c,e,tp,att)
 	return c:IsSetCard(0x994) and c:IsMonster()
 		and ((c:IsFaceup() and c:IsLocation(LOCATION_MZONE)) or c:IsLocation(LOCATION_HAND))
-		and c:IsAbleToRemove()
+		and c:GetOriginalAttribute() and c:IsAbleToRemove()
 end
 function s.spfilter(c,e,tp,att)
 	return c:IsSetCard(0x994) and c:IsMonster()
@@ -40,8 +40,7 @@ end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	local att=e:GetLabel()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,s.refilter,tp,LOCATION_HAND+LOCATION_MZONE,0,1,1,nil)
-	local tc=g:GetFirst():GetOriginalAttribute()
+	local g=Duel.SelectMatchingCard(tp,s.refilter,tp,LOCATION_HAND+LOCATION_MZONE,0,1,1,nil,e,tp,att):GetFirst()
 	if Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)~=0 then
 	local tc=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil,e,tp,att)
 	if tc then
