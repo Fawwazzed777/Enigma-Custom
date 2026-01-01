@@ -88,18 +88,19 @@ end,
 end,
 	--Enigmation - Overcharge Dragon
 	[96488218]=function(e,tp,tc)
+	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc and tc:IsFaceup() 
+	if tc and c:IsRelateToEffect(e) and tc:IsRelateToEffect(e) and tc:IsFaceup() 
 	and tc:IsType(TYPE_EFFECT) and not tc:IsDisabled()then
 			--Negate its effects
-			local e1=Effect.CreateEffect(e:GetHandler())
+			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_DISABLE)
 			e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 			tc:RegisterEffect(e1)
 		if tc:IsFaceup() and tc:IsRelateToEffect(e) and not tc:IsImmuneToEffect(e) then
 		local atk=tc:GetAttack()
-		local e2=Effect.CreateEffect(e:GetHandler())
+		local e2=Effect.CreateEffect(c)
 		e2:SetType(EFFECT_TYPE_SINGLE)
 		e2:SetCode(EFFECT_SET_ATTACK_FINAL)
 		e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
@@ -107,7 +108,7 @@ end,
 		tc:RegisterEffect(e2)
 		Duel.Damage(1-tp,math.ceil(atk/2),REASON_EFFECT)
 		--Cannot Attack
-		local e3=Effect.CreateEffect(e:GetHandler())
+		local e3=Effect.CreateEffect(c)
 		e3:SetType(EFFECT_TYPE_SINGLE)
 		e3:SetCode(EFFECT_CANNOT_ATTACK)
 		e3:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
