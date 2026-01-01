@@ -50,20 +50,23 @@ end
 function s.cfilter(c)
 	return c:IsSetCard(SET_RANK_UP_MAGIC) and c:IsSpell() and c:IsAbleToRemove()
 end
-function s.ovfilter(c,e,tp,lc)
-	return c:IsFaceup() and c:IsMonster() and c:IsLocation(LOCATION_REMOVED)and
-	c:IsType(TYPE_XYZ,lc,SUMMON_TYPE_XYZ,tp) and c:IsSetCard(0x145,lc,SUMMON_TYPE_XYZ,tp) and c:IsRankAbove(6)
-		and Duel.GetMatchingGroupCount(Card.IsAttribute,tp,LOCATION_REMOVED,0,nil,ATTRIBUTE_DARK)>=5
+function s.ovfilter(c,tp,lc)
+	return c:IsFaceup()
+		and c:IsLocation(LOCATION_REMOVED)
+		and c:IsType(TYPE_XYZ,lc,SUMMON_TYPE_XYZ,tp)
+		and c:IsSetCard(0x145,lc,SUMMON_TYPE_XYZ,tp)
+		and c:IsRankAbove(6)
 end
 function s.xyzop(e,tp,chk)
-	if chk==0 then return Duel.GetFlagEffect(tp,id)==0 and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_GRAVE,0,1,nil) end
+	if chk==0 then return Duel.GetFlagEffect(tp,id)==0 
+	and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_GRAVE,0,1,nil)
+	and Duel.GetMatchingGroupCount(Card.IsAttribute,tp,LOCATION_REMOVED,0,nil,ATTRIBUTE_DARK)>=5 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local tc=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_GRAVE,0,nil):SelectUnselect(Group.CreateGroup(),tp,false,Xyz.ProcCancellable)
-	if tc then
+	local g=Duel.SelectMatchingCard(tp,s.cfilter,tp,LOCATION_GRAVE,0,1,1,nil)
+	if #g==0 then return false end
 	Duel.RegisterFlagEffect(tp,id,RESET_PHASE|PHASE_END,0,1)
-	Duel.Remove(tc,POS_FACEUP,REASON_COST)
-		return true
-	else return false end
+	Duel.Remove(g,POS_FACEUP,REASON_COST)
+	return true
 end
 function s.discon(e,tp,eg,ep,ev,re,r,rp)
 	local loc=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION)
