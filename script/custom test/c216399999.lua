@@ -27,7 +27,6 @@ function s.refilter(c,e,tp,att)
 		and ((c:IsFaceup() and c:IsLocation(LOCATION_MZONE)) or c:IsLocation(LOCATION_HAND))
 		and c:IsAbleToRemove()
 end
-end
 function s.spfilter(c,e,tp,att)
 	return c:IsSetCard(0x994) and c:IsMonster()
 		and c:GetOriginalAttribute()~=att
