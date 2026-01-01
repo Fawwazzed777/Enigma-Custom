@@ -6,7 +6,7 @@ function s.initial_effect(c)
 	e0:SetType(EFFECT_TYPE_ACTIVATE)
 	e0:SetCode(EVENT_FREE_CHAIN)
 	c:RegisterEffect(e0)
-	--Recycle + grant re-activation
+	--Recycle + grant activation or copy activation
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_TODECK)
@@ -28,6 +28,7 @@ function s.monfilter(c)
 end
 --Really make you wonder...
 s.effect_map={
+	--Enigmation - Spectre Dragon
 	[96488199]=function(e,tp,tc) 
 	local g=Duel.SelectTarget(tp,Card.IsFaceup,tp,0,LOCATION_MZONE,1,1,nil)
 	local tc=Duel.GetFirstTarget()
@@ -61,10 +62,125 @@ s.effect_map={
 		Duel.Damage(1-tp,800,REASON_EFFECT)	
 	end
 end,
-
-	[87654321]=function(e,tp,tc)
-		Duel.Draw(tp,1,REASON_EFFECT)
+	--Enigmation - Phantasm Dragon
+	[96488201]=function(e,tp,tc)
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+		local g=Duel.SelectMatchingCard(tp,Card.IsAbleToRemove,tp,0,LOCATION_MZONE,1,1,nil)
+		local tc=g:GetFirst()
+		if tc then
+		Duel.HintSelection(g)
+		if Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)>0 then
+			Duel.Damage(1-tp,1400,REASON_EFFECT)
+		end
 	end
+end,
+	--Enigmation - Overcharge Dragon
+	[96488218]=function(e,tp,tc)
+	local c=e:GetHandler()
+	local tc=Duel.GetFirstTarget()
+	if tc and c:IsRelateToEffect(e) and tc:IsRelateToEffect(e) and tc:IsFaceup() 
+	and tc:IsType(TYPE_EFFECT) and not tc:IsDisabled()then
+			--Negate its effects
+			local e1=Effect.CreateEffect(c)
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetCode(EFFECT_DISABLE)
+			e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+			tc:RegisterEffect(e1)
+		if tc:IsFaceup() and tc:IsRelateToEffect(e) and not tc:IsImmuneToEffect(e) then
+		local atk=tc:GetAttack()
+		local e2=Effect.CreateEffect(c)
+		e2:SetType(EFFECT_TYPE_SINGLE)
+		e2:SetCode(EFFECT_SET_ATTACK_FINAL)
+		e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+		e2:SetValue(math.ceil(atk/2))
+		tc:RegisterEffect(e2)
+		Duel.Damage(1-tp,math.ceil(atk/2),REASON_EFFECT)
+		--Cannot Attack
+		local e3=Effect.CreateEffect(c)
+		e3:SetType(EFFECT_TYPE_SINGLE)
+		e3:SetCode(EFFECT_CANNOT_ATTACK)
+		e3:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+		tc:RegisterEffect(e3)
+		end
+	end
+end,
+	--Enigmation - Over Burst Dragon
+	[96488219]=function(e,tp,tc)
+	local c=e:GetHandler()
+	local g=Duel.GetMatchingGroup(s.atk,tp,0,LOCATION_MZONE,nil)
+	local tc=g:GetFirst()
+	for tc in aux.Next(g) do
+		local e0=Effect.CreateEffect(c)
+		e0:SetType(EFFECT_TYPE_SINGLE)
+		e0:SetCode(EFFECT_DISABLE)
+		e0:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+		tc:RegisterEffect(e0)
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_SET_ATTACK_FINAL)
+		e1:SetValue(0)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+		tc:RegisterEffect(e1)
+		local e2=e1:Clone()
+		e2:SetCode(EFFECT_SET_DEFENSE_FINAL)
+		tc:RegisterEffect(e2)
+end 
+		if c:IsFaceup() and c:IsRelateToEffect(e) then
+		Duel.BreakEffect()
+		local ttk=Duel.GetMatchingGroupCount(Card.IsFaceup,tp,0,LOCATION_MZONE,c)
+		local e3=Effect.CreateEffect(c)
+		e3:SetType(EFFECT_TYPE_SINGLE)
+		e3:SetCode(EFFECT_UPDATE_ATTACK)
+		e3:SetValue(ttk*500)
+		e3:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+		c:RegisterEffect(e3,true)
+		Duel.Damage(1-tp,(ttk)*500,REASON_EFFECT)
+end
+end,
+	--Enigmation - Spectral General
+	[96488216]=function(e,tp,tc)
+	function s.sum(c)
+	return c:IsFaceup() and (c:HasNonZeroAttack() or c:HasNonZeroDefense())
+	end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
+	local g=Duel.SelectMatchingCard(tp,s.sum,tp,0,LOCATION_MZONE,1,1,nil)
+	local tc=g:GetFirst()
+	if tc then
+		Duel.HintSelection(g)
+		Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(76922029,0))
+		local op=Duel.SelectOption(tp,aux.Stringid(2137678,0),aux.Stringid(id,2))
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		if op==0 then
+			e1:SetCode(EFFECT_SET_ATTACK_FINAL)
+			e1:SetValue(tc:GetAttack()/2)
+		else
+			e1:SetCode(EFFECT_SET_DEFENSE_FINAL)
+			e1:SetValue(tc:GetDefense()/2)
+		end
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+		tc:RegisterEffect(e1)
+end
+end,
+	--Enigmation - Spectral Genesis
+	[96488215]=function(e,tp,tc)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
+	local g=Duel.SelectMatchingCard(tp,s.sum,tp,0,LOCATION_MZONE,1,1,nil)
+	local tc=g:GetFirst()
+	if tc then
+		Duel.HintSelection(g)
+		Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,0))
+		local e1=Effect.CreateEffect(e:GetHandler())
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetCode(EFFECT_SET_ATTACK_FINAL)
+			e1:SetValue(0)
+			e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+			tc:RegisterEffect(e1)
+			local e2=e1:Clone()
+			e2:SetCode(EFFECT_SET_DEFENSE_FINAL)
+			tc:RegisterEffect(e2)
+end
+end
 }
 
 --Ah shit......
