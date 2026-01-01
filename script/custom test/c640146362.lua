@@ -89,8 +89,11 @@ end,
 	--Enigmation - Overcharge Dragon
 	[96488218]=function(e,tp,tc)
 	local c=e:GetHandler()
-	local tc=Duel.GetFirstTarget()
-	if tc and c:IsRelateToEffect(e) and tc:IsRelateToEffect(e) and tc:IsFaceup() 
+	local tc=Duel.SelectTarget(tp,function(c,e,tp)
+	return c:IsFaceup() and c:IsType(TYPE_EFFECT) and not c:IsDisabled()
+	end,tp,0,LOCATION_MZONE,1,1,nil)
+	Duel.SetOperationInfo(0,CATEGORY_DISABLE,g,1,0,0)
+	if tc and tc:IsRelateToEffect(e) and tc:IsFaceup() 
 	and tc:IsType(TYPE_EFFECT) and not tc:IsDisabled()then
 			--Negate its effects
 			local e1=Effect.CreateEffect(c)
@@ -118,7 +121,12 @@ end,
 end,
 	--Enigmation - Over Burst Dragon
 	[96488219]=function(e,tp,tc)
-	local g=Duel.GetMatchingGroup(s.atk,tp,0,LOCATION_MZONE,nil)
+	function s.atk(c,e,tp)
+	return c:IsFaceup() and c:IsType(TYPE_EFFECT) and not c:IsDisabled()
+end
+	local g=Duel.GetMatchingGroup(function(c,e,tp) return c:IsFaceup() 
+	and c:IsType(TYPE_EFFECT) and not c:IsDisabled()
+	end,tp,0,LOCATION_MZONE,nil)
 	local tc=g:GetFirst()
 	for tc in aux.Next(g) do
 		local e0=Effect.CreateEffect(e:GetHandler())
