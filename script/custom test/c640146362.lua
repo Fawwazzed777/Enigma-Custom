@@ -89,7 +89,7 @@ end,
 	--Enigmation - Overcharge Dragon
 	[96488218]=function(e,tp,tc)
 	local tc=Duel.SelectTarget(tp,function(c,e,tp)
-	return c:IsFaceup() and c:IsType(TYPE_EFFECT) and not c:IsDisabled()
+	return tc:IsFaceup() and tc:IsType(TYPE_EFFECT) and not tc:IsDisabled()
 	end,tp,0,LOCATION_MZONE,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DISABLE,g,1,0,0)
 	if tc then
