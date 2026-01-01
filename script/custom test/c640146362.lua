@@ -136,10 +136,6 @@ end,
 		local e2=e1:Clone()
 		e2:SetCode(EFFECT_SET_DEFENSE_FINAL)
 		tc:RegisterEffect(e2)
-		if tc:IsFaceup() and tc:IsRelateToEffect(e) then
-		local ttk=Duel.GetMatchingGroupCount(Card.IsFaceup,tp,0,LOCATION_MZONE,e:GetHandler())
-		Duel.Damage(1-tp,(ttk)*500,REASON_EFFECT)
-end
 end
 end,
 	--Enigmation - Spectral General
