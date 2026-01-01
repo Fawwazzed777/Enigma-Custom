@@ -134,11 +134,11 @@ end,
 		local e2=e1:Clone()
 		e2:SetCode(EFFECT_SET_DEFENSE_FINAL)
 		tc:RegisterEffect(e2)
-end 
 		if e:GetHandler():IsFaceup() and e:GetHandler():IsRelateToEffect(e) then
 		Duel.BreakEffect()
 		local ttk=Duel.GetMatchingGroupCount(Card.IsFaceup,tp,0,LOCATION_MZONE,e:GetHandler())
 		Duel.Damage(1-tp,(ttk)*500,REASON_EFFECT)
+end
 end
 end,
 	--Enigmation - Spectral General
@@ -151,8 +151,8 @@ end,
 	local tc=g:GetFirst()
 	if tc then
 		Duel.HintSelection(g)
-		Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(76922029,0))
-		local op=Duel.SelectOption(tp,aux.Stringid(2137678,0),aux.Stringid(id,2))
+		Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(96488216,0))
+		local op=Duel.SelectOption(tp,aux.Stringid(96488216,3),aux.Stringid(96488216,2))
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		if op==0 then
@@ -173,7 +173,7 @@ end,
 	local tc=g:GetFirst()
 	if tc then
 		Duel.HintSelection(g)
-		Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,0))
+		Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(96488215,0))
 		local e1=Effect.CreateEffect(e:GetHandler())
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_SET_ATTACK_FINAL)
@@ -184,8 +184,7 @@ end,
 			e2:SetCode(EFFECT_SET_DEFENSE_FINAL)
 			tc:RegisterEffect(e2)
 end
-end
-}
+end}
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.recfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil)
 	and Duel.IsExistingMatchingCard(s.monfilter,tp,LOCATION_MZONE,0,1,nil)
