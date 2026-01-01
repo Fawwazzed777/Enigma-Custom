@@ -52,7 +52,7 @@ function s.cfilter(c)
 end
 function s.ovfilter(c,tp,lc)
 	return c:IsFaceup()
-		and c:IsLocation(LOCATION_REMOVED)
+		and c:IsLocation(LOCATION_MZONE)
 		and c:IsType(TYPE_XYZ,lc,tp)
 		and c:IsSetCard(0x145,lc,tp)
 		and c:IsRankAbove(6)
