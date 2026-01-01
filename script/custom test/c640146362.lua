@@ -89,7 +89,7 @@ end,
 	--Enigmation - Overcharge Dragon
 	[96488218]=function(e,tp,tc)
 	local tc=Duel.GetFirstTarget()
-	if tc and e:GetHandler():IsRelateToEffect(e) and tc:IsRelateToEffect(e) and tc:IsFaceup() 
+	if tc and tc:IsFaceup() 
 	and tc:IsType(TYPE_EFFECT) and not tc:IsDisabled()then
 			--Negate its effects
 			local e1=Effect.CreateEffect(e:GetHandler())
