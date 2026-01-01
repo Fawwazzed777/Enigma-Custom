@@ -40,7 +40,8 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE+LOCATION_REMOVED)
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
-	local att=e:GetLabel()
+	local c=e:GetHandler()
+	local att=Duel.GetAttribute(c:GetOriginalAttribute())
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,s.refilter,tp,LOCATION_HAND+LOCATION_MZONE,0,1,1,nil,e,tp,att):GetFirst()
 	if Duel.Remove(g,POS_FACEUP,REASON_EFFECT)~=0 then
