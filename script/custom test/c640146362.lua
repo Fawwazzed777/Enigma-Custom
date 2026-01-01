@@ -140,12 +140,6 @@ end
 		if c:IsFaceup() and c:IsRelateToEffect(e) then
 		Duel.BreakEffect()
 		local ttk=Duel.GetMatchingGroupCount(Card.IsFaceup,tp,0,LOCATION_MZONE,c)
-		local e3=Effect.CreateEffect(c)
-		e3:SetType(EFFECT_TYPE_SINGLE)
-		e3:SetCode(EFFECT_UPDATE_ATTACK)
-		e3:SetValue(ttk*500)
-		e3:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
-		c:RegisterEffect(e3,true)
 		Duel.Damage(1-tp,(ttk)*500,REASON_EFFECT)
 end
 end,
