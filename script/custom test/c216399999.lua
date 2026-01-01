@@ -43,9 +43,7 @@ function s.spfilter(c,e,tp,att)
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.cost1(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then
-		return Duel.IsExistingMatchingCard(s.costfilter,tp,LOCATION_HAND+LOCATION_MZONE,0,1,nil)
-	end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.costfilter,tp,LOCATION_HAND+LOCATION_MZONE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=Duel.SelectMatchingCard(tp,s.costfilter,tp,LOCATION_HAND+LOCATION_MZONE,0,1,1,nil)
 	local att=g:GetFirst():GetOriginalAttribute()
@@ -54,9 +52,7 @@ function s.cost1(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.tg1(e,tp,eg,ep,ev,re,r,rp,chk)
 	local att=e:GetLabel()
-	if chk==0 then
-		return Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil,e,tp,att)
-	end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil,e,tp,att) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE+LOCATION_REMOVED)
 end
 function s.op1(e,tp,eg,ep,ev,re,r,rp)
@@ -70,7 +66,7 @@ function s.op1(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.xyzmatfilter(c)
-	return c:IsSetCard(0x994) and c:IsType(TYPE_XYZ)
+	return c:IsSetCard(0x994) and c:IsType(TYPE_XYZ) or (c:IsFaceup() and c:IsLocation(LOCATION_EXTRA))
 end
 function s.xyzspfilter(c,e,tp,rank)
 	return c:IsType(TYPE_XYZ) and c:IsRace(RACE_CYBERSE)
@@ -79,16 +75,12 @@ function s.xyzspfilter(c,e,tp,rank)
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false)
 end
 function s.tg2(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then
-		return Duel.IsExistingMatchingCard(s.xyzmatfilter,tp,
-			LOCATION_GRAVE+LOCATION_REMOVED+LOCATION_EXTRA,0,1,nil)
-	end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.xyzmatfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED+LOCATION_EXTRA,0,1,nil)end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
 function s.op2(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
-	local mg=Duel.SelectMatchingCard(tp,s.xyzmatfilter,tp,
-		LOCATION_GRAVE+LOCATION_REMOVED+LOCATION_EXTRA,0,1,1,nil)
+	local mg=Duel.SelectMatchingCard(tp,s.xyzmatfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED+LOCATION_EXTRA,0,1,1,nil)
 	local mc=mg:GetFirst()
 	if not mc then return end
 	local rank=mc:GetRank()
