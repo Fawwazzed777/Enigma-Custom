@@ -136,7 +136,7 @@ end,
 		local e2=e1:Clone()
 		e2:SetCode(EFFECT_SET_DEFENSE_FINAL)
 		tc:RegisterEffect(e2)
-		if e:GetHandler():IsFaceup() and e:GetHandler():IsRelateToEffect(e) then
+		if tc then
 		Duel.BreakEffect()
 		local ttk=Duel.GetMatchingGroupCount(Card.IsFaceup,tp,0,LOCATION_MZONE,e:GetHandler())
 		Duel.Damage(1-tp,(ttk)*500,REASON_EFFECT)
