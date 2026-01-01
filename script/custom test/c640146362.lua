@@ -88,9 +88,7 @@ end,
 end,
 	--Enigmation - Overcharge Dragon
 	[96488218]=function(e,tp,tc)
-	function s.ffilter1(c)
-	return c:IsFaceup() and Card.IsNegateableMonster()end
-	local g=Duel.SelectTarget(tp,s.ffilter1,tp,0,LOCATION_MZONE,1,1,nil)
+	local g=Duel.SelectTarget(tp,Card.IsNegatableMonster,tp,0,LOCATION_MZONE,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DISABLE,g,1,0,0)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
@@ -121,12 +119,7 @@ end,
 end,
 	--Enigmation - Over Burst Dragon
 	[96488219]=function(e,tp,tc)
-	function s.atk(c,e,tp)
-	return c:IsFaceup() and c:IsType(TYPE_EFFECT) and not c:IsDisabled()
-end
-	local g=Duel.GetMatchingGroup(function(c,e,tp) return c:IsFaceup() 
-	and c:IsType(TYPE_EFFECT) and not c:IsDisabled()
-	end,tp,0,LOCATION_MZONE,nil)
+	local g=Duel.GetMatchingGroup(Card.IsNegatableMonster,tp,0,LOCATION_MZONE,nil)
 	local tc=g:GetFirst()
 	for tc in aux.Next(g) do
 		local e0=Effect.CreateEffect(e:GetHandler())
