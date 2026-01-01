@@ -88,10 +88,12 @@ end,
 end,
 	--Enigmation - Overcharge Dragon
 	[96488218]=function(e,tp,tc)
-	local tc=Duel.SelectTarget(tp,function(c,e,tp)
-	return tc:IsFaceup() and tc:IsType(TYPE_EFFECT) and not tc:IsDisabled()
-	end,tp,0,LOCATION_MZONE,1,1,nil)
+	function s.ffilter1(c)
+	return c:IsFaceup() and Card.IsNegateableMonster()end
+	local g=Duel.SelectTarget(tp,s.ffilter1,tp,0,LOCATION_MZONE,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DISABLE,g,1,0,0)
+	local c=e:GetHandler()
+	local tc=Duel.GetFirstTarget()
 	if tc then
 			--Negate its effects
 			local e1=Effect.CreateEffect(e:GetHandler())
