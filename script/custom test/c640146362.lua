@@ -93,7 +93,7 @@ end,
 	return c:IsFaceup() and c:IsType(TYPE_EFFECT) and not c:IsDisabled()
 	end,tp,0,LOCATION_MZONE,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DISABLE,g,1,0,0)
-	if tc and tc:IsRelateToEffect(e) and tc:IsFaceup() 
+	if tc and tc:IsFaceup() 
 	and tc:IsType(TYPE_EFFECT) and not tc:IsDisabled()then
 			--Negate its effects
 			local e1=Effect.CreateEffect(c)
