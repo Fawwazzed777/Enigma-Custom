@@ -29,7 +29,7 @@ function s.refilter(c,e,tp,att)
 end
 function s.spfilter(c,e,tp,hc,att)
 	return c:IsSetCard(0x994) and c:IsMonster()
-		and not c:IsAttribute(c:GetOriginalAttribute())
+		and not c:IsAttribute(hc:GetOriginalAttribute())
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 		and Duel.GetMZoneCount(tp,c)>0
 end
