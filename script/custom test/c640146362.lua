@@ -16,14 +16,26 @@ function s.initial_effect(c)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.operation)
 	c:RegisterEffect(e1)
+	--If this card is banished
+	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(id,1))
+	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e2:SetCode(EVENT_REMOVE)
+	e2:SetProperty(EFFECT_FLAG_DELAY)
+	e2:SetCountLimit(1,{id,1})
+	e2:SetTarget(s.bntg)
+	e2:SetOperation(s.bnop)
+	c:RegisterEffect(e2)
 end
 s.listed_series={0x344}
+s.listed_names={96488218,96488216,96488199}
 function s.recfilter(c)
 	return c:IsSetCard(0x344) and c:IsMonster() 
 	and (c:IsLocation(LOCATION_GRAVE) or c:IsFaceup()) and c:IsAbleToDeck()
 end
 function s.monfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x344) and c:IsType(TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ)
+	return c:IsFaceup() and c:IsSetCard(0x344) and c:IsType(TYPE_EXTRA)
 	and s.effect_map[c:GetCode()]~=nil
 end
 --Really make you wonder...
@@ -182,22 +194,18 @@ end,
 end
 end
 }
-
---Ah shit......
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.recfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil)
 	and Duel.IsExistingMatchingCard(s.monfilter,tp,LOCATION_MZONE,0,1,nil)
 	end
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
-	--Recycle
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 	local rg=Duel.SelectMatchingCard(tp,s.recfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil)
 	local rc=rg:GetFirst()
 	if not rc then return end
-	local seq=rc:IsType(TYPE_EXTRA) and SEQ_DECKBOTTOM or SEQ_DECKBOTTOM
+	local seq=rc:IsType(TYPE_EXTRA) and SEQ_DECKSHUFFLE or SEQ_DECKSHUFFLE
 	if Duel.SendtoDeck(rc,nil,seq,REASON_EFFECT)==0 then return end
-	--Select monster
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	local tg=Duel.SelectMatchingCard(tp,s.monfilter,tp,LOCATION_MZONE,0,1,1,nil)
 	local tc=tg:GetFirst()
@@ -206,5 +214,31 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	local func=s.effect_map[tc:GetCode()]
 	if func then
 		func(e,tp,tc)
+	end
+end
+function s.spfilter(c,e,tp)
+	return c:IsType(TYPE_EXTRA) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+end
+function s.bntg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil,e,tp) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE+LOCATION_REMOVED)
+end
+function s.bnop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local sc=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil,e,tp):GetFirst()
+	if not sc then return end
+	if Duel.SpecialSummon(sc,0,tp,tp,false,false,POS_FACEUP)==0 then return end
+	sc:CompleteProcedure()
+	if sc:IsType(TYPE_XYZ) then
+		local mg=Group.FromCards(c)
+		if Duel.IsExistingMatchingCard(Card.IsMonster,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,c) then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
+		local tc=Duel.SelectMatchingCard(tp,Card.IsMonster,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,c):GetFirst()
+		if tc then
+			mg:AddCard(tc)
+		end
+	end
+		Duel.Overlay(sc,mg)
 	end
 end
