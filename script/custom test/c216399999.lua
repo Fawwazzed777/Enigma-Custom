@@ -66,9 +66,8 @@ function s.op1(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.xyzmatfilter(c)
-	return (c:IsSetCard(0x994) and c:IsType(TYPE_XYZ) and c:IsLocation(LOCATION_GRAVE+LOCATION_REMOVED) 
+	return (c:IsSetCard(0x994) and c:IsType(TYPE_XYZ) and c:IsLocation(LOCATION_GRAVE+LOCATION_REMOVED))
 	or (c:IsPendulumMonster() and c:IsFaceup() and c:IsLocation(LOCATION_EXTRA))
-end
 end
 function s.xyzspfilter(c,e,tp,rank)
 	return c:IsType(TYPE_XYZ) and c:IsRace(RACE_CYBERSE)
