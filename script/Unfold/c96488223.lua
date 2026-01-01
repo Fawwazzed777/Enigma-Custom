@@ -51,7 +51,7 @@ function s.cfilter(c)
 	return c:IsSetCard(SET_RANK_UP_MAGIC) and c:IsSpell() and c:IsAbleToRemove()
 end
 function s.ovfilter(c,tp,lc)
-	return c:IsFaceup() and c:IsMonster() and
+	return (c:IsFaceup() and c:IsMonster() and c:IsLocation(LOCATION_REMOVED))and
 	c:IsType(TYPE_XYZ,lc,SUMMON_TYPE_XYZ,tp) and c:IsSetCard(0x145,lc,SUMMON_TYPE_XYZ,tp) and c:IsRankAbove(6)
 		and Duel.GetMatchingGroupCount(Card.IsAttribute,tp,LOCATION_REMOVED,0,nil,ATTRIBUTE_DARK)>=5
 end
