@@ -53,8 +53,8 @@ end
 function s.ovfilter(c,tp,lc)
 	return c:IsFaceup()
 		and c:IsLocation(LOCATION_REMOVED)
-		and c:IsType(TYPE_XYZ,lc,SUMMON_TYPE_XYZ,tp)
-		and c:IsSetCard(0x145,lc,SUMMON_TYPE_XYZ,tp)
+		and c:IsType(TYPE_XYZ,lc,tp)
+		and c:IsSetCard(0x145,lc,tp)
 		and c:IsRankAbove(6)
 end
 function s.xyzop(e,tp,chk)
