@@ -65,7 +65,7 @@ function s.cfilter(c,e,tp)
 	and Duel.IsExistingMatchingCard(s.ssfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp,c:GetRank(),c)
 end
 function s.ssfilter(c,e,tp,rk,mc)
-	return (c:IsRank(rk) or c:IsRankBelow(rk-1))and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return (c:GetRank()==rk or c:GetRank()==rk-1)and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 		and Duel.GetLocationCountFromEx(tp,tp,mc,c)>0
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
