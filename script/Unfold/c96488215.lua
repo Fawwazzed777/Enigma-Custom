@@ -36,7 +36,9 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_SINGLE)
+	e4:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e4:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
+	e4:SetRange(LOCATION_MZONE)
 	e4:SetCondition(s.indcon)
 	e4:SetValue(1)
 	c:RegisterEffect(e4)
@@ -45,7 +47,7 @@ s.listed_names={96488216}
 function s.indval(e,re,tp)
 	return tp~=e:GetHandlerPlayer()
 end
-function s.indcon(c,e,tp)
+function s.indcon(c,tp)
 	return Duel.IsExistingMatchingCard(Card.IsCode,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil,96488216)
 end
 function s.sum(c)
