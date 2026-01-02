@@ -47,8 +47,8 @@ s.listed_names={96488216}
 function s.indval(e,re,tp)
 	return tp~=e:GetHandlerPlayer()
 end
-function s.indcon(c,e,tp)
-	return e:GetHandler():IsFaceup() and Duel.IsExistingMatchingCard(Card.IsCode,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil,96488216)
+function s.indcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingMatchingCard(Card.IsCode,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil,96488216)
 end
 function s.sum(c)
 	return c:IsFaceup() and (c:HasNonZeroAttack() or c:HasNonZeroDefense())
