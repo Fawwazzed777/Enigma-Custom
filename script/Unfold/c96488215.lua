@@ -39,8 +39,7 @@ function s.initial_effect(c)
 	e4:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e4:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
 	e4:SetRange(LOCATION_MZONE)
-	e4:SetCondition(s.indcon)
-	e4:SetValue(1)
+	e4:SetValue(s.indcon)
 	c:RegisterEffect(e4)
 end
 s.listed_names={96488216}
