@@ -38,7 +38,6 @@ end
 function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(s.tdfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,nil)
 	ct=Duel.SendtoDeck(g,nil,2,REASON_EFFECT)
-	if not ct:IsRelateToEffect(e) then return end
 	if ct>0 then
 		Duel.Recover(tp,ct*500,REASON_EFFECT)
 		Duel.Damage(1-tp,ct*500,REASON_EFFECT)
