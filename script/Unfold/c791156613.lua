@@ -47,7 +47,7 @@ function s.devas_exist(e)
 	and c:IsSetCard(0x765) end,e:GetHandlerPlayer(),LOCATION_MZONE,LOCATION_MZONE,1,nil)
 end
 function s.vandal_mat(c)
-	return c:IsSetCard(SET_VANDAL)
+	return c:IsSetCard(0x963)
 end
 function s.devas_xyz(e,c)
 	return c:IsFaceup()
