@@ -1,7 +1,7 @@
 --Revandal Emperor Devas
 local s,id=GetID()
 function s.initial_effect(c)
-	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(s.ffilter),7,2,nil,nil,99)
+	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(s.ffilter),7,2,nil,nil,Xyz.InfiniteMats)
 	c:EnableReviveLimit()
 	--
 	local e1=Effect.CreateEffect(c)
@@ -11,7 +11,7 @@ function s.initial_effect(c)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(1,id)
-	e1:SetCost(aux.dxmcostgen(1,1))
+	e1:SetCost(Cost.DetachFromSelf(1))
 	e1:SetCondition(s.co)
 	e1:SetOperation(s.op)
 	c:RegisterEffect(e1)
