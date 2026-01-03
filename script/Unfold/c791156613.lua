@@ -6,74 +6,93 @@ function s.initial_effect(c)
 	e0:SetType(EFFECT_TYPE_ACTIVATE)
 	e0:SetCode(EVENT_FREE_CHAIN)
 	c:RegisterEffect(e0)
-	--All monsters become LIGHT Fiend while "Devas" monster exists
+	--All face-up monsters become LIGHT Fiend while "Devas" monster exists
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetCode(EFFECT_CHANGE_ATTRIBUTE)
 	e1:SetRange(LOCATION_FZONE)
+	e1:SetCode(EFFECT_CHANGE_ATTRIBUTE)
 	e1:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
-	e1:SetCondition(s.attrcon)
+	e1:SetCondition(s.devas_exist)
 	e1:SetValue(ATTRIBUTE_LIGHT)
 	c:RegisterEffect(e1)
-	local e1b=e1:Clone()
-	e1b:SetCode(EFFECT_CHANGE_RACE)
-	e1b:SetValue(RACE_FIEND)
-	c:RegisterEffect(e1b)
-	--ATK/DEF gain for Devas Xyz with Vandal material (your turn only)
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_FIELD)
-	e2:SetCode(EFFECT_UPDATE_ATTACK)
-	e2:SetRange(LOCATION_FZONE)
-	e2:SetTargetRange(LOCATION_MZONE,0)
-	e2:SetCondition(s.atkcon)
-	e2:SetTarget(s.atktg)
-	e2:SetValue(s.atkval)
+	local e2=e1:Clone()
+	e2:SetCode(EFFECT_CHANGE_RACE)
+	e2:SetValue(RACE_FIEND)
 	c:RegisterEffect(e2)
-	local e2b=e2:Clone()
-	e2b:SetCode(EFFECT_UPDATE_DEFENSE)
-	c:RegisterEffect(e2b)
-	--ATK loss on opponent monsters when chain is activated
+	--ATK gain for Devas Xyz with Vandal material
 	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e3:SetCode(EVENT_CHAINING)
+	e3:SetType(EFFECT_TYPE_FIELD)
 	e3:SetRange(LOCATION_FZONE)
-	e3:SetOperation(s.chainop)
+	e3:SetCode(EFFECT_UPDATE_ATTACK)
+	e3:SetTargetRange(LOCATION_MZONE,0)
+	e3:SetTarget(s.devas_xyz)
+	e3:SetValue(s.atkval)
 	c:RegisterEffect(e3)
+	--DEF gain
+	local e4=e3:Clone()
+	e4:SetCode(EFFECT_UPDATE_DEFENSE)
+	e4:SetValue(s.defval)
+	c:RegisterEffect(e4)
+	--Opponent monsters lose ATK on each chain activation
+	local e5=Effect.CreateEffect(c)
+	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e5:SetRange(LOCATION_FZONE)
+	e5:SetCode(EVENT_CHAINING)
+	e5:SetCondition(s.chaincon)
+	e5:SetOperation(s.chainop)
+	c:RegisterEffect(e5)
 end
-s.listed_series={0x765,0x963}
-function s.devasfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x765)
+function s.devas_exist(e)
+	return Duel.IsExistingMatchingCard(function(c) return c:IsFaceup() 
+	and c:IsSetCard(0x765) end,e:GetHandlerPlayer(),LOCATION_MZONE,LOCATION_MZONE,1,nil)
 end
-function s.attrcon(e)
-	return Duel.IsExistingMatchingCard(s.devasfilter,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,nil)
+function s.vandal_mat(c)
+	return c:IsSetCard(SET_VANDAL)
 end
-function s.atkcon(e,tp)
-	return Duel.GetTurnPlayer()==tp
+function s.devas_xyz(e,c)
+	return c:IsFaceup()
+		and c:IsSetCard(0x765)
+		and c:IsType(TYPE_XYZ)
+		and c:GetOverlayGroup():IsExists(s.vandal_mat,1,nil)
+		and Duel.GetTurnPlayer()==c:GetControler()
 end
-function s.atktg(e,c)
-	return c:IsFaceup() and c:IsSetCard(0x765) and c:IsType(TYPE_XYZ)
-		and c:GetOverlayGroup():IsExists(Card.IsSetCard,1,nil,0x963)
+function s.light_fiend_count()
+	return Duel.GetMatchingGroupCount(
+		function(c)
+			return c:IsFaceup()
+				and c:IsAttribute(ATTRIBUTE_LIGHT)
+				and c:IsRace(RACE_FIEND)
+		end,0,LOCATION_MZONE,LOCATION_MZONE,nil)
 end
 function s.atkval(e,c)
-	return Duel.GetMatchingGroupCount(function(tc) return tc:IsFaceup() and tc:IsAttribute(ATTRIBUTE_LIGHT) 
-	and tc:IsRace(RACE_FIEND) end,c:GetControler(),LOCATION_MZONE,LOCATION_MZONE,nil)*300
+	return s.light_fiend_count()*300
 end
-function s.vandalxyzfilter(c,tp)
-	return c:IsFaceup() and c:IsSetCard(0x963) and c:IsType(TYPE_XYZ) and c:IsControler(tp)
+
+function s.defval(e,c)
+	return s.light_fiend_count()*300
+end
+function s.vandal_xyz_exist(tp)
+	return Duel.IsExistingMatchingCard(
+		function(c)
+			return c:IsFaceup()
+				and c:IsType(TYPE_XYZ)
+				and c:IsSetCard(0x963)
+				end,tp,LOCATION_MZONE,0,1,nil)
+end
+
+function s.chaincon(e,tp,eg,ep,ev,re,r,rp)
+	return rp~=tp and s.vandal_xyz_exist(tp)
+		and Duel.GetFlagEffect(tp,id)==0
 end
 function s.chainop(e,tp,eg,ep,ev,re,r,rp)
-	if not Duel.IsExistingMatchingCard(s.vandalxyzfilter,tp,LOCATION_MZONE,0,1,nil,tp) then return end
-	local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_MZONE,nil)
+	Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
+	local g=Duel.GetMatchingGroup(function(c) return c:IsFaceup() and c:IsControler(1-tp) end,tp,0,LOCATION_MZONE,nil)
 	for tc in aux.Next(g) do
-			tc:RegisterFlagEffect(id,RESET_PHASE+PHASE_END,0,1)
-			local e1=Effect.CreateEffect(e:GetHandler())
-			e1:SetType(EFFECT_TYPE_SINGLE)
-			e1:SetCode(EFFECT_UPDATE_ATTACK)
-			e1:SetValue(-100)
-			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-			tc:RegisterEffect(e1)
-			local e2=e1:Clone()
-			e2:SetCode(EFFECT_UPDATE_DEFENSE)
-			tc:RegisterEffect(e2)
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_UPDATE_ATTACK)
+		e1:SetValue(-100)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+		tc:RegisterEffect(e1)
 	end
 end
