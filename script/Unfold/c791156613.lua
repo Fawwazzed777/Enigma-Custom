@@ -32,7 +32,7 @@ function s.initial_effect(c)
 	local e2b=e2:Clone()
 	e2b:SetCode(EFFECT_UPDATE_DEFENSE)
 	c:RegisterEffect(e2b)
-	--Force ATK loss on opponent monsters when chain is activated
+	--ATK loss on opponent monsters when chain is activated
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e3:SetCode(EVENT_CHAINING)
@@ -58,13 +58,11 @@ function s.atkval(e,c)
 	return Duel.GetMatchingGroupCount(function(tc) return tc:IsFaceup() and tc:IsAttribute(ATTRIBUTE_LIGHT) 
 	and tc:IsRace(RACE_FIEND) end,c:GetControler(),LOCATION_MZONE,LOCATION_MZONE,nil)*300
 end
---========== FORCED OPPONENT EFFECT ==========
 function s.vandalxyzfilter(c,tp)
 	return c:IsFaceup() and c:IsSetCard(0x963) and c:IsType(TYPE_XYZ) and c:IsControler(tp)
 end
 function s.chainop(e,tp,eg,ep,ev,re,r,rp)
 	if not Duel.IsExistingMatchingCard(s.vandalxyzfilter,tp,LOCATION_MZONE,0,1,nil,tp) then return end
-	--Apply once per turn per monster
 	local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_MZONE,nil)
 	for tc in aux.Next(g) do
 		if tc:GetFlagEffect(id)==0 then
@@ -72,9 +70,12 @@ function s.chainop(e,tp,eg,ep,ev,re,r,rp)
 			local e1=Effect.CreateEffect(e:GetHandler())
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_UPDATE_ATTACK)
-			e1:SetValue(-100)
+			e1:SetValue(-200)
 			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 			tc:RegisterEffect(e1)
+			local e2=e1:Clone()
+			e2:SetCode(EFFECT_UPDATE_DEFENSE)
+			tc:RegisterEffect(e2)
 		end
 	end
 end
