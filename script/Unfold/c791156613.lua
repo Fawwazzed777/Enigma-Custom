@@ -26,12 +26,11 @@ function s.initial_effect(c)
 	e3:SetCode(EFFECT_UPDATE_ATTACK)
 	e3:SetTargetRange(LOCATION_MZONE,0)
 	e3:SetTarget(s.devas_xyz)
-	e3:SetValue(s.atkval)
+	e3:SetValue(s.val)
 	c:RegisterEffect(e3)
 	--DEF gain
 	local e4=e3:Clone()
 	e4:SetCode(EFFECT_UPDATE_DEFENSE)
-	e4:SetValue(s.defval)
 	c:RegisterEffect(e4)
 	--Opponent monsters lose ATK on each chain activation
 	local e5=Effect.CreateEffect(c)
@@ -56,7 +55,7 @@ function s.devas_xyz(e,c)
 		and c:GetOverlayGroup():IsExists(s.vandal_mat,1,nil)
 		and Duel.GetTurnPlayer()==c:GetControler()
 end
-function s.light_fiend_count()
+function s.light()
 	return Duel.GetMatchingGroupCount(
 		function(c)
 			return c:IsFaceup()
@@ -64,12 +63,8 @@ function s.light_fiend_count()
 				and c:IsRace(RACE_FIEND)
 		end,0,LOCATION_MZONE,LOCATION_MZONE,nil)
 end
-function s.atkval(e,c)
-	return s.light_fiend_count()*300
-end
-
-function s.defval(e,c)
-	return s.light_fiend_count()*300
+function s.val(e,c)
+	return s.light()*200
 end
 function s.vandal_xyz_exist(tp)
 	return Duel.IsExistingMatchingCard(
