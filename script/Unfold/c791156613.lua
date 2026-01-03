@@ -51,7 +51,7 @@ function s.atkcon(e,tp)
 	return Duel.GetTurnPlayer()==tp
 end
 function s.atktg(e,c)
-	return c:IsFaceup()and c:IsSetCard(0x765)and c:IsType(TYPE_XYZ)
+	return c:IsFaceup() and c:IsSetCard(0x765) and c:IsType(TYPE_XYZ)
 		and c:GetOverlayGroup():IsExists(Card.IsSetCard,1,nil,0x963)
 end
 function s.atkval(e,c)
@@ -65,17 +65,15 @@ function s.chainop(e,tp,eg,ep,ev,re,r,rp)
 	if not Duel.IsExistingMatchingCard(s.vandalxyzfilter,tp,LOCATION_MZONE,0,1,nil,tp) then return end
 	local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_MZONE,nil)
 	for tc in aux.Next(g) do
-		if tc:GetFlagEffect(id)==0 then
 			tc:RegisterFlagEffect(id,RESET_PHASE+PHASE_END,0,1)
 			local e1=Effect.CreateEffect(e:GetHandler())
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_UPDATE_ATTACK)
-			e1:SetValue(-100)
+			e1:SetValue(-200)
 			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 			tc:RegisterEffect(e1)
 			local e2=e1:Clone()
 			e2:SetCode(EFFECT_UPDATE_DEFENSE)
 			tc:RegisterEffect(e2)
-		end
 	end
 end
