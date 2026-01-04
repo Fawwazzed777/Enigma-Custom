@@ -66,22 +66,22 @@ end
 function s.val(e,c)
 	return s.light()*200
 end
-function s.vandal_xyz_exist(tp)
-	return Duel.IsExistingMatchingCard(
-		function(c)
-			return c:IsFaceup()
-				and c:IsType(TYPE_XYZ)
-				and c:IsSetCard(0x963)
-				end,tp,LOCATION_MZONE,0,1,nil)
+function s.vfilter(c)
+	return c:IsFaceup()and c:IsType(TYPE_XYZ) and c:IsSetCard(0x963)
 end
-
+function s.vandal_xyz_exist(tp)
+	return Duel.IsExistingMatchingCard(s.vfilter,tp,LOCATION_MZONE,0,1,nil)
+end
 function s.chaincon(e,tp,eg,ep,ev,re,r,rp)
 	return rp~=tp and s.vandal_xyz_exist(tp)
 		and Duel.GetFlagEffect(tp,id)==0
 end
+function s.oppc(c) 
+	return c:IsFaceup() and c:IsControler(1-tp) and (c:HasNonZeroAttack() or c:HasNonZeroDefense())
+end
 function s.chainop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
-	local g=Duel.GetMatchingGroup(function(c) return c:IsFaceup() and c:IsControler(1-tp) end,tp,0,LOCATION_MZONE,nil)
+	Duel.RegisterFlagEffect(tp,id,RESET_EVENT+RESETS_STANDARD,0,1)
+	local g=Duel.GetMatchingGroup(s.oppc,tp,0,LOCATION_MZONE,nil)
 	for tc in aux.Next(g) do
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
@@ -89,5 +89,8 @@ function s.chainop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetValue(-100)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 		tc:RegisterEffect(e1)
+		local e2=e1:Clone()
+		e2:SetCode(EFFECT_UPDATE_DEFENSE)
+		tc:RegisterEffect(e2)
 	end
 end
