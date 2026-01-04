@@ -41,7 +41,7 @@ function s.initial_effect(c)
 	e5:SetCondition(s.chaincon)
 	e5:SetOperation(s.chainop)
 	c:RegisterEffect(e5)
-	--Opponent monsters lose ATK based on Vandal Counters
+	--Opponent monsters lose 100 ATK based on Vandal Counters
 	local e6=Effect.CreateEffect(c)
 	e6:SetType(EFFECT_TYPE_FIELD)
 	e6:SetRange(LOCATION_FZONE)
@@ -49,6 +49,9 @@ function s.initial_effect(c)
 	e6:SetTargetRange(0,LOCATION_MZONE)
 	e6:SetValue(s.debuff)
 	c:RegisterEffect(e6)
+	local e7=e6:Clone()
+	e7:SetCode(EFFECT_UPDATE_DEFENSE)
+	c:RegisterEffect(e7)
 end
 s.listed_series={0x765,0x963}
 function s.devas_exist(e)
