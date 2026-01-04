@@ -12,3 +12,5 @@ if not GenerateEffect then
 	--Additional Types
 	RACE_VIRTUOUS    = 0x4000000
 	end
+--Counter
+COUNTER_VANDAL =0x1765
