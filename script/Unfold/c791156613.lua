@@ -1,7 +1,7 @@
 --Vandalization
 local s,id=GetID()
 function s.initial_effect(c)
-	c:EnableCounterPermit(COUNTER_VANDAL)
+	c:EnableCounterPermit(0x1765)
 	--Activate
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_ACTIVATE)
