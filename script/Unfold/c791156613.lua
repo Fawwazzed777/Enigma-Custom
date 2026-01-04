@@ -91,8 +91,8 @@ function s.chaincon(e,tp,eg,ep,ev,re,r,rp)
 	return rp~=tp and s.vandal_xyz_exist(tp)
 end
 function s.chainop(e,tp,eg,ep,ev,re,r,rp)
-	e:GetHandler():AddCounter(COUNTER_VANDAL,1)
+	e:GetHandler():AddCounter(0x1765,1)
 end
 function s.debuff(e,c)
-	return -100*e:GetHandler():GetCounter(COUNTER_VANDAL)
+	return -100*e:GetHandler():GetCounter(0x1765)
 end
