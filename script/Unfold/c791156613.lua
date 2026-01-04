@@ -52,6 +52,15 @@ function s.initial_effect(c)
 	local e7=e6:Clone()
 	e7:SetCode(EFFECT_UPDATE_DEFENSE)
 	c:RegisterEffect(e7)
+	--Cannot be destroyed by effects
+	local e8=Effect.CreateEffect(c)
+	e8:SetType(EFFECT_TYPE_SINGLE)
+	e8:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e8:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
+	e8:SetRange(LOCATION_MZONE)
+	e8:SetCondition(s.vcon)
+	e8:SetValue(1)
+	c:RegisterEffect(e8)
 end
 s.listed_series={0x765,0x963}
 s.counter_place_list={0x1765}
@@ -99,4 +108,7 @@ function s.chainop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.debuff(e,c)
 	return -100*e:GetHandler():GetCounter(0x1765)
+end
+function s.vcon(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():GetCounter(0x1765)>=3
 end
