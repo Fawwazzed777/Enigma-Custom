@@ -76,7 +76,7 @@ function s.chaincon(e,tp,eg,ep,ev,re,r,rp)
 	return rp~=tp and s.vandal_xyz_exist(tp)
 		and Duel.GetFlagEffect(tp,id)==0
 end
-function s.oppc(c) 
+function s.oppc(c,e,tp) 
 	return c:IsFaceup() and c:IsControler(1-tp) and (c:HasNonZeroAttack() or c:HasNonZeroDefense())
 end
 function s.chainop(e,tp,eg,ep,ev,re,r,rp)
