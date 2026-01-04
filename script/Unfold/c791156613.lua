@@ -110,5 +110,5 @@ function s.debuff(e,c)
 	return -200*e:GetHandler():GetCounter(0x1765)
 end
 function s.vcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetCounter(0x1765)>=2
+	return e:GetHandler():GetCounter(0x1765)>=3
 end
