@@ -41,7 +41,7 @@ function s.initial_effect(c)
 	e5:SetCondition(s.chaincon)
 	e5:SetOperation(s.chainop)
 	c:RegisterEffect(e5)
-	--Opponent monsters lose 100 ATK based on Vandal Counters
+	--Opponent monsters lose ATK/DEF based on Vandal Counters
 	local e6=Effect.CreateEffect(c)
 	e6:SetType(EFFECT_TYPE_FIELD)
 	e6:SetRange(LOCATION_FZONE)
@@ -89,7 +89,7 @@ function s.light_fiend_count()
 		0,LOCATION_MZONE,LOCATION_MZONE,nil)
 end
 function s.atkval(e,c)
-	return s.light_fiend_count()*300
+	return s.light_fiend_count()*200
 end
 function s.vandal_xyz_exist(tp)
 	return Duel.IsExistingMatchingCard(
@@ -107,7 +107,7 @@ function s.chainop(e,tp,eg,ep,ev,re,r,rp)
 	e:GetHandler():AddCounter(0x1765,1)
 end
 function s.debuff(e,c)
-	return -300*e:GetHandler():GetCounter(0x1765)
+	return -200*e:GetHandler():GetCounter(0x1765)
 end
 function s.vcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetCounter(0x1765)>=2
