@@ -1,2 +1,2 @@
 --Custom counters
-COUNTER_VANDAL = 0x1765
+COUNTER_VANDAL =0x1765

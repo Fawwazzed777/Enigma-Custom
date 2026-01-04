@@ -1,12 +1,12 @@
 --Vandalization
 local s,id=GetID()
 function s.initial_effect(c)
+	c:EnableCounterPermit(COUNTER_VANDAL)
 	--Activate
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_ACTIVATE)
 	e0:SetCode(EVENT_FREE_CHAIN)
 	c:RegisterEffect(e0)
-	c:EnableCounterPermit(COUNTER_VANDAL)
 	--All face-up monsters become LIGHT Fiend while "Devas" exists
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
