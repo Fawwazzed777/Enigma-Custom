@@ -54,6 +54,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e7)
 end
 s.listed_series={0x765,0x963}
+s.counter_place_list={0x1765}
 function s.devas_exist(e)
 	return Duel.IsExistingMatchingCard(function(c) return 
 	c:IsFaceup() and c:IsSetCard(0x765) end,
