@@ -107,7 +107,7 @@ function s.chainop(e,tp,eg,ep,ev,re,r,rp)
 	e:GetHandler():AddCounter(0x1765,1)
 end
 function s.debuff(e,c)
-	return -100*e:GetHandler():GetCounter(0x1765)
+	return -300*e:GetHandler():GetCounter(0x1765)
 end
 function s.vcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetCounter(0x1765)>=3
