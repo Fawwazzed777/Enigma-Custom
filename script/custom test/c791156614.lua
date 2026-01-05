@@ -70,10 +70,7 @@ function s.reltg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.relop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DETACH)
-	local xc=Duel.SelectMatchingCard(tp,s.xyzfilter,tp,LOCATION_MZONE,0,1,1,nil)
-	if not xc then return end
-	Duel.HintSelection(xc)
-	if xc:RemoveOverlayCard(tp,1,0,1,1,REASON_EFFECT)==0 then return end
+	if Duel.RemoveOverlayCard(tp,1,0,1,1,REASON_EFFECT)==0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
 	local g=Duel.SelectMatchingCard(tp,Card.IsReleasable,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
 	if #g>0 then
