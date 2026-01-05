@@ -3,7 +3,7 @@ local s,id=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()
 	--Xyz Summon
-	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(s.xyzfilter),7,2,nil,nil,Xyz.InfiniteMats)
+	Xyz.AddProcedure(c,s.xyzfilter,7,2,nil,nil,Xyz.InfiniteMats)
 	c:SetUniqueOnField(1,0,id)
 	--On Xyz Summon: SS Devas, attach self if Xyz
 	local e1=Effect.CreateEffect(c)
