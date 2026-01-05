@@ -21,6 +21,7 @@ function s.initial_effect(c)
 	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_NEGATE)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e2:SetProperty(EFFECT_FLAG_DELAY)
 	e2:SetCode(EVENT_CHAINING)
 	e2:SetRange(LOCATION_OVERLAY)
 	e2:SetCountLimit(1,{id,1})
@@ -102,9 +103,7 @@ function s.reltg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_RELEASE,nil,1,0,LOCATION_MZONE)
 end
 function s.relop(e,tp,eg,ep,ev,re,r,rp)
-	local xc=Duel.IsExistingMatchingCard(s.xyzfilter,tp,LOCATION_MZONE,0,1,nil)
-	if not xc then return end
-	if xc:RemoveOverlayCard(tp,1,0,1,1,REASON_EFFECT)==0 then return end
+	if Duel.RemoveOverlayCard(tp,1,0,1,1,REASON_EFFECT)==0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
 	local g=Duel.SelectMatchingCard(tp,Card.IsReleasable,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
 	if #g>0 then
