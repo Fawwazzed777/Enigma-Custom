@@ -29,7 +29,7 @@ function s.initial_effect(c)
 	e2:SetTarget(s.mattg)
 	e2:SetOperation(s.matop)
 	c:RegisterEffect(e2)
-	--Detach 1 material from LIGHT Fiend Xyz; Tribute 1 monster
+	--Detach 1 material, then Tribute 1 monster
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,2))
 	e3:SetCategory(CATEGORY_RELEASE)
@@ -37,10 +37,10 @@ function s.initial_effect(c)
 	e3:SetCode(EVENT_FREE_CHAIN)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCountLimit(1,{id,2})
-	e3:SetCost(s.relcost)
 	e3:SetTarget(s.reltg)
 	e3:SetOperation(s.relop)
 	c:RegisterEffect(e3)
+
 end
 s.listed_series={0x765,0x963}
 function s.xyzfilter(c)
@@ -90,23 +90,23 @@ function s.matop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Overlay(c,Group.FromCards(rc))
 	end
 end
-function s.costfilter(c)
+function s.xyzfilter(c)
 	return c:IsFaceup()
 		and c:IsType(TYPE_XYZ)
 		and c:IsAttribute(ATTRIBUTE_LIGHT)
 		and c:IsRace(RACE_FIEND)
-		and Duel.CheckRemoveOverlayCard(tp,1,0,1,REASON_COST)
-end
-function s.relcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.costfilter,tp,LOCATION_MZONE,0,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DETACH)
-	Duel.RemoveOverlayCard(tp,1,0,1,1,REASON_COST)
+		and c:GetOverlayCount()>0
 end
 function s.reltg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsReleasable,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.xyzfilter,tp,LOCATION_MZONE,0,1,nil)
+	and Duel.IsExistingMatchingCard(Card.IsReleasable,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil)end
 	Duel.SetOperationInfo(0,CATEGORY_RELEASE,nil,1,0,LOCATION_MZONE)
 end
 function s.relop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DETACH)
+	local xc=Duel.SelectMatchingCard(tp,s.xyzfilter,tp,LOCATION_MZONE,0,1,1,nil):GetFirst()
+	if not xc then return end
+	if xc:RemoveOverlayCard(tp,1,1,REASON_EFFECT)==0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
 	local g=Duel.SelectMatchingCard(tp,Card.IsReleasable,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
 	if #g>0 then
