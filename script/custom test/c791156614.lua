@@ -1,0 +1,127 @@
+--Vandal General Viria
+local s,id=GetID()
+function s.initial_effect(c)
+	c:EnableReviveLimit()
+	--Xyz Summon
+	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(s.xyzfilter),7,2,nil,nil,Xyz.InfiniteMats)
+	c:SetUniqueOnField(1,0,id)
+	--On Xyz Summon: SS Devas, attach self if Xyz
+	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,0))
+	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e1:SetProperty(EFFECT_FLAG_DELAY)
+	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e1:SetCountLimit(1,{id,0})
+	e1:SetCondition(s.spcon)
+	e1:SetTarget(s.sptg)
+	e1:SetOperation(s.spop)
+	c:RegisterEffect(e1)
+	--If opponent activates monster effect while this card is material
+	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(id,1))
+	e2:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_NEGATE)
+	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e2:SetCode(EVENT_CHAINING)
+	e2:SetRange(LOCATION_OVERLAY)
+	e2:SetCountLimit(1,{id,1})
+	e2:SetCondition(s.matcon)
+	e2:SetTarget(s.mattg)
+	e2:SetOperation(s.matop)
+	c:RegisterEffect(e2)
+	--Detach 1 material from LIGHT Fiend Xyz; Tribute 1 monster
+	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(id,2))
+	e3:SetCategory(CATEGORY_RELEASE)
+	e3:SetType(EFFECT_TYPE_QUICK_O)
+	e3:SetCode(EVENT_FREE_CHAIN)
+	e3:SetRange(LOCATION_MZONE)
+	e3:SetCountLimit(1,{id,2})
+	e3:SetCost(s.relcost)
+	e3:SetTarget(s.reltg)
+	e3:SetOperation(s.relop)
+	c:RegisterEffect(e3)
+end
+s.listed_series={0x765,0x963}
+function s.xyzfilter(c)
+	return c:IsRace(RACE_FIEND) and c:IsAttribute(ATTRIBUTE_LIGHT)
+end
+function s.spcon(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():IsSummonType(SUMMON_TYPE_XYZ)
+end
+function s.spfilter(c,e,tp)
+	return c:IsSetCard(0x765)
+		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+end
+function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then
+		return Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil,e,tp)
+	end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE+LOCATION_REMOVED)
+end
+function s.spop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local tc=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil,e,tp):GetFirst()
+	if not tc then return end
+	if Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)==0 then return end
+	--If Xyz monster, attach this card and its materials
+	if tc:IsType(TYPE_XYZ) and c:IsRelateToEffect(e) then
+		local og=c:GetOverlayGroup()
+		if #og>0 then
+			Duel.Overlay(tc,og)
+		end
+		Duel.Overlay(tc,Group.FromCards(c))
+	end
+end
+-------------------------------------------------
+--Material effect
+function s.matcon(e,tp,eg,ep,ev,re,r,rp)
+	return rp==1-tp
+		and re:IsActiveType(TYPE_MONSTER)
+		and Duel.IsChainNegatable(ev)
+end
+function s.mattg(e,tp,eg,ep,ev,re,r,rp,chk)
+	local c=e:GetHandler()
+	if chk==0 then
+		return c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
+end
+function s.matop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local rc=re:GetHandler()
+	if Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)==0 then return end
+	if Duel.NegateActivation(ev) and rc:IsRelateToEffect(re) then
+		Duel.Overlay(c,Group.FromCards(rc))
+	end
+end
+function s.costfilter(c)
+	return c:IsFaceup()
+		and c:IsType(TYPE_XYZ)
+		and c:IsAttribute(ATTRIBUTE_LIGHT)
+		and c:IsRace(RACE_FIEND)
+		and c:CheckRemoveOverlayCard(tp,1,REASON_COST)
+end
+function s.relcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then
+		return Duel.IsExistingMatchingCard(s.costfilter,tp,LOCATION_MZONE,0,1,nil)
+	end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DETACH)
+	local tc=Duel.SelectMatchingCard(tp,s.costfilter,tp,LOCATION_MZONE,0,1,1,nil):GetFirst()
+	tc:RemoveOverlayCard(tp,1,1,REASON_COST)
+end
+function s.reltg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then
+		return Duel.IsExistingMatchingCard(Card.IsReleasable,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil)
+	end
+	Duel.SetOperationInfo(0,CATEGORY_RELEASE,nil,1,0,LOCATION_MZONE)
+end
+function s.relop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
+	local g=Duel.SelectMatchingCard(tp,Card.IsReleasable,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
+	if #g>0 then
+		Duel.Release(g,REASON_EFFECT)
+	end
+end
