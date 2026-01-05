@@ -57,21 +57,18 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.xyzfilter(c)
-	return c:IsFaceup()
-		and c:IsType(TYPE_XYZ)
-		and c:IsAttribute(ATTRIBUTE_LIGHT)
-		and c:IsRace(RACE_FIEND)
+	return c:IsFaceup() and c:IsType(TYPE_XYZ)
 		and c:GetOverlayCount()>0
 end
 function s.reltg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.xyzfilter,tp,LOCATION_MZONE,0,1,nil)
-	and Duel.IsExistingMatchingCard(Card.IsReleasable,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil)end
+	and Duel.IsExistingMatchingCard(Card.IsReleasable,tp,LOCATION_MZONE,LOCATION_MZONE,1,e:GetHandler())end
 	Duel.SetOperationInfo(0,CATEGORY_RELEASE,nil,1,0,LOCATION_MZONE)
 end
 function s.relop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.RemoveOverlayCard(tp,1,0,1,1,REASON_EFFECT)==0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
-	local g=Duel.SelectMatchingCard(tp,Card.IsReleasable,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,Card.IsReleasable,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,e:GetHandler())
 	if #g>0 then
 		Duel.Release(g,REASON_EFFECT)
 	end
