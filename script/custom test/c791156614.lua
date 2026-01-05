@@ -1,10 +1,9 @@
 --Vandal General Viria
 local s,id=GetID()
 function s.initial_effect(c)
-	c:EnableReviveLimit()
 	--Xyz Summon
-	Xyz.AddProcedure(c,s.xyzfilter,7,2,nil,nil,Xyz.InfiniteMats)
-	c:SetUniqueOnField(1,0,id)
+	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(s.ffilter),7,2,nil,nil,Xyz.InfiniteMats)
+	c:EnableReviveLimit()
 	--On Xyz Summon: SS Devas, attach self if Xyz
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
@@ -43,7 +42,7 @@ function s.initial_effect(c)
 
 end
 s.listed_series={0x765,0x963}
-function s.xyzfilter(c)
+function s.ffilter(c)
 	return c:IsRace(RACE_FIEND) and c:IsAttribute(ATTRIBUTE_LIGHT)
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
