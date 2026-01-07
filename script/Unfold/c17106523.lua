@@ -93,8 +93,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	if sc and Duel.SpecialSummon(sc,0,tp,tp,false,false,POS_FACEUP)~=0 then
 	local c=e:GetHandler()
 		if c:IsRelateToEffect(e) then
-			Duel.Overlay(sc,c)
-			if c:IsRelateToEffect(e) then
+			if Duel.Overlay(sc,c)~=0 and Duel.IsExistingMatchingCard(s.filter,tp,0,LOCATION_MZONE,1,nil)then
 				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_OPPO)
 				local fg=Duel.SelectMatchingCard(tp,s.filter,tp,0,LOCATION_MZONE,1,1,nil)
 				Duel.HintSelection(fg)
