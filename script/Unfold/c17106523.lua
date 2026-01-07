@@ -60,6 +60,9 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		sc:CompleteProcedure()
 	end
 end
+function s.filter(c)
+	return not c:IsStatus(STATUS_LEAVE_CONFIRMED) and c:IsAbleToChangeControler()
+end
 function s.cfilter(c,e,tp)
 	return c:IsType(TYPE_XYZ) and c:IsAbleToExtraAsCost()
 	and Duel.IsExistingMatchingCard(s.ssfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp,c:GetRank(),c)
@@ -91,6 +94,14 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 		if c:IsRelateToEffect(e) then
 			Duel.Overlay(sc,c)
+			if c:IsRelateToEffect(e) then
+				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_OPPO)
+				local fg=Duel.SelectMatchingCard(tp,s.filter,tp,0,LOCATION_MZONE,1,1,nil)
+				Duel.HintSelection(fg)
+				if #fg>0 and not fg:GetFirst():IsImmuneToEffect(e) then
+				Duel.Overlay(sc,fg)
+				end
+			end
 		end
 	end
 end
