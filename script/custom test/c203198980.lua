@@ -10,6 +10,21 @@ function s.initial_effect(c)
 	e1:SetTarget(s.indestg)
 	e1:SetValue(1)
 	c:RegisterEffect(e1)
+	--If returned to Deck or removed
+	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(id,0))
+	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e2:SetCode(EVENT_TO_DECK)
+	e2:SetCountLimit(1,{id,0})
+	e2:SetProperty(EFFECT_FLAG_DELAY)
+	e2:SetCondition(s.scon)
+	e2:SetTarget(s.stg)
+	e2:SetOperation(s.sop)
+	c:RegisterEffect(e2)
+	local ee=e2:Clone()
+	ee:SetCode(EVENT_REMOVE)
+	c:RegisterEffect(ee)
 	--Grant effect when used as material for "Enigmation"or "Imaginary Force" fusion,synchro or xyz monster
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
@@ -22,6 +37,19 @@ s.listed_series={0x303,0x344}
 function s.indestg(e,c)
 	local handler=e:GetHandler()
 	return c==handler or c==handler:GetBattleTarget()
+end
+function s.scon(e,tp,eg,ep,ev,re,r,rp)
+	if not re then return false end
+	local rc=re:GetHandler()
+	return (rc:IsSetCard(0x303) or rc:IsSetCard(0x344))
+end
+function s.stg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,e:GetHandler(),1,0,0)
+end
+function s.sop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	Duel.SendtoHand(c,nil,REASON_EFFECT)
 end
 function s.efcon(e,tp,eg,ep,ev,re,r,rp)
 	local p=e:GetHandler()
