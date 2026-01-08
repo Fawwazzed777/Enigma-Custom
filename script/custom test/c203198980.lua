@@ -51,7 +51,7 @@ function s.efop(e,tp,eg,ep,ev,re,r,rp)
 		rc:RegisterEffect(e2,true)
 	end
 end
-function s.drop(e,tp,eg,ep,ev,re,r,rp)
+function s.drop(e,c,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,0,id)
 	local handler=e:GetHandler()
 	return c==handler or c==handler:GetBattleTarget()
