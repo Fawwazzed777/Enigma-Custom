@@ -61,7 +61,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.filter(c)
-	return not c:IsStatus(STATUS_LEAVE_CONFIRMED) and c:IsAbleToChangeControler()
+	return not c:IsStatus(STATUS_LEAVE_CONFIRMED) and not c:IsType(TYPE_TOKEN) and c:IsAbleToChangeControler()
 end
 function s.cfilter(c,e,tp)
 	return c:IsType(TYPE_XYZ) and c:IsAbleToExtraAsCost()
@@ -93,12 +93,12 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	if sc and Duel.SpecialSummon(sc,0,tp,tp,false,false,POS_FACEUP)~=0 then
 	local c=e:GetHandler()
 		if c:IsRelateToEffect(e) then
-			if Duel.Overlay(sc,c)~=0 and Duel.IsExistingMatchingCard(s.filter,tp,0,LOCATION_MZONE,1,nil)then
+			if Duel.Overlay(sc,c)~=0 and sc:IsType(TYPE_XYZ) and Duel.IsExistingMatchingCard(s.filter,tp,0,LOCATION_MZONE,1,nil)then
 				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_OPPO)
 				local fg=Duel.SelectMatchingCard(tp,s.filter,tp,0,LOCATION_MZONE,1,1,nil)
 				Duel.HintSelection(fg)
 				if #fg>0 and not fg:GetFirst():IsImmuneToEffect(e) then
-				Duel.Overlay(sc,fg)
+				Duel.Overlay(sc,fg,true)
 				end
 			end
 		end
