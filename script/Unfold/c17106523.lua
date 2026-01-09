@@ -68,6 +68,9 @@ function s.ssfilter(c,e,tp,rk,mc)
 	return (c:GetRank()==rk or c:GetRank()==rk-1)and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 		and Duel.GetLocationCountFromEx(tp,tp,mc,c)>0
 end
+function s.filter(c)
+	return not c:IsStatus(STATUS_LEAVE_CONFIRMED) and not c:IsType(TYPE_TOKEN) and c:IsAbleToChangeControler()
+end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:SetLabel(1)
 	if chk==0 then return true end
@@ -84,9 +87,6 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SendtoDeck(g,nil,2,REASON_COST)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE)
 end
-function s.filter(c)
-	return not c:IsStatus(STATUS_LEAVE_CONFIRMED) and not c:IsType(TYPE_TOKEN) and c:IsAbleToChangeControler()
-end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local c=e:GetHandler()
@@ -97,7 +97,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_OPPO)
 				local fg=Duel.SelectMatchingCard(tp,s.filter,tp,0,LOCATION_MZONE,1,1,nil)
 				Duel.HintSelection(fg)
-				if fg>0 and fg:GetFirst():IsRelateToEffect(e) and not fg:GetFirst():IsImmuneToEffect(e) then
+				if #fg>0 and fg:GetFirst():IsRelateToEffect(e) and not fg:GetFirst():IsImmuneToEffect(e) then
 				Duel.Overlay(sc,fg,true)
 			end
 		end
