@@ -65,9 +65,6 @@ end
 function s.rmlimit(e,c,tp,r)
 	return c==e:GetHandler() and r==REASON_EFFECT
 end
-function s.distg(e,c)
-	return c==e:GetHandler():GetBattleTarget()
-end
 function s.regcon(e,tp,eg,ep,ev,re,r,rp)
 	return (e:GetHandler():GetSummonType()&SUMMON_TYPE_XYZ)==SUMMON_TYPE_XYZ and e:GetLabel()==1
 end
@@ -143,10 +140,15 @@ function s.battleop(e,tp,eg,ep,ev,re,r,rp)
 	--Negate effects
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE)
+	e3:SetTargetRange(0,LOCATION_MZONE)
+	e3:SetTarget(s.distg)
 	e3:SetCode(EFFECT_DISABLE)
 	e3:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_DAMAGE_CAL)
 	bc:RegisterEffect(e3)
 	local e4=e3:Clone()
 	e4:SetCode(EFFECT_DISABLE_EFFECT)
 	bc:RegisterEffect(e4)
+end
+function s.distg(e,c)
+	return c==e:GetHandler():GetBattleTarget()
 end
