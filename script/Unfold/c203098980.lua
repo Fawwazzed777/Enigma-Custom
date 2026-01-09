@@ -20,12 +20,10 @@ function s.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,1))
 	e1:SetCategory(CATEGORY_ATKCHANGE)
-	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetRange(LOCATION_MZONE)
-	e1:SetTargetRange(LOCATION_MZONE,0)
-	e1:SetCode(EVENT_SPSUMMON_SUCCESS+EFFECT_UPDATE_ATTACK)
+	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e1:SetCondition(s.escon)
-	e1:SetValue(800)
+	e1:SetOperation(s.gainop)
 	c:RegisterEffect(e1)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)
@@ -68,8 +66,8 @@ function s.cannotdisfilter(e,ct)
 	local trig_c=trig_e:GetHandler()
 	return trig_c:IsControler(e:GetHandlerPlayer()) and trig_c:IsLocation(LOCATION_MZONE) and trig_c:IsRace(RACE_DRAGON) and trig_c:IsFaceup()
 end
-function s.escon(e)
-	return e:GetHandler():GetFlagEffect(id)>0
+function s.escon(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetLabel()==1
 end
 function s.valcheck(e,c)
 	local g=c:GetMaterial()
@@ -78,4 +76,19 @@ function s.valcheck(e,c)
 	else
 		e:GetLabelObject():SetLabel(0)
 	end
+end
+function s.gainop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	--ATK/DEF down
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(EFFECT_UPDATE_ATTACK)
+	e1:SetRange(LOCATION_MZONE)
+	e1:SetTargetRange(0,LOCATION_MZONE)
+	e1:SetValue(-800)
+	e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+	c:RegisterEffect(e1)
+	local e2=e1:Clone()
+	e2:SetCode(EFFECT_UPDATE_DEFENSE)
+	c:RegisterEffect(e2)
 end
