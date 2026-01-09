@@ -68,8 +68,8 @@ function s.cannotdisfilter(e,ct)
 	local trig_c=trig_e:GetHandler()
 	return trig_c:IsControler(e:GetHandlerPlayer()) and trig_c:IsLocation(LOCATION_MZONE) and trig_c:IsRace(RACE_DRAGON) and trig_c:IsFaceup()
 end
-function s.escon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsXyzSummoned() and e:GetLabel()==1
+function s.escon(e)
+	return e:GetHandler():GetFlagEffect(id)>0
 end
 function s.valcheck(e,c)
 	local g=c:GetMaterial()
