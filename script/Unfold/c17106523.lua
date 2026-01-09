@@ -60,9 +60,6 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		sc:CompleteProcedure()
 	end
 end
-function s.filter(c)
-	return not c:IsStatus(STATUS_LEAVE_CONFIRMED) and not c:IsType(TYPE_TOKEN) and c:IsAbleToChangeControler()
-end
 function s.cfilter(c,e,tp)
 	return c:IsType(TYPE_XYZ) and c:IsAbleToExtraAsCost()
 	and Duel.IsExistingMatchingCard(s.ssfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp,c:GetRank(),c)
@@ -87,19 +84,21 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SendtoDeck(g,nil,2,REASON_COST)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE)
 end
+function s.filter(c)
+	return not c:IsStatus(STATUS_LEAVE_CONFIRMED) and not c:IsType(TYPE_TOKEN) and c:IsAbleToChangeControler()
+end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local c=e:GetHandler()
 	local sc=Duel.SelectMatchingCard(tp,s.ssfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp,Duel.GetChainInfo(0,CHAININFO_TARGET_PARAM)):GetFirst()
 	if sc and Duel.SpecialSummon(sc,0,tp,tp,false,false,POS_FACEUP)~=0 then
-	local c=e:GetHandler()
-		if c:IsRelateToEffect(e) then
-			if Duel.Overlay(sc,c)~=0 and sc:IsType(TYPE_XYZ) and Duel.IsExistingMatchingCard(s.filter,tp,0,LOCATION_MZONE,1,nil)then
+			if Duel.Overlay(sc,c)~=0 and c:IsRelateToEffect(e) 
+			and sc:IsType(TYPE_XYZ) and Duel.IsExistingMatchingCard(s.filter,tp,0,LOCATION_MZONE,1,nil)then
 				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_OPPO)
 				local fg=Duel.SelectMatchingCard(tp,s.filter,tp,0,LOCATION_MZONE,1,1,nil)
 				Duel.HintSelection(fg)
-				if #fg>0 and not fg:GetFirst():IsImmuneToEffect(e) then
+				if #fg>0 and c:IsRelateToEffect(e) and fg:GetFirst():IsRelateToEffect(e) and not fg:GetFirst():IsImmuneToEffect(e) then
 				Duel.Overlay(sc,fg,true)
-				end
 			end
 		end
 	end
