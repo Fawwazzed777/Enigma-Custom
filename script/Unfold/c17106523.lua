@@ -97,7 +97,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_OPPO)
 				local fg=Duel.SelectMatchingCard(tp,s.filter,tp,0,LOCATION_MZONE,1,1,nil)
 				Duel.HintSelection(fg)
-				if #fg>0 and fg:GetFirst():IsRelateToEffect(e) and not fg:GetFirst():IsImmuneToEffect(e) then
+				if fg and fg:GetFirst():IsRelateToEffect(e) and not fg:GetFirst():IsImmuneToEffect(e) then
 				Duel.Overlay(sc,fg,true)
 			end
 		end
