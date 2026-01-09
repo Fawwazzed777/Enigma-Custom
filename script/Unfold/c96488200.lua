@@ -21,7 +21,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 	--Extra busted
 	local e3=Effect.CreateEffect(c)
-	e3:SetCategory(CATEGORY_DESTROY)
+	e3:SetCategory(CATEGORY_REMOVE)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCountLimit(1)
@@ -47,33 +47,20 @@ function s.initial_effect(c)
 	e5:SetTargetRange(1,1)
 	e5:SetTarget(s.rmlimit)
 	c:RegisterEffect(e5)
-	--atk/def
+	--Battle debuff + negate
 	local e6=Effect.CreateEffect(c)
-	e6:SetCategory(CATEGORY_ATKCHANGE+CATEGORY_DEFCHANGE)
-	e6:SetType(EFFECT_TYPE_FIELD)
-	e6:SetCode(EFFECT_SET_ATTACK_FINAL)
-	e6:SetRange(LOCATION_MZONE)
-	e6:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
-	e6:SetCondition(s.effcon)
-	e6:SetTarget(s.atktg2)
-	e6:SetValue(0)
+	e6:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e6:SetCode(EVENT_PRE_DAMAGE_CALCULATE)
+	e6:SetCondition(s.battlecon)
+	e6:SetOperation(s.battleop)
 	c:RegisterEffect(e6)
-	--negate
-	local e7=e6:Clone()
-	e7:SetCode(EFFECT_DISABLE)
-	e7:SetTargetRange(0,LOCATION_MZONE)
-	e7:SetTarget(s.distg)
-	c:RegisterEffect(e7)
-	local e9=e6:Clone()
-	e9:SetCode(EFFECT_SET_DEFENSE_FINAL)
-	c:RegisterEffect(e9)
 	--spsummon condition
-	local e8=Effect.CreateEffect(c)
-	e8:SetType(EFFECT_TYPE_SINGLE)
-	e8:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e8:SetCode(EFFECT_SPSUMMON_CONDITION)
-	e8:SetValue(aux.xyzlimit)
-	c:RegisterEffect(e8)
+	local er=Effect.CreateEffect(c)
+	er:SetType(EFFECT_TYPE_SINGLE)
+	er:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	er:SetCode(EFFECT_SPSUMMON_CONDITION)
+	er:SetValue(aux.xyzlimit)
+	c:RegisterEffect(er)
 end
 function s.rmlimit(e,c,tp,r)
 	return c==e:GetHandler() and r==REASON_EFFECT
@@ -103,32 +90,63 @@ end
 function s.effcon(e)
 	return e:GetHandler():GetFlagEffect(id)>0
 end
-
-
+function s.stfilter(c)
+	return c:IsSpellTrap() and c:IsAbleToRemove()
+end
 function s.rcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
 	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
 end
 function s.rtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetFieldGroupCount(tp,0,LOCATION_SZONE)>0 end
-	local sg=Duel.GetFieldGroup(tp,0,LOCATION_SZONE)
-	Duel.SetOperationInfo(0,CATEGORY_REMOVE,sg,#sg,0,0)
+	local g=Duel.GetMatchingGroup(s.stfilter,tp,0,LOCATION_ONFIELD,nil)
+	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,#g,0,0)
 end
 function s.rop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local sg=Duel.GetFieldGroup(tp,0,LOCATION_SZONE)
-	local ct=Duel.Remove(sg,POS_FACEUP,REASON_EFFECT)
-	if ct>0 and c:IsFaceup() and c:IsRelateToEffect(e) then
+	local g=Duel.GetMatchingGroup(s.stfilter,tp,0,LOCATION_ONFIELD,nil)
+	if #g==0 then return end
+	if Duel.Remove(g,POS_FACEUP,REASON_EFFECT)==0 then return end
+	local ct=Duel.GetFieldGroupCount(tp,LOCATION_REMOVED,LOCATION_REMOVED)
+	local extra=math.floor(ct/5)
+	if extra>0 then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_EXTRA_ATTACK)
-		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-		e1:SetValue(ct)
+		e1:SetValue(extra)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 		c:RegisterEffect(e1)
 	end
 end
-function s.atktg2(e,c)
-	return c==e:GetHandler():GetBattleTarget()
+--Battle debuff
+function s.battlecon(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local bc=c:GetBattleTarget()
+	return bc~=nil
 end
---
+function s.battleop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local bc=c:GetBattleTarget()
+	if not bc or not bc:IsRelateToBattle() then return end
+	local ct=Duel.GetFieldGroupCount(tp,LOCATION_REMOVED,LOCATION_REMOVED)
+	local val=ct*600
+	--ATK/DEF reduction
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetCode(EFFECT_UPDATE_ATTACK)
+	e1:SetValue(-val)
+	e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_DAMAGE_CAL)
+	bc:RegisterEffect(e1)
+	local e2=e1:Clone()
+	e2:SetCode(EFFECT_UPDATE_DEFENSE)
+	bc:RegisterEffect(e2)
+	--Negate effects
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_SINGLE)
+	e3:SetCode(EFFECT_DISABLE)
+	e3:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_DAMAGE_CAL)
+	bc:RegisterEffect(e3)
+	local e4=e3:Clone()
+	e4:SetCode(EFFECT_DISABLE_EFFECT)
+	bc:RegisterEffect(e4)
+end
