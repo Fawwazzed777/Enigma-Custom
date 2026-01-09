@@ -92,8 +92,8 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local sc=Duel.SelectMatchingCard(tp,s.ssfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp,Duel.GetChainInfo(0,CHAININFO_TARGET_PARAM)):GetFirst()
 	if sc and Duel.SpecialSummon(sc,0,tp,tp,false,false,POS_FACEUP)~=0 then
-			if Duel.Overlay(sc,c)~=0 and c:IsRelateToEffect(e) 
-			and sc:IsType(TYPE_XYZ) and Duel.IsExistingMatchingCard(s.filter,tp,0,LOCATION_MZONE,1,nil)then
+			if Duel.Overlay(sc,c)~=0 and sc:IsType(TYPE_XYZ)
+			and Duel.IsExistingMatchingCard(s.filter,tp,0,LOCATION_MZONE,1,nil)then
 				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_OPPO)
 				local fg=Duel.SelectMatchingCard(tp,s.filter,tp,0,LOCATION_MZONE,1,1,nil)
 				Duel.HintSelection(fg)
