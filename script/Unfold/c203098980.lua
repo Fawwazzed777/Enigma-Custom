@@ -1,9 +1,10 @@
 --Enigmation Force - Renegade Hawk
+Duel.LoadScript("c511018020.lua")
 local s,id=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()
 	--Xyz summon procedure
-	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(s.ffilter),5,4,nil,nil,Xyz.InfiniteMats)
+	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(s.ffilter),5,5,nil,nil,Xyz.InfiniteMats)
 	c:AddMustBeXyzSummoned()
 	--
 	local e0=Effect.CreateEffect(c)
@@ -18,7 +19,7 @@ function s.initial_effect(c)
 	--
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,1))
-	e1:SetCategory(CATEGORY_DESTROY)
+	e1:SetCategory(CATEGORY_ATKCHANGE)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetTargetRange(LOCATION_MZONE,0)
