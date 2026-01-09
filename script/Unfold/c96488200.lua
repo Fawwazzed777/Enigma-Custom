@@ -50,7 +50,7 @@ function s.initial_effect(c)
 	--Battle debuff + negate
 	local e6=Effect.CreateEffect(c)
 	e6:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
-	e6:SetCode(EVENT_DAMAGE_CALCULATING)
+	e6:SetCode(EVENT_BATTLE_START)
 	e6:SetCondition(s.battlecon)
 	e6:SetOperation(s.battleop)
 	c:RegisterEffect(e6)
