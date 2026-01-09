@@ -1,10 +1,10 @@
 --Enigmation - Phantasm Hydra
 local s,id=GetID()
 function s.initial_effect(c)
-	--Must be properly summoned before reviving
 	c:EnableReviveLimit()
 	--Xyz summon procedure
 	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(Card.IsSetCard,0x344),9,4,nil,nil,Xyz.InfiniteMats)
+	c:AddMustBeXyzSummoned()
 	--Check materials used for its Xyz summon
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
@@ -54,13 +54,6 @@ function s.initial_effect(c)
 	e6:SetCondition(s.battlecon)
 	e6:SetOperation(s.battleop)
 	c:RegisterEffect(e6)
-	--spsummon condition
-	local er=Effect.CreateEffect(c)
-	er:SetType(EFFECT_TYPE_SINGLE)
-	er:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	er:SetCode(EFFECT_SPSUMMON_CONDITION)
-	er:SetValue(aux.xyzlimit)
-	c:RegisterEffect(er)
 end
 function s.rmlimit(e,c,tp,r)
 	return c==e:GetHandler() and r==REASON_EFFECT
