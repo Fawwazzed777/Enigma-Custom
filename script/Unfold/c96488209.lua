@@ -111,14 +111,14 @@ end
 function s.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return not c:IsReason(REASON_REPLACE)
-	 and c:GetOverlayGroup():IsExists(Card.IsAbleToRemoveAsCost,1,nil) end
+	 and c:IsFaceup() and c:GetOverlayGroup():IsExists(Card.IsAbleToRemoveAsCost,1,nil) end
 	if Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
 	local ovg=c:GetOverlayGroup()
 	local rg=Duel.Remove(ovg,POS_FACEUP,REASON_COST)
 	local g=Duel.SelectMatchingCard(tp,Card.IsRemovable,tp,0,LOCATION_ONFIELD,rg,rg,nil)
-		if #g>0 then
+		if rg then
 		Duel.HintSelection(g)
-		if Duel.Remove(g,POS_FACEUP,REASON_EFFECT)==0 then return end
+		if #g==0 and Duel.Remove(g,POS_FACEUP,REASON_EFFECT)==0 then return end
 		local og=Duel.GetOperatedGroup():Filter(Card.IsLocation,nil,LOCATION_REMOVED)
 		if #og>0 then
 			Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,2))
@@ -130,4 +130,3 @@ function s.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	else return false end
 end
 end
-
