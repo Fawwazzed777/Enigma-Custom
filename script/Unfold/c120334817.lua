@@ -1,7 +1,6 @@
 --Ultimaya King Arcanum
 local s,id=GetID()
 function s.initial_effect(c)
-TYPE_EXTRA= TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ+TYPE_LINK
 	--link summon
 	Link.AddProcedure(c,aux.FilterBoolFunctionEx(Card.IsSetCard,0x309),2,2)
 	c:EnableReviveLimit()
@@ -56,8 +55,7 @@ function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local rk=Duel.IsExistingMatchingCard(s.exist,tp,LOCATION_MZONE,0,1,e:GetHandler())
 	local g=Duel.SelectMatchingCard(tp,s.hand,tp,LOCATION_DECK,0,1,1,nil)
 	if #g>0 then
-	Duel.SendtoHand(g,nil,REASON_EFFECT)
-	Duel.ConfirmCards(1-tp,g)
+	Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 		if rk and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
 		local sg=Duel.SelectMatchingCard(tp,Card.IsDestructable,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
 		if #sg>0 then
