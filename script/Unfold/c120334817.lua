@@ -56,6 +56,20 @@ function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local st=Duel.SelectMatchingCard(tp,s.ha,tp,LOCATION_DECK+LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil)
 	if st then
 	Duel.SSet(tp,st)
+	--Quick Trap
+	local et=Effect.CreateEffect(e:GetHandler())
+	et:SetType(EFFECT_TYPE_SINGLE)
+	et:SetCode(EFFECT_TRAP_ACT_IN_SET_TURN)
+	et:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
+	et:SetReset(RESET_EVENT+RESETS_STANDARD)
+	st:RegisterEffect(et)
+		--Quick Spell
+		local eq=Effect.CreateEffect(e:GetHandler())
+		eq:SetType(EFFECT_TYPE_SINGLE)
+		eq:SetCode(EFFECT_QP_ACT_IN_SET_TURN)
+		eq:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
+		eq:SetReset(RESET_EVENT+RESETS_STANDARD)
+		st:RegisterEffect(eq)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
 	local rk=Duel.IsExistingMatchingCard(s.exist,tp,LOCATION_MZONE,0,1,e:GetHandler())
 	local ek=Duel.IsExistingMatchingCard(s.dfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
