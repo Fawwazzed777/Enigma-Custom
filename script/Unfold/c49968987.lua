@@ -39,6 +39,7 @@ function s.initial_effect(c)
 	local ep=Effect.CreateEffect(c)
 	ep:SetDescription(aux.Stringid(id,2))
 	ep:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	ep:SetProperty(EFFECT_FLAG_DELAY)
 	ep:SetCode(EVENT_DESTROY)
 	ep:SetRange(LOCATION_EXTRA)
 	ep:SetCountLimit(1,{id,1})
@@ -47,12 +48,13 @@ function s.initial_effect(c)
 	ep:SetOperation(s.penop)
 	c:RegisterEffect(ep)
 	--
-	local ee=Effect.CreateEffect(c)
-	ee:SetCategory(CATEGORY_ATKCHANGE)
-	ee:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
-	ee:SetRange(LOCATION_PZONE)
-	ee:SetOperation(s.debtop)
-	c:RegisterEffect(ee)
+	local ew=Effect.CreateEffect(c)
+	ew:SetType(EFFECT_TYPE_FIELD)
+	ew:SetRange(LOCATION_PZONE)
+	ew:SetTargetRange(0,LOCATION_MZONE)
+	ew:SetCode(EFFECT_UPDATE_ATTACK)
+	ew:SetValue(s.valq)
+	c:RegisterEffect(ew)
 end
 function s.ffilter(c,fc,sumtype,tp)
 	return c:IsAttribute(ATTRIBUTE_FIRE)
@@ -115,18 +117,10 @@ function s.penop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.MoveToField(c,tp,tp,LOCATION_PZONE,POS_FACEUP,true)
 	end
 end
-function s.debtop(e,tp,eg,ep,ev,re,r,rp)
+function s.valq(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local val=0
 		if tc:IsType(TYPE_XYZ)  then val=tc:GetRank()*-200
 		else val=tc:GetLevel()*-200 end
 		if tc:IsType(TYPE_LINK) then val=tc:GetLink()*-200 end
-	--ATK down
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetCode(EFFECT_UPDATE_ATTACK)
-	e1:SetTargetRange(0,LOCATION_MZONE)
-	e1:SetValue(val)
-	e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-	c:RegisterEffect(e1)
 end
