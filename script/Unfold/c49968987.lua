@@ -103,7 +103,7 @@ function s.penconfilter(c,tp)
 end
 function s.pencon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	return eg:IsExists(s.sppenconfilter,1,nil,tp) and c:IsFaceup()
+	return eg:IsExists(s.penconfilter,1,nil,tp) and c:IsFaceup()
 end
 function s.pentg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckLocation(tp,LOCATION_PZONE,0) or Duel.CheckLocation(tp,LOCATION_PZONE,1) end
