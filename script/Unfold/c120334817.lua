@@ -31,31 +31,30 @@ function s.cfilter(c,g)
 	return g:IsContains(c) and c:IsDestructable()
 end
 function s.ha(c)
-	return c:IsSetCard(0x309) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0x309) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsSSetable()
 end
 function s.exist(c)
 	return c:IsFaceup() and c:IsSetCard(0x309) and (c:IsType(TYPE_EXTRA) or c:GetOriginalType(ORIGINAL_TYPE_EXTRA))
 end
 function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local lg=e:GetHandler():GetLinkedGroup()
-	local rg=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil,lg) 
-	local sr=Duel.IsExistingMatchingCard(s.hand,tp,LOCATION_DECK,0,1,nil)
-	if chk==0 then return #rg>0 and sr end
+	if chkc then return chkc:IsControler(tp) and s.cfilter(chkc) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.ha,tp,LOCATION_DECK+LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SET)
 end
 function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local lg=e:GetHandler():GetLinkedGroup()
 	local rg=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil,lg) 
-	local sr=Duel.IsExistingMatchingCard(s.hand,tp,LOCATION_DECK,0,1,nil)
+	local sr=Duel.IsExistingMatchingCard(s.ha,tp,LOCATION_DECK+LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil)
 	if #rg>0 and sr then
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local tg=rg:Select(tp,1,1,nil)
 	Duel.HintSelection(tg)
 	if Duel.Destroy(tg,REASON_EFFECT)~=0 then
+	local st=Duel.SelectMatchingCard(tp,s.ha,tp,LOCATION_DECK+LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil)
+	if st then
+	Duel.SSet(tp,st)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
 	local rk=Duel.IsExistingMatchingCard(s.exist,tp,LOCATION_MZONE,0,1,e:GetHandler())
-	local g=Duel.SelectMatchingCard(tp,s.ha,tp,LOCATION_DECK,0,1,1,nil)
-	if #g>0 then
-	Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 		if rk and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
 		local sg=Duel.SelectMatchingCard(tp,Card.IsDestructable,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
 		if #sg>0 then
