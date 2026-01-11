@@ -94,7 +94,7 @@ function s.aop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.SelectMatchingCard(tp,s.pefilter,tp,LOCATION_EXTRA,0,1,1,nil)
 	if #tc==0 then return end
 	Duel.SendtoHand(tc,nil,REASON_EFFECT)
-	Duel.ConfirmCards(1-tp,g)
+	Duel.ConfirmCards(1-tp,tc)
 end
 end
 function s.pencon(e,tp,eg,ep,ev,re,r,rp)
