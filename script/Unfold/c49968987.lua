@@ -61,16 +61,16 @@ function s.deccon(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.dectg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
-	Duel.SetOperationInfo(0,CATEGORY_ATKCHANGE,nil,0,1-tp,200)
+	Duel.SetOperationInfo(0,CATEGORY_ATKCHANGE,nil,0,1-tp,100)
 end
 function s.decop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(s.atkfilter,1-tp,LOCATION_MZONE,1,nil)
 	local tc=g:GetFirst()
 	for tc in aux.Next(g) do
 		local val=0
-		if tc:IsType(TYPE_XYZ)  then val=tc:GetRank()*-200
-		else val=tc:GetLevel()*-200 end
-		if tc:IsType(TYPE_LINK) then val=tc:GetLink()*-200 end
+		if tc:IsType(TYPE_XYZ)  then val=tc:GetRank()*-100
+		else val=tc:GetLevel()*-100 end
+		if tc:IsType(TYPE_LINK) then val=tc:GetLink()*-100 end
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
