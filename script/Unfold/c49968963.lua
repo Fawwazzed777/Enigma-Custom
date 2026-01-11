@@ -1,4 +1,4 @@
---Ultimaya Nether Visitor
+--Ultimaya Dark Lancer
 local s,id=GetID()
 function s.initial_effect(c)
 	--pendulum summon
@@ -24,6 +24,21 @@ function s.initial_effect(c)
 	e2:SetTarget(s.tg)
 	e2:SetOperation(s.op)
 	c:RegisterEffect(e2)
+	--
+	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(id,0))
+	e3:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
+	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e3:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
+	e3:SetCode(EVENT_SUMMON_SUCCESS)
+	e3:SetCountLimit(1,{id,1})
+	e3:SetTarget(s.thtg)
+	e3:SetOperation(s.thop)
+	c:RegisterEffect(e3)
+	local e=e3:Clone()
+	e:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e:SetCondition(s.effcon)
+	c:RegisterEffect(e)
 end
 function s.thfilter(c,ft)
 	return c:IsFaceup() and (ft>0 or c:GetSequence()<5) and c:IsSetCard(0x309) and not c:IsCode(id) and c:IsAbleToHand()
@@ -91,3 +106,21 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 		tc:RegisterEffect(e2)
 	end
 end
+function s.effcon(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():IsSummonType(SUMMON_TYPE_PENDULUM)
+end
+function s.tefilter(c,e,tp,eg,ep,ev,re,r,rp)
+	return c:IsSetCard(0x309) and c:IsPendulumMonster() and c:IsAbleToHand()
+end
+function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(s.tefilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,e:GetHandler()) end
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK+LOCATION_GRAVE)
+end
+function s.thop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+	local g=Duel.SelectMatchingCard(tp,s.tefilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,e:GetHandler())
+	if #g>0 then
+		Duel.SendtoHand(g,nil,REASON_EFFECT)
+		Duel.ConfirmCards(1-tp,g)
+	end
+end	
