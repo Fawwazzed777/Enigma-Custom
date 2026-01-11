@@ -30,8 +30,8 @@ end
 function s.cfilter(c,g)
 	return g:IsContains(c) and c:IsDestructable()
 end
-function s.hand(c)
-	return c:IsSetCard(0x309) and c:IsAbleToHand()
+function s.ha(c)
+	return c:IsSetCard(0x309) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.exist(c)
 	return c:IsFaceup() and c:IsSetCard(0x309) and (c:IsType(TYPE_EXTRA) or c:GetOriginalType(ORIGINAL_TYPE_EXTRA))
@@ -53,7 +53,7 @@ function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.Destroy(tg,REASON_EFFECT)~=0 then
 	if not e:GetHandler():IsRelateToEffect(e) then return end
 	local rk=Duel.IsExistingMatchingCard(s.exist,tp,LOCATION_MZONE,0,1,e:GetHandler())
-	local g=Duel.SelectMatchingCard(tp,s.hand,tp,LOCATION_DECK,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,s.ha,tp,LOCATION_DECK,0,1,1,nil)
 	if #g>0 then
 	Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 		if rk and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
