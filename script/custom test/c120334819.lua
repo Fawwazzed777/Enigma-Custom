@@ -17,7 +17,27 @@ function s.initial_effect(c)
 	local ep=e1:Clone()
 	ep:SetCondition(s.descon)
 	c:RegisterEffect(ep)
-
+	--When you Pendulum Summon
+	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(id,3))
+	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e2:SetRange(LOCATION_PZONE)
+	e2:SetCategory(CATEGORY_TOHAND)
+	e2:SetCountLimit(1,{id,1})
+	e2:SetCondition(s.acon)
+	e2:SetOperation(s.aop)
+	c:RegisterEffect(e2)
+	--To PZ
+	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(id,2))
+	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e3:SetProperty(EFFECT_FLAG_DELAY)
+	e3:SetCode(EVENT_DESTROYED)
+	e3:SetCondition(s.pencon)
+	e3:SetTarget(s.pentg)
+	e3:SetOperation(s.penop)
+	c:RegisterEffect(e3)
 end
 s.listed_series={0x309}
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
@@ -46,5 +66,30 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 			Duel.SendtoHand(g,nil,REASON_EFFECT)
 			Duel.ConfirmCards(1-tp,g)
 		end
+	end
+end
+function s.cfilter(c,tp)
+	return c:IsControler(tp) and c:IsPendulumSummoned()
+end
+function s.acon(e,tp,eg,ep,ev,re,r,rp)
+	return eg:IsExists(s.cfilter,1,nil,tp)
+end
+function s.aop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if not c:IsRelateToEffect(e) then return end
+	Duel.SendtoHand(c,nil,REASON_EFFECT)
+end
+function s.pencon(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	return c:IsPreviousLocation(LOCATION_MZONE) and c:IsFaceup()
+end
+function s.pentg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.CheckPendulumZones(tp) end
+end
+function s.penop(e,tp,eg,ep,ev,re,r,rp)
+	if not Duel.CheckPendulumZones(tp) then return end
+	local c=e:GetHandler()
+	if c:IsRelateToEffect(e) then
+		Duel.MoveToField(c,tp,tp,LOCATION_PZONE,POS_FACEUP,true)
 	end
 end
