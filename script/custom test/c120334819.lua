@@ -88,6 +88,7 @@ function s.aop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SendtoHand(tc,nil,REASON_EFFECT)
 	Duel.ConfirmCards(1-tp,g)
 end
+end
 function s.pencon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	return c:IsPreviousLocation(LOCATION_MZONE) and c:IsFaceup()
