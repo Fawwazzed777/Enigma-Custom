@@ -6,15 +6,16 @@ function s.initial_effect(c)
 	--Destroy and SP
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
-	e1:SetCategory(CATEGORY_DESTROY+CATEGORY_TOHAND+CATEGORY_SEARCH)
+	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_DESTROY+CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e1:SetRange(LOCATION_HAND+LOCATION_EXTRA)
+	e1:SetRange(LOCATION_HAND)
 	e1:SetCountLimit(1,{id,0})
 	e1:SetTarget(s.destg)
 	e1:SetOperation(s.desop)
 	c:RegisterEffect(e1)
 	local ep=e1:Clone()
+	ep:SetRange(LOCATION_EXTRA)
 	ep:SetCondition(s.descon)
 	c:RegisterEffect(ep)
 	--When you Pendulum Summon
@@ -50,8 +51,8 @@ function s.afilter(c)
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_PZONE) end
-	if chk==0 then return Duel.IsExistingTarget(Card.IsDestructable,tp,LOCATION_PZONE,0,1,nil)
-		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
+	if chk==0 then return Duel.GetFieldGroup(tp,LOCATION_MZONE,0) and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) and
+	Duel.IsExistingTarget(Card.IsDestructable,tp,LOCATION_PZONE,0,1,nil)end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local dg=Duel.SelectTarget(tp,Card.IsDestructable,tp,LOCATION_PZONE,0,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,dg,1,0,0)
