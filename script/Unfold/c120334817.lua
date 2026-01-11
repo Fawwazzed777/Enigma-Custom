@@ -52,8 +52,8 @@ function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local tg=rg:Select(tp,1,1,nil)
 	Duel.HintSelection(tg)
 	if Duel.Destroy(tg,REASON_EFFECT)~=0 then
-	local st=Duel.SelectMatchingCard(tp,s.ha,tp,LOCATION_DECK+LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil)
-	if st:IsSSetable() then
+	local st=Duel.SelectMatchingCard(tp,s.ha,tp,LOCATION_DECK+LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil):GetFirst()
+	if st:IsRelateToEffect(e) and st:IsSSetable() then
 	Duel.SSet(tp,st)
 	--Quick Trap
 	local et=Effect.CreateEffect(e:GetHandler())
