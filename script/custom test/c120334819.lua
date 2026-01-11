@@ -51,8 +51,14 @@ function s.afilter(c)
 	return c:IsSetCard(0x309) and c:IsAbleToHand()
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_PZONE) end
-	if chk==0 then return Duel.GetFieldGroup(tp,LOCATION_MZONE,0) and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) and
+	if chk==0 then
+	local c=e:GetHandler()
+	if c:IsLocation(LOCATION_EXTRA) then
+		if Duel.GetLocationCountFromEx(tp,tp,nil,c)<=0 then return false end
+	else
+		if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return false end
+	end
+	return e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) and
 	Duel.IsExistingTarget(Card.IsDestructable,tp,LOCATION_PZONE,0,1,nil)end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local dg=Duel.SelectTarget(tp,Card.IsDestructable,tp,LOCATION_PZONE,0,1,1,nil)
