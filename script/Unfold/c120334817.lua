@@ -27,8 +27,8 @@ s.listed_series={0x309,0xa309}
 function s.bpt(e,c)
 	return c:IsSummonType(SUMMON_TYPE_PENDULUM)
 end
-function s.cfilter(c,g)
-	return g:IsContains(c) and c:IsDestructable()
+function s.cfilter(c)
+	return c:IsDestructable()
 end
 function s.ha(c)
 	return c:IsSetCard(0x309) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsSSetable()
@@ -45,10 +45,9 @@ function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SET)
 end
 function s.tdop(e,tp,eg,ep,ev,re,r,rp)
-	local lg=e:GetHandler():GetLinkedGroup()
-	local rg=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil,lg) 
+	local rg=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,e:GetHandler()) 
 	local sr=Duel.IsExistingMatchingCard(s.ha,tp,LOCATION_DECK+LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil)
-	if #rg>0 and sr then
+	if rg and sr then
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local tg=rg:Select(tp,1,1,nil)
 	Duel.HintSelection(tg)
