@@ -71,13 +71,21 @@ end
 function s.cfilter(c,tp)
 	return c:IsControler(tp) and c:IsPendulumSummoned()
 end
+function s.pefilter(c)
+	return c:IsSetCard(0x309) and c:IsAbleToHand() and c:IsPendulumMonster() and c:IsFaceup()
+end
 function s.acon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter,1,nil,tp)
 end
 function s.aop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not c:IsRelateToEffect(e) then return end
-	Duel.SendtoHand(c,nil,REASON_EFFECT)
+	if Duel.SendtoHand(c,nil,REASON_EFFECT)~=0 and
+	Duel.IsExistingMatchingCard(s.pefilter,tp,LOCATION_EXTRA,0,1,nil) and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
+	local tc=Duel.SelectMatchingCard(tp,s.pefilter,tp,LOCATION_EXTRA,0,1,1,nil)
+	if #tc==0 then return end
+	Duel.SendtoHand(tc,nil,REASON_EFFECT)
+	Duel.ConfirmCards(1-tp,g)
 end
 function s.pencon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
