@@ -3,6 +3,7 @@ local s,id=GetID()
 function s.initial_effect(c)
 	--Must be properly summoned before reviving
 	c:EnableReviveLimit()
+	Pendulum.AddProcedure(c,false)
 	--Fusion summon procedure
 	Fusion.AddProcMix(c,true,true,49968956,s.ffilter)
 	--Searing Burst
@@ -12,7 +13,7 @@ function s.initial_effect(c)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetHintTiming(0,TIMINGS_CHECK_MONSTER)
-	e1:SetCountLimit(1,id,EFFECT_COUNT_CODE_OATH)
+	e1:SetCountLimit(1,id)
 	e1:SetCondition(s.condition)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.operation)
@@ -34,6 +35,24 @@ function s.initial_effect(c)
 	local e4=e2:Clone()
 	e4:SetCode(EVENT_FLIP_SUMMON_SUCCESS)
 	c:RegisterEffect(e4)
+	--Place in Pendulum Zone on Destroy
+	local ep=Effect.CreateEffect(c)
+	ep:SetDescription(aux.Stringid(id,2))
+	ep:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	ep:SetCode(EVENT_DESTROY)
+	ep:SetRange(LOCATION_EXTRA)
+	ep:SetCountLimit(1,{id,1})
+	ep:SetCondition(s.pencon)
+	ep:SetTarget(s.pentg)
+	ep:SetOperation(s.penop)
+	c:RegisterEffect(ep)
+	--
+	local ee=Effect.CreateEffect(c)
+	ee:SetCategory(CATEGORY_ATKCHANGE)
+	ee:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	ee:SetRange(LOCATION_PZONE)
+	ee:SetOperation(s.debtop)
+	c:RegisterEffect(ee)
 end
 function s.ffilter(c,fc,sumtype,tp)
 	return c:IsAttribute(ATTRIBUTE_FIRE)
@@ -79,4 +98,35 @@ function s.decop(e,tp,eg,ep,ev,re,r,rp)
 		tc:RegisterEffect(e1)
 	end
 end
-
+function s.penconfilter(c,tp)
+	return c:IsControler(tp) and c:IsFaceup() and c:IsSetCard(0x309) or c:IsCode(1686814)
+end
+function s.pencon(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	return eg:IsExists(s.sppenconfilter,1,nil,tp) and c:IsFaceup()
+end
+function s.pentg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.CheckLocation(tp,LOCATION_PZONE,0) or Duel.CheckLocation(tp,LOCATION_PZONE,1) end
+end
+function s.penop(e,tp,eg,ep,ev,re,r,rp)
+	if not Duel.CheckLocation(tp,LOCATION_PZONE,0) and not Duel.CheckLocation(tp,LOCATION_PZONE,1) then return end
+	local c=e:GetHandler()
+	if c:IsRelateToEffect(e) then
+		Duel.MoveToField(c,tp,tp,LOCATION_PZONE,POS_FACEUP,true)
+	end
+end
+function s.debtop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local val=0
+		if tc:IsType(TYPE_XYZ)  then val=tc:GetRank()*-200
+		else val=tc:GetLevel()*-200 end
+		if tc:IsType(TYPE_LINK) then val=tc:GetLink()*-200 end
+	--ATK down
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(EFFECT_UPDATE_ATTACK)
+	e1:SetTargetRange(0,LOCATION_MZONE)
+	e1:SetValue(val)
+	e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+	c:RegisterEffect(e1)
+end
