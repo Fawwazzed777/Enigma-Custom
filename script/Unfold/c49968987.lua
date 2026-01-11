@@ -119,8 +119,18 @@ function s.penop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.valq(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
+	local g=Duel.GetMatchingGroup(s.atkfilter,1-tp,LOCATION_MZONE,1,nil)
+	local tc=g:GetFirst()
+	for tc in aux.Next(g) do
 	local val=0
 		if tc:IsType(TYPE_XYZ)  then val=tc:GetRank()*-200
 		else val=tc:GetLevel()*-200 end
 		if tc:IsType(TYPE_LINK) then val=tc:GetLink()*-200 end
+			local e1=Effect.CreateEffect(c)
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetCode(EFFECT_UPDATE_ATTACK)
+			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+			e1:SetValue(val)
+			tc:RegisterEffect(e1)
+end
 end
