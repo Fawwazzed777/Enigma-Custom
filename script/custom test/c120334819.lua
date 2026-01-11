@@ -49,10 +49,10 @@ function s.afilter(c)
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_PZONE) end
-	if chk==0 then return Duel.IsExistingTarget(nil,tp,LOCATION_PZONE,0,1,nil)
+	if chk==0 then return Duel.IsExistingTarget(Card.IsDestructable,tp,LOCATION_PZONE,0,1,nil)
 		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local dg=Duel.SelectTarget(tp,nil,tp,LOCATION_PZONE,0,1,1,nil)
+	local dg=Duel.SelectTarget(tp,Card.IsDestructable,tp,LOCATION_PZONE,0,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,dg,1,0,0)
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
