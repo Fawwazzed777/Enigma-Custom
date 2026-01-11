@@ -48,13 +48,14 @@ function s.initial_effect(c)
 	ep:SetOperation(s.penop)
 	c:RegisterEffect(ep)
 	--
-	local ew=Effect.CreateEffect(c)
-	ew:SetType(EFFECT_TYPE_FIELD)
-	ew:SetRange(LOCATION_PZONE)
-	ew:SetTargetRange(0,LOCATION_MZONE)
-	ew:SetCode(EFFECT_UPDATE_ATTACK)
-	ew:SetValue(s.valq)
-	c:RegisterEffect(ew)
+	local eb=Effect.CreateEffect(c)
+	eb:SetType(EFFECT_TYPE_FIELD)
+	eb:SetCode(EFFECT_UPDATE_ATTACK)
+	eb:SetRange(LOCATION_PZONE)
+	eb:SetTargetRange(LOCATION_MZONE,0)
+	eb:SetTarget(function(_,c) return (c:IsSetCard(0x309) or c:IsCode(1686814)) and c:IsMonster() end)
+	eb:SetValue(function(_,c) return c:GetLevel()*100 or c:GetRank()*100 or c:GetLink()*100 end)
+	c:RegisterEffect(eb)
 end
 function s.ffilter(c,fc,sumtype,tp)
 	return c:IsAttribute(ATTRIBUTE_FIRE)
@@ -116,21 +117,4 @@ function s.penop(e,tp,eg,ep,ev,re,r,rp)
 	if c:IsRelateToEffect(e) then
 		Duel.MoveToField(c,tp,tp,LOCATION_PZONE,POS_FACEUP,true)
 	end
-end
-function s.valq(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	local g=Duel.GetMatchingGroup(s.atkfilter,1-tp,LOCATION_MZONE,1,nil)
-	local tc=g:GetFirst()
-	for tc in aux.Next(g) do
-	local val=0
-		if tc:IsType(TYPE_XYZ)  then val=tc:GetRank()*-200
-		else val=tc:GetLevel()*-200 end
-		if tc:IsType(TYPE_LINK) then val=tc:GetLink()*-200 end
-			local e1=Effect.CreateEffect(c)
-			e1:SetType(EFFECT_TYPE_SINGLE)
-			e1:SetCode(EFFECT_UPDATE_ATTACK)
-			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-			e1:SetValue(val)
-			tc:RegisterEffect(e1)
-end
 end
