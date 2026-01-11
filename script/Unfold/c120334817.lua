@@ -33,6 +33,9 @@ end
 function s.ha(c)
 	return c:IsSetCard(0x309) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsSSetable()
 end
+function s.dfilter(c)
+	return not c:IsStatus(STATUS_LEAVE_CONFIRMED) and c:IsDestructable()
+end
 function s.exist(c)
 	return c:IsFaceup() and c:IsSetCard(0x309) and (c:IsType(TYPE_EXTRA) or c:GetOriginalType(ORIGINAL_TYPE_EXTRA))
 end
@@ -55,8 +58,9 @@ function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SSet(tp,st)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
 	local rk=Duel.IsExistingMatchingCard(s.exist,tp,LOCATION_MZONE,0,1,e:GetHandler())
-		if rk and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
-		local sg=Duel.SelectMatchingCard(tp,Card.IsDestructable,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
+	local ek=Duel.IsExistingMatchingCard(s.dfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
+		if rk and ek and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
+		local sg=Duel.SelectMatchingCard(tp,s.dfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
 		if #sg>0 then
 		Duel.HintSelection(sg)
 		Duel.Destroy(sg,REASON_EFFECT)
