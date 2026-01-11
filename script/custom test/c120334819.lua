@@ -44,7 +44,7 @@ end
 s.listed_series={0x309}
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	return c:IsFaceup()
+	return Duel.GetLocationCount(tp,LOCATION_MZONE)>-2 and c:IsFaceup()
 end
 function s.afilter(c)
 	return c:IsSetCard(0x309) and c:IsAbleToHand()
