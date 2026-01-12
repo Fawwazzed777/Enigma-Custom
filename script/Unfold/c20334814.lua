@@ -81,12 +81,15 @@ function s.spquickcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsSetCard,0xa309),e:GetHandlerPlayer(),LOCATION_MZONE,0,1,e:GetHandler()) 
 end
 function s.penconfilter(c,tp)
-	return c:IsControler(tp) and c:IsFaceup() and (c:IsSetCard(0x309) or c:IsCode(1686814))
+	return c:IsControler(tp) and (c:IsSetCard(0x309) or c:IsCode(1686814))
 end
 function s.pencon(e,tp,eg,ep,ev,re,r,rp)
-	return ep~=tp and eg:IsExists(s.penconfilter,1,nil,tp) and e:GetHandler():IsFaceup()
-	and re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsSpellTrapEffect()
-	and Duel.IsChainNegatable(ev)
+	return ep~=tp
+		and Duel.IsExistingMatchingCard(aux.FaceupFilter(s.penconfilter),tp,LOCATION_ONFIELD,0,1,nil)
+		and e:GetHandler():IsFaceup()
+		and re:IsHasType(EFFECT_TYPE_ACTIVATE)
+		and re:IsSpellTrapEffect()
+		and Duel.IsChainNegatable(ev)
 end
 function s.pentg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckLocation(tp,LOCATION_PZONE,0) or Duel.CheckLocation(tp,LOCATION_PZONE,1) end
