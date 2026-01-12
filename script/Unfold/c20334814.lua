@@ -33,7 +33,6 @@ function s.initial_effect(c)
 	local ep=Effect.CreateEffect(c)
 	ep:SetDescription(aux.Stringid(id,1))
 	ep:SetType(EFFECT_TYPE_QUICK_O)
-	ep:SetProperty(EFFECT_FLAG_DELAY)
 	ep:SetCode(EVENT_CHAINING)
 	ep:SetRange(LOCATION_EXTRA)
 	ep:SetCountLimit(1,id)
@@ -82,23 +81,21 @@ function s.spquickcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsSetCard,0xa309),e:GetHandlerPlayer(),LOCATION_MZONE,0,1,e:GetHandler()) 
 end
 function s.penconfilter(c,tp)
-	return c:IsControler(tp) and c:IsFaceup() and c:IsSetCard(0x309) or c:IsCode(1686814)
+	return c:IsControler(tp) and c:IsFaceup() and (c:IsSetCard(0x309) or c:IsCode(1686814))
 end
 function s.pencon(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	return eg:IsExists(s.penconfilter,1,nil,tp) and c:IsFaceup()
-	and ep~=tp and re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsSpellTrapEffect()
+	return ep~=tp and eg:IsExists(s.penconfilter,1,nil,tp) and e:GetHandler():IsFaceup()
+	and re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsSpellTrapEffect()
 	and Duel.IsChainNegatable(ev)
 end
 function s.pentg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckLocation(tp,LOCATION_PZONE,0) or Duel.CheckLocation(tp,LOCATION_PZONE,1) end
-	if re:GetHandler():IsRelateToEffect(re) then
-		Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
-	end
+	Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
 end
 function s.penop(e,tp,eg,ep,ev,re,r,rp)
-	if not Duel.CheckLocation(tp,LOCATION_PZONE,0) and not Duel.CheckLocation(tp,LOCATION_PZONE,1) then return end
 	local c=e:GetHandler()
+	if not Duel.CheckLocation(tp,LOCATION_PZONE,0) and not Duel.CheckLocation(tp,LOCATION_PZONE,1) then return end
+	if not c:IsRelateToEffect(e) then return end
 	if Duel.NegateActivation(ev) then
 		Duel.MoveToField(c,tp,tp,LOCATION_PZONE,POS_FACEUP,true)
 	end
