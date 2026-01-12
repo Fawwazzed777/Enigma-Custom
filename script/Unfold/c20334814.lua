@@ -80,8 +80,8 @@ end
 function s.spquickcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsSetCard,0xa309),e:GetHandlerPlayer(),LOCATION_MZONE,0,1,e:GetHandler()) 
 end
-function s.penconfilter(c,tp)
-	return c:IsControler(tp) and (c:IsSetCard(0x309) or c:IsCode(1686814))
+function s.penconfilter(c)
+	return (c:IsSetCard(0x309) or c:IsCode(1686814))
 end
 function s.pencon(e,tp,eg,ep,ev,re,r,rp)
 	return ep~=tp
