@@ -42,7 +42,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(ep)
 	--PZ Effect
 	local es=Effect.CreateEffect(c)
-	es:SetDescription(aux.Stringid(id,0))
+	es:SetDescription(aux.Stringid(id,2))
 	es:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	es:SetType(EFFECT_TYPE_FIELD|EFFECT_TYPE_TRIGGER_O)
 	es:SetCode(EVENT_PHASE|PHASE_END)
