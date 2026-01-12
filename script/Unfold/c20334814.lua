@@ -3,6 +3,7 @@ local s,id=GetID()
 function s.initial_effect(c)
 	--Synchro
 	Synchro.AddProcedure(c,aux.FilterBoolFunctionEx(Card.IsSetCard,0x309),1,1,Synchro.NonTunerEx(Card.IsSetCard,0x309),1,99)
+	Pendulum.AddProcedure(c,false)
 	c:EnableReviveLimit()
 	--Banish
 	local e1=Effect.CreateEffect(c)
@@ -28,6 +29,30 @@ function s.initial_effect(c)
 	e2:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x309))
 	e2:SetValue(400)
 	c:RegisterEffect(e2)
+	--Place in Pendulum Zone on Activate Spell/Trap
+	local ep=Effect.CreateEffect(c)
+	ep:SetDescription(aux.Stringid(id,1))
+	ep:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	ep:SetProperty(EFFECT_FLAG_DELAY)
+	ep:SetCode(EVENT_CHAINING)
+	ep:SetRange(LOCATION_EXTRA)
+	ep:SetCountLimit(1,{id,1})
+	ep:SetCondition(s.pencon)
+	ep:SetTarget(s.pentg)
+	ep:SetOperation(s.penop)
+	c:RegisterEffect(ep)
+	--PZ Effect
+	local es=Effect.CreateEffect(c)
+	es:SetDescription(aux.Stringid(id,0))
+	es:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	es:SetType(EFFECT_TYPE_FIELD|EFFECT_TYPE_TRIGGER_O)
+	es:SetCode(EVENT_PHASE|PHASE_END)
+	es:SetRange(LOCATION_PZONE)
+	es:SetCountLimit(1,{id,2})
+	es:SetCondition(s.spcon)
+	es:SetTarget(s.sptg)
+	es:SetOperation(s.spop)
+	c:RegisterEffect(es)
 end
 function s.pfilter(c)
 	return c:IsFaceup() and c:IsAbleToRemove()
@@ -55,4 +80,40 @@ end
 end
 function s.spquickcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsSetCard,0xa309),e:GetHandlerPlayer(),LOCATION_MZONE,0,1,e:GetHandler()) 
+end
+function s.penconfilter(c,tp)
+	return c:IsControler(tp) and c:IsFaceup() and c:IsSetCard(0x309) or c:IsCode(1686814)
+end
+function s.pencon(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	return eg:IsExists(s.penconfilter,1,nil,tp) and c:IsFaceup()
+	and ep~=tp and re:GetHandler():IsLocation(LOCATION_ONFIELD) and re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsSpellTrapEffect()
+	and Duel.IsChainNegatable(ev)
+end
+function s.pentg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.CheckLocation(tp,LOCATION_PZONE,0) or Duel.CheckLocation(tp,LOCATION_PZONE,1) end
+	if re:GetHandler():IsRelateToEffect(re) then
+		Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
+	end
+end
+function s.penop(e,tp,eg,ep,ev,re,r,rp)
+	if not Duel.CheckLocation(tp,LOCATION_PZONE,0) and not Duel.CheckLocation(tp,LOCATION_PZONE,1) then return end
+	local c=e:GetHandler()
+	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) then
+		Duel.MoveToField(c,tp,tp,LOCATION_PZONE,POS_FACEUP,true)
+	end
+end
+function s.spcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetTurnPlayer()~=tp 
+end
+function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
+end
+function s.spop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if c:IsRelateToEffect(e) then
+		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
+	end
 end
