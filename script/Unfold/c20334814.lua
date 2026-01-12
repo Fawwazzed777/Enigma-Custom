@@ -32,7 +32,7 @@ function s.initial_effect(c)
 	--Place in Pendulum Zone on Activate Spell/Trap
 	local ep=Effect.CreateEffect(c)
 	ep:SetDescription(aux.Stringid(id,1))
-	ep:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	ep:SetType(EFFECT_TYPE_QUICK_O)
 	ep:SetProperty(EFFECT_FLAG_DELAY)
 	ep:SetCode(EVENT_CHAINING)
 	ep:SetRange(LOCATION_EXTRA)
