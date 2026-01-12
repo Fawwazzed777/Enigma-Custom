@@ -7,7 +7,6 @@ function s.initial_effect(c)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetHintTiming(0,TIMING_MAIN_END)
 	e1:SetCondition(s.condition)
-	e1:SetCountLimit(1,id)
 	c:RegisterEffect(e1)
 	--Return to hand
 	local e2=Effect.CreateEffect(c)
