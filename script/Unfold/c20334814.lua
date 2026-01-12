@@ -87,7 +87,7 @@ end
 function s.pencon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	return eg:IsExists(s.penconfilter,1,nil,tp) and c:IsFaceup()
-	and ep~=tp and re:GetHandler():IsLocation(LOCATION_ONFIELD) and re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsSpellTrapEffect()
+	and ep~=tp and re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsSpellTrapEffect()
 	and Duel.IsChainNegatable(ev)
 end
 function s.pentg(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -99,7 +99,7 @@ end
 function s.penop(e,tp,eg,ep,ev,re,r,rp)
 	if not Duel.CheckLocation(tp,LOCATION_PZONE,0) and not Duel.CheckLocation(tp,LOCATION_PZONE,1) then return end
 	local c=e:GetHandler()
-	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) then
+	if Duel.NegateActivation(ev) then
 		Duel.MoveToField(c,tp,tp,LOCATION_PZONE,POS_FACEUP,true)
 	end
 end
