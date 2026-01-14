@@ -4,7 +4,7 @@ function s.initial_effect(c)
 	c:SetUniqueOnField(1,0,id)
 	--fusion material
 	c:EnableReviveLimit()
-	Fusion.AddProcMix(c,true,true,s.ffilter1,s.ffilter2)
+	Fusion.AddProcMixN(c,true,true,s.ffilter1,s.ffilter2)
 	Fusion.AddContactProc(c,s.contactfil,s.contactop,s.splimit)
 	--Shuffle banished "Eternity Tech" to debuff
 	local e1=Effect.CreateEffect(c)
