@@ -29,21 +29,23 @@ function s.contactop(g,tp)
 	Duel.ConfirmCards(1-tp,g)
 	Duel.SendtoDeck(g,nil,2,REASON_COST+REASON_MATERIAL)
 end
-function s.rmfilter(c)
-	return c:IsSetCard(0x994) and c:IsAbleToDeck()
-end
 function s.splimit(e,se,sp,st)
 	return not e:GetHandler():IsLocation(LOCATION_EXTRA)
 end
+function s.rmfilter(c)
+	return c:IsSetCard(0x994) and c:IsAbleToDeck()
+end
+function s.afilter(c)
+	return c:IsMonster() and c:IsFaceup() and c:HasNonZeroAttack()
+end
 function s.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsMonster,tp,0,LOCATION_MZONE,1,nil) and
+	if chk==0 then return Duel.IsExistingMatchingCard(s.afilter,tp,0,LOCATION_MZONE,1,nil) and
 	Duel.IsExistingMatchingCard(s.rmfilter,tp,LOCATION_REMOVED,0,1,nil) end
 end
 function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	local maxtc=Duel.GetTargetCount(nil,tp,0,LOCATION_ONFIELD,nil)
-	local g=Duel.SelectMatchingCard(tp,s.rmfilter,tp,LOCATION_REMOVED,0,1,maxtc,nil)
+	local g=Duel.SelectMatchingCard(tp,s.rmfilter,tp,LOCATION_REMOVED,0,1,99,nil)
 	local ct=Duel.SendtoDeck(g,nil,2,REASON_EFFECT)
 	if ct==0 then return end
 	local val=ct*500
