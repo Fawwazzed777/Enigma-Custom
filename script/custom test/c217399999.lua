@@ -51,6 +51,8 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local val=ct*500
 	local og=Duel.GetMatchingGroup(s.afilter,tp,0,LOCATION_MZONE,nil)
 	for tc in aux.Next(og) do
+	local prev_atk=tc:GetAttack()
+	local newatk=math.max(prev_atk-val,0)
 		--ATK down
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
@@ -59,7 +61,7 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 		tc:RegisterEffect(e1)
 		--If ATK becomes 0
-		if tc:GetAttack()~=0 and tc:IsAttack(0) then
+		if prev_atk>0 and newatk==0 then
 			--Negate effects
 			local e2=Effect.CreateEffect(c)
 			e2:SetType(EFFECT_TYPE_SINGLE)
