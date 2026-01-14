@@ -10,7 +10,8 @@ function s.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_ATKCHANGE)
-	e1:SetType(EFFECT_TYPE_IGNITION)
+	e1:SetType(EFFECT_TYPE_QUICK_O)
+	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(1,id)
 	e1:SetTarget(s.atktg)
@@ -36,7 +37,7 @@ function s.rmfilter(c)
 	return c:IsSetCard(0x994) and c:IsAbleToDeck()
 end
 function s.afilter(c)
-	return c:IsMonster() and c:IsFaceup() and c:HasNonZeroAttack()
+	return c:IsMonster() and c:IsFaceup() and c:IsAttackAbove(0)
 end
 function s.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.afilter,tp,0,LOCATION_MZONE,1,nil) and
@@ -59,7 +60,7 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 		tc:RegisterEffect(e1)
 		--If ATK becomes 0
-		if tc:GetAttack()-val<=0 then
+		if tc:GetAttack()~=0 and tc:IsAttack(0) then
 			--Negate effects
 			local e2=Effect.CreateEffect(c)
 			e2:SetType(EFFECT_TYPE_SINGLE)
