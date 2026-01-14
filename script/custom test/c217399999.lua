@@ -1,4 +1,4 @@
---Eternity Tech - Chrono Nazark
+--Eternity Ace - Chrono Nazark
 local s,id=GetID()
 function s.initial_effect(c)
 	--fusion material
