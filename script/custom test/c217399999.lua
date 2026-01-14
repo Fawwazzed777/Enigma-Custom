@@ -4,7 +4,7 @@ function s.initial_effect(c)
 	c:SetUniqueOnField(1,0,id)
 	--fusion material
 	c:EnableReviveLimit()
-	Fusion.AddProcMixN(c,false,false,16599999,1,s.ffilter2,1)
+	Fusion.AddProcMixN(c,false,false,16599999,1,s.ffilter,1)
 	Fusion.AddContactProc(c,s.contactfil,s.contactop,s.splimit)
 	--Shuffle banished "Eternity Tech" to debuff
 	local e1=Effect.CreateEffect(c)
@@ -19,11 +19,11 @@ function s.initial_effect(c)
 end
 s.listed_names={16599999}
 s.listed_series={0x994} 
-function s.ffilter2(c,fc,sumtype,tp)
-	return c:IsRace(RACE_CYBERSE) and c:IsType(TYPE_XYZ) 
+function s.ffilter(c,fc,sumtype,tp,sub,mg,sg)
+	return c:GetType(fc,sumtype,tp)~=0 and (not sg or not sg:IsExists(s.fusfilter,1,c,c:GetAttribute(fc,sumtype,tp),fc,sumtype,tp))
 end
 function s.contactfil(tp)
-	return Duel.GetMatchingGroup(function(c) return c:IsType(TYPE_MONSTER) and c:IsAbleToDeckOrExtraAsCost() end,tp,LOCATION_ONFIELD,0,nil)
+	return Duel.GetMatchingGroup(Card.IsAbleToDeckOrExtraAsCost,tp,LOCATION_ONFIELD,0,nil)
 end
 function s.contactop(g,tp)
 	Duel.ConfirmCards(1-tp,g)
@@ -31,6 +31,9 @@ function s.contactop(g,tp)
 end
 function s.rmfilter(c)
 	return c:IsSetCard(0x994) and c:IsAbleToDeck()
+end
+function s.splimit(e,se,sp,st)
+	return not e:GetHandler():IsLocation(LOCATION_EXTRA)
 end
 function s.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsMonster,tp,0,LOCATION_MZONE,1,nil) and
