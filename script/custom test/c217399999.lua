@@ -78,6 +78,22 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 			e4:SetValue(1)
 			e4:SetReset(RESET_EVENT+RESETS_STANDARD)
 			tc:RegisterEffect(e4)
+			--But does not prevent you to attack
+			local e5=Effect.CreateEffect(c)
+			e5:SetType(EFFECT_TYPE_FIELD)
+			e5:SetCode(EFFECT_DIRECT_ATTACK)
+			e5:SetRange(LOCATION_MZONE)
+			e5:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
+			e5:SetTarget(s.dirtg)
+			e5:SetReset(RESET_EVENT+RESETS_STANDARD)
+			tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,1)
+			tc:RegisterEffect(e5)
 		end
 	end
+end
+function s.dirfilter(c)
+	return c:GetFlagEffect(id)==0
+end
+function s.dirtg(e,c)
+	return not Duel.IsExistingMatchingCard(s.dirfilter,c:GetControler(),0,LOCATION_MZONE,1,nil)
 end
