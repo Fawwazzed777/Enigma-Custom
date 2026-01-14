@@ -4,7 +4,7 @@ function s.initial_effect(c)
 	c:SetUniqueOnField(1,0,id)
 	--fusion material
 	c:EnableReviveLimit()
-	Fusion.AddProcMixN(c,true,true,s.ffilter1,s.ffilter2)
+	Fusion.AddProcMixN(c,false,false,16599999,1,s.ffilter2,1)
 	Fusion.AddContactProc(c,s.contactfil,s.contactop,s.splimit)
 	--Shuffle banished "Eternity Tech" to debuff
 	local e1=Effect.CreateEffect(c)
@@ -19,9 +19,6 @@ function s.initial_effect(c)
 end
 s.listed_names={16599999}
 s.listed_series={0x994} 
-function s.ffilter1(c,fc,sumtype,tp)
-	return c:IsCode(16599999) 
-end
 function s.ffilter2(c,fc,sumtype,tp)
 	return c:IsRace(RACE_CYBERSE) and c:IsType(TYPE_XYZ) 
 end
