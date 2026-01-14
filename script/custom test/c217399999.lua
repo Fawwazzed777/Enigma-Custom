@@ -1,4 +1,4 @@
---
+--Eternity Tech - Chrono Nazark
 local s,id=GetID()
 function s.initial_effect(c)
 	c:SetUniqueOnField(1,0,id)
@@ -20,7 +20,7 @@ end
 s.listed_names={16599999}
 s.listed_series={0x994} 
 function s.ffilter(c,fc,sumtype,tp,sub,mg,sg)
-	return c:GetType(fc,sumtype,tp)~=0 and (not sg or not sg:IsExists(s.fusfilter,1,c,c:GetAttribute(fc,sumtype,tp),fc,sumtype,tp))
+	return c:IsType(TYPE_CYBERSE,fc,sumtype,tp)
 end
 function s.contactfil(tp)
 	return Duel.GetMatchingGroup(Card.IsAbleToDeckOrExtraAsCost,tp,LOCATION_ONFIELD,0,nil)
