@@ -1,7 +1,6 @@
 --Eternity Tech - Chrono Nazark
 local s,id=GetID()
 function s.initial_effect(c)
-	c:SetUniqueOnField(1,0,id)
 	--fusion material
 	c:EnableReviveLimit()
 	Fusion.AddProcMixN(c,false,false,16599999,1,s.ffilter,1)
