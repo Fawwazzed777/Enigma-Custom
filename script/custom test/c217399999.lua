@@ -56,11 +56,10 @@ function s.rmfilter(c)
 	return c:IsSetCard(0x993) and c:IsAbleToDeck()
 end
 function s.afilter(c)
-	return c:IsMonster() and c:IsFaceup() and c:IsAttackAbove(0)
+	return c:IsMonster() and c:IsFaceup() and (c:IsAttackAbove(0) or c:HasNonZeroAttack())
 end
 function s.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.afilter,tp,0,LOCATION_MZONE,1,nil) and
-	Duel.IsExistingMatchingCard(s.rmfilter,tp,LOCATION_REMOVED,0,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.afilter,tp,0,LOCATION_MZONE,1,nil) end
 end
 function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
