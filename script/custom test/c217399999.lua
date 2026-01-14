@@ -20,7 +20,7 @@ end
 s.listed_names={16599999}
 s.listed_series={0x994} 
 function s.ffilter(c,fc,sumtype,tp,sub,mg,sg)
-	return c:IsRace(RACE_CYBERSE,fc,sumtype,tp) and c:IsType(TYPE_XYZ)
+	return c:IsRace(RACE_CYBERSE) and c:IsType(TYPE_XYZ)
 end
 function s.contactfil(tp)
 	return Duel.GetMatchingGroup(Card.IsAbleToDeckOrExtraAsCost,tp,LOCATION_ONFIELD,0,nil)
@@ -49,7 +49,7 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local ct=Duel.SendtoDeck(g,nil,2,REASON_EFFECT)
 	if ct==0 then return end
 	local val=ct*500
-	local og=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_MZONE,nil)
+	local og=Duel.GetMatchingGroup(s.afilter,tp,0,LOCATION_MZONE,nil)
 	for tc in aux.Next(og) do
 		--ATK down
 		local e1=Effect.CreateEffect(c)
