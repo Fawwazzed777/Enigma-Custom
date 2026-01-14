@@ -19,7 +19,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 s.listed_names={16599999}
-s.listed_series={0x994} 
+s.listed_series={0x993} 
 function s.ffilter(c,fc,sumtype,tp,sub,mg,sg)
 	return c:IsRace(RACE_CYBERSE) and c:IsType(TYPE_XYZ)
 end
@@ -34,7 +34,7 @@ function s.splimit(e,se,sp,st)
 	return not e:GetHandler():IsLocation(LOCATION_EXTRA)
 end
 function s.rmfilter(c)
-	return c:IsSetCard(0x994) and c:IsAbleToDeck()
+	return c:IsSetCard(0x993) and c:IsAbleToDeck()
 end
 function s.afilter(c)
 	return c:IsMonster() and c:IsFaceup() and c:IsAttackAbove(0)
