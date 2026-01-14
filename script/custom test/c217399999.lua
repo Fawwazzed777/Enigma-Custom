@@ -20,7 +20,7 @@ end
 s.listed_names={16599999}
 s.listed_series={0x994} 
 function s.ffilter(c,fc,sumtype,tp,sub,mg,sg)
-	return c:IsType(TYPE_CYBERSE,fc,sumtype,tp)
+	return c:IsRace(RACE_CYBERSE,fc,sumtype,tp) and c:Type(TYPE_XYZ)
 end
 function s.contactfil(tp)
 	return Duel.GetMatchingGroup(Card.IsAbleToDeckOrExtraAsCost,tp,LOCATION_ONFIELD,0,nil)
