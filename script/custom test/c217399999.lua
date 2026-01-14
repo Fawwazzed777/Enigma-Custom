@@ -60,7 +60,6 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 		tc:RegisterEffect(e1)
 		--If ATK becomes 0
 		if tc:GetAttack()~=0 and tc:IsAttack(0) then
-			Duel.BreakEffect()
 			--Negate effects
 			local e2=Effect.CreateEffect(c)
 			e2:SetType(EFFECT_TYPE_SINGLE)
