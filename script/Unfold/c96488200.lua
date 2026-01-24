@@ -3,7 +3,7 @@ local s,id=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()
 	--Xyz summon procedure
-	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(Card.IsSetCard,0x344),10,4,nil,nil,Xyz.InfiniteMats)
+	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(Card.IsSetCard,0x344),12,4,nil,nil,Xyz.InfiniteMats)
 	c:AddMustBeXyzSummoned()
 	--Check materials used for its Xyz summon
 	local e1=Effect.CreateEffect(c)
