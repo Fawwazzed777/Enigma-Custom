@@ -124,7 +124,7 @@ function s.o1(e,tp,eg,ep,ev,re,r,rp)
 	local fg=Duel.SelectMatchingCard(tp,Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil,e,tp)
 	if #fg>0 then
 	Duel.HintSelection(fg)
-	fg:GetFirst():UpdateAttack(-1000,RESET_EVENT|RESETS_STANDARD)	
+	fg:GetFirst():UpdateAttack(-1500,RESET_EVENT|RESETS_STANDARD)	
 end
 end
 end
