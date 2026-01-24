@@ -3,7 +3,7 @@ local s,id=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()
 	--Xyz summon procedure
-	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(Card.IsSetCard,0x344),9,4,nil,nil,Xyz.InfiniteMats)
+	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(Card.IsSetCard,0x344),10,4,nil,nil,Xyz.InfiniteMats)
 	c:AddMustBeXyzSummoned()
 	--Check materials used for its Xyz summon
 	local e1=Effect.CreateEffect(c)
@@ -55,6 +55,7 @@ function s.initial_effect(c)
 	e6:SetOperation(s.battleop)
 	c:RegisterEffect(e6)
 end
+s.listed_series={0x145}
 function s.rmlimit(e,c,tp,r)
 	return c==e:GetHandler() and r==REASON_EFFECT
 end
@@ -67,7 +68,7 @@ function s.regop(e,tp,eg,ep,ev,re,r,rp)
 	c:RegisterFlagEffect(0,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,0))
 end
 function s.matfilter(c,sc)
-	return c:IsSetCard(0x344) and c:IsType(TYPE_XYZ,sc,SUMMON_TYPE_XYZ)
+	return c:IsSetCard(0x145) and c:IsType(TYPE_XYZ,sc,SUMMON_TYPE_XYZ)
 end
 function s.valcheck(e,c)
 	local g=c:GetMaterial()
