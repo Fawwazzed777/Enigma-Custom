@@ -1,4 +1,4 @@
---Imaginary Force Wish
+--Imaginary Force Warcry
 local s,id=GetID()
 function s.initial_effect(c)
 	local e0=Effect.CreateEffect(c)
