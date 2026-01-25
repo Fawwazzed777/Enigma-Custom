@@ -91,13 +91,14 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsAbleToHand()
+	if chk==0 then return e:GetHandler():IsAbleToHand() end
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,e:GetHandler(),1,0,0)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,0,id)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect() then
+	if c:IsRelateToEffect(e) and c:IsAbleToHand() then
 		Duel.SendtoHand(c,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,c)
 end
