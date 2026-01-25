@@ -13,12 +13,11 @@ function s.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
+	e1:SetProperty(EFFECT_FLAG_DELAY)
 	e1:SetRange(LOCATION_GRAVE)
 	e1:SetCode(EVENT_TO_DECK)
 	e1:SetCountLimit(1,{id,1})
 	e1:SetCondition(s.con)
-	e1:SetTarget(s.tg)
 	e1:SetOperation(s.op)
 	c:RegisterEffect(e1)
 end
@@ -76,29 +75,20 @@ end
 function s.con(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.afilter,1,nil,tp)
 end
-function s.tg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsAbleToHand() end
-end
 function s.op(e,tp,eg,ep,ev,re,r,rp)
-	local e1=Effect.CreateEffect(e:GetHandler())
+	local c=e:GetHandler()
+	if not c:IsRelateToEffect(e) then return end
+	-- delayed End Phase add
+	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e1:SetCode(EVENT_PHASE+PHASE_END)
 	e1:SetCountLimit(1)
-	e1:SetCondition(s.thcon)
-	e1:SetOperation(s.thop)
-	e1:SetReset(RESET_PHASE|PHASE_END)
+	e1:SetOperation(function()
+		if c:IsAbleToHand() then
+			Duel.SendtoHand(c,nil,REASON_EFFECT)
+			Duel.ConfirmCards(1-tp,c)
+		end
+	end)
+	e1:SetReset(RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e1,tp)
-end
-
-function s.thcon(e,tp,eg,ep,ev,re,r,rp)
-	if chk==0 then return e:GetHandler():IsAbleToHand() end
-end
-function s.thop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_CARD,0,id)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) and c:IsAbleToHand() then
-		Duel.SendtoHand(c,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,c)
-end
 end
