@@ -31,15 +31,17 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 s.listed_series={0x303}
-function s.rtfilter(c,e,tp)
-	return c:IsPreviousLocation(LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_REMOVED) and c:IsReason(REASON_EFFECT)
+function s.rtfilter(c)
+	return c:IsReason(REASON_EFFECT)
+		and c:IsLocation(LOCATION_DECK+LOCATION_EXTRA)
+		and not c:IsPreviousLocation(LOCATION_HAND)
 end
 function s.rvfilter(c)
 	return c:IsSetCard(0x303)
 end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
-	return (eg:IsExists(s.rtfilter,1,nil,e,tp) or eg:IsExists(s.rtfilter,1,nil,e,1-tp)) and 
-	Duel.IsExistingMatchingCard(s.rvfilter,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,nil) 
+	return eg:IsExists(s.rtfilter,1,nil)
+		and Duel.IsExistingMatchingCard(s.rvfilter,tp,LOCATION_MZONE,0,1,nil)
 end
 function s.filter(c)
 	return c:IsSetCard(0x303) and not c:IsCode(id) and c:IsAbleToHand()
