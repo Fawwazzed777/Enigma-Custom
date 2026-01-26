@@ -76,9 +76,11 @@ function s.summon(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.hdcon(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
 	if not re then return false end
 	local rc=re:GetHandler()
 	return rc:IsSetCard(0x303)
+	and c:IsPreviousLocation(0x7)
 end
 function s.hdtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

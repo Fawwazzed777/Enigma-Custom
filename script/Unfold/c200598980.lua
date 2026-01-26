@@ -58,9 +58,11 @@ end
 end
 end
 function s.drcon(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
 	if not re then return false end
 	local rc=re:GetHandler()
 	return rc:IsSetCard(0x303)
+	and c:IsPreviousLocation(0x7)
 end
 function s.filter(c)
 	return c:IsType(TYPE_SPELL) and c:IsSetCard(0x303) and c:IsSSetable()
