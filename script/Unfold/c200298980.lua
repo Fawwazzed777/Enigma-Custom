@@ -27,9 +27,10 @@ function s.initial_effect(c)
 end
 function s.drcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if not re or not c:IsLocation(LOCATION_DECK) then return false end
+	if not re then return false end
 	local rc=re:GetHandler()
-	return rc and rc:IsSetCard(0x303) and eg:IsContains(c)
+	return rc:IsSetCard(0x303)
+	and eg:IsExists(Card.IsPreviousLocation,1,nil,0x7)
 end
 function s.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
