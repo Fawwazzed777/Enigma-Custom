@@ -28,7 +28,7 @@ end
 function s.drcon(e,tp,eg,ep,ev,re,r,rp)
 	if not re then return false end
 	local rc=re:GetHandler()
-	return rc:IsSetCard(0x303)
+	return rc:IsSetCard(0x303) and eg:IsExists(function(c)return c:IsLocation(LOCATION_DECK)end,1,nil)
 end
 function s.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
