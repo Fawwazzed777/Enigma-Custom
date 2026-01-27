@@ -7,6 +7,7 @@ function s.initial_effect(c)
 	e1:SetCategory(CATEGORY_TODECK)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_MZONE)
+	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetCountLimit(1,id)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.operation)
@@ -15,19 +16,32 @@ end
 s.listed_series={0x7f3}
 function s.filter(c)
 	return c:IsSetCard(0x7f3) and c:IsType(TYPE_SPELL) and c:IsAbleToDeck()
+	and c:CheckActivateEffect(false,true,false)~=nil
+end
+function s.ccost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingTarget(s.filter,tp,LOCATION_GRAVE,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,2))
+	local g=Duel.SelectTarget(tp,s.filter,tp,LOCATION_GRAVE,0,1,1,nil)
+	local te=g:GetFirst():CheckActivateEffect(false,true,true)
+	s[Duel.GetCurrentChain()]=te
+	Duel.SendtoDeck(g,nil,2,REASON_COST)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and s.filter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(s.filter,tp,LOCATION_GRAVE,0,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-	local g=Duel.SelectTarget(tp,s.filter,tp,LOCATION_GRAVE,0,1,1,nil)
-	Duel.SetOperationInfo(0,CATEGORY_TODECK,g,1,0,0)
+	local te=s[Duel.GetCurrentChain()]
+	if chkc then
+		local tg=te:GetTarget()
+		return tg(e,tp,eg,ep,ev,re,r,rp,0,true)
+	end
+	if chk==0 then return true end
+	if not te then return end
+	e:SetCategory(te:GetCategory())
+	e:SetProperty(te:GetProperty())
+	local tg=te:GetTarget()
+	if tg then tg(e,tp,eg,ep,ev,re,r,rp,1) end
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	local tc=Duel.GetFirstTarget()
-	if not (tc and tc:IsRelateToEffect(e)) then return end	
-	-- Copy the Spell's original effects
-	c:CopyEffect(tc:GetOriginalCode(),RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,1)	
-	Duel.SendtoDeck(tc,nil,2,REASON_EFFECT)
+	local te=s[Duel.GetCurrentChain()]
+	if not te then return end
+	local op=te:GetOperation()
+	if op then op(e,tp,eg,ep,ev,re,r,rp) end
 end
