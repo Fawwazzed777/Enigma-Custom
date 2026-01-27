@@ -8,6 +8,7 @@ function s.initial_effect(c)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetCountLimit(1,id,EFFECT_COUNT_CODE_OATH)
+	e1:SetCost(Cost.PayLP(800))
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.operation)
 	c:RegisterEffect(e1)
@@ -23,7 +24,7 @@ end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc and Duel.Destroy(tc,REASON_EFFECT)>0 then
-		--If this effect was used by a "Pyrorixis" monster
+		--[Recast]If this effect was used by a "Pyrorixis" monster
 		if re and re:GetHandler():IsSetCard(0x7f3) and re:GetHandler():IsType(TYPE_MONSTER) then
 			Duel.Damage(1-tp,500,REASON_EFFECT)
 		end

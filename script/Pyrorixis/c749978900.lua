@@ -1,14 +1,14 @@
 --Pyrorixis Mage Falina
 local s,id=GetID()
 function s.initial_effect(c)
-	--Copy "Pyrorixis" Spell/trap from GY
+	--Activate 1 "Pyrorixis" Spell/trap from GY
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_TODECK)
+	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(1,id)
-	e1:SetCost(Cost.PayLP(500))
 	e1:SetTarget(s.cptg)
 	e1:SetOperation(s.cpop)
 	c:RegisterEffect(e1)
