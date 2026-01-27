@@ -20,9 +20,9 @@ function s.filter(c)
 	and c:CheckActivateEffect(false,true,false)~=nil
 end
 function s.ccost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingTarget(s.filter,tp,LOCATION_GRAVE,0,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_GRAVE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,2))
-	local g=Duel.SelectTarget(tp,s.filter,tp,LOCATION_GRAVE,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_GRAVE,0,1,1,nil)
 	local te=g:GetFirst():CheckActivateEffect(false,true,true)
 	s[Duel.GetCurrentChain()]=te
 	Duel.SendtoDeck(g,nil,2,REASON_COST)
