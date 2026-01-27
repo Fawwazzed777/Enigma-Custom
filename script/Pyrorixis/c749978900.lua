@@ -10,41 +10,35 @@ function s.initial_effect(c)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(1,id)
 	e1:SetCost(s.cpcost)
-	e1:SetTarget(s.cptg)
 	e1:SetOperation(s.cpop)
 	c:RegisterEffect(e1)
 	--Special Summon from hand
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,0))
-	e2:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_RECOVER)
+	e2:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_DAMAGE)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_MZONE)
-	e2:SetCountLimit(1,id)
+	e2:SetCountLimit(1,{id,1})
 	e2:SetTarget(s.hsptg)
 	e2:SetOperation(s.hspop)
 	c:RegisterEffect(e2)
 end
 s.listed_series={0x7f3}
-function s.filter(c)
-	return c:IsSetCard(0x7f3) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToDeckAsCost()
-	and c:CheckActivateEffect(false,true,false)~=nil
-end
 function s.cpfilter(c)
 	return c:IsSetCard(0x7f3) and c:IsSpellTrap()
 		and c:IsAbleToDeck()
 		and c:CheckActivateEffect(false,true,false)~=nil
 end
+
 function s.cpcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckLPCost(tp,500) end
 	Duel.PayLPCost(tp,500)
 end
-function s.cptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and s.cpfilter(chkc) end
-	if chk==0 then return Duel.IsExistingMatchingCard(s.cpfilter,tp,LOCATION_GRAVE,0,1,nil) end
-end
+
 function s.cpop(e,tp,eg,ep,ev,re,r,rp)
-	local tc=Duel.SelectMatchingCard(tp,s.cpfilter,tp,LOCATION_GRAVE,0,1,1,nil)
-	if not (tc and tc:IsRelateToEffect(e)) then return end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EFFECT)
+	local tc=Duel.SelectMatchingCard(tp,s.cpfilter,tp,LOCATION_GRAVE,0,1,1,nil):GetFirst()
+	if not tc then return end
 	local te,ceg,cep,cev,cre,cr,crp=tc:CheckActivateEffect(false,true,true)
 	if not te then return end
 	local tg=te:GetTarget()
