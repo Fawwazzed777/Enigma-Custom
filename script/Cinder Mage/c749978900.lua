@@ -15,40 +15,33 @@ function s.initial_effect(c)
 end
 s.listed_series={0x7f3}
 function s.filter(c)
-	return c:IsSetCard(0x7f3)
-		and c:IsType(TYPE_SPELL)
-		and c:IsAbleToDeckAsCost()
-		and c:CheckActivateEffect(false,true,false)~=nil
+	return c:IsSetCard(0x7f3) and c:IsType(TYPE_SPELL) and c:IsAbleToDeckAsCost()
+	and c:CheckActivateEffect(false,true,false)~=nil
 end
 function s.ccost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_GRAVE,0,1,nil) end	
+	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_GRAVE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,1))
 	local g=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_GRAVE,0,1,1,nil)
-	local tc=g:GetFirst()
-	local te=tc:CheckActivateEffect(false,true,true)
-	e:SetLabelObject(te)
-	Duel.SendtoDeck(tc,nil,2,REASON_COST)
+	local te=g:GetFirst():CheckActivateEffect(false,true,true)
+	s[Duel.GetCurrentChain()]=te
+	Duel.SendtoDeck(g,nil,2,REASON_COST)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	local te=e:GetLabelObject()
-	if not te then return false end
-	local tg=te:GetTarget()
+	local te=s[Duel.GetCurrentChain()]
 	if chkc then
-		return tg and tg(e,tp,eg,ep,ev,re,r,rp,0,chkc)
+		local tg=te:GetTarget()
+		return tg(e,tp,eg,ep,ev,re,r,rp,0,true)
 	end
-	if chk==0 then
-		if tg then return tg(e,tp,eg,ep,ev,re,r,rp,0) end
-		return true
-	end
+	if chk==0 then return true end
+	if not te then return end
 	e:SetCategory(te:GetCategory())
-	e:SetProperty(te:GetProperty())	
+	e:SetProperty(te:GetProperty())
+	local tg=te:GetTarget()
 	if tg then tg(e,tp,eg,ep,ev,re,r,rp,1) end
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
-	local te=e:GetLabelObject()
-	if not te then return end	
+	local te=s[Duel.GetCurrentChain()]
+	if not te then return end
 	local op=te:GetOperation()
-	if op then
-		op(e,tp,eg,ep,ev,re,r,rp)
-	end
+	if op then op(e,tp,eg,ep,ev,re,r,rp) end
 end
