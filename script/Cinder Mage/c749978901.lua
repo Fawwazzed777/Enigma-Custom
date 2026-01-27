@@ -24,7 +24,8 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc and Duel.Destroy(tc,REASON_EFFECT)>0 then
 		--If this effect was copied by a monster
-		if re and re:GetHandler():IsType(TYPE_MONSTER) then
+		local rc=e:GetHandler()
+		if rc:IsType(TYPE_MONSTER) then
 			Duel.Damage(1-tp,500,REASON_EFFECT)
 		end
 	end
