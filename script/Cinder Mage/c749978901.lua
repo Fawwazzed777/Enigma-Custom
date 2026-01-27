@@ -1,4 +1,4 @@
---Cinder Mage Ignition
+--Pyrorixis Ignition
 local s,id=GetID()
 function s.initial_effect(c)
 	--Destroy 1 card
