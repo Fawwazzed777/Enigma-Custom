@@ -16,7 +16,7 @@ function s.initial_effect(c)
 end
 s.listed_series={0x7f3}
 function s.filter(c)
-	return c:IsSetCard(0x7f3) and c:IsType(TYPE_SPELL) and c:IsAbleToDeck()
+	return c:IsSetCard(0x7f3) and c:IsType(TYPE_SPELL) and c:IsAbleToDeckAsCost()
 	and c:CheckActivateEffect(false,true,false)~=nil
 end
 function s.ccost(e,tp,eg,ep,ev,re,r,rp,chk)
