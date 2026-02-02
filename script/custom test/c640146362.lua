@@ -52,16 +52,19 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
     local g=Duel.GetTargetCards(e)
     if #g<2 then return end   
     local tc1=g:Filter(Card.IsLocation,nil,LOCATION_GRAVE+LOCATION_REMOVED):GetFirst()
-    local tc2=e:GetLabelObject()    
-    if tc1 and Duel.SendtoDeck(tc1,nil,2,REASON_EFFECT)>0 and tc1:IsLocation(LOCATION_DECK+LOCATION_EXTRA) then
-        if not tc2 or tc2:IsFacedown() or not tc2:IsRelateToEffect(e) then return end
-        local code=tc2:GetCode()
+    local tc2=e:GetLabelObject() 
+    if tc1 and Duel.SendtoDeck(tc1,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)>0 and tc1:IsLocation(LOCATION_DECK+LOCATION_EXTRA) then
+        if not tc2 or tc2:IsFacedown() or not tc2:IsRelateToEffect(e) then return end        
+        local code=tc2:GetOriginalCode()
         local m=_G["c"..code]
-        if m and m.target and m.operation then
-            if m.target(e,tp,eg,ep,ev,re,r,rp,0) then
-                m.target(e,tp,eg,ep,ev,re,r,rp,1)
-                m.operation(e,tp,eg,ep,ev,re,r,rp)
+        if not m then return end
+        local f_tg = m.target or m.tg or m.target1
+        local f_op = m.operation or m.op or m.operation1
+        if f_op then
+            if f_tg then
+                f_tg(e,tp,eg,ep,ev,re,r,rp,1)
             end
+            f_op(e,tp,eg,ep,ev,re,r,rp)
         end
     end
 end
