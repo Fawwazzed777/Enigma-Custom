@@ -52,11 +52,11 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
     local tc=tg:GetFirst()
     if not tc then return end
     --Take the effect of monster with 344 label
-    local effs = {tc:GetMarkedEffects(344)}
-    if #effs > 0 then
-        local te = effs[1]
-        local tg = te:GetTarget()
-        local op = te:GetOperation()
+    local effs={tc:GetMarkedEffects(3445)}
+    if #effs>0 then
+        local te=effs[1]
+        local tg=te:GetTarget()
+        local op=te:GetOperation()
         if not tg or tg(e,tp,eg,ep,ev,re,r,rp,0) then
             if tg then tg(e,tp,eg,ep,ev,re,r,rp,1) end
             if op then op(e,tp,eg,ep,ev,re,r,rp) end
