@@ -6,10 +6,11 @@ function s.initial_effect(c)
 	e0:SetType(EFFECT_TYPE_ACTIVATE)
 	e0:SetCode(EVENT_FREE_CHAIN)
 	c:RegisterEffect(e0)
-	--Recycle + grant activation or copy activation
+	--Recycle + Apply Effect
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_TODECK)
+	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_SZONE)
 	e1:SetCountLimit(1,id)
@@ -38,27 +39,33 @@ function s.monfilter(c)
 	return c:IsFaceup() and (c:IsCode(96488218,96488216,96488199) or c:ListsCode(96488218,96488216,96488199)) and c:IsType(TYPE_EXTRA)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.recfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil)
-	and Duel.IsExistingMatchingCard(s.monfilter,tp,LOCATION_MZONE,0,1,nil)
-	end
+	if chkc then return false end
+	if chk==0 then return Duel.IsExistingTarget(s.recfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil)
+	and Duel.IsExistingTarget(s.monfilter,tp,LOCATION_MZONE,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
+    local g1=Duel.SelectTarget(tp,s.recfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil)
+    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
+    local g2=Duel.SelectTarget(tp,s.monfilter,tp,LOCATION_MZONE,0,1,1,nil)
+    e:SetLabelObject(g2:GetFirst())
+    Duel.SetOperationInfo(0,CATEGORY_TODECK,g1,1,0,0)
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
-    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-    local rg=Duel.SelectMatchingCard(tp,s.recfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil)
-    local rc=rg:GetFirst()
-    if not rc or Duel.SendtoDeck(rc,nil,2,REASON_EFFECT)==0 then return end
-    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-    local tc=Duel.SelectTarget(tp,s.monfilter,tp,LOCATION_MZONE,0,1,1,nil)
-    if not tc then return end
-    --Take the effect of monster with 344 label
-    local effs={tc:GetMarkedEffects(3445)}
-    if #effs>0 then
-        local te=effs[1]
-        local tg=te:GetTarget()
-        local op=te:GetOperation()
-        if not tg or tg(e,tp,eg,ep,ev,re,r,rp,0) then
-            if tg then tg(e,tp,eg,ep,ev,re,r,rp,1) end
-            if op then op(e,tp,eg,ep,ev,re,r,rp) end
+    local g=Duel.GetTargetCards(e)
+    if #g<2 then return end
+    local tc1=g:Filter(Card.IsLocation,nil,LOCATION_GRAVE+LOCATION_REMOVED):GetFirst()
+    local tc2=e:GetLabelObject()   
+    if tc1 and Duel.SendtoDeck(tc1,nil,2,REASON_EFFECT)>0 and tc1:IsLocation(LOCATION_DECK+LOCATION_EXTRA) then
+        if not tc2 or tc2:IsFacedown() or not tc2:IsRelateToEffect(e) then return end
+        local effs={tc2:GetMarkedEffects(3445)}
+        if #effs>0 then
+            local te=effs[1]
+            local tg=te:GetTarget()
+            local op=te:GetOperation()     
+            e:SetProperty(te:GetProperty())
+            if not tg or tg(e,tp,eg,ep,ev,re,r,rp,0) then
+                if tg then tg(e,tp,eg,ep,ev,re,r,rp,1) end
+                if op then op(e,tp,eg,ep,ev,re,r,rp) end
+            end
         end
     end
 end
