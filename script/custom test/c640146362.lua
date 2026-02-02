@@ -32,41 +32,36 @@ end
 s.listed_series={0x344}
 s.listed_names={96488218,96488216,96488199}
 function s.recfilter(c)
-	return c:IsSetCard(0x344) and c:IsMonster() 
-	and (c:IsLocation(LOCATION_GRAVE) or c:IsFaceup()) and c:IsAbleToDeck()
+    return c:IsSetCard(0x344) and c:IsMonster() and c:IsAbleToDeck()
 end
 function s.monfilter(c)
-	return c:IsFaceup() and (c:IsCode(96488218,96488216,96488199) or c:ListsCode(96488218,96488216,96488199)) and c:IsType(TYPE_EXTRA)
+    return c:IsFaceup() and (c:IsCode(96488218,96488216,96488199) or c:ListsCode(96488218,96488216,96488199))
 end
-function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chkc then return false end
-	if chk==0 then return Duel.IsExistingTarget(s.recfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil)
-	and Duel.IsExistingTarget(s.monfilter,tp,LOCATION_MZONE,0,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
+function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+    if chkc then return false end
+    if chk==0 then return Duel.IsExistingTarget(s.recfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil)
+        and Duel.IsExistingTarget(s.monfilter,tp,LOCATION_MZONE,0,1,nil) end    
+    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
     local g1=Duel.SelectTarget(tp,s.recfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil)
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-    local g2=Duel.SelectTarget(tp,s.monfilter,tp,LOCATION_MZONE,0,1,1,nil)
+    local g2=Duel.SelectTarget(tp,s.monfilter,tp,LOCATION_MZONE,0,1,1,nil)    
     e:SetLabelObject(g2:GetFirst())
     Duel.SetOperationInfo(0,CATEGORY_TODECK,g1,1,0,0)
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
     local g=Duel.GetTargetCards(e)
-    if #g<2 then return end
+    if #g<2 then return end   
     local tc1=g:Filter(Card.IsLocation,nil,LOCATION_GRAVE+LOCATION_REMOVED):GetFirst()
-    local tc2=e:GetLabelObject()  
-    if not tc1 or not tc2 or not tc2:IsRelateToEffect(e) then return end
-    if Duel.SendtoDeck(tc1,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)>0 and tc1:IsLocation(LOCATION_DECK+LOCATION_EXTRA) then
-        local effs={tc2:GetMarkedEffects(344)}
-        if #effs>0 then
-            local te=effs[1]
-            local tg=te:GetTarget()
-            local op=te:GetOperation()
-            e:SetProperty(te:GetProperty())
-            if not tg or tg(e,tp,eg,ep,ev,re,r,rp,0) then
-                if tg then tg(e,tp,eg,ep,ev,re,r,rp,1) end
-                if op then op(e,tp,eg,ep,ev,re,r,rp) end
+    local tc2=e:GetLabelObject()    
+    if tc1 and Duel.SendtoDeck(tc1,nil,2,REASON_EFFECT)>0 and tc1:IsLocation(LOCATION_DECK+LOCATION_EXTRA) then
+        if not tc2 or tc2:IsFacedown() or not tc2:IsRelateToEffect(e) then return end
+        local code=tc2:GetCode()
+        local m=_G["c"..code]
+        if m and m.target and m.operation then
+            if m.target(e,tp,eg,ep,ev,re,r,rp,0) then
+                m.target(e,tp,eg,ep,ev,re,r,rp,1)
+                m.operation(e,tp,eg,ep,ev,re,r,rp)
             end
-        else
         end
     end
 end
