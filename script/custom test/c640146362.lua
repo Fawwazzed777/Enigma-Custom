@@ -53,19 +53,20 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
     local g=Duel.GetTargetCards(e)
     if #g<2 then return end
     local tc1=g:Filter(Card.IsLocation,nil,LOCATION_GRAVE+LOCATION_REMOVED):GetFirst()
-    local tc2=e:GetLabelObject()   
-    if tc1 and Duel.SendtoDeck(tc1,nil,2,REASON_EFFECT)>0 and tc1:IsLocation(LOCATION_DECK+LOCATION_EXTRA) then
-        if not tc2 or tc2:IsFacedown() or not tc2:IsRelateToEffect(e) then return end
+    local tc2=e:GetLabelObject()  
+    if not tc1 or not tc2 or not tc2:IsRelateToEffect(e) then return end
+    if Duel.SendtoDeck(tc1,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)>0 and tc1:IsLocation(LOCATION_DECK+LOCATION_EXTRA) then
         local effs={tc2:GetMarkedEffects(3445)}
         if #effs>0 then
             local te=effs[1]
             local tg=te:GetTarget()
-            local op=te:GetOperation()     
+            local op=te:GetOperation()
             e:SetProperty(te:GetProperty())
             if not tg or tg(e,tp,eg,ep,ev,re,r,rp,0) then
                 if tg then tg(e,tp,eg,ep,ev,re,r,rp,1) end
                 if op then op(e,tp,eg,ep,ev,re,r,rp) end
             end
+        else
         end
     end
 end
