@@ -15,7 +15,7 @@ function s.initial_effect(c)
 	e1:SetCountLimit(1,id)
 	e1:SetTarget(s.tg)
 	e1:SetOperation(s.op)
-	e1:SetLabel(3445)
+	e1:SetLabel(344)
 	c:RegisterEffect(e1)
 	--pierce
 	local e2=Effect.CreateEffect(c)

@@ -56,7 +56,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
     local tc2=e:GetLabelObject()  
     if not tc1 or not tc2 or not tc2:IsRelateToEffect(e) then return end
     if Duel.SendtoDeck(tc1,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)>0 and tc1:IsLocation(LOCATION_DECK+LOCATION_EXTRA) then
-        local effs={tc2:GetMarkedEffects(3445)}
+        local effs={tc2:GetMarkedEffects(344)}
         if #effs>0 then
             local te=effs[1]
             local tg=te:GetTarget()

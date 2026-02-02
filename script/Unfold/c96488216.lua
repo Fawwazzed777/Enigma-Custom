@@ -37,7 +37,7 @@ function s.initial_effect(c)
 	e3:SetCountLimit(1)
 	e3:SetTarget(s.target)
 	e3:SetOperation(s.operation)
-	e1:SetLabel(3445)
+	e1:SetLabel(344)
 	c:RegisterEffect(e3)
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
