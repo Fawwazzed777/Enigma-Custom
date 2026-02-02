@@ -48,8 +48,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
     local rc=rg:GetFirst()
     if not rc or Duel.SendtoDeck(rc,nil,2,REASON_EFFECT)==0 then return end
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-    local tg=Duel.SelectMatchingCard(tp,s.monfilter,tp,LOCATION_MZONE,0,1,1,nil)
-    local tc=tg:GetFirst()
+    local tc=Duel.SelectTarget(tp,s.monfilter,tp,LOCATION_MZONE,0,1,1,nil)
     if not tc then return end
     --Take the effect of monster with 344 label
     local effs={tc:GetMarkedEffects(3445)}
