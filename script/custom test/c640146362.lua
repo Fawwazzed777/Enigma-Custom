@@ -30,7 +30,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 s.listed_series={0x344}
-s.listed_names={96488218,96488216,96488199}
+s.listed_names={96488218, 96488216, 96488199, 96488215, 96488219, 96488201}
 function s.recfilter(c)
     return c:IsSetCard(0x344) and c:IsMonster() and c:IsAbleToDeck()
 end
