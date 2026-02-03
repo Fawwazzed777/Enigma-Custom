@@ -30,7 +30,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 s.listed_series={0x344}
-s.listed_names={96488218, 96488216, 96488199, 96488215, 96488219, 96488201}
+s.listed_names={96488218,96488216,96488199}
 function s.recfilter(c)
     return c:IsSetCard(0x344) and c:IsMonster() and c:IsAbleToDeck()
 end
@@ -120,6 +120,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
                 e3:SetCode(EFFECT_CANNOT_ATTACK)
                 e3:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
                 sc:RegisterEffect(e3)
+			end
            --SPECTRAL GENESIS
         elseif code==96488215 then
             Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
@@ -170,7 +171,6 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
             end
         end
     end
-end
 function s.sum(c)
     return c:IsFaceup() and (c:HasNonZeroAttack() or c:HasNonZeroDefense())
 end
