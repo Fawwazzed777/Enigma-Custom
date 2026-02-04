@@ -9,7 +9,7 @@ function s.initial_effect(c)
 	e0:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SPSUM_PARAM)
 	e0:SetRange(LOCATION_EXTRA)
 	e0:SetCondition(s.spcon)
-	e0:SetTarget(s.selfsptg)
+	e0:SetTarget(s.sptg)
 	e0:SetOperation(s.spop)
 	e0:SetValue(SUMMON_TYPE_FUSION)
 	e0:SetTargetRange(POS_FACEUP,0)	
@@ -17,7 +17,7 @@ function s.initial_effect(c)
 	--Apply up to 2 "Pyrorixis" Spell/trap from GY
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
-	e1:SetCategory(CATEGORY_TODECK)
+	e1:SetCategory(CATEGORY_TODECK+CATEGORY_DAMAGE)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetRange(LOCATION_MZONE)
@@ -27,36 +27,46 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 s.listed_series={0x7f3}
-function s.fusfilter(c)
-	return c:IsType(TYPE_MONSTER) and c:IsLevelAbove(7) and c:IsSetCard(0x7f3) and c:IsAbleToGraveAsCost()
+function s.spmatfilter1(c)
+	return c:IsFaceup() and c:IsSetCard(0x7f3) and c:IsLevelAbove(7) and c:IsAbleToGraveAsCost()
 end
-function s.spellfilter(c)
-	return c:IsType(TYPE_SPELL) and c:IsSetCard(0x7f3) and c:IsAbleToRemoveAsCost()
+function s.spmatfilter2(c)
+	return c:IsSetCard(0x7f3) and c:IsSpell() and c:IsAbleToRemoveAsCost()
 end
-function s.rescon(sg,e,tp,mg)
-	return Duel.GetLocationCountFromEx(tp,tp,sg,e:GetHandler())>0
-	and sg:FilterCount(Card.IsControler,nil,tp)
-end
-function s.spcon(e,c,se,sp,st)
+function s.spcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	return c:GetLocation()~=LOCATION_EXTRA
-	and Duel.IsExistingMatchingCard(s.fusfilter,tp,LOCATION_MZONE,0,1,nil)
-	and Duel.IsExistingMatchingCard(s.spellfilter,tp,LOCATION_GRAVE,0,1,nil)
+	return Duel.GetLocationCountFromEx(tp,tp,nil,c)>0
+		and Duel.IsExistingMatchingCard(s.spmatfilter1,tp,LOCATION_MZONE,0,1,nil)
+		and Duel.IsExistingMatchingCard(s.spmatfilter2,tp,LOCATION_GRAVE,0,1,nil)
 end
-
-function s.selfsptg(mg,sg,e,tp,eg,ep,ev,re,r,rp,chk,c)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local mg=Duel.SelectMatchingCard(tp,s.fusfilter,tp,LOCATION_MZONE,0,1,1,nil)
-	if #mg==0 then return false end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local sg=Duel.SelectMatchingCard(tp,s.spellfilter,tp,LOCATION_GRAVE,0,1,1,nil)
-	if #sg==0 then return false end
-	mg:KeepAlive()
-	sg:KeepAlive()
-	e:SetLabelObject(mg)
-	e:SetLabel(sg:GetFirst():GetFieldID())
-	return true
+function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,c)
+	local g1=Duel.GetMatchingGroup(s.spmatfilter1,tp,LOCATION_MZONE,0,nil)
+	local g2=Duel.GetMatchingGroup(s.spmatfilter2,tp,LOCATION_GRAVE,0,nil)	
+	if g1:GetCount()>0 and g2:GetCount()>0 then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+		local sg1=g1:Select(tp,1,1,nil)
+		if sg1:GetCount()>0 then
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+			local sg2=g2:Select(tp,1,1,nil)
+			if sg2:GetCount()>0 then
+				sg1:Merge(sg2)
+				e:SetLabelObject(sg1)
+				sg1:KeepAlive()
+				return true
+			end
+		end
+	end
+	return false
+end
+function s.spop(e,tp,eg,ep,ev,re,r,rp,c)
+	local g=e:GetLabelObject()
+	if not g then return end
+	local tc1=g:Filter(Card.IsLocation,nil,LOCATION_MZONE):GetFirst()
+	local tc2=g:Filter(Card.IsLocation,nil,LOCATION_GRAVE):GetFirst()	
+	Duel.SendtoGrave(tc1,REASON_COST)
+	Duel.Remove(tc2,POS_FACEUP,REASON_COST)
+	g:DeleteGroup()
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	local mg=e:GetLabelObject()
@@ -67,7 +77,6 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.Remove(sg,POS_FACEUP,REASON_MATERIAL+REASON_FUSION)
 	mg:DeleteGroup()
 end
-
 function s.cpfilter(c)
 	return c:IsSetCard(0x7f3) and c:IsSpellTrap()
 		and c:IsAbleToDeck()
@@ -105,11 +114,11 @@ function s.cpop(e,tp,eg,ep,ev,re,r,rp)
 			end
 			Duel.SendtoDeck(tc,nil,2,REASON_EFFECT)
 			ct=ct+1
+			--Self Burn 
+			if ct>0 then
 			Duel.BreakEffect()
+			Duel.Damage(tp,ct*1000,REASON_EFFECT)
+			end
 		end
-	end
-	--Self Burn 
-	if ct>0 then
-		Duel.Damage(tp,ct*1000,REASON_EFFECT)
 	end
 end
