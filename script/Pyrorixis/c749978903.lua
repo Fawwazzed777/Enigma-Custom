@@ -84,7 +84,6 @@ function s.cpop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EFFECT)
 	local g=Duel.SelectMatchingCard(tp,s.cpfilter,tp,LOCATION_GRAVE,0,1,2,nil)
 	if #g==0 then return end
-	local ct=0
 	for tc in aux.Next(g) do
 		local te=tc:CheckActivateEffect(false,true,true)
 		if te then
@@ -106,8 +105,7 @@ function s.cpop(e,tp,eg,ep,ev,re,r,rp)
 					etc:ReleaseEffectRelation(te)
 				end
 			end
-			Duel.SendtoDeck(tc,nil,2,REASON_EFFECT)
-			ct=ct+1
+			local ct=Duel.SendtoDeck(tc,nil,2,REASON_EFFECT)
 			--Self Burn 
 			if ct>0 then
 			Duel.BreakEffect()
