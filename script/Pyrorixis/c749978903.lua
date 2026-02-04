@@ -51,31 +51,25 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,c)
 			local sg2=g2:Select(tp,1,1,nil)
 			if sg2:GetCount()>0 then
 				sg1:Merge(sg2)
-				e:SetLabelObject(sg1)
 				sg1:KeepAlive()
+				e:SetLabelObject(sg1)
 				return true
 			end
 		end
 	end
 	return false
 end
+
 function s.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	local g=e:GetLabelObject()
 	if not g then return end
-	local tc1=g:Filter(Card.IsLocation,nil,LOCATION_MZONE):GetFirst()
-	local tc2=g:Filter(Card.IsLocation,nil,LOCATION_GRAVE):GetFirst()	
-	Duel.SendtoGrave(tc1,REASON_COST)
-	Duel.Remove(tc2,POS_FACEUP,REASON_COST)
+	local tc_mon=g:Filter(Card.IsLocation,nil,LOCATION_MZONE):GetFirst()
+	local tc_spl=g:Filter(Card.IsLocation,nil,LOCATION_GRAVE):GetFirst()	
+	if tc_mon and tc_spl then
+		Duel.SendtoGrave(tc_mon,REASON_COST)
+		Duel.Remove(tc_spl,POS_FACEUP,REASON_COST)
+	end
 	g:DeleteGroup()
-end
-function s.spop(e,tp,eg,ep,ev,re,r,rp,c)
-	local mg=e:GetLabelObject()
-	local fid=e:GetLabel()
-	local sg=Duel.GetMatchingGroup(Card.GetFieldID,tp,LOCATION_GRAVE,0,nil,fid)
-	c:SetMaterial(mg)
-	Duel.SendtoGrave(mg,REASON_MATERIAL+REASON_FUSION)
-	Duel.Remove(sg,POS_FACEUP,REASON_MATERIAL+REASON_FUSION)
-	mg:DeleteGroup()
 end
 function s.cpfilter(c)
 	return c:IsSetCard(0x7f3) and c:IsSpellTrap()
