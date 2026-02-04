@@ -37,15 +37,15 @@ function s.rescon(sg,e,tp,mg)
 	return Duel.GetLocationCountFromEx(tp,tp,sg,e:GetHandler())>0
 	and sg:FilterCount(Card.IsControler,nil,tp)
 end
-function s.spcon(e,c)
+function s.spcon(e,c,se,sp,st)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	return Duel.GetLocationCountFromEx(tp,tp,nil,c)>0
+	return c:GetLocation()~=LOCATION_EXTRA
 		and Duel.IsExistingMatchingCard(s.fusfilter,tp,LOCATION_MZONE,0,1,nil)
 		and Duel.IsExistingMatchingCard(s.spellfilter,tp,LOCATION_GRAVE,0,1,nil)
 end
 
-function s.selfsptg(e,tp,eg,ep,ev,re,r,rp,chk,c)
+function s.selfsptg(mg,sg,e,tp,eg,ep,ev,re,r,rp,chk,c)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 	local mg=Duel.SelectMatchingCard(tp,s.fusfilter,tp,LOCATION_MZONE,0,1,1,nil)
 	if #mg==0 then return false end
