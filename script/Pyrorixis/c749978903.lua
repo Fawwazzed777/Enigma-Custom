@@ -41,8 +41,8 @@ function s.spcon(e,c,se,sp,st)
 	if c==nil then return true end
 	local tp=c:GetControler()
 	return c:GetLocation()~=LOCATION_EXTRA
-		and Duel.IsExistingMatchingCard(s.fusfilter,tp,LOCATION_MZONE,0,1,nil)
-		and Duel.IsExistingMatchingCard(s.spellfilter,tp,LOCATION_GRAVE,0,1,nil)
+	and Duel.IsExistingMatchingCard(s.fusfilter,tp,LOCATION_MZONE,0,1,nil)
+	and Duel.IsExistingMatchingCard(s.spellfilter,tp,LOCATION_GRAVE,0,1,nil)
 end
 
 function s.selfsptg(mg,sg,e,tp,eg,ep,ev,re,r,rp,chk,c)
