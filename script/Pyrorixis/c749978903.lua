@@ -74,7 +74,6 @@ end
 function s.cpfilter(c)
 	return c:IsSetCard(0x7f3) and c:IsSpellTrap()
 		and c:IsAbleToDeck()
-		and c:CheckActivateEffect(false,true,false)~=nil
 end
 function s.cptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.cpfilter,tp,LOCATION_GRAVE,0,1,nil) end
