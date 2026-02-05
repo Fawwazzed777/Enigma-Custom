@@ -76,12 +76,12 @@ function s.cpfilter(c)
 		and c:IsAbleToDeck()
 end
 function s.cptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.cpfilter,tp,LOCATION_GRAVE,0,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.cpfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,0))
 end
 function s.cpop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EFFECT)
-	local g=Duel.SelectMatchingCard(tp,s.cpfilter,tp,LOCATION_GRAVE,0,1,2,nil)
+	local g=Duel.SelectMatchingCard(tp,s.cpfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,2,nil)
 	if #g==0 then return end
 	for tc in aux.Next(g) do
 		local te=tc:CheckActivateEffect(false,true,true)
