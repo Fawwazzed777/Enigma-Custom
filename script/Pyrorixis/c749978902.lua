@@ -35,28 +35,17 @@ function s.cptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,0))
 end
 function s.cpop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EFFECT)
-	local tc=Duel.SelectMatchingCard(tp,s.cpfilter,tp,LOCATION_GRAVE,0,1,1,nil):GetFirst()
-	if not tc then return end
-	local te,ceg,cep,cev,cre,cr,crp=tc:CheckActivateEffect(false,true,true)
-	if not te then return end
-	local tg=te:GetTarget()
-	local op=te:GetOperation()
-	if tg then tg(te,tp,Group.CreateGroup(),PLAYER_NONE,0,e,REASON_EFFECT,PLAYER_NONE,1) end
-	Duel.BreakEffect()
-	tc:CreateEffectRelation(te)
-	Duel.BreakEffect()
-	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
-	for etc in aux.Next(g) do
-		etc:CreateEffectRelation(te)
-	end
-	if op then op(te,tp,Group.CreateGroup(),PLAYER_NONE,0,e,REASON_EFFECT,PLAYER_NONE,1) end
-	tc:ReleaseEffectRelation(te)
-	for etc in aux.Next(g) do
-		etc:ReleaseEffectRelation(te)
-	end
-	Duel.BreakEffect()
-	Duel.SendtoDeck(te:GetHandler(),nil,2,REASON_EFFECT)
+    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EFFECT)
+    local g=Duel.SelectMatchingCard(tp,s.cpfilter,tp,LOCATION_GRAVE,0,1,1,nil)
+    local tc=g:GetFirst()
+    if not tc then return end
+    local te=tc:CheckActivateEffect(false,true,true)
+    if te then
+        local op=te:GetOperation()
+        if op then op(e,tp,eg,ep,ev,re,r,rp) end
+        Duel.BreakEffect()
+        Duel.SendtoDeck(tc,nil,2,REASON_EFFECT)
+    end
 end
 
 function s.spfilter(c)
