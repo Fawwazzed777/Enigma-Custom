@@ -17,20 +17,26 @@ s.listed_series={0x7f3}
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local exc=nil
 	if e:IsHasType(EFFECT_TYPE_ACTIVATE) then exc=e:GetHandler() end
+	if chkc then return chkc:IsOnField() and chkc:IsDestructable() and chkc~=exc end
 	if chk==0 then return Duel.IsExistingTarget(Card.IsDestructable,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,exc) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local g=Duel.SelectTarget(tp,Card.IsDestructable,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,exc)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
-	local exc=nil
-	if e:IsHasType(EFFECT_TYPE_ACTIVATE) then exc=e:GetHandler() end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local tc=Duel.GetFirstTarget()
-	if tc and Duel.Destroy(tc,REASON_EFFECT)>0 then
-		--[Recast]If this effect was applied by a "Pyrorixis" monster
-		local is_apply = not e:IsHasType(EFFECT_TYPE_ACTIVATE)    
-		if is_apply then
+	local is_apply = not e:IsHasType(EFFECT_TYPE_ACTIVATE)
+	if is_apply then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+		local g=Duel.GetMatchingGroup(Card.IsDestructable,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,e:GetHandler())
+		if #g>0 then
+			tc=g:Select(tp,1,1,nil):GetFirst()
+		end
+	end
+	if tc and (is_apply or tc:IsRelateToEffect(e)) then
+		if Duel.Destroy(tc,REASON_EFFECT)>0 and is_apply then
+			--[Recast]
+			Duel.BreakEffect()
 			Duel.Damage(1-tp,800,REASON_EFFECT)
 		end
 	end
