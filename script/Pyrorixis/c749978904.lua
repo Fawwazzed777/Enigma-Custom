@@ -31,23 +31,21 @@ end
 function s.spfilter(c,e,tp)
 	return c:IsSetCard(0x7f3) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
+function s.nfilter(c)
+	return c:IsFaceup() and not c:IsSetCard(0x7f3)
+end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+	local g=Duel.GetMatchingGroup(s.nfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	local tc=g:GetFirst()
 	for tc in aux.Next(g) do
 		if not tc:IsSetCard(0x7f3) then
-			Duel.NegateRelatedChain(tc,RESET_TURN_SET)
 			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 			e1:SetCode(EFFECT_DISABLE)
 			e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 			tc:RegisterEffect(e1)
-			local e2=e1:Clone()
-			e2:SetCode(EFFECT_DISABLE_EFFECT)
-			e2:SetValue(RESET_TURN_SET)
-			tc:RegisterEffect(e2)
 		end
 	end
 	--[Recast]If this effect was applied by a "Pyrorixis" monster
