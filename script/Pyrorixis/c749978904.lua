@@ -47,7 +47,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
         end
     end
     --Recast
-    if c:IsType(TYPE_MONSTER) and tc:IsSetCard(0x7f3) or not e:IsHasType(EFFECT_TYPE_ACTIVATE) then
+    if re and re:GetHandler():IsSetCard(0x7f3) and re:GetHandler():IsType(TYPE_MONSTER)then
         local sg=Duel.GetMatchingGroup(aux.NecroValleyFilter(s.spfilter),tp,LOCATION_GRAVE,0,nil,e,tp)
         if #sg>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
             Duel.BreakEffect()
