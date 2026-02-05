@@ -45,8 +45,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 			e1:SetCode(EFFECT_DISABLE)
 			e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
-			tc:RegisterEffect(e1)
-	end
+			if tc:RegisterEffect(e1)>0 then
 	--[Recast]If this effect was applied by a "Pyrorixis" monster
 	if re and re:GetHandler():IsSetCard(0x7f3) and re:GetHandler():IsType(TYPE_MONSTER) or not e:IsHasType(EFFECT_TYPE_ACTIVATE) then
 		if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 
@@ -59,18 +58,20 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 				local lv=sc:GetLevel()
 				if lv>0 then
 					Duel.Recover(tp,lv*300,REASON_EFFECT)
+							--FIRE Lock
+							local e3=Effect.CreateEffect(c)
+							e3:SetType(EFFECT_TYPE_FIELD)
+							e3:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+							e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CLIENT_HINT)
+							e3:SetDescription(aux.Stringid(id,1))
+							e3:SetTargetRange(1,0)
+							e3:SetTarget(s.splimit)
+							e3:SetReset(RESET_PHASE+PHASE_END)
+							Duel.RegisterEffect(e3,tp)
+							end
+						end
+					end	
 				end
-			end			
-			--FIRE Lock
-			local e3=Effect.CreateEffect(c)
-			e3:SetType(EFFECT_TYPE_FIELD)
-			e3:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
-			e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CLIENT_HINT)
-			e3:SetDescription(aux.Stringid(id,1))
-			e3:SetTargetRange(1,0)
-			e3:SetTarget(s.splimit)
-			e3:SetReset(RESET_PHASE+PHASE_END)
-			Duel.RegisterEffect(e3,tp)
 			end
 		end
 	end
