@@ -34,35 +34,31 @@ end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
     local c=e:GetHandler()
     local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
-    for tc in aux.Next(g) do
-        if not tc:IsSetCard(0x7f3) then
-            Duel.NegateRelatedChain(tc,RESET_TURN_SET)
-            local e1=Effect.CreateEffect(c)
-            e1:SetType(EFFECT_TYPE_SINGLE)
-            e1:SetCode(EFFECT_DISABLE)
-            e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
-            tc:RegisterEffect(e1)
-            local e2=e1:Clone()
-            e2:SetCode(EFFECT_DISABLE_EFFECT)
-            tc:RegisterEffect(e2)
+    if #g>0 then
+        for tc in aux.Next(g) do
+            if not tc:IsSetCard(0x7f3) then
+                local e1=Effect.CreateEffect(c)
+                e1:SetType(EFFECT_TYPE_SINGLE)
+                e1:SetCode(EFFECT_DISABLE)
+                e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+                tc:RegisterEffect(e1)
+                local e2=e1:Clone()
+                e2:SetCode(EFFECT_DISABLE_EFFECT)
+                tc:RegisterEffect(e2)
+            end
         end
     end
-    local is_monster= e:GetHandler():IsType(TYPE_MONSTER)
-    local is_recast= not e:IsHasType(EFFECT_TYPE_ACTIVATE)
-
-    if is_monster or is_recast then
+	--[Recast]If this effect was applied by a "Pyrorixis" monster
+    local is_apply = not e:IsHasType(EFFECT_TYPE_ACTIVATE)    
+    if is_apply then
         if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 
             and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp)
-            and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then            
+            and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
             Duel.BreakEffect()
-            Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
             local sc=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp):GetFirst()
             if sc and Duel.SpecialSummon(sc,0,tp,tp,false,false,POS_FACEUP)>0 then
-                local lv=sc:GetLevel()
-                if lv>0 then
-                    Duel.Recover(tp,lv*300,REASON_EFFECT)
-                end                
-                -- Lock FIRE only
+                Duel.Recover(tp,sc:GetLevel()*300,REASON_EFFECT)             
+                --Lock FIRE only
                 local e3=Effect.CreateEffect(c)
                 e3:SetType(EFFECT_TYPE_FIELD)
                 e3:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
