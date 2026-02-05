@@ -25,43 +25,50 @@ function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
     Duel.SendtoGrave(g,REASON_COST)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-    if chk==0 then return Duel.IsExistingMatchingCard(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
+	local exc=nil
+	if e:IsHasType(EFFECT_TYPE_ACTIVATE) then exc=e:GetHandler() end
+    if chk==0 then return Duel.IsExistingMatchingCard(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,1,exc) end
     Duel.SetOperationInfo(0,CATEGORY_DISABLE,nil,1,PLAYER_ALL,LOCATION_MZONE)
 end
+function s.spfilter(c,e,tp)
+    return c:IsSetCard(0x7f3) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
-	for tc in aux.Next(g) do
-		if not tc:IsSetCard(0x7f3) then
-			local e1=Effect.CreateEffect(c)
-			e1:SetType(EFFECT_TYPE_SINGLE)
-			e1:SetCode(EFFECT_DISABLE)
-			e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
-			tc:RegisterEffect(e1)
-			local e2=e1:Clone()
-			e2:SetCode(EFFECT_DISABLE_EFFECT)
-			tc:RegisterEffect(e2)
-		end
-	end
-	--If Recast: Special Summon
-	if not e:IsHasType(EFFECT_TYPE_ACTIVATE) or c:IsType(TYPE_MONSTER) then
-		if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 
-			and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp)
-			and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
-			Duel.BreakEffect()
-			local sc=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp):GetFirst()
-			if sc and Duel.SpecialSummon(sc,0,tp,tp,false,false,POS_FACEUP)>0 then
-				Duel.Recover(tp,sc:GetLevel()*300,REASON_EFFECT)
-				-- FIRE Limit
-				local e3=Effect.CreateEffect(c)
-				e3:SetType(EFFECT_TYPE_FIELD)
-				e3:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
-				e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-				e3:SetTargetRange(1,0)
-				e3:SetTarget(function(e,c) return not c:IsAttribute(ATTRIBUTE_FIRE) end)
-				e3:SetReset(RESET_PHASE+PHASE_END)
-				Duel.RegisterEffect(e3,tp)
-			end
-		end
-	end
+	local exc=nil
+	if e:IsHasType(EFFECT_TYPE_ACTIVATE) then exc=e:GetHandler() end	
+    local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,exc)
+    for tc in aux.Next(g) do
+        if not tc:IsSetCard(0x7f3) then
+            Duel.NegateRelatedChain(tc,RESET_TURN_SET)
+            local e1=Effect.CreateEffect(c)
+            e1:SetType(EFFECT_TYPE_SINGLE)
+            e1:SetCode(EFFECT_DISABLE)
+            e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+            tc:RegisterEffect(e1)
+            local e2=e1:Clone()
+            e2:SetCode(EFFECT_DISABLE_EFFECT)
+            tc:RegisterEffect(e2)
+        end
+    end
+    local ec=e:GetHandler()
+	if ec:IsType(TYPE_MONSTER) or not e:IsHasType(EFFECT_TYPE_ACTIVATE) then
+        if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 
+            and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp)
+            and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
+            Duel.BreakEffect()
+            local sc=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp):GetFirst()
+            if sc and Duel.SpecialSummon(sc,0,tp,tp,false,false,POS_FACEUP)>0 then
+                Duel.Recover(tp,sc:GetLevel()*300,REASON_EFFECT)
+                -- FIRE Lock
+                local e3=Effect.CreateEffect(c)
+                e3:SetType(EFFECT_TYPE_FIELD)
+                e3:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+                e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CLIENT_HINT)
+                e3:SetTargetRange(1,0)
+                e3:SetTarget(function(e,c) return not c:IsAttribute(ATTRIBUTE_FIRE) end)
+                e3:SetReset(RESET_PHASE+PHASE_END)
+                Duel.RegisterEffect(e3,tp)
+            end
+        end
+    end
 end
