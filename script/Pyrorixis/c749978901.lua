@@ -36,8 +36,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	if tc and (is_apply or tc:IsRelateToEffect(e)) then
 		if Duel.Destroy(tc,REASON_EFFECT)>0 then
 			--RECAST
-			local rc = re and re:GetHandler()
-			if is_apply and rc and rc:IsSetCard(0x7f3) and rc:IsType(TYPE_MONSTER) then
+			if is_apply then
 				Duel.BreakEffect()
 				Duel.Damage(1-tp,800,REASON_EFFECT)
 			end
