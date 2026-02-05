@@ -46,7 +46,6 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetCode(EFFECT_DISABLE)
 			e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 			tc:RegisterEffect(e1)
-		end
 	end
 	--[Recast]If this effect was applied by a "Pyrorixis" monster
 	if re and re:GetHandler():IsSetCard(0x7f3) and re:GetHandler():IsType(TYPE_MONSTER) or not e:IsHasType(EFFECT_TYPE_ACTIVATE) then
@@ -72,6 +71,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			e3:SetTarget(s.splimit)
 			e3:SetReset(RESET_PHASE+PHASE_END)
 			Duel.RegisterEffect(e3,tp)
+			end
 		end
 	end
 end
