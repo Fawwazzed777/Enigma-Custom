@@ -26,8 +26,6 @@ end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	local is_apply = not e:IsHasType(EFFECT_TYPE_ACTIVATE)
-	local rc = re and re:GetHandler()
-	local is_pyrorixis_monster = rc and rc:IsSetCard(0x7f3) and rc:IsType(TYPE_MONSTER)
 	if is_apply then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 		local g=Duel.GetMatchingGroup(Card.IsDestructable,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,e:GetHandler())
@@ -38,7 +36,8 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	if tc and (is_apply or tc:IsRelateToEffect(e)) then
 		if Duel.Destroy(tc,REASON_EFFECT)>0 then
 			--RECAST
-			if is_apply and is_pyrorixis_monster then
+			local rc = re and re:GetHandler()
+			if is_apply and rc and rc:IsSetCard(0x7f3) and rc:IsType(TYPE_MONSTER) then
 				Duel.BreakEffect()
 				Duel.Damage(1-tp,800,REASON_EFFECT)
 			end
