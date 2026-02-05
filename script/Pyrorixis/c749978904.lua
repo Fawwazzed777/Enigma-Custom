@@ -39,8 +39,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
     local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,exc)
     for tc in aux.Next(g) do
         if not tc:IsSetCard(0x7f3) then
-            Duel.NegateRelatedChain(tc,RESET_TURN_SET)
-            local e1=Effect.CreateEffect(c)
+            local e1=Effect.CreateEffect(e:GetHandler())
             e1:SetType(EFFECT_TYPE_SINGLE)
             e1:SetCode(EFFECT_DISABLE)
             e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
