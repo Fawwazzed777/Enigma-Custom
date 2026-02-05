@@ -32,45 +32,47 @@ function s.spfilter(c,e,tp)
     return c:IsSetCard(0x7f3) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
-    local c=e:GetHandler()
-    local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
-    if #g>0 then
-        for tc in aux.Next(g) do
-            if not tc:IsSetCard(0x7f3) then
-                local e1=Effect.CreateEffect(c)
-                e1:SetType(EFFECT_TYPE_SINGLE)
-                e1:SetCode(EFFECT_DISABLE)
-                e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
-                tc:RegisterEffect(e1)
-                local e2=e1:Clone()
-                e2:SetCode(EFFECT_DISABLE_EFFECT)
-                tc:RegisterEffect(e2)
-            end
-        end
-    end
-	--[Recast]If this effect was applied by a "Pyrorixis" monster
-    local is_apply = not e:IsHasType(EFFECT_TYPE_ACTIVATE)    
-    if is_apply then
-        if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 
-            and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp)
-            and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
-            Duel.BreakEffect()
-            local sc=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp):GetFirst()
-            if sc and Duel.SpecialSummon(sc,0,tp,tp,false,false,POS_FACEUP)>0 then
-                Duel.Recover(tp,sc:GetLevel()*300,REASON_EFFECT)             
-                --Lock FIRE only
-                local e3=Effect.CreateEffect(c)
-                e3:SetType(EFFECT_TYPE_FIELD)
-                e3:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
-                e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CLIENT_HINT)
-                e3:SetDescription(aux.Stringid(id,1))
-                e3:SetTargetRange(1,0)
-                e3:SetTarget(s.splimit)
-                e3:SetReset(RESET_PHASE+PHASE_END)
-                Duel.RegisterEffect(e3,tp)
-            end
-        end
-    end
+	local c=e:GetHandler()
+	local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+	if #g>0 then
+		for tc in aux.Next(g) do
+			if not tc:IsSetCard(0x7f3) then
+				local e1=Effect.CreateEffect(c)
+				e1:SetType(EFFECT_TYPE_SINGLE)
+				e1:SetCode(EFFECT_DISABLE)
+				e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+				tc:RegisterEffect(e1)
+				local e2=e1:Clone()
+				e2:SetCode(EFFECT_DISABLE_EFFECT)
+				tc:RegisterEffect(e2)
+			end
+		end
+	end
+	--RECAST
+	local is_apply= not e:IsHasType(EFFECT_TYPE_ACTIVATE) 
+	local rc= re and re:GetHandler()
+	local is_pyrorixis_monster= rc and rc:IsSetCard(0x7f3) and rc:IsType(TYPE_MONSTER)
+	if is_apply and is_pyrorixis_monster then
+		if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 
+			and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp)
+			and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then			
+			Duel.BreakEffect()
+			local sc=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp):GetFirst()
+			if sc and Duel.SpecialSummon(sc,0,tp,tp,false,false,POS_FACEUP)>0 then
+				Duel.Recover(tp,sc:GetLevel()*300,REASON_EFFECT)				
+				--Lock FIRE Only
+				local e3=Effect.CreateEffect(c)
+				e3:SetType(EFFECT_TYPE_FIELD)
+				e3:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+				e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CLIENT_HINT)
+				e3:SetDescription(aux.Stringid(id,1))
+				e3:SetTargetRange(1,0)
+				e3:SetTarget(s.splimit)
+				e3:SetReset(RESET_PHASE+PHASE_END)
+				Duel.RegisterEffect(e3,tp)
+			end
+		end
+	end
 end
 function s.splimit(e,c)
     return not c:IsAttribute(ATTRIBUTE_FIRE)
