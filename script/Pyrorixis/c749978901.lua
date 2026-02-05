@@ -29,7 +29,8 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc and Duel.Destroy(tc,REASON_EFFECT)>0 then
 		--[Recast]If this effect was applied by a "Pyrorixis" monster
-		if re and re:GetHandler():IsSetCard(0x7f3) and re:GetHandler():IsType(TYPE_MONSTER) then
+		local is_apply = not e:IsHasType(EFFECT_TYPE_ACTIVATE)    
+		if is_apply then
 			Duel.Damage(1-tp,800,REASON_EFFECT)
 		end
 	end
