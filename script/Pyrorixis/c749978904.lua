@@ -24,8 +24,11 @@ function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
     local g=Duel.SelectMatchingCard(tp,s.costfilter,tp,LOCATION_HAND+LOCATION_ONFIELD,0,1,1,e:GetHandler())
     Duel.SendtoGrave(g,REASON_COST)
 end
+function s.negfilter(c,e)
+    return not c:IsSetCard(0x7f3) and Card.IsNegatableMonster()
+end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-    if chk==0 then return Duel.IsExistingMatchingCard(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
+    if chk==0 then return Duel.IsExistingMatchingCard(s.negfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
     Duel.SetOperationInfo(0,CATEGORY_DISABLE,nil,1,PLAYER_ALL,LOCATION_MZONE)
 end
 function s.spfilter(c,e,tp)
@@ -33,7 +36,7 @@ function s.spfilter(c,e,tp)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+	local g=Duel.GetMatchingGroup(s.negfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	for tc in aux.Next(g) do
 		if not tc:IsSetCard(0x7f3) then
 			local e1=Effect.CreateEffect(c)
