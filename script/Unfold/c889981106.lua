@@ -37,6 +37,8 @@ function s.initial_effect(c)
 	e4:SetCode(EVENT_ATTACK_ANNOUNCE)
 	e4:SetRange(LOCATION_MZONE)
 	e4:SetCountLimit(1,{id,2})
+	e4:SetCondition(s.cord)
+	e4:SetTarget(s.tgd)
 	e4:SetOperation(s.ord)
 	c:RegisterEffect(e4)
 end
@@ -61,7 +63,25 @@ function s.dop(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.Draw(p,d,REASON_EFFECT)
 end
+function s.cord(e,tp,eg,ep,ev,re,r,rp)
+	return tp~=Duel.GetTurnPlayer()
+end
+function s.tgd(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	local tg=Duel.GetAttacker()
+	if chkc then return chkc==tg end
+	if chk==0 then return tg:IsOnField() and tg:IsCanBeEffectTarget(e) end
+	Duel.SetTargetCard(tg)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,tg,1,0,0)
+	local dam=tg:GetAttack()
+	Duel.SetTargetParam(dam/2)
+	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,dam/2)
+end
 function s.ord(e,tp,eg,ep,ev,re,r,rp)
-	Duel.NegateAttack()
-	Duel.Damage(1-tp,1600,REASON_EFFECT)
+	local tg,d=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS,CHAININFO_TARGET_PARAM)
+	local tc=tg:GetFirst()
+	if tc:IsRelateToEffect(e) and tc:CanAttack() and not tc:IsStatus(STATUS_ATTACK_CANCELED) then
+		if Duel.Destroy(tc,REASON_EFFECT) then
+			Duel.Damage(1-tp,d,REASON_EFFECT)
+		end
+	end
 end
