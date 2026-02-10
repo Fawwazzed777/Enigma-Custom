@@ -12,22 +12,18 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 s.listed_series={0x7f3}
-function s.recast_check(e)
-	local rc=re:GetHandler()
-	return rc and rc:IsMonster() and rc:IsSetCard(0x7f3)
-end
 function s.thfilter(c)
 	return c:IsSetCard(0x7f3) and c:IsMonster() and c:IsAbleToHand()
 end
 function s.negfilter(c)
 	return c:IsFaceup() and not c:IsDisabled()
 end
-
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(1-tp) and chkc:IsOnField() and s.negfilter(chkc) end
-	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil) end	
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK+LOCATION_GRAVE)
-	if s.recast_check(e) then
+	-- RECAST:Pyrorixis
+	if re and re:GetHandler():IsSetCard(0x7f3) and re:GetHandler():IsMonster() then
 		e:SetProperty(EFFECT_FLAG_CARD_TARGET)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISABLE)
 		local g=Duel.SelectTarget(tp,s.negfilter,tp,0,LOCATION_ONFIELD,1,1,nil)
@@ -44,8 +40,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
 	end
-	--RECAST:Pyrorixis Monster
-	if s.recast_check(e) and Duel.SelectYesNo(tp,aux.Stringid(id,1))then
+	if re and re:GetHandler():IsSetCard(0x7f3) and re:GetHandler():IsMonster() then
 		local tc=Duel.GetFirstTarget()
 		if tc and tc:IsRelateToEffect(e) and tc:IsFaceup() and not tc:IsDisabled() then
 			Duel.BreakEffect()
