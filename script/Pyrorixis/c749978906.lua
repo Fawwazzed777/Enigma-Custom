@@ -39,13 +39,13 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 	--RECAST EFFECT
-	if re and re:GetHandler():IsSetCard(0x7f3) and re:GetHandler():IsMonster() then
-		local sg=Duel.GetMatchingGroup(s.negfilter,tp,0,LOCATION_ONFIELD,nil)
-		if #sg>0 then
+	if re and re:GetHandler():IsSetCard(0x7f3) and re:GetHandler():IsMonster() and
+	Duel.SelectYesNo(tp,aux.Stringid(id,1))then
+		local tc=Duel.SelectMatchingCard(tp,s.negfilter,tp,0,LOCATION_ONFIELD,1,1,nil)
+		if tc then
 			Duel.BreakEffect()
+			Duel.HintSelection(tc)
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISABLE)
-			local tc=sg:Select(tp,1,1,nil):GetFirst()
-			if tc then
 				--Negate Effect
 				local e1=Effect.CreateEffect(e:GetHandler())
 				e1:SetType(EFFECT_TYPE_SINGLE)
@@ -61,7 +61,6 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 				e3:SetCode(EFFECT_CANNOT_TRIGGER)
 				tc:RegisterEffect(e3)				
 				Duel.Hint(HINT_OPSELECTED,1-tp,aux.Stringid(id,1))
-			end
 		end
 	end
 end
