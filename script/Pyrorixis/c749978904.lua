@@ -42,7 +42,8 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
     Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,0)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
-    local c=e:GetHandler()   
+    local c=e:GetHandler()
+	local is_apply = not e:IsHasType(EFFECT_TYPE_ACTIVATE)
     --Cannot Special Summon except FIRE monsters (only active if Recasted)
     local e1=Effect.CreateEffect(c)
     e1:SetType(EFFECT_TYPE_FIELD)
@@ -67,7 +68,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
         end
     end
     --RECAST (Special Summon + Gain LP)
-    if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 
+    if is_apply and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 
         and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp)
         and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then                   
         if #g>0 then Duel.BreakEffect() end        
