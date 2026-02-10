@@ -8,7 +8,7 @@ function s.initial_effect(c)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetCountLimit(1,id,EFFECT_COUNT_CODE_OATH)
-	e1:SetCost(Cost.PayLP(800))
+	e1:SetCost(Cost.PayLP(1000))
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.operation)
 	c:RegisterEffect(e1)
@@ -38,7 +38,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 			--RECAST
 			if is_apply then
 				Duel.BreakEffect()
-				Duel.Damage(1-tp,800,REASON_EFFECT)
+				Duel.Recover(tp,1000,REASON_EFFECT)
 			end
 		end
 	end

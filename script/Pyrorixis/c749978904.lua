@@ -25,7 +25,7 @@ function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
     Duel.SendtoGrave(g,REASON_COST)
 end
 function s.negfilter(c,e)
-    return not c:IsSetCard(0x7f3) and Card.IsNegatableMonster()
+    return not c:IsSetCard(0x7f3) and c:IsNegatableMonster()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return Duel.IsExistingMatchingCard(s.negfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
