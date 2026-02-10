@@ -42,16 +42,15 @@ end
 
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	--Search
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil)
 	if #g>0 then
 		if Duel.SendtoHand(g,nil,REASON_EFFECT)>0 then
 			Duel.ConfirmCards(1-tp,g)
 		end
 	end
-	local is_apply = not e:IsHasType(EFFECT_TYPE_ACTIVATE)
+	local is_apply = not e:IsHasType(EFFECT_TYPE_ACTIVATE) and e:IsMonster() and e:IsSetCard(0x7f3)
 	--RECAST: Negate & Activation Lock
-	if is_apply and re:GetHandler():IsMonster() and re:GetHandler():IsSetCard(0x7f3) then
+	if is_apply then
 	local tc=Duel.GetFirstTarget()
 	if tc and tc:IsRelateToEffect(e) and tc:IsFaceup() and not tc:IsDisabled() then
 		Duel.BreakEffect()		
