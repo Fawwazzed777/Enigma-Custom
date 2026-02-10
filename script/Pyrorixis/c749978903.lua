@@ -27,35 +27,32 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 s.listed_series={0x7f3}
-function s.spmatfilter1(c)
-	return c:IsFaceup() and c:IsSetCard(0x7f3) and c:IsLevelAbove(7) and c:IsAbleToGraveAsCost()
+function s.spfilter1(c,tp,sc)
+	return c:IsFaceup() and c:IsSetCard(0x7f3) and c:IsLevelAbove(7) 
+		and c:IsAbleToGraveAsCost()
+		and Duel.GetLocationCountFromEx(tp,tp,c,sc)>0
 end
-function s.spmatfilter2(c)
-	return c:IsSetCard(0x7f3) and c:IsSpell() and c:IsAbleToRemoveAsCost()
+function s.spfilter2(c)
+	return c:IsSetCard(0x7f3) and c:IsType(TYPE_SPELL) and c:IsAbleToRemoveAsCost()
 end
 function s.spcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	return Duel.GetLocationCountFromEx(tp,tp,nil,c)>0
-		and Duel.IsExistingMatchingCard(s.spmatfilter1,tp,LOCATION_MZONE,0,1,nil)
-		and Duel.IsExistingMatchingCard(s.spmatfilter2,tp,LOCATION_GRAVE,0,1,nil)
+	return Duel.IsExistingMatchingCard(s.spfilter1,tp,LOCATION_MZONE,0,1,nil,tp,c)
+		and Duel.IsExistingMatchingCard(s.spfilter2,tp,LOCATION_GRAVE,0,1,nil)
 end
-function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,c)
-	local g1=Duel.GetMatchingGroup(s.spmatfilter1,tp,LOCATION_MZONE,0,nil)
-	local g2=Duel.GetMatchingGroup(s.spmatfilter2,tp,LOCATION_GRAVE,0,nil)	
-	if #g1>0 and #g2>0 then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-		local sg1=g1:Select(tp,1,1,nil)
-		if #sg1>0 then
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-			local sg2=g2:Select(tp,1,1,nil)
-			if #sg2>0 then
-				sg1:Merge(sg2)
-				sg1:KeepAlive()
-				e:SetLabelObject(sg1)
-				return true
-			end
-		end
+function s.sptg(e,tp,eg,ep,ev,re,r,rp,c)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+	local g1=Duel.SelectMatchingCard(tp,s.spfilter1,tp,LOCATION_MZONE,0,1,1,nil,tp,c)
+	if #g1==0 then return false end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	local g2=Duel.SelectMatchingCard(tp,s.spfilter2,tp,LOCATION_GRAVE,0,1,1,nil)
+	if #g2==0 then return false end
+	g1:Merge(g2)
+	if #g1==2 then
+		g1:KeepAlive()
+		e:SetLabelObject(g1)
+		return true
 	end
 	return false
 end
@@ -63,13 +60,14 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	local g=e:GetLabelObject()
 	if not g then return end
 	local tc_mon=g:Filter(Card.IsLocation,nil,LOCATION_MZONE):GetFirst()
-	local tc_spl=g:Filter(Card.IsLocation,nil,LOCATION_GRAVE):GetFirst()	
-	if tc_mon and tc_spl then
-		Duel.SendtoGrave(tc_mon,REASON_COST+REASON_MATERIAL)
-		Duel.Remove(tc_spl,POS_FACEUP,REASON_COST+REASON_MATERIAL)
+	local tc_spell=g:Filter(Card.IsLocation,nil,LOCATION_GRAVE):GetFirst()
+	if tc_mon and tc_spell then
+		Duel.SendtoGrave(tc_mon,REASON_COST)
+		Duel.Remove(tc_spell,POS_FACEUP,REASON_COST)
 	end
 	g:DeleteGroup()
 end
+
 function s.cpfilter(c)
 	return c:IsSetCard(0x7f3) and c:IsSpellTrap() and c:IsAbleToDeck()
 end
