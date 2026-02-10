@@ -29,7 +29,7 @@ end
 s.listed_series={0x7f3}
 function s.spfilter1(c,tp,sc)
 	return c:IsFaceup() and c:IsSetCard(0x7f3) and c:IsLevelAbove(7) 
-		and c:IsAbleToGraveAsCost()
+		and not c:IsCode(id) and c:IsAbleToGraveAsCost()
 		and Duel.GetLocationCountFromEx(tp,tp,c,sc)>0
 end
 function s.spfilter2(c)
