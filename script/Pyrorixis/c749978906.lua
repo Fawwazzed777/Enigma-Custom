@@ -49,7 +49,6 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		local sg=Duel.GetMatchingGroup(s.negfilter,tp,0,LOCATION_ONFIELD,nil)
 		if #sg>0 and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
 			Duel.BreakEffect()
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISABLE)
 			local tc=sg:Select(tp,1,1,nil):GetFirst()
 			if tc then
 				Duel.HintSelection(tc)
