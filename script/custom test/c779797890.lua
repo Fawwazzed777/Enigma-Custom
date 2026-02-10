@@ -15,7 +15,7 @@ function s.initial_effect(c)
 	e1:SetTarget(s.rmtg)
 	e1:SetOperation(s.rmop)
 	c:RegisterEffect(e1)	
-	--Banish from GY to gain ATK & Effect (Quick Effect)
+	--Banish from GY to gain ATK
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_ATKCHANGE+CATEGORY_REMOVE)
@@ -23,8 +23,8 @@ function s.initial_effect(c)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1,{id,1})
-	e2:SetTarget(s.copytg)
-	e2:SetOperation(s.copyop)
+	e2:SetTarget(s.pytg)
+	e2:SetOperation(s.pyop)
 	c:RegisterEffect(e2)	
 	--Add to hand when banished
 	local e3=Effect.CreateEffect(c)
@@ -71,17 +71,17 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)
 	end
 end
-function s.copyfilter(c,e,tp)
-	return c:IsSetCard(0x145) or c:IsSetCard(0x344) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemove()
+function s.atkfilter(c)
+	return (c:IsSetCard(0x145) or c:IsSetCard(0x344)) and c:IsMonster() and c:IsAbleToRemove()
 end
-function s.copytg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.copyfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
+function s.pytg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(s.atkfilter,tp,LOCATION_GRAVE,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,tp,LOCATION_GRAVE)
 end
-function s.copyop(e,tp,eg,ep,ev,re,r,rp)
+function s.pyop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,s.copyfilter,tp,LOCATION_GRAVE,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,s.atkfilter,tp,LOCATION_GRAVE,0,1,1,nil)
 	local tc=g:GetFirst()
 	if tc and Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)>0 then
 		--Gain ATK
