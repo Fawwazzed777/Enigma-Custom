@@ -19,22 +19,28 @@ end
 function s.negfilter(c)
 	return c:IsFaceup() and not c:IsDisabled()
 end
-function s.recast_check(e,re)
-	if not re then return false end
-	local rc=re:GetHandler()
-	return rc and rc:IsMonster() and rc:IsSetCard(0x7f3)
+function s.is_pyrorixis_recast(e)
+	local ev=Duel.GetCurrentChain()
+	if ev>0 then
+		local te=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_EFFECT)
+		if te then
+			local tc=te:GetHandler()
+			return tc and tc:IsMonster() and tc:IsSetCard(0x7f3)
+		end
+	end
+	return false
 end
 
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(1-tp) and chkc:IsOnField() and s.negfilter(chkc) end
-	local is_recast = s.recast_check(e,re)
+	local is_recast = s.is_pyrorixis_recast(e)
 	if chk==0 then 
 		local b1 = Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil)
 		if is_recast then
 			return b1 and Duel.IsExistingTarget(s.negfilter,tp,0,LOCATION_ONFIELD,1,nil)
 		end
 		return b1
-	end
+	end	
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK+LOCATION_GRAVE)
 	if is_recast then
 		e:SetProperty(EFFECT_FLAG_CARD_TARGET)
@@ -47,6 +53,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
+	--Search
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil)
 	if #g>0 then
@@ -54,26 +61,24 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			Duel.ConfirmCards(1-tp,g)
 		end
 	end
-	--RECAST (Pyrorixis monster)
-	if s.recast_check(e,re) then
-		local tc=Duel.GetFirstTarget()
-		if tc and tc:IsRelateToEffect(e) and tc:IsFaceup() then
-			Duel.BreakEffect()
-			--Negate Effect
-			local e1=Effect.CreateEffect(e:GetHandler())
-			e1:SetType(EFFECT_TYPE_SINGLE)
-			e1:SetCode(EFFECT_DISABLE)
-			e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
-			tc:RegisterEffect(e1)
-			--Disable Effect Activation
-			local e2=e1:Clone()
-			e2:SetCode(EFFECT_DISABLE_EFFECT)
-			tc:RegisterEffect(e2)
-			--Cannot Trigger
-			local e3=e1:Clone()
-			e3:SetCode(EFFECT_CANNOT_TRIGGER)
-			tc:RegisterEffect(e3)			
-			Duel.Hint(HINT_OPSELECTED,1-tp,aux.Stringid(id,1))
-		end
+	--Recast
+	local tc=Duel.GetFirstTarget()
+	if tc and tc:IsRelateToEffect(e) and tc:IsFaceup() then
+		Duel.BreakEffect()
+		-- Negate Effect
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_DISABLE)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+		tc:RegisterEffect(e1)
+		-- Disable Effect Activation
+		local e2=e1:Clone()
+		e2:SetCode(EFFECT_DISABLE_EFFECT)
+		tc:RegisterEffect(e2)
+		-- Cannot Trigger
+		local e3=e1:Clone()
+		e3:SetCode(EFFECT_CANNOT_TRIGGER)
+		tc:RegisterEffect(e3)					
+		Duel.Hint(HINT_OPSELECTED,1-tp,aux.Stringid(id,1))
 	end
 end
