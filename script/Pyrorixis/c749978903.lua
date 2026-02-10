@@ -62,8 +62,8 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	local tc_mon=g:Filter(Card.IsLocation,nil,LOCATION_MZONE):GetFirst()
 	local tc_spell=g:Filter(Card.IsLocation,nil,LOCATION_GRAVE):GetFirst()
 	if tc_mon and tc_spell then
-		Duel.SendtoGrave(tc_mon,REASON_COST)
-		Duel.Remove(tc_spell,POS_FACEUP,REASON_COST)
+		Duel.SendtoGrave(tc_mon,REASON_COST+REASON_MATERIAL)
+		Duel.Remove(tc_spell,POS_FACEUP,REASON_COST+REASON_MATERIAL)
 	end
 	g:DeleteGroup()
 end
