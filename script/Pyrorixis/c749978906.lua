@@ -24,13 +24,13 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 		return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil)
 	end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK+LOCATION_GRAVE)
-	local is_recast = re and re:GetHandler():IsSetCard(0x7f3) and re:GetHandler():IsMonster()
-	if is_recast then
+	if not e:IsHasType(EFFECT_TYPE_ACTIVATE) then
 		e:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH+CATEGORY_DISABLE)
 	end
 end
 
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
+	--SEARCH EFFECT
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil)
 	if #g>0 then
@@ -38,14 +38,21 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			Duel.ConfirmCards(1-tp,g)
 		end
 	end
-	--RECAST EFFECT
-	if re and re:GetHandler():IsSetCard(0x7f3) and re:GetHandler():IsMonster() and
-	Duel.SelectYesNo(tp,aux.Stringid(id,1))then
-		local tc=Duel.SelectMatchingCard(tp,s.negfilter,tp,0,LOCATION_ONFIELD,1,1,nil)
-		if tc then
+	--RECAST EFFECT (Pyrorixis Monster)
+	local rc=e:GetHandler()
+	local ev_chain=Duel.GetCurrentChain()
+	if ev_chain>0 then
+		local te=Duel.GetChainInfo(ev_chain,CHAININFO_TRIGGERING_EFFECT)
+		if te then rc=te:GetHandler() end
+	end
+	if not e:IsHasType(EFFECT_TYPE_ACTIVATE) and rc:IsMonster() and rc:IsSetCard(0x7f3) then
+		local sg=Duel.GetMatchingGroup(s.negfilter,tp,0,LOCATION_ONFIELD,nil)
+		if #sg>0 and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
 			Duel.BreakEffect()
-			Duel.HintSelection(tc)
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISABLE)
+			local tc=sg:Select(tp,1,1,nil):GetFirst()
+			if tc then
+				Duel.HintSelection(tc)
 				--Negate Effect
 				local e1=Effect.CreateEffect(e:GetHandler())
 				e1:SetType(EFFECT_TYPE_SINGLE)
@@ -61,6 +68,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 				e3:SetCode(EFFECT_CANNOT_TRIGGER)
 				tc:RegisterEffect(e3)				
 				Duel.Hint(HINT_OPSELECTED,1-tp,aux.Stringid(id,1))
+			end
 		end
 	end
 end
