@@ -13,8 +13,6 @@ function s.initial_effect(c)
 end
 s.listed_series={0x7f3}
 function s.recast_check(e)
-	local re=e:GetOwnerEffect()
-	if not re then return false end
 	local rc=re:GetHandler()
 	return rc and rc:IsMonster() and rc:IsSetCard(0x7f3)
 end
