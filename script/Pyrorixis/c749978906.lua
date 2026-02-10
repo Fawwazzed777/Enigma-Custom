@@ -47,7 +47,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ConfirmCards(1-tp,g)
 	end
 	--RECAST:Pyrorixis Monster
-	if s.recast_check(e) then
+	if s.recast_check(e) and Duel.SelectYesNo(tp,aux.Stringid(id,1))then
 		local tc=Duel.GetFirstTarget()
 		if tc and tc:IsRelateToEffect(e) and tc:IsFaceup() and not tc:IsDisabled() then
 			Duel.BreakEffect()
