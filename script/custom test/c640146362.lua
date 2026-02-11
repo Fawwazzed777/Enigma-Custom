@@ -41,11 +41,11 @@ function s.monfilter(c,e,tp)
     if code==96488199 or code==96488218 then
         return Duel.IsExistingMatchingCard(Card.IsFaceup,tp,0,LOCATION_MZONE,1,nil)   
     --Spectral General
-    elseif code==96488216 then
+    elseif code==96488215 or code==96488216 then
         return Duel.IsExistingMatchingCard(s.spectral,tp,LOCATION_GRAVE,0,1,nil,e,tp)
-            or Duel.IsExistingMatchingCard(Card.IsFaceup,tp,0,LOCATION_MZONE,1,nil)
+            or Duel.IsExistingMatchingCard(s.sum,tp,0,LOCATION_MZONE,1,nil)
     else
-        return Duel.IsExistingMatchingCard(Card.IsFaceup,tp,0,LOCATION_MZONE,1,nil)
+        return Duel.IsExistingMatchingCard(s.sum,tp,0,LOCATION_MZONE,1,nil)
     end
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
