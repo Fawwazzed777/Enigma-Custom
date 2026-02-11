@@ -58,12 +58,11 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
         local code=tc2:GetOriginalCode()        
         -- APPLY EFFECT (Ignoring Cost & Condition)     
         --SPECTRE DRAGON
-        if code==96488199 then
-            Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-            local g=Duel.SelectMatchingCard(tp,Card.IsFaceup,tp,0,LOCATION_MZONE,1,1,nil)
-            local sc=g:GetFirst()
-            if sc then
-                Duel.HintSelection(g)
+		local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_MZONE,nil)
+            if #g>0 then
+                Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
+                local sc=g:Select(tp,1,1,nil):GetFirst()
+                --Apply: Atk-800,Negate and Damage
                 local e1=Effect.CreateEffect(e:GetHandler())
                 e1:SetType(EFFECT_TYPE_SINGLE)
                 e1:SetCode(EFFECT_UPDATE_ATTACK)
@@ -79,8 +78,8 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
                 e3:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
                 sc:RegisterEffect(e3)
                 Duel.Damage(1-tp,800,REASON_EFFECT)
-            end            
-		--SPECTRAL GENERAL (96488216)
+            end           
+		--SPECTRAL GENERAL
 		elseif code==96488216 then
 		--Check
 		local b1=Duel.IsExistingMatchingCard(s.spectral,tp,LOCATION_GRAVE,0,1,nil,e,tp)
@@ -121,38 +120,35 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
         end
     end
         --OVERCHARGE DRAGON
-        elseif code==96488218 then
-            Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-            local g=Duel.SelectMatchingCard(tp,Card.IsNegatableMonster,tp,0,LOCATION_MZONE,1,1,nil)
-            local sc=g:GetFirst()
-            if sc then
-                Duel.HintSelection(g)
+		elseif code==96488218 then
+            local g=Duel.GetMatchingGroup(Card.IsNegatableMonster,tp,0,LOCATION_MZONE,nil)
+            if #g>0 then
+                Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
+                local sc=g:Select(tp,1,1,nil):GetFirst()
+                -- Apply: Negate,Halve ATK,Burn,Cannot Attack
                 local e1=Effect.CreateEffect(e:GetHandler())
                 e1:SetType(EFFECT_TYPE_SINGLE)
                 e1:SetCode(EFFECT_DISABLE)
                 e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
                 sc:RegisterEffect(e1)
                 local atk=sc:GetAttack()
-                local e2=Effect.CreateEffect(e:GetHandler())
-                e2:SetType(EFFECT_TYPE_SINGLE)
+                local e2=e1:Clone()
                 e2:SetCode(EFFECT_SET_ATTACK_FINAL)
-                e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
                 e2:SetValue(math.ceil(atk/2))
                 sc:RegisterEffect(e2)
                 Duel.Damage(1-tp,math.ceil(atk/2),REASON_EFFECT)
-                local e3=Effect.CreateEffect(e:GetHandler())
-                e3:SetType(EFFECT_TYPE_SINGLE)
+                local e3=e1:Clone()
                 e3:SetCode(EFFECT_CANNOT_ATTACK)
-                e3:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
                 sc:RegisterEffect(e3)
-			end
-           --SPECTRAL GENESIS
+            end
+        --SPECTRAL GENESIS
         elseif code==96488215 then
             Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-            local sg=Duel.SelectMatchingCard(tp,s.sum,tp,0,LOCATION_MZONE,1,1,nil)
-            local sc=sg:GetFirst()
-            if sc then
-                Duel.HintSelection(sg)
+            local sg=Duel.GetMatchingGroup(tp,s.sum,tp,0,LOCATION_MZONE,nil)
+           if #sg>0 then
+                Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
+                local sc=sg:Select(tp,1,1,nil):GetFirst()
+                Duel.HintSelection(sc)
                 local e1=Effect.CreateEffect(e:GetHandler())
                 e1:SetType(EFFECT_TYPE_SINGLE) 
 				e1:SetCode(EFFECT_SET_ATTACK_FINAL) 
@@ -185,13 +181,13 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
             Duel.Damage(1-tp,count*500,REASON_EFFECT)			
         --PHANTASM DRAGON 
         elseif code==96488201 then
-            Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-            local sg=Duel.SelectMatchingCard(tp,Card.IsAbleToRemove,tp,0,LOCATION_MZONE,1,1,nil)
-            if #sg>0 then
+            local g=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,0,LOCATION_MZONE,nil)
+            if #g>0 then
+                Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+                local sg=g:Select(tp,1,1,nil)
                 Duel.HintSelection(sg)
                 if Duel.Remove(sg,POS_FACEUP,REASON_EFFECT)>0 then
                     Duel.Damage(1-tp,1400,REASON_EFFECT)
-					end
                 end
             end
         end
