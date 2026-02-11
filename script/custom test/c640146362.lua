@@ -59,10 +59,10 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
         local code=tc2:GetOriginalCode()               
         --SPECTRE DRAGON
         if code==96488199 then
-            local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_MZONE,nil)
-            if #g>0 then
-                Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-                local sc=g:Select(tp,1,1,nil):GetFirst()
+            local g=Duel.GetMatchingGroup(function(c) return c:IsFaceup() and c:IsCanBeEffectTarget(e) end,tp,0,LOCATION_MZONE,nil)
+			if #g>0 then
+				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
+				local sc=g:Select(tp,1,1,nil):GetFirst()
                 Duel.HintSelection(sc)
                 --Update ATK/DEF -800, Negate, and Damage 800
                 local e1=Effect.CreateEffect(e:GetHandler())
@@ -118,10 +118,12 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 
         --OVERCHARGE DRAGON
         elseif code==96488218 then
-            local g=Duel.GetMatchingGroup(Card.IsNegatableMonster,tp,0,LOCATION_MZONE,nil)
+            local g=Duel.GetMatchingGroup(function(c) return c:IsCanBeEffectTarget(e)
+			and Card.IsNegatableMonster end,tp,0,LOCATION_MZONE,nil)
             if #g>0 then
                 Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
                 local sc=g:Select(tp,1,1,nil):GetFirst()
+                Duel.HintSelection(sc)
                 --Negate, Halve ATK, Burn, Cannot Attack
                 local e1=Effect.CreateEffect(e:GetHandler())
                 e1:SetType(EFFECT_TYPE_SINGLE)
@@ -146,7 +148,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
                 Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
                 local sc=sg:Select(tp,1,1,nil):GetFirst()
                 Duel.HintSelection(sc)
-                -- ATK&DEF 0
+                -- ATK & DEF menjadi 0
                 local e1=Effect.CreateEffect(e:GetHandler())
                 e1:SetType(EFFECT_TYPE_SINGLE) 
                 e1:SetCode(EFFECT_SET_ATTACK_FINAL) 
