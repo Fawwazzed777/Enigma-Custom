@@ -87,11 +87,12 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 		if opt==0 then
         --Efek 1: Special Summon 1 "Enigmation" from GY
         Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-        local sg=Duel.SelectMatchingCard(tp, s.spfilter, tp, LOCATION_GRAVE, 0, 1, 1, nil, e, tp)
+        local sg=Duel.SelectTarget(tp,s.spectral,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
         if #sg>0 then
-            local sc=sg:GetFirst()
-            if Duel.SpecialSummonStep(sc, 0, tp, tp, false, false, POS_FACEUP) then
+            local sc=sg:GetFirstTarget()
+            if Duel.SpecialSummonStep(sc,0,tp,tp,false,false,POS_FACEUP) then
                 local e1=Effect.CreateEffect(e:GetHandler())
+				e1:SetDescription(3206)
                 e1:SetType(EFFECT_TYPE_SINGLE)
                 e1:SetCode(EFFECT_CANNOT_ATTACK)
                 e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
@@ -107,7 +108,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
         if sc then
             Duel.HintSelection(g)
             --ATK or DEF
-            local op=Duel.SelectOption(tp,aux.Stringid(code,3),aux.Stringid(id,2))
+            local op=Duel.SelectOption(tp,aux.Stringid(code,3),aux.Stringid(code,2))
             local e1=Effect.CreateEffect(e:GetHandler())
             e1:SetType(EFFECT_TYPE_SINGLE)
             e1:SetCode(op==0 and EFFECT_SET_ATTACK_FINAL or EFFECT_SET_DEFENSE_FINAL)
@@ -194,6 +195,9 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
     end
 function s.sum(c)
     return c:IsFaceup() and (c:HasNonZeroAttack() or c:HasNonZeroDefense())
+end
+function s.spectral(c,e,tp)
+	return c:IsSetCard(0x344) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.spfilter(c,e,tp)
 	return c:IsType(TYPE_EXTRA) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
