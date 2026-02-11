@@ -51,18 +51,20 @@ end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
     local g=Duel.GetTargetCards(e)
     if #g<2 then return end   
+    --(LabelObject)
     local tc1=g:Filter(Card.IsLocation,nil,LOCATION_GRAVE+LOCATION_REMOVED):GetFirst()
     local tc2=e:GetLabelObject() 
     if tc1 and Duel.SendtoDeck(tc1,nil,2,REASON_EFFECT)>0 and tc1:IsLocation(LOCATION_DECK+LOCATION_EXTRA) then
         if not tc2 or tc2:IsFacedown() or not tc2:IsRelateToEffect(e) then return end                
-        local code=tc2:GetOriginalCode()        
-        -- APPLY EFFECT (Ignoring Cost & Condition)     
+        local code=tc2:GetOriginalCode()               
         --SPECTRE DRAGON
-		local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_MZONE,nil)
+        if code==96488199 then
+            local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_MZONE,nil)
             if #g>0 then
                 Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
                 local sc=g:Select(tp,1,1,nil):GetFirst()
-                --Apply: Atk-800,Negate and Damage
+                Duel.HintSelection(sc)
+                --Update ATK/DEF -800, Negate, and Damage 800
                 local e1=Effect.CreateEffect(e:GetHandler())
                 e1:SetType(EFFECT_TYPE_SINGLE)
                 e1:SetCode(EFFECT_UPDATE_ATTACK)
@@ -78,55 +80,49 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
                 e3:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
                 sc:RegisterEffect(e3)
                 Duel.Damage(1-tp,800,REASON_EFFECT)
-            end 
-end			
-		--SPECTRAL GENERAL
-		elseif code==96488216 then
-		--Check
-		local b1=Duel.IsExistingMatchingCard(s.spectral,tp,LOCATION_GRAVE,0,1,nil,e,tp)
-		local b2=Duel.IsExistingMatchingCard(s.sum,tp,0,LOCATION_MZONE,1,nil)   
-		--Option
-		local op=Duel.SelectEffect(tp,
-        {b1,aux.Stringid(code,0)},
-        {b2,aux.Stringid(code,4)})
-		if op==1 then
-        --Special Summon from GY
-        Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-        local sg=Duel.SelectTarget(tp,s.spectral,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
-        if #sg>0 then
-            local sc=sg:GetFirst()
-            if Duel.SpecialSummonStep(sc,0,tp,tp,false,false,POS_FACEUP) then
-                local e1=Effect.CreateEffect(e:GetHandler())
-                e1:SetType(EFFECT_TYPE_SINGLE)
-                e1:SetCode(EFFECT_CANNOT_ATTACK)
-                e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
-                sc:RegisterEffect(e1)
+            end            
+        --SPECTRAL GENERAL
+        elseif code==96488216 then
+            local b1=Duel.IsExistingMatchingCard(s.spectral,tp,LOCATION_GRAVE,0,1,nil,e,tp)
+            local b2=Duel.IsExistingMatchingCard(s.sum,tp,0,LOCATION_MZONE,1,nil)   
+            local op=Duel.SelectEffect(tp,
+                {b1, aux.Stringid(code,0)},
+                {b2, aux.Stringid(code,2)})
+            if op==1 then
+                Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+                local sg=Duel.SelectMatchingCard(tp,s.spectral,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
+                if #sg>0 then
+                    local sc=sg:GetFirst()
+                    if Duel.SpecialSummonStep(sc,0,tp,tp,false,false,POS_FACEUP) then
+                        local e1=Effect.CreateEffect(e:GetHandler())
+                        e1:SetType(EFFECT_TYPE_SINGLE)
+                        e1:SetCode(EFFECT_CANNOT_ATTACK)
+                        e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+                        sc:RegisterEffect(e1)
+                    end
+                    Duel.SpecialSummonComplete()
+                end
+            elseif op==2 then
+                Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
+                local sc=Duel.SelectMatchingCard(tp,s.sum,tp,0,LOCATION_MZONE,1,1,nil):GetFirst()
+                if sc then
+                    Duel.HintSelection(sc)
+                    local sub_op=Duel.SelectOption(tp,aux.Stringid(code,3),aux.Stringid(code,2))
+                    local e1=Effect.CreateEffect(e:GetHandler())
+                    e1:SetType(EFFECT_TYPE_SINGLE)
+                    e1:SetCode(sub_op==0 and EFFECT_SET_ATTACK_FINAL or EFFECT_SET_DEFENSE_FINAL)
+                    e1:SetValue((sub_op==0 and sc:GetAttack() or sc:GetDefense())/2)
+                    sc:RegisterEffect(e1)
+                end
             end
-            Duel.SpecialSummonComplete()
-        end
-		elseif op==2 then
-        --Debuff (Only active if b2 is true)
-        Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-        local g=Duel.SelectMatchingCard(tp,s.sum,tp,0,LOCATION_MZONE,1,1,nil)
-        local sc=g:GetFirst()
-        if sc then
-            Duel.HintSelection(g)
-            local sub_op=Duel.SelectOption(tp,aux.Stringid(code,3),aux.Stringid(code,2))
-            local e1=Effect.CreateEffect(e:GetHandler())
-            e1:SetType(EFFECT_TYPE_SINGLE)
-            e1:SetCode(sub_op==0 and EFFECT_SET_ATTACK_FINAL or EFFECT_SET_DEFENSE_FINAL)
-            e1:SetValue((sub_op==0 and sc:GetAttack() or sc:GetDefense())/2)
-            e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-            sc:RegisterEffect(e1)
-        end
-    end
+
         --OVERCHARGE DRAGON
-		elseif code==96488218 then
+        elseif code==96488218 then
             local g=Duel.GetMatchingGroup(Card.IsNegatableMonster,tp,0,LOCATION_MZONE,nil)
             if #g>0 then
                 Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
                 local sc=g:Select(tp,1,1,nil):GetFirst()
-                -- Apply: Negate,Halve ATK,Burn,Cannot Attack
+                --Negate, Halve ATK, Burn, Cannot Attack
                 local e1=Effect.CreateEffect(e:GetHandler())
                 e1:SetType(EFFECT_TYPE_SINGLE)
                 e1:SetCode(EFFECT_DISABLE)
@@ -142,45 +138,49 @@ end
                 e3:SetCode(EFFECT_CANNOT_ATTACK)
                 sc:RegisterEffect(e3)
             end
+
         --SPECTRAL GENESIS
         elseif code==96488215 then
-            Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-            local sg=Duel.GetMatchingGroup(tp,s.sum,tp,0,LOCATION_MZONE,nil)
-           if #sg>0 then
+            local sg=Duel.GetMatchingGroup(s.sum,tp,0,LOCATION_MZONE,nil)
+            if #sg>0 then
                 Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
                 local sc=sg:Select(tp,1,1,nil):GetFirst()
                 Duel.HintSelection(sc)
+                -- ATK & DEF menjadi 0
                 local e1=Effect.CreateEffect(e:GetHandler())
                 e1:SetType(EFFECT_TYPE_SINGLE) 
-				e1:SetCode(EFFECT_SET_ATTACK_FINAL) 
-				e1:SetValue(0)
+                e1:SetCode(EFFECT_SET_ATTACK_FINAL) 
+                e1:SetValue(0)
                 e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
                 sc:RegisterEffect(e1)
                 local e2=e1:Clone() 
-				e2:SetCode(EFFECT_SET_DEFENSE_FINAL)
+                e2:SetCode(EFFECT_SET_DEFENSE_FINAL)
                 sc:RegisterEffect(e2)
-            end			
-        --OVER BURST DRAGON 
+            end         
+
+        --OVER BURST DRAGON
         elseif code==96488219 then
             local sg=Duel.GetMatchingGroup(Card.IsNegatableMonster,tp,0,LOCATION_MZONE,nil)
-			local sc=sg:GetFirst()
-            for sc in aux.Next(sg) do
-                local e1=Effect.CreateEffect(e:GetHandler())
-                e1:SetType(EFFECT_TYPE_SINGLE) 
-				e1:SetCode(EFFECT_DISABLE)
-                e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
-                sc:RegisterEffect(e1)
-                local e2=e1:Clone() 
-				e2:SetCode(EFFECT_SET_ATTACK_FINAL) 
-				e2:SetValue(0)
-                sc:RegisterEffect(e2)
-                local e3=e1:Clone() 
-				e3:SetCode(EFFECT_SET_DEFENSE_FINAL)
-                sc:RegisterEffect(e3)
+            if #sg>0 then
+                for sc in aux.Next(sg) do
+                    local e1=Effect.CreateEffect(e:GetHandler())
+                    e1:SetType(EFFECT_TYPE_SINGLE) 
+                    e1:SetCode(EFFECT_DISABLE)
+                    e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+                    sc:RegisterEffect(e1)
+                    local e2=e1:Clone() 
+                    e2:SetCode(EFFECT_SET_ATTACK_FINAL) 
+                    e2:SetValue(0)
+                    sc:RegisterEffect(e2)
+                    local e3=e1:Clone() 
+                    e3:SetCode(EFFECT_SET_DEFENSE_FINAL)
+                    sc:RegisterEffect(e3)
+                end
+                local count=Duel.GetMatchingGroupCount(Card.IsFaceup,tp,0,LOCATION_MZONE,nil)
+                Duel.Damage(1-tp,count*500,REASON_EFFECT)
             end
-            local count=Duel.GetMatchingGroupCount(Card.IsFaceup,tp,0,LOCATION_MZONE,nil)
-            Duel.Damage(1-tp,count*500,REASON_EFFECT)			
-        --PHANTASM DRAGON 
+
+        --PHANTASM DRAGON
         elseif code==96488201 then
             local g=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,0,LOCATION_MZONE,nil)
             if #g>0 then
@@ -192,7 +192,8 @@ end
                 end
             end
         end
- 
+    end
+end
 function s.sum(c)
     return c:IsFaceup() and (c:HasNonZeroAttack() or c:HasNonZeroDefense())
 end
