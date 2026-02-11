@@ -46,7 +46,7 @@ end
 function s.matfilter2(c,fc,sumtype,tp,mg,sg)
 	if not sg then return false end
 	local mc=sg:GetFirst()
-	return (c:IsSetCard(0x145) or c:IsSetCard(0x344)) 
+	return ((c:IsSummonType(SUMMON_TYPE_SPECIAL) and c:IsLocation(LOCATION_MZONE)) or c:IsSetCard(0x344))
 		and not c:IsRace(mc:GetRace())
 end
 function s.matfilter3(c,fc,sumtype,tp,mg,sg)
