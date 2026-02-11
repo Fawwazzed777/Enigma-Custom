@@ -34,29 +34,29 @@ s.listed_names={96488218,96488216,96488199}
 function s.recfilter(c)
     return c:IsSetCard(0x344) and c:IsMonster() and c:IsAbleToDeck()
 end
-function s.monfilter(c,e,tp)
-    if not (c:IsFaceup() and (c:IsCode(96488218,96488216,96488199) or c:ListsCode(96488218,96488216,96488199))) then return false end
-    local code=c:GetOriginalCode()  
-    --Spectre or Overcharge
-    if code==96488199 or code==96488218 then
-        return Duel.IsExistingMatchingCard(Card.IsFaceup,tp,0,LOCATION_MZONE,1,nil)   
-    --Spectral General
-    elseif code==96488215 or code==96488216 then
-        return Duel.IsExistingMatchingCard(s.spectral,tp,LOCATION_GRAVE,0,1,nil,e,tp)
-            or Duel.IsExistingMatchingCard(s.sum,tp,0,LOCATION_MZONE,1,nil)
-    else
-        return Duel.IsExistingMatchingCard(s.sum,tp,0,LOCATION_MZONE,1,nil)
-    end
+function s.monfilter(c)
+    return c:IsFaceup() and (c:IsCode(96488218,96488216,96488199) or c:ListsCode(96488218,96488216,96488199))
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
     if chkc then return false end
-    if chk==0 then return Duel.IsExistingTarget(s.recfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil)
-        and Duel.IsExistingTarget(s.monfilter,tp,LOCATION_MZONE,0,1,nil) end    
+    if chk==0 then 
+        local b1=Duel.IsExistingTarget(s.recfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil)
+        local b2=Duel.IsExistingTarget(s.monfilter,tp,LOCATION_MZONE,0,1,nil)
+        return b1 and b2 
+    end
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
     local g1=Duel.SelectTarget(tp,s.recfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil)
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-    local g2=Duel.SelectTarget(tp,s.monfilter,tp,LOCATION_MZONE,0,1,1,nil)    
-    e:SetLabelObject(g2:GetFirst())
+    local g2=Duel.SelectTarget(tp,s.monfilter,tp,LOCATION_MZONE,0,1,1,nil)
+    local tc=g2:GetFirst()
+    local code=tc:GetOriginalCode()
+    local opp_mon=Duel.IsExistingMatchingCard(Card.IsFaceup,tp,0,LOCATION_MZONE,1,nil)
+    local gy_mon=Duel.IsExistingMatchingCard(s.spectral,tp,LOCATION_GRAVE,0,1,nil,e,tp)  
+    --Spectre/Overcharge check
+    if (code==96488199 or code==96488218) and not opp_mon then
+        return false 
+    end 
+    e:SetLabelObject(tc)
     Duel.SetOperationInfo(0,CATEGORY_TODECK,g1,1,0,0)
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
