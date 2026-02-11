@@ -100,7 +100,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
             Duel.SpecialSummonComplete()
         end     
     else
-        --Debuff ATK or DEF Final
+        --Efek 2: Debuff ATK or DEF Final
         Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
         local g=Duel.SelectMatchingCard(tp,s.sum,tp,0,LOCATION_MZONE,1,1,nil)
         local sc=g:GetFirst()
