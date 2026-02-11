@@ -78,7 +78,8 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
                 e3:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
                 sc:RegisterEffect(e3)
                 Duel.Damage(1-tp,800,REASON_EFFECT)
-            end           
+            end 
+end			
 		--SPECTRAL GENERAL
 		elseif code==96488216 then
 		--Check
@@ -191,7 +192,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
                 end
             end
         end
-    end
+ 
 function s.sum(c)
     return c:IsFaceup() and (c:HasNonZeroAttack() or c:HasNonZeroDefense())
 end
