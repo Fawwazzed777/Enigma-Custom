@@ -83,7 +83,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 		--SPECTRAL GENERAL
 		elseif code==96488216 then
 		--efek: [0] Special Summon or [1] Debuff ATK/DEF
-		local opt=Duel.SelectOption(tp, aux.Stringid(code,0), aux.Stringid(code,2))   
+		local opt=Duel.SelectOption(tp, aux.Stringid(code,0), aux.Stringid(code,4))   
 		if opt==0 then
         --Efek 1: Special Summon 1 "Enigmation" from GY
         Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
