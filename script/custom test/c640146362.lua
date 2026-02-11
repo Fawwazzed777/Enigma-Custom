@@ -89,7 +89,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
         Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
         local sg=Duel.SelectTarget(tp,s.spectral,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
         if #sg>0 then
-            local sc=sg:GetFirstTarget()
+            local sc=sg:GetFirst()
             if Duel.SpecialSummonStep(sc,0,tp,tp,false,false,POS_FACEUP) then
                 local e1=Effect.CreateEffect(e:GetHandler())
 				e1:SetDescription(3206)
