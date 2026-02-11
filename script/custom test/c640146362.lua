@@ -80,40 +80,42 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
                 sc:RegisterEffect(e3)
                 Duel.Damage(1-tp,800,REASON_EFFECT)
             end            
-		--SPECTRAL GENERAL
+		--SPECTRAL GENERAL (96488216)
 		elseif code==96488216 then
-		--efek: [0] Special Summon or [1] Debuff ATK/DEF
-		local opt=Duel.SelectOption(tp, aux.Stringid(code,0), aux.Stringid(code,4))   
-		if opt==0 then
-        --efek: [1] Special Summon 1 "Enigmation" from GY
+		--Check
+		local b1=Duel.IsExistingMatchingCard(s.spectral,tp,LOCATION_GRAVE,0,1,nil,e,tp)
+		local b2=Duel.IsExistingMatchingCard(s.sum,tp,0,LOCATION_MZONE,1,nil)   
+		--Option
+		local op=Duel.SelectEffect(tp,
+        {b1,aux.Stringid(code,0)},
+        {b2,aux.Stringid(code,4)})
+		if op==1 then
+        --Special Summon from GY
         Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
         local sg=Duel.SelectTarget(tp,s.spectral,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
         if #sg>0 then
             local sc=sg:GetFirst()
             if Duel.SpecialSummonStep(sc,0,tp,tp,false,false,POS_FACEUP) then
                 local e1=Effect.CreateEffect(e:GetHandler())
-				e1:SetDescription(3206)
-				e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CLIENT_HINT)
                 e1:SetType(EFFECT_TYPE_SINGLE)
                 e1:SetCode(EFFECT_CANNOT_ATTACK)
                 e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
                 sc:RegisterEffect(e1)
             end
             Duel.SpecialSummonComplete()
-        end     
-    else
-        --Efek 2: Debuff ATK or DEF Final
+        end
+		elseif op==2 then
+        --Debuff (Only active if b2 is true)
         Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
         local g=Duel.SelectMatchingCard(tp,s.sum,tp,0,LOCATION_MZONE,1,1,nil)
         local sc=g:GetFirst()
         if sc then
             Duel.HintSelection(g)
-            --ATK or DEF
-            local op=Duel.SelectOption(tp,aux.Stringid(code,3),aux.Stringid(code,2))
+            local sub_op=Duel.SelectOption(tp,aux.Stringid(code,3),aux.Stringid(code,2))
             local e1=Effect.CreateEffect(e:GetHandler())
             e1:SetType(EFFECT_TYPE_SINGLE)
-            e1:SetCode(op==0 and EFFECT_SET_ATTACK_FINAL or EFFECT_SET_DEFENSE_FINAL)
-            e1:SetValue((op==0 and sc:GetAttack() or sc:GetDefense())/2)
+            e1:SetCode(sub_op==0 and EFFECT_SET_ATTACK_FINAL or EFFECT_SET_DEFENSE_FINAL)
+            e1:SetValue((sub_op==0 and sc:GetAttack() or sc:GetDefense())/2)
             e1:SetReset(RESET_EVENT+RESETS_STANDARD)
             sc:RegisterEffect(e1)
         end
