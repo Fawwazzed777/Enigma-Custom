@@ -87,7 +87,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
             local b2=Duel.IsExistingMatchingCard(s.sum,tp,0,LOCATION_MZONE,1,nil)   
             local op=Duel.SelectEffect(tp,
                 {b1, aux.Stringid(code,0)},
-                {b2, aux.Stringid(code,2)})
+                {b2, aux.Stringid(code,4)})
             if op==1 then
                 Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
                 local sg=Duel.SelectMatchingCard(tp,s.spectral,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
@@ -146,7 +146,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
                 Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
                 local sc=sg:Select(tp,1,1,nil):GetFirst()
                 Duel.HintSelection(sc)
-                -- ATK & DEF menjadi 0
+                -- ATK&DEF 0
                 local e1=Effect.CreateEffect(e:GetHandler())
                 e1:SetType(EFFECT_TYPE_SINGLE) 
                 e1:SetCode(EFFECT_SET_ATTACK_FINAL) 
