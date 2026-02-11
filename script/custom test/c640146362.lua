@@ -34,8 +34,19 @@ s.listed_names={96488218,96488216,96488199}
 function s.recfilter(c)
     return c:IsSetCard(0x344) and c:IsMonster() and c:IsAbleToDeck()
 end
-function s.monfilter(c)
-    return c:IsFaceup() and (c:IsCode(96488218,96488216,96488199) or c:ListsCode(96488218,96488216,96488199))
+function s.monfilter(c,e,tp)
+    if not (c:IsFaceup() and (c:IsCode(96488218,96488216,96488199) or c:ListsCode(96488218,96488216,96488199))) then return false end
+    local code=c:GetOriginalCode()  
+    --Spectre or Overcharge
+    if code==96488199 or code==96488218 then
+        return Duel.IsExistingMatchingCard(Card.IsFaceup,tp,0,LOCATION_MZONE,1,nil)   
+    --Spectral General
+    elseif code==96488216 then
+        return Duel.IsExistingMatchingCard(s.spectral,tp,LOCATION_GRAVE,0,1,nil,e,tp)
+            or Duel.IsExistingMatchingCard(Card.IsFaceup,tp,0,LOCATION_MZONE,1,nil)
+    else
+        return Duel.IsExistingMatchingCard(Card.IsFaceup,tp,0,LOCATION_MZONE,1,nil)
+    end
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
     if chkc then return false end
