@@ -10,7 +10,5 @@ if not GenerateEffect then
 	ATTRIBUTE_RADIANT= 0x100
 
 	--Additional Types
-	RACE_VIRTUOUS    = 0x4000000
+	RACE_VIRTUOUS	= 0x100000000
 	end
---Counter
-COUNTER_VANDAL =0x1765
