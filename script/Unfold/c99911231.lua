@@ -69,6 +69,7 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 			if atk~=0 and tc:IsAttack(0) then 
 			Duel.BreakEffect()
 			Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)
+			end
         end
     end
 end
