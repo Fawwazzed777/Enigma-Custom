@@ -41,9 +41,9 @@ function s.initial_effect(c)
 	--immune
 	local e5=Effect.CreateEffect(c)
 	e5:SetType(EFFECT_TYPE_SINGLE)
-	e5:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_UNCOPYABLE)
-	e5:SetRange(LOCATION_MZONE)
 	e5:SetCode(EFFECT_IMMUNE_EFFECT)
+	e5:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e5:SetRange(LOCATION_MZONE)
 	e5:SetValue(s.efilter)
 	c:RegisterEffect(e5)
 	--Battle debuff + negate
@@ -56,7 +56,7 @@ function s.initial_effect(c)
 end
 s.listed_series={0x145}
 function s.efilter(e,te)
-	if (te:IsSpellTrapEffect() and not c:IsSetCard(0x145) or c:IsSetCard(0x344)) then return true end
+	return te:IsActiveType(TYPE_SPELL+TYPE_TRAP) and te:GetOwnerPlayer()~=e:GetHandlerPlayer()
 end
 function s.regcon(e,tp,eg,ep,ev,re,r,rp)
 	return (e:GetHandler():GetSummonType()&SUMMON_TYPE_XYZ)==SUMMON_TYPE_XYZ and e:GetLabel()==1
@@ -88,13 +88,13 @@ function s.rcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
 end
 function s.rtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetFieldGroupCount(tp,0,LOCATION_SZONE)>0 end
-	local g=Duel.GetMatchingGroup(s.stfilter,tp,0,LOCATION_ONFIELD,nil)
+	if chk==0 then return Duel.GetFieldGroupCount(tp,LOCATION_SZONE,LOCATION_SZONE)>0 end
+	local g=Duel.GetMatchingGroup(s.stfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,#g,0,0)
 end
 function s.rop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local g=Duel.GetMatchingGroup(s.stfilter,tp,0,LOCATION_ONFIELD,nil)
+	local g=Duel.GetMatchingGroup(s.stfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
 	if #g==0 then return end
 	if Duel.Remove(g,POS_FACEUP,REASON_EFFECT)==0 then return end
 	local ct=Duel.GetFieldGroupCount(tp,LOCATION_REMOVED,LOCATION_REMOVED)
