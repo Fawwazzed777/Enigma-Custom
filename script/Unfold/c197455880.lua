@@ -28,8 +28,8 @@ function s.initial_effect(c)
 end
 s.listed_series={0x344}
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
-    return (eg:IsExists(Card.IsControler,1,nil,1-tp) 
-	and eg:IsAbleToRemove()) and Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsSetCard,0x344),tp,LOCATION_ONFIELD,0,1,nil)
+    return eg:IsExists(function(c)return c:IsControler(1-tp) and c:IsAbleToRemove()end,1,nil) 
+	and Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsSetCard,0x344),tp,LOCATION_ONFIELD,0,1,nil)
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return Duel.CheckLPCost(tp,1000) end
