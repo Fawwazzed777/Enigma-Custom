@@ -38,14 +38,13 @@ function s.initial_effect(c)
 	e4:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
 	e4:SetValue(1)
 	c:RegisterEffect(e4)
-	--cannot be banished
+	--immune
 	local e5=Effect.CreateEffect(c)
-	e5:SetType(EFFECT_TYPE_FIELD)
-	e5:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e5:SetCode(EFFECT_CANNOT_REMOVE)
+	e5:SetType(EFFECT_TYPE_SINGLE)
+	e5:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_UNCOPYABLE)
 	e5:SetRange(LOCATION_MZONE)
-	e5:SetTargetRange(1,1)
-	e5:SetTarget(s.rmlimit)
+	e5:SetCode(EFFECT_IMMUNE_EFFECT)
+	e5:SetValue(s.efilter)
 	c:RegisterEffect(e5)
 	--Battle debuff + negate
 	local e6=Effect.CreateEffect(c)
@@ -56,8 +55,8 @@ function s.initial_effect(c)
 	c:RegisterEffect(e6)
 end
 s.listed_series={0x145}
-function s.rmlimit(e,c,tp,r)
-	return c==e:GetHandler() and r==REASON_EFFECT
+function s.efilter(e,te)
+	if (te:IsSpellTrapEffect() and not c:IsSetCard(0x145) or c:IsSetCard(0x344)) then return true end
 end
 function s.regcon(e,tp,eg,ep,ev,re,r,rp)
 	return (e:GetHandler():GetSummonType()&SUMMON_TYPE_XYZ)==SUMMON_TYPE_XYZ and e:GetLabel()==1
