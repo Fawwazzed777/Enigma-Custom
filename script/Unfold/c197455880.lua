@@ -48,7 +48,7 @@ function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
     Duel.PayLPCost(tp,1000)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-    local g=eg:Filter(Card.IsControler,nil,1-tp):Filter(Card.IsLocation,nil,LOCATION_MZONE)
+    local g=eg:Filter(Card.IsControler,nil,1-tp):Filter(Card.IsAbleToRemove,nil)
     local c=e:GetHandler()
     if chk==0 then 
         return #g>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -58,8 +58,8 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
     Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,0,0)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
-    local c=e:GetHandler()
-    local g=eg:Filter(Card.IsControler,nil,1-tp):Filter(Card.IsLocation,nil,LOCATION_MZONE)
+local c=e:GetHandler()
+    local g=eg:Filter(Card.IsControler,nil,1-tp):Filter(Card.IsLocation,nil,LOCATION_MZONE):Filter(Card.IsAbleToRemove,nil)   
     if #g>0 then
         Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
         local sg=g:Select(tp,1,1,nil)
