@@ -1,4 +1,4 @@
--- Enigmation Lord - Void Sentinel
+--Enigmation Lord - Void Sentinel
 local s,id=GetID()
 function s.initial_effect(c)
     --Banish opponent's monster and SS this card from GY
@@ -15,7 +15,7 @@ function s.initial_effect(c)
     e1:SetTarget(s.sptg)
     e1:SetOperation(s.spop)
     c:RegisterEffect(e1)
-    --If banished, grant protection to an Enigmation monster
+    --(If banished), grant protection to an Enigmation monster
     local e2=Effect.CreateEffect(c)
     e2:SetDescription(aux.Stringid(id,1))
     e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
@@ -25,6 +25,18 @@ function s.initial_effect(c)
     e2:SetTarget(s.prottg)
     e2:SetOperation(s.protop)
     c:RegisterEffect(e2)
+	--(Field Trigger)
+    local e3=Effect.CreateEffect(c)
+    e3:SetDescription(aux.Stringid(id,1))
+    e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+    e3:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
+    e3:SetCode(EVENT_REMOVE)
+    e3:SetRange(LOCATION_MZONE)
+    e3:SetCountLimit(1,{id,1})
+    e3:SetCondition(s.othercon)
+    e3:SetTarget(s.prottg)
+    e3:SetOperation(s.protop)
+    c:RegisterEffect(e3)
 end
 s.listed_series={0x344}
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
@@ -60,6 +72,10 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
             end
         end
     end
+end
+--Other
+function s.othercon(e,tp,eg,ep,ev,re,r,rp)
+    return not eg:Contains(e:GetHandler())
 end
 function s.prottg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
     if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) 
