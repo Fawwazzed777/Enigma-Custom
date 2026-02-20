@@ -93,7 +93,7 @@ function s.splimit(e,c,sump,sumtype,sumpos,targetp,se)
     return not (c:IsSetCard(0x344) or c:IsSetCard(0x145)) and c:IsLocation(LOCATION_EXTRA)
 end
 function s.thfilter(c)
-    return (c:IsSetCard(0x344) or c:IsSetCard(0x145)) and c:IsFaceup() and c:IsAbleToHand()
+    return (c:IsSetCard(0x344) or c:IsSetCard(0x145)) and c:IsFaceup() and c:IsMonster() and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
     if chkc then return chkc:IsLocation(LOCATION_REMOVED) and chkc:IsControler(tp) and s.thfilter(chkc) end
