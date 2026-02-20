@@ -75,7 +75,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 end
 --Other
 function s.othercon(e,tp,eg,ep,ev,re,r,rp)
-    return not eg:Contains(e:GetHandler())
+    return not eg:IsContains(e:GetHandler())
 end
 function s.prottg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
     if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) 
