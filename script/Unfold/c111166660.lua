@@ -41,8 +41,8 @@ end
 
 --Global Check
 function s.checkop(e,tp,eg,ep,ev,re,r,rp)
-    Duel.RegisterFlagEffect(0,id,RESET_PHASE+PHASE_END,0,1)
-    Duel.RegisterFlagEffect(1,id,RESET_PHASE+PHASE_END,0,1)
+    Duel.RegisterFlagEffect(0,111166660,RESET_PHASE+PHASE_END,0,1)
+    Duel.RegisterFlagEffect(1,111166660,RESET_PHASE+PHASE_END,0,1)
 end
 
 --Lock (Anti-Climbing)
