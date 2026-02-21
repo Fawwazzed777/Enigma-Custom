@@ -2112,7 +2112,7 @@ function Auxiliary.GetAttributeStrings(v)
 		[ATTRIBUTE_WIND] = 1013,
 		[ATTRIBUTE_LIGHT] = 1014,
 		[ATTRIBUTE_DARK] = 1015,
-		[ATTRIBUTE_DIVINE] = 1016
+		[ATTRIBUTE_DIVINE] = 1016,
 		[ATTRIBUTE_RADIANT] = 1017
 	}
 	local res={}
