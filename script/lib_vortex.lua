@@ -55,7 +55,7 @@ end
 function Vortex.Target(total_val, recipe)
     return function(e,tp,eg,ep,ev,re,r,rp,chk,c)
         local rg=Duel.GetMatchingGroup(Vortex.MatFilter,tp,LOCATION_MZONE,0,nil)
-        local sg=aux.SelectUnselectGroup(rg,e,tp,2,99,Vortex.Rescon(total_val, recipe),1,tp,aux.Stringid(e:GetHandler():GetID(),0))
+        local sg=aux.SelectUnselectGroup(rg,e,tp,2,99,Vortex.Rescon(total_val, recipe),1,tp,aux.Stringid(c:GetID(),0))
         if sg then
             sg:KeepAlive()
             e:SetLabelObject(sg)
