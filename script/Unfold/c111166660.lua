@@ -1,5 +1,5 @@
 --Enigmation Lord - Void Crisis
-Duel.LoadScript("lib_vortex.lua")
+Duel.LoadScript("utility_enigma.lua")
 local s,id=GetID()
 function s.initial_effect(c)
     c:EnableReviveLimit()       
