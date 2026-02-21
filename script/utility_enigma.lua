@@ -2113,6 +2113,7 @@ function Auxiliary.GetAttributeStrings(v)
 		[ATTRIBUTE_LIGHT] = 1014,
 		[ATTRIBUTE_DARK] = 1015,
 		[ATTRIBUTE_DIVINE] = 1016
+		[ATTRIBUTE_RADIANT] = 1017
 	}
 	local res={}
 	local ct=0
@@ -2152,7 +2153,8 @@ function Auxiliary.GetRaceStrings(v)
 		[RACE_CREATORGOD] = 1042,
 		[RACE_WYRM] = 1043,
 		[RACE_CYBERSE] = 1044,
-		[RACE_ILLUSION] = 1045
+		[RACE_ILLUSION] = 1045,
+		[RACE_VIRTUOUS] = 1046
 	}
 	local res={}
 	local ct=0
