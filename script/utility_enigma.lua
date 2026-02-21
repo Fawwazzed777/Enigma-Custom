@@ -2855,7 +2855,6 @@ function Vortex.Operation(e,tp,eg,ep,ev,re,r,rp,c,sg)
 end
 Duel.LoadScript("debug_utility.lua")
 Duel.LoadScript("cards_specific_functions.lua")
-Duel.LoadScript("user_cards_specific_functions.lua")
 Duel.LoadScript("proc_fusion.lua")
 Duel.LoadScript("proc_fusion_spell.lua")
 Duel.LoadScript("proc_ritual.lua")
