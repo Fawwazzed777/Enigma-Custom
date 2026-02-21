@@ -3,7 +3,7 @@ Duel.LoadScript("utility_enigma.lua")
 local s,id=GetID()
 function s.initial_effect(c)
     c:EnableReviveLimit()       
-    --Vortex Summon Implementation
+    --Summon Logic
     --Requirement: Total Value 12, Recipe: 1 Rank 4 + 1+ Level 4 or lower
     Vortex.AddProcedure(c,12,s.vortex_recipe)    
     --Anti-Climbing Lock (Floodgate)
@@ -30,26 +30,22 @@ s.listed_series={0x145,0x344}
 function s.vortex_recipe(sg,e,tp,mg)
     --Min. 5 Enigmation/Phantasm card in Banishment
     local g=Duel.GetMatchingGroup(function(c) 
-        return (c:IsSetCard(0x145) or c:IsSetCard(0x344)) and c:IsFaceup() 
-    end, tp, LOCATION_REMOVED, 0, nil)
-    if #g < 5 then return false end
-    --Syarat 2: 1 Rank 4 Monster
-    local has_rank4 = sg:IsExists(Card.IsRank, 1, nil, 4)
-    --Syarat 3: Sisanya adalah Level 4 kebawah
-    local others_check = sg:FilterCount(function(c) 
+        return (c:IsSetCard(0x145) or c:IsSetCard(0x344)) and c:IsFaceup() end,tp,LOCATION_REMOVED,0,nil)
+    if #g<5 then return false end
+    local has_rank4= sg:IsExists(Card.IsRank,1,nil,4)
+    local others_check= sg:FilterCount(function(c) 
         return not c:IsType(TYPE_XYZ) and c:IsLevelBelow(4) 
-    end, nil)
-    
-    return has_rank4 and (others_check == #sg - 1)
+    end, nil)    
+    return has_rank4 and (others_check==#sg-1)
 end
 
---Global Check: Tetap menggunakan ID Void Crisis (111166660) sebagai Flag
+--Global Check
 function s.checkop(e,tp,eg,ep,ev,re,r,rp)
-    Duel.RegisterFlagEffect(0, 111166660, RESET_PHASE+PHASE_END, 0, 1)
-    Duel.RegisterFlagEffect(1, 111166660, RESET_PHASE+PHASE_END, 0, 1)
+    Duel.RegisterFlagEffect(0,id,RESET_PHASE+PHASE_END,0,1)
+    Duel.RegisterFlagEffect(1,id,RESET_PHASE+PHASE_END,0,1)
 end
 
---Lock (Anti-Climbing) - Tetap dipertahankan
+--Lock (Anti-Climbing)
 function s.splimit(e,c,sump,sumtype,sumpos,targetp,se)
     if not (c:IsLocation(LOCATION_EXTRA) or c:IsType(TYPE_EXTRA)) then return false end    
     local tpe=c:GetType()
