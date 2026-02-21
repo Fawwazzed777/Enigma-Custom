@@ -29,12 +29,13 @@ function Vortex.Rescon(total_val,recipe)
 end
 
 function Vortex.AddProcedure(c,total_val,recipe)
+    if not c then return end
     local e1=Effect.CreateEffect(c)
     e1:SetType(EFFECT_TYPE_FIELD)
     e1:SetCode(EFFECT_SPSUMMON_PROC)
     e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
     e1:SetRange(LOCATION_EXTRA)
-    e1:SetLabel(c:GetID()) 
+    -- e1:SetLabel(c:GetID())
     e1:SetCondition(Vortex.Condition(total_val,recipe))
     e1:SetTarget(Vortex.Target(total_val,recipe))
     e1:SetOperation(Vortex.Operation)
@@ -55,8 +56,8 @@ end
 function Vortex.Target(total_val,recipe)
     return function(e,tp,eg,ep,ev,re,r,rp,chk,c)
         local rg=Duel.GetMatchingGroup(Vortex.MatFilter,tp,LOCATION_MZONE,0,nil)
-        --Manual filter
-        local sg=aux.SelectUnselectGroup(rg,e,tp,2,99,Vortex.Rescon(total_val,recipe),1,tp,HINTMSG_SPSUMMON)
+        local cid=e:GetHandler():GetID() 
+        local sg=aux.SelectUnselectGroup(rg,e,tp,2,99,Vortex.Rescon(total_val,recipe),1,tp,aux.Stringid(cid,0))
         if sg then
             sg:KeepAlive()
             e:SetLabelObject(sg)
