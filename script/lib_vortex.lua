@@ -1,19 +1,19 @@
--- Vortex Procedure Library
+--Vortex Procedure Library
 if not Vortex then
     Vortex = {}
 end
 
--- ID Reference for Global Flag
+--ID Reference for Global Flag
 VORTEX_GLOBAL_FLAG = 111166660
 
--- Helper(Level, Rank, or Link)
+--Helper(Level, Rank, or Link)
 function Vortex.GetValue(c)
     if c:IsType(TYPE_LINK) then return c:GetLink() end
     if c:IsType(TYPE_XYZ) then return c:GetRank() end
     return c:GetLevel()
 end
 
--- Prosedur Utama: Daftarkan ke Kartu
+--Procedure
 function Vortex.AddProcedure(c, total_val, recipe)
     --total_val: Total Level/Rank/Link needed (example: 12)
     --recipe: Function for the material (ex: 1 Rank 4 + 1 Lvl 4)   
