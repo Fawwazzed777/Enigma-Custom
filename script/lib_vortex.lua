@@ -43,10 +43,10 @@ end
 function Vortex.Condition(total_val, recipe)
     return function(e,c,tp,sg)
         if c==nil then return true end
-        if Duel.GetLocationCountFromEx(tp,tp,nil,c)<=0 then return false end       
-        --GLOBAL CHECK: Check if a card is banished this turn
-        --Global Effect Void Crisis
-        if Duel.GetFlagEffect(tp,111166660)== 0 then return false end        
+        local tp=c:GetControler()       
+        if Duel.GetLocationCountFromEx(tp,tp,nil,c)<=0 then return false end               
+        -- GLOBAL CHECK
+        if Duel.GetFlagEffect(tp,111166660)== 0 then return false end                
         local rg=Duel.GetMatchingGroup(Vortex.MatFilter,tp,LOCATION_MZONE,0,nil)
         return aux.SelectUnselectGroup(rg,e,tp,2,99,Vortex.Rescon(total_val, recipe),0)
     end
