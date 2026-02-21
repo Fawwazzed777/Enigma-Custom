@@ -19,8 +19,9 @@ function Vortex.Rescon(total_val,recipe)
     return function(sg,e,tp,mg)
         local sum= 0
         local tc= sg:GetFirst()
-        for tc in aux.Next(sg) do
+        while tc do
             sum= sum + Vortex.GetValue(tc)
+            tc= sg:GetNext()
         end
         if sum~= total_val then return false end
         if Duel.GetLocationCountFromEx(tp,tp,sg,e:GetHandler())<=0 then return false end
@@ -35,9 +36,8 @@ function Vortex.AddProcedure(c,total_val,recipe)
     e1:SetCode(EFFECT_SPSUMMON_PROC)
     e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
     e1:SetRange(LOCATION_EXTRA)
-    -- e1:SetLabel(c:GetID())
-    e1:SetCondition(Vortex.Condition(total_val,recipe))
-    e1:SetTarget(Vortex.Target(total_val,recipe))
+    e1:SetCondition(Vortex.Condition(total_val, recipe))
+    e1:SetTarget(Vortex.Target(total_val, recipe))
     e1:SetOperation(Vortex.Operation)
     e1:SetValue(99)
     c:RegisterEffect(e1)
@@ -47,7 +47,7 @@ function Vortex.Condition(total_val,recipe)
     return function(e,c,tp,sg)
         if c==nil then return true end
         local tp=c:GetControler()
-        if Duel.GetFlagEffect(tp,VORTEX_GLOBAL_FLAG)==0 then return false end       
+        if Duel.GetFlagEffect(tp,VORTEX_GLOBAL_FLAG)==0 then return false end
         local rg=Duel.GetMatchingGroup(Vortex.MatFilter,tp,LOCATION_MZONE,0,nil)
         return aux.SelectUnselectGroup(rg,e,tp,2,99,Vortex.Rescon(total_val,recipe),0)
     end
@@ -56,7 +56,8 @@ end
 function Vortex.Target(total_val,recipe)
     return function(e,tp,eg,ep,ev,re,r,rp,chk,c)
         local rg=Duel.GetMatchingGroup(Vortex.MatFilter,tp,LOCATION_MZONE,0,nil)
-        local cid=e:GetHandler():GetID() 
+        local handler= e:GetHandler()
+        local cid= handler:GetID()
         local sg=aux.SelectUnselectGroup(rg,e,tp,2,99,Vortex.Rescon(total_val,recipe),1,tp,aux.Stringid(cid,0))
         if sg then
             sg:KeepAlive()
