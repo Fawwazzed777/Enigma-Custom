@@ -28,15 +28,15 @@ end
 s.listed_series={0x145,0x344}
 --Recipe for Void Crisis
 function s.vortex_recipe(sg,e,tp,mg)
-    --Min. 5 Enigmation/Phantasm card in Banishment
+    --Minimal 5 Enigmation/Phantasm di Banishment
     local g=Duel.GetMatchingGroup(function(c) 
-        return (c:IsSetCard(0x145) or c:IsSetCard(0x344)) and c:IsFaceup() end,tp,LOCATION_REMOVED,0,nil)
+        return (c:IsSetCard(0x145) or c:IsSetCard(0x344)) and c:IsFaceup() 
+    end,tp,LOCATION_REMOVED,0,nil)
     if #g<5 then return false end
-    local has_rank4= sg:IsExists(Card.IsRank,1,nil,4)
-    local others_check= sg:FilterCount(function(c) 
-        return not c:IsType(TYPE_XYZ) and c:IsLevelBelow(4) 
-    end, nil)    
-    return has_rank4 and (others_check==#sg-1)
+    local g_rank4= sg:Filter(Card.IsRank,nil,4)
+    if #g_rank4~= 1 then return false end   
+    local other_mats= sg-g_rank4
+    return other_mats:All(function(c) return c:IsLevelBelow(4) and c:GetLevel() > 0 end)
 end
 
 --Global Check
