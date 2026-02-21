@@ -2785,7 +2785,7 @@ end
 --(ID Void Crisis)
 VORTEX_GLOBAL_FLAG = 111166660 
 
--- Helper(Level, Rank, atau Link)
+--Helper(Level, Rank, atau Link)
 function Vortex.GetValue(c)
     if c:IsType(TYPE_LINK) then return c:GetLink() end
     if c:IsType(TYPE_XYZ) then return c:GetRank() end
