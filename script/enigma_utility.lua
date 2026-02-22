@@ -259,8 +259,8 @@ function Duel.RegisterFlagEffectCustom(player, code, reset_flag, property, reset
 end
 
 function Card.RegisterFlagEffectCustom(c, code, reset_flag, property, reset_count, label, desc)
-    Debug.Message("Duel.RegisterFlagEffect("..code..")")
-    Card.RegisterFlagEffect(c, code, reset_flag, property, reset_count, label, desc)
+    if not c or not code then return end 
+    Duel.RegisterFlagEffect(c:GetControler(), code, reset_flag, property, reset_count, label)
 end
 
 

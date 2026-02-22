@@ -26,20 +26,21 @@ function Vortex.Rescon(sg,e,tp,mg,total_val,recipe)
 end
 
 function Vortex.AddProcedure(c,total_val,recipe)
+    --Main Summon Procedure
     local e1=Effect.CreateEffect(c)
     e1:SetType(EFFECT_TYPE_FIELD)
     e1:SetCode(EFFECT_SPSUMMON_PROC)
     e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
     e1:SetRange(LOCATION_EXTRA)
-    e1:SetLabel(total_val)
+    e1:SetLabel(total_val)   
     if recipe then
         e1:SetLabelObject(recipe)
-    end
+    end    
     e1:SetCondition(Vortex.Condition)
     e1:SetTarget(Vortex.Target)
     e1:SetOperation(Vortex.Operation)
     e1:SetValue(SUMMON_TYPE_VORTEX)
-    c:RegisterEffect(e1)    
+    c:RegisterEffect(e1)
     local e0=Effect.CreateEffect(c)
     e0:SetType(EFFECT_TYPE_SINGLE)
     e0:SetCode(EFFECT_REMOVE_TYPE)

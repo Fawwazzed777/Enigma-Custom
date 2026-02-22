@@ -1,6 +1,8 @@
 -- Enigmation Lord - Void Crisis
 if not ENIGMA_PATCH then Duel.LoadScript("enigma_utility.lua") end
+if not VORTEX_IMPORTED then Duel.LoadScript("proc_vortex.lua") end
 local s,id=GetID()
+
 function s.vortex_recipe(sg,e,tp,mg)
     local g=Duel.GetMatchingGroup(function(c) 
         return (c:IsSetCard(0x145) or c:IsSetCard(0x344)) and c:IsFaceup() 
