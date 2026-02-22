@@ -11,6 +11,8 @@ if not ENIGMA_PATCH then Duel.LoadScript("enigma_utility.lua") end
 
 if not ENIGMA_CONSTANTS_IMPORTED then Duel.LoadScript("enigma_constant.lua") end
 
+if not VORTEX_IMPORTED then Duel.LoadScript("proc_vortex.lua") end
+
 --------------------------------------------
 local ATTRIBUTES = {}
 ATTRIBUTES[ATTRIBUTE_EARTH] = "EARTH"
@@ -261,10 +263,5 @@ function Card.RegisterFlagEffectCustom(c, code, reset_flag, property, reset_coun
     Card.RegisterFlagEffect(c, code, reset_flag, property, reset_count, label, desc)
 end
 
---------------------------------------------
--- Import modules
---------------------------------------------
-
-if not VORTEX_IMPORTED then Duel.LoadScript("proc_vortex.lua") end
 
 --------------------------------------------

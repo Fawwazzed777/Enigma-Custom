@@ -1,4 +1,4 @@
-VORTEX_IMPORTED=true
+VORTEX_IMPORTED = true
 
 if not aux.VortexProcedure then
 	aux.VortexProcedure = {}
