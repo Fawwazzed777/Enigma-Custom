@@ -9,7 +9,7 @@ if not ENIGMA_PATCH then Duel.LoadScript("enigma_utility.lua") end
 -- Import constants
 --------------------------------------------
 
-if not ENIGMA_CONSTANTS_IMPORTED then Duel.LoadScript("enigma_constants.lua") end
+if not ENIGMA_CONSTANTS_IMPORTED then Duel.LoadScript("enigma_constant.lua") end
 
 --------------------------------------------
 local ATTRIBUTES = {}
@@ -252,12 +252,12 @@ end
 
 function Duel.RegisterFlagEffectCustom(player, code, reset_flag, property, reset_count, label)
     if not label then label = 0 end
-    Debug.UniqueMessage(player, "Duel.RegisterFlagEffect("..code..")")
+    Debug.Message("Duel.RegisterFlagEffect("..code..")")
     Duel.RegisterFlagEffect(player, code, reset_flag, property, reset_count, label)
 end
 
 function Card.RegisterFlagEffectCustom(c, code, reset_flag, property, reset_count, label, desc)
-    Debug.UniqueMessage(c:GetControler(), "Card.RegisterFlagEffect("..code..")")
+    Debug.Message("Duel.RegisterFlagEffect("..code..")")
     Card.RegisterFlagEffect(c, code, reset_flag, property, reset_count, label, desc)
 end
 
