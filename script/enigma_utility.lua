@@ -241,10 +241,10 @@ LOCATIONS[LOCATION_OVERLAY] = "OVERLAY"
 LOCATIONS[LOCATION_ONFIELD] = "ONFIELD"
 LOCATIONS[LOCATION_PUBLIC] = "PUBLIC"
 function Auxiliary.DecodeLocation(location)
-    if not location then return "NONE" end
+    if not location or type(location) ~= "number" then return "NONE" end -- Tambahkan baris pengaman ini
     local out
     for k,v in pairs(LOCATIONS) do
-        if k&location==k then
+        if (k & location) == k then 
             if out then out = out.."|"..v
             else out = v end
         end
