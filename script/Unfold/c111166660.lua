@@ -4,16 +4,14 @@ if not VORTEX_IMPORTED then Duel.LoadScript("proc_vortex.lua") end
 local s,id=GetID()
 
 function s.vortex_recipe(sg,e,tp,mg)
-    --Minimal 5 Enigmation/Phantasm cards in Banishment
     local g=Duel.GetMatchingGroup(function(c) 
         return (c:IsSetCard(0x145) or c:IsSetCard(0x344)) and c:IsFaceup() 
     end,tp,LOCATION_REMOVED,0,nil)
     if #g<5 then return false end       
-    --Rank 4
+    
     local g_rank4=sg:Filter(Card.IsRank,nil,4)
     if #g_rank4~=1 then return false end   
     
-    --The other must Level 4 or lower
     local other_mats=sg-g_rank4
     local count_valid = other_mats:FilterCount(function(c) 
         return c:IsLevelBelow(4) and c:GetLevel()>0 
