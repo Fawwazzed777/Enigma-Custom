@@ -22,6 +22,18 @@ end
 function s.initial_effect(c)
     c:EnableReviveLimit()       
     Vortex.AddProcedure(c,12,s.vortex_recipe)
+	local e_test = Effect.CreateEffect(c)
+	e_test:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e_test:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e_test:SetCondition(function(e,tp,eg,ep,ev,re,r,rp)
+		return e:GetHandler():GetSummonType() == SUMMON_TYPE_VORTEX
+	end)
+	e_test:SetOperation(function(e,tp,eg,ep,ev,re,r,rp)
+		Duel.Hint(HINT_MESSAGE,tp,aux.Stringid(id,0))
+		--Debug:
+		Debug.Message("Sistem: Vortex Summon Detected!")
+	end)
+	c:RegisterEffect(e_test)
     --Anti-Climbing Lock
     local e1=Effect.CreateEffect(c)
     e1:SetType(EFFECT_TYPE_FIELD)
