@@ -9,76 +9,102 @@ if not ENIGMA_PATCH then Duel.LoadScript("enigma_utility.lua") end
 -- Import constants
 --------------------------------------------
 
-if not ENIGMA_PATCH_CONSTANTS then Duel.LoadScript("enigma_constants.lua") end
+if not ENIGMA_CONSTANTS_IMPORTED then Duel.LoadScript("enigma_constants.lua") end
 
 --------------------------------------------
-
---Vortex Summon
-if not Vortex then
-    Vortex = {}
-end
-
-VORTEX_GLOBAL_FLAG= 111166660 
-
-function Vortex.GetValue(c)
-    if c:IsType(TYPE_LINK) then return c:GetLink() end
-    if c:IsType(TYPE_XYZ) then return c:GetRank() end
-    return c:GetLevel()
-end
-
-function Vortex.MatFilter(c,filter,tp)
-    return c:IsFaceup() and c:IsAbleToDeck() and (not filter or filter(c,tp))
-end
-
-function Vortex.Rescon(sg,e,tp,mg,total_val,recipe)
-    local sum=sg:GetSum(Vortex.GetValue)
-    if sum~=total_val then return false end
-    if Duel.GetLocationCountFromEx(tp,tp,sg,e:GetHandler())<=0 then return false end
-    if not recipe then return true end
-    return recipe(sg,e,tp,mg)
-end
-
-function Vortex.AddProcedure(c,total_val,recipe)
-    local e1=Effect.CreateEffect(c)
-    e1:SetType(EFFECT_TYPE_FIELD)
-    e1:SetCode(EFFECT_SPSUMMON_PROC)
-    e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
-    e1:SetRange(LOCATION_EXTRA)
-    e1:SetLabel(total_val)
-    e1:SetLabelObject(recipe)
-    e1:SetCondition(Vortex.Condition)
-    e1:SetTarget(Vortex.Target)
-    e1:SetOperation(Vortex.Operation)
-    e1:SetValue(99)
-    c:RegisterEffect(e1)
-end
-
-function Vortex.Condition(e,c,tp,sg)
-    if c==nil then return true end
-    local tp=c:GetControler()
-    if Duel.GetFlagEffect(tp,VORTEX_GLOBAL_FLAG)==0 then return false end   
-    local total_val=e:GetLabel()
-    local recipe=e:GetLabelObject()
-    local rg=Duel.GetMatchingGroup(Vortex.MatFilter,tp,LOCATION_MZONE,0,nil)   
-    return aux.SelectUnselectGroup(rg,e,tp,2,99,function(sg,e,tp,mg) return Vortex.Rescon(sg,e,tp,mg,total_val,recipe) end,0)
-end
-
-function Vortex.Target(e,tp,eg,ep,ev,re,r,rp,chk,c)
-    local total_val=e:GetLabel()
-    local recipe=e:GetLabelObject()
-    local rg=Duel.GetMatchingGroup(Vortex.MatFilter,tp,LOCATION_MZONE,0,nil)   
-    local sg=aux.SelectUnselectGroup(rg,e,tp,2,99,function(sg,e,tp,mg) return Vortex.Rescon(sg,e,tp,mg,total_val,recipe) end,1,tp,HINTMSG_SPSUMMON,nil,nil,true)
-    if sg then
-        sg:KeepAlive()
-        e:SetLabelObject(sg)
-        return true
+local ATTRIBUTES = {}
+ATTRIBUTES[ATTRIBUTE_EARTH] = "EARTH"
+ATTRIBUTES[ATTRIBUTE_WATER] = "WATER"
+ATTRIBUTES[ATTRIBUTE_FIRE] = "FIRE"
+ATTRIBUTES[ATTRIBUTE_WIND] = "WIND"
+ATTRIBUTES[ATTRIBUTE_LIGHT] = "LIGHT"
+ATTRIBUTES[ATTRIBUTE_DARK] = "DARK"
+ATTRIBUTES[ATTRIBUTE_DIVINE] = "DIVINE"
+function Auxiliary.DecodeAttribute(attr)
+    local out
+    for k,v in pairs(ATTRIBUTES) do
+        if k&attr==k then
+            if out then out = out.."|"..v
+            else out = v end
+        end
     end
-    return false
+    return out or "NONE"
 end
 
-function Vortex.Operation(e,tp,eg,ep,ev,re,r,rp,c,sg)
-    local g=e:GetLabelObject()
-    if not g then return end
-    Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_MATERIAL+REASON_COST)
-    g:DeleteGroup()
+local RACES = {}
+RACES[RACE_WARRIOR] = "WARRIOR"
+RACES[RACE_SPELLCASTER] = "SPELLCASTER"
+RACES[RACE_FAIRY] = "FAIRY"
+RACES[RACE_FIEND] = "FIEND"
+RACES[RACE_ZOMBIE] = "ZOMBIE"
+RACES[RACE_MACHINE] = "MACHINE"
+RACES[RACE_AQUA] = "AQUA"
+RACES[RACE_PYRO] = "PYRO"
+RACES[RACE_ROCK] = "ROCK"
+RACES[RACE_WINGEDBEAST] = "WINGEDBEAST"
+RACES[RACE_PLANT] = "PLANT"
+RACES[RACE_INSECT] = "INSECT"
+RACES[RACE_THUNDER] = "THUNDER"
+RACES[RACE_DRAGON] = "DRAGON"
+RACES[RACE_BEAST] = "BEAST"
+RACES[RACE_BEASTWARRIOR] = "BEASTWARRIOR"
+RACES[RACE_DINOSAUR] = "DINOSAUR"
+RACES[RACE_FISH] = "FISH"
+RACES[RACE_SEASERPENT] = "SEASERPENT"
+RACES[RACE_REPTILE] = "REPTILE"
+RACES[RACE_PSYCHIC] = "PSYCHIC"
+RACES[RACE_DIVINE] = "DIVINE"
+RACES[RACE_CREATORGOD] = "CREATORGOD"
+RACES[RACE_WYRM] = "WYRM"
+RACES[RACE_CYBERSE] = "CYBERSE"
+RACES[RACE_ILLUSION] = "ILLUSION"
+RACES[RACE_CYBORG] = "CYBORG"
+RACES[RACE_MAGICALKNIGHT] = "MAGICALKNIGHT"
+RACES[RACE_HIGHDRAGON] = "HIGHDRAGON"
+RACES[RACE_OMEGAPSYCHIC] = "OMEGAPSYCHIC"
+RACES[RACE_CELESTIALWARRIOR] = "CELESTIALWARRIOR"
+RACES[RACE_GALAXY] = "GALAXY"
+RACES[RACE_YOKAI] = "YOKAI"
+function Auxiliary.DecodeRace(race)
+    local out
+    for k,v in pairs(RACES) do
+        if k&race==k then
+            if out then out = out.."|"..v
+            else out = v end
+        end
+    end
+    return out or "NONE"
 end
+
+local REASONS = {}
+REASONS[REASON_VORTEX] = "VORTEX"
+function Auxiliary.DecodeReason(reason)
+    local out
+    for k,v in pairs(REASONS) do
+        if k&reason==k then
+            if out then out = out.."|"..v
+            else out = v end
+        end
+    end
+    return out or "NONE"
+end
+
+local SUMMON_TYPES = {}
+SUMMON_TYPES[SUMMON_TYPE_VORTEX] = "VORTEX"
+function Auxiliary.DecodeSummonType(summon)
+    local out
+    for k,v in pairs(SUMMON_TYPES) do
+        if k&summon==k then
+            if out then out = out.."|"..v
+            else out = v end
+        end
+    end
+    return out or "NONE"
+end
+--------------------------------------------
+-- Import modules
+--------------------------------------------
+
+if not VORTEX_IMPORTED then Duel.LoadScript("proc_vortex.lua") end
+
+--------------------------------------------

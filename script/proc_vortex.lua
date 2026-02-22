@@ -1,6 +1,12 @@
---Vortex Summon
+VORTEX_IMPORTED=true
+
+if not aux.VortexProcedure then
+	aux.VortexProcedure = {}
+	Vortex = aux.VortexProcedure
+end
+
 if not Vortex then
-    Vortex = {}
+    Vortex = aux.VortexProcedure
 end
 
 VORTEX_GLOBAL_FLAG= 111166660 
@@ -22,7 +28,7 @@ function Vortex.Rescon(sg,e,tp,mg,total_val,recipe)
     if not recipe then return true end
     return recipe(sg,e,tp,mg)
 end
-
+--Vortex Summon
 function Vortex.AddProcedure(c,total_val,recipe)
     local e1=Effect.CreateEffect(c)
     e1:SetType(EFFECT_TYPE_FIELD)
@@ -34,8 +40,16 @@ function Vortex.AddProcedure(c,total_val,recipe)
     e1:SetCondition(Vortex.Condition)
     e1:SetTarget(Vortex.Target)
     e1:SetOperation(Vortex.Operation)
-    e1:SetValue(99)
+    e1:SetValue(SUMMON_TYPE_VORTEX)
     c:RegisterEffect(e1)
+	--remove fusion type
+	local e0=Effect.CreateEffect(c)
+	e0:SetType(EFFECT_TYPE_SINGLE)
+	e0:SetCode(EFFECT_REMOVE_TYPE)
+	e0:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE)
+	e0:SetRange(LOCATION_ALL)
+	e0:SetValue(TYPE_FUSION)
+	c:RegisterEffect(e0)
 end
 
 function Vortex.Condition(e,c,tp,sg)
@@ -64,6 +78,6 @@ end
 function Vortex.Operation(e,tp,eg,ep,ev,re,r,rp,c,sg)
     local g=e:GetLabelObject()
     if not g then return end
-    Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_MATERIAL+REASON_COST)
+    Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_MATERIAL+REASON_VORTEX)
     g:DeleteGroup()
 end
