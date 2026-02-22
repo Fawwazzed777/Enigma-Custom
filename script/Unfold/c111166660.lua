@@ -20,7 +20,8 @@ function s.vortex_recipe(sg,e,tp,mg)
     return count_valid == #other_mats
 end
 function s.initial_effect(c)
-    c:EnableReviveLimit()       
+    c:EnableReviveLimit()
+	--Vortex Procedure
     Vortex.AddProcedure(c,12,s.vortex_recipe)
 	local e_test = Effect.CreateEffect(c)
 	e_test:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
@@ -31,7 +32,7 @@ function s.initial_effect(c)
 	e_test:SetOperation(function(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Hint(HINT_MESSAGE,tp,aux.Stringid(id,0))
 		--Debug:
-		Debug.Message("Sistem: Vortex Summon Detected!")
+		Debug.Message("System: Vortex Summon Detected!")
 	end)
 	c:RegisterEffect(e_test)
     --Anti-Climbing Lock
