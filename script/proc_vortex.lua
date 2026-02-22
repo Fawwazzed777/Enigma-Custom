@@ -36,7 +36,9 @@ function Vortex.AddProcedure(c,total_val,recipe)
     e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
     e1:SetRange(LOCATION_EXTRA)
     e1:SetLabel(total_val)
-    e1:SetLabelObject(recipe)
+    if recipe then
+        e1:SetLabelObject(recipe)
+    end
     e1:SetCondition(Vortex.Condition)
     e1:SetTarget(Vortex.Target)
     e1:SetOperation(Vortex.Operation)
