@@ -131,7 +131,7 @@ SUMMON_TYPES[SUMMON_TYPE_XYZ] = "XYZ"
 SUMMON_TYPES[SUMMON_TYPE_PENDULUM] = "PENDULUM"
 SUMMON_TYPES[SUMMON_TYPE_LINK] = "LINK"
 SUMMON_TYPES[SUMMON_TYPE_MAXIMUM] = "MAXIMUM"
---SUMMON_TYPES[SUMMON_TYPE_VORTEX] = "VORTEX"
+SUMMON_TYPES[SUMMON_TYPE_VORTEX] = "VORTEX"
 function Auxiliary.DecodeSummonType(summon)
     local out
     for k,v in pairs(SUMMON_TYPES) do
@@ -241,6 +241,7 @@ LOCATIONS[LOCATION_OVERLAY] = "OVERLAY"
 LOCATIONS[LOCATION_ONFIELD] = "ONFIELD"
 LOCATIONS[LOCATION_PUBLIC] = "PUBLIC"
 function Auxiliary.DecodeLocation(location)
+    if not location then return "NONE" end
     local out
     for k,v in pairs(LOCATIONS) do
         if k&location==k then
