@@ -1,15 +1,11 @@
 VORTEX_IMPORTED = true
 
 if not aux.VortexProcedure then
-	aux.VortexProcedure = {}
-	Vortex = aux.VortexProcedure
-end
-
-if not Vortex then
+    aux.VortexProcedure = {}
     Vortex = aux.VortexProcedure
 end
 
-VORTEX_GLOBAL_FLAG= 111166660 
+VORTEX_GLOBAL_FLAG = 111166660 
 
 function Vortex.GetValue(c)
     if c:IsType(TYPE_LINK) then return c:GetLink() end
@@ -28,7 +24,7 @@ function Vortex.Rescon(sg,e,tp,mg,total_val,recipe)
     if not recipe then return true end
     return recipe(sg,e,tp,mg)
 end
---Vortex Summon
+
 function Vortex.AddProcedure(c,total_val,recipe)
     local e1=Effect.CreateEffect(c)
     e1:SetType(EFFECT_TYPE_FIELD)
@@ -43,15 +39,14 @@ function Vortex.AddProcedure(c,total_val,recipe)
     e1:SetTarget(Vortex.Target)
     e1:SetOperation(Vortex.Operation)
     e1:SetValue(SUMMON_TYPE_VORTEX)
-    c:RegisterEffect(e1)
-	--remove fusion type
-	local e0=Effect.CreateEffect(c)
-	e0:SetType(EFFECT_TYPE_SINGLE)
-	e0:SetCode(EFFECT_REMOVE_TYPE)
-	e0:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE)
-	e0:SetRange(LOCATION_ALL)
-	e0:SetValue(TYPE_FUSION)
-	c:RegisterEffect(e0)
+    c:RegisterEffect(e1)    
+    local e0=Effect.CreateEffect(c)
+    e0:SetType(EFFECT_TYPE_SINGLE)
+    e0:SetCode(EFFECT_REMOVE_TYPE)
+    e0:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE)
+    e0:SetRange(LOCATION_ALL)
+    e0:SetValue(TYPE_FUSION)
+    c:RegisterEffect(e0)
 end
 
 function Vortex.Condition(e,c,tp,sg)
@@ -67,7 +62,7 @@ end
 function Vortex.Target(e,tp,eg,ep,ev,re,r,rp,chk,c)
     local total_val=e:GetLabel()
     local recipe=e:GetLabelObject()
-    local rg=Duel.GetMatchingGroup(Vortex.MatFilter,tp,LOCATION_MZONE,0,nil)   
+    local rg=Duel.GetMatchingGroup(Vortex.MatFilter,tp,LOCATION_MZONE,0,nil)
     local sg=aux.SelectUnselectGroup(rg,e,tp,2,99,function(sg,e,tp,mg) return Vortex.Rescon(sg,e,tp,mg,total_val,recipe) end,1,tp,HINTMSG_SPSUMMON,nil,nil,true)
     if sg then
         sg:KeepAlive()
