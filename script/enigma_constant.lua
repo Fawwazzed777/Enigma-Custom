@@ -1,3 +1,4 @@
+ENIGMA_CONSTANTS_IMPORTED = true
 --min/max values
 MIN_ID      = 1000      --4 digit, by DataManager::GetDesc()
 MAX_ID      = 268435455 --9 digit, by DataManager::GetDesc()

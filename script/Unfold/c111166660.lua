@@ -1,5 +1,5 @@
 -- Enigmation Lord - Void Crisis
-Duel.LoadScript("utility_enigma.lua")
+if not ENIGMA_PATCH then Duel.LoadScript("enigma_utility.lua") end
 local s,id=GetID()
 function s.initial_effect(c)
     c:EnableReviveLimit()       
