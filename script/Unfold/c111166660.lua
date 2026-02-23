@@ -9,7 +9,7 @@ function s.vortex_recipe(sg,e,tp,mg)
     if not p then return false end
     local g=Duel.GetMatchingGroup(function(c) 
         return (c:IsSetCard(0x145) or c:IsSetCard(0x344)) and c:IsFaceup() 
-    end, p, LOCATION_REMOVED, 0, nil)   
+    end,p,LOCATION_REMOVED,0,nil)   
     if #g<5 then return false end           
     --Rank 4
     local g_rank4=sg:Filter(Card.IsRank,nil,4)
