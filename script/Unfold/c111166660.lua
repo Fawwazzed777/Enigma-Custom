@@ -79,10 +79,11 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,Card.IsAbleToRemove,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,2,e:GetHandler())
-	local tc=g:GetFirst()
+	local tc=Duel.SelectMatchingCard(tp,Card.IsAbleToRemove,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,2,e:GetHandler())
 	if tc then
-		Duel.HintSelection(g)
-		Duel.Remove(tc,POS_FACDOWN,REASON_EFFECT)
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+		local tg=tc:Select(tp,1,2,nil)
+		Duel.HintSelection(tg)
+		Duel.Remove(tg,POS_FACEDOWN,REASON_EFFECT)
 end
 end
