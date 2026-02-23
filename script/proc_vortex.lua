@@ -30,7 +30,7 @@ function Vortex.Rescon(sg,e,tp,mg,total_val,recipe)
 end
 
 function Vortex.AddProcedure(c,total_val,recipe)
-    --Main Summon Procedure
+    -- Main Summon Procedure
     local e1=Effect.CreateEffect(c)
     e1:SetType(EFFECT_TYPE_FIELD)
     e1:SetCode(EFFECT_SPSUMMON_PROC)
@@ -43,6 +43,29 @@ function Vortex.AddProcedure(c,total_val,recipe)
     e1:SetOperation(Vortex.Operation)
     e1:SetValue(SUMMON_TYPE_VORTEX) 
     c:RegisterEffect(e1)
+    --NOT FUSION
+    local e2=Effect.CreateEffect(c)
+    e2:SetType(EFFECT_TYPE_SINGLE)
+    e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SET_AVAILABLE)
+    e2:SetRange(LOCATION_ALL)
+    e2:SetCode(EFFECT_REMOVE_TYPE)
+    e2:SetValue(TYPE_FUSION)
+    c:RegisterEffect(e2)
+    if TYPE_VORTEX then
+        local e3=e2:Clone()
+        e3:SetCode(EFFECT_ADD_TYPE)
+        e3:SetValue(TYPE_VORTEX)
+        c:RegisterEffect(e3)
+    end
+    local e4=Effect.CreateEffect(c)
+    e4:SetType(EFFECT_TYPE_SINGLE)
+    e4:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SET_AVAILABLE)
+    e4:SetRange(LOCATION_ALL)
+    e4:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
+    e4:SetValue(function(e,re,rp)
+        return re:IsHasCategory(CATEGORY_FUSION_SUMMON)
+    end)
+    c:RegisterEffect(e4)
 end
 
 function Vortex.Condition(e,c,tp,sg)
