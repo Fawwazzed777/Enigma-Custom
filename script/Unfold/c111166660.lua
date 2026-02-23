@@ -4,19 +4,18 @@ if not VORTEX_IMPORTED then Duel.LoadScript("proc_vortex.lua") end
 local s,id=GetID()
 --Material Logic
 function s.vortex_recipe(sg,e,tp,mg)
+    local p= tp or e:GetHandlerPlayer()
     local g=Duel.GetMatchingGroup(function(c) 
         return (c:IsSetCard(0x145) or c:IsSetCard(0x344)) and c:IsFaceup() 
-    end,tp,LOCATION_REMOVED,0,nil)
+    end,p,LOCATION_REMOVED,0,nil) 
     if #g<5 then return false end       
-    
     local g_rank4=sg:Filter(Card.IsRank,nil,4)
     if #g_rank4~=1 then return false end   
-    
+
     local other_mats=sg-g_rank4
     local count_valid = other_mats:FilterCount(function(c) 
         return c:IsLevelBelow(4) and c:GetLevel()>0 
-    end,nil)
-    
+    end,nil)  
     return count_valid == #other_mats
 end
 function s.initial_effect(c)
