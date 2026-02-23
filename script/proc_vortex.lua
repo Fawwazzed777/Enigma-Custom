@@ -61,7 +61,7 @@ function Vortex.AddProcedure(c,total_val,recipe)
     end)
     c:RegisterEffect(e3)	
 end
-
+end
 function Vortex.Condition(e,c,tp,sg)
     if c==nil then return true end
     local tp=c:GetControler()
