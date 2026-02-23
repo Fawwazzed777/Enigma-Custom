@@ -43,7 +43,7 @@ function s.initial_effect(c)
 	e2:SetCountLimit(1)
 	e2:SetTarget(s.target)
 	e2:SetOperation(s.operation)
-	c:RegisterEffect(e2
+	c:RegisterEffect(e2)
     --Global Check
     if not s.global_check then
         s.global_check=true
@@ -84,6 +84,5 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	if tc then
 		Duel.HintSelection(g)
 		Duel.Remove(tc,POS_FACDOWN,REASON_EFFECT)
-end
 end
 end
