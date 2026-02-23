@@ -76,6 +76,6 @@ end
 function Vortex.Operation(e,tp,eg,ep,ev,re,r,rp,c,sg)
     local g=e:GetLabelObject()
     if not g or type(g)~="userdata" then return end
-    Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_MATERIAL+REASON_COST)
+    Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_MATERIAL+REASON_VORTEX)
     g:DeleteGroup()
 end

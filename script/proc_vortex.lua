@@ -95,7 +95,16 @@ end
 
 function Vortex.Operation(e,tp,eg,ep,ev,re,r,rp,c,sg)
     local g=e:GetLabelObject()
-    if not g then return end
-    Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_MATERIAL+REASON_COST)
+    if not g then return end   
+    --Xyz (Core)
+    local core=g:Filter(Card.IsType,nil,TYPE_XYZ)
+    local fuel=g-core   
+    if #core>0 then
+        Duel.SendtoDeck(core,nil,SEQ_DECKSHUFFLE,REASON_MATERIAL+REASON_VORTEX)
+    end    
+    --Other go to GY (Standard Procedure)
+    if #fuel>0 then
+        Duel.SendtoGrave(fuel,REASON_MATERIAL+REASON_VORTEX)
+    end  
     g:DeleteGroup()
 end
