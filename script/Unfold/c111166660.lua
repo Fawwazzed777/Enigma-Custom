@@ -2,7 +2,7 @@
 if not ENIGMA_PATCH then Duel.LoadScript("enigma_utility.lua") end
 if not VORTEX_IMPORTED then Duel.LoadScript("proc_vortex.lua") end
 local s,id=GetID()
-
+--Material Logic
 function s.vortex_recipe(sg,e,tp,mg)
     local g=Duel.GetMatchingGroup(function(c) 
         return (c:IsSetCard(0x145) or c:IsSetCard(0x344)) and c:IsFaceup() 
@@ -21,18 +21,9 @@ function s.vortex_recipe(sg,e,tp,mg)
 end
 function s.initial_effect(c)
     c:EnableReviveLimit()
+	c:SetSPSummonOnce(id)
 	--Vortex Procedure
     Vortex.AddProcedure(c,12,s.vortex_recipe)
-local e_test = Effect.CreateEffect(c)
-    e_test:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
-    e_test:SetCode(EVENT_SPSUMMON_SUCCESS)
-    e_test:SetCondition(function(e,tp,eg,ep,ev,re,r,rp)
-        return (e:GetHandler():GetSummonType()& SUMMON_TYPE_VORTEX)== SUMMON_TYPE_VORTEX
-    end)
-    e_test:SetOperation(function(e,tp,eg,ep,ev,re,r,rp)
-        Debug.Message("Vortex Summon Detected!")
-    end)
-    c:RegisterEffect(e_test)
     --Anti-Climbing Lock
     local e1=Effect.CreateEffect(c)
     e1:SetType(EFFECT_TYPE_FIELD)
