@@ -5,6 +5,10 @@ if not aux.VortexProcedure then
     Vortex = aux.VortexProcedure
 end
 
+if not Vortex then
+    Vortex = {}
+end
+
 VORTEX_GLOBAL_FLAG = 111166660 
 SUMMON_TYPE_VORTEX = SUMMON_TYPE_SPECIAL+0x50
 function Vortex.GetValue(c)
@@ -39,23 +43,6 @@ function Vortex.AddProcedure(c,total_val,recipe)
     e1:SetOperation(Vortex.Operation)
     e1:SetValue(SUMMON_TYPE_VORTEX) 
     c:RegisterEffect(e1)
-    --NOT FUSION and cannot be used as Fusion material
-    local e0=Effect.CreateEffect(c)
-    e0:SetType(EFFECT_TYPE_SINGLE)
-    e0:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SET_AVAILABLE)
-    e0:SetRange(LOCATION_ALL)
-    e0:SetCode(EFFECT_REMOVE_TYPE)
-    e0:SetValue(TYPE_FUSION)
-    c:RegisterEffect(e0)
-    local e3=Effect.CreateEffect(c)
-    e3:SetType(EFFECT_TYPE_SINGLE)
-    e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SET_AVAILABLE)
-    e3:SetRange(LOCATION_EXTRA)
-    e3:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
-    e3:SetValue(function(e,re,rp)
-        return re:IsHasCategory(CATEGORY_FUSION_SUMMON) or (re:GetActiveType() and re:GetActiveType()&TYPE_FUSION~=0)
-    end)
-    c:RegisterEffect(e3)    
 end
 
 function Vortex.Condition(e,c,tp,sg)
