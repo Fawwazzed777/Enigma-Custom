@@ -17,8 +17,7 @@ function s.vortex_recipe(sg,e,tp,mg)
     --Level 4 or lower
     local other_mats=sg-g_rank4
     local count_valid = other_mats:FilterCount(function(c) 
-        return (c:GetLevel()>0 and c:IsLevelBelow(4)) or c:IsType(TYPE_LINK+TYPE_XYZ)
-    end,nil)  
+        return (c:GetLevel()>0 and c:IsLevelBelow(4))end,nil)  
     return count_valid == #other_mats
 end
 function s.initial_effect(c)
@@ -35,6 +34,16 @@ function s.initial_effect(c)
     e1:SetTargetRange(1,1)
     e1:SetTarget(s.splimit)
     c:RegisterEffect(e1)
+	--Banish Face-down
+	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(id,0))
+	e2:SetCategory(CATEGORY_REMOVE+CATEGORY_DAMAGE)
+	e2:SetType(EFFECT_TYPE_IGNITION)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetCountLimit(1)
+	e2:SetTarget(s.target)
+	e2:SetOperation(s.operation)
+	c:RegisterEffect(e2
     --Global Check
     if not s.global_check then
         s.global_check=true
@@ -62,4 +71,20 @@ end
 function s.checkop(e,tp,eg,ep,ev,re,r,rp)
     Duel.RegisterFlagEffect(0,id,RESET_PHASE+PHASE_END,0,1)
     Duel.RegisterFlagEffect(1,id,RESET_PHASE+PHASE_END,0,1)
+end
+function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,0,LOCATION_MZONE,1,e:GetHandler()) end
+	local g=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,0,LOCATION_MZONE,nil)
+	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,0)
+end
+function s.operation(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	local g=Duel.SelectMatchingCard(tp,Card.IsAbleToRemove,tp,0,LOCATION_MZONE,1,2,e:GetHandler())
+	local tc=g:GetFirst()
+	if tc then
+		Duel.HintSelection(g)
+		Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)
+end
+end
 end
