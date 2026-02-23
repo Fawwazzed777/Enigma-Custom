@@ -26,6 +26,7 @@ function Vortex.Rescon(sg,e,tp,mg,total_val,recipe)
 end
 
 function Vortex.AddProcedure(c,total_val,recipe)
+    --Main Summon Procedure
     local e1=Effect.CreateEffect(c)
     e1:SetType(EFFECT_TYPE_FIELD)
     e1:SetCode(EFFECT_SPSUMMON_PROC)
@@ -38,30 +39,32 @@ function Vortex.AddProcedure(c,total_val,recipe)
     e1:SetOperation(Vortex.Operation)
     e1:SetValue(SUMMON_TYPE_VORTEX) 
     c:RegisterEffect(e1)
-	--NOT FUSION and cannot be used as Fusion material
-	local e0=Effect.CreateEffect(c)
+    --NOT FUSION and cannot be used as Fusion material
+    local e0=Effect.CreateEffect(c)
     e0:SetType(EFFECT_TYPE_SINGLE)
     e0:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SET_AVAILABLE)
     e0:SetRange(LOCATION_ALL)
     e0:SetCode(EFFECT_REMOVE_TYPE)
     e0:SetValue(TYPE_FUSION)
     c:RegisterEffect(e0)
+    --ADD TYPE VORTEX
     if TYPE_VORTEX then
         local e2=e0:Clone()
         e2:SetCode(EFFECT_ADD_TYPE)
         e2:SetValue(TYPE_VORTEX)
         c:RegisterEffect(e2)
-	local e3=Effect.CreateEffect(c)
+    end
+    local e3=Effect.CreateEffect(c)
     e3:SetType(EFFECT_TYPE_SINGLE)
     e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SET_AVAILABLE)
     e3:SetRange(LOCATION_EXTRA)
     e3:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
     e3:SetValue(function(e,re,rp)
-        return re:GetHandler():IsHasCategory(CATEGORY_FUSION_SUMMON) or re:GetActiveType()&TYPE_FUSION~=0
+        return re:IsHasCategory(CATEGORY_FUSION_SUMMON) or (re:GetActiveType() and re:GetActiveType()&TYPE_FUSION~=0)
     end)
-    c:RegisterEffect(e3)	
+    c:RegisterEffect(e3)    
 end
-end
+
 function Vortex.Condition(e,c,tp,sg)
     if c==nil then return true end
     local tp=c:GetControler()
