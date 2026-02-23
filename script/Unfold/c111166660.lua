@@ -73,18 +73,20 @@ function s.checkop(e,tp,eg,ep,ev,re,r,rp)
     Duel.RegisterFlagEffect(0,id,RESET_PHASE+PHASE_END,0,1)
     Duel.RegisterFlagEffect(1,id,RESET_PHASE+PHASE_END,0,1)
 end
+
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,e:GetHandler()) end
-	local g=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
-	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,0,0)
+    if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,e:GetHandler()) end
+    Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,PLAYER_ALL,LOCATION_ONFIELD)
 end
+
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,e:GetHandler())
-	if #g>0 then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-		local tg=g:Select(tp,1,2,nil)
-		Duel.HintSelection(tg)
-		Duel.Remove(tg,POS_FACEDOWN,REASON_EFFECT)
-end
+    local g=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,e:GetHandler())    
+    if #g>0 then
+        Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+        local tg=g:Select(tp,1,2,nil)
+        if #tg>0 then
+            Duel.HintSelection(tg)
+            Duel.Remove(tg,POS_FACEDOWN,REASON_EFFECT)
+        end
+    end
 end
