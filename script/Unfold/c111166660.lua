@@ -86,7 +86,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
         local tg=g:Select(tp,1,2,nil)
         if #tg>0 then
             Duel.HintSelection(tg)
-            Duel.Remove(tg,POS_FACEDOWN,REASON_EFFECT)
+            Duel.Remove(tg,POS_FACEUP,REASON_EFFECT)
         end
     end
 end
