@@ -1,4 +1,5 @@
--- Enigmation Lord - Void Crisis
+--Enigmation Lord - Void Crisis
+--scripted by fawwazzed
 if not ENIGMA_PATCH then Duel.LoadScript("enigma_utility.lua") end
 if not VORTEX_IMPORTED then Duel.LoadScript("proc_vortex.lua") end
 local s,id=GetID()
@@ -34,7 +35,7 @@ function s.initial_effect(c)
     e1:SetTargetRange(1,1)
     e1:SetTarget(s.splimit)
     c:RegisterEffect(e1)
-	--Banish Face-down
+	--Banish
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,0))
 	e2:SetCategory(CATEGORY_REMOVE+CATEGORY_DAMAGE)
