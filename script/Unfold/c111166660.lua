@@ -27,7 +27,6 @@ function s.initial_effect(c)
 	--Vortex Procedure
     Vortex.AddProcedure(c,12,s.vortex_recipe)
 	--Level/Rank Cover
-	--Level 8
 	local es=Effect.CreateEffect(c)
 	es:SetType(EFFECT_TYPE_SINGLE)
 	es:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
@@ -35,13 +34,10 @@ function s.initial_effect(c)
 	es:SetCode(EFFECT_CHANGE_LEVEL)
 	es:SetValue(8)
 	c:RegisterEffect(es)
-	--Rank 4
 	local er=Effect.CreateEffect(c)
 	er:SetType(EFFECT_TYPE_SINGLE)
-	er:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	er:SetRange(LOCATION_ALL)
-	er:SetCode(EFFECT_CHANGE_RANK)
-	er:SetValue(4)
+	er:SetCode(EFFECT_XYZ_LEVEL)
+	er:SetValue(function(e,c) return 4 end)
 	c:RegisterEffect(er)
     --Anti-Climbing Lock
     local e1=Effect.CreateEffect(c)
