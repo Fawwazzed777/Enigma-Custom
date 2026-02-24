@@ -30,21 +30,6 @@ function Vortex.Rescon(sg,e,tp,mg,total_val,recipe)
 end
 
 function Vortex.AddProcedure(c,total_val,recipe)
-	--Have Rank but not Xyz
-	local exy=Effect.CreateEffect(c)
-	exy:SetType(EFFECT_TYPE_SINGLE)
-	exy:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SET_AVAILABLE)
-	exy:SetCode(EFFECT_RANK_LEVEL_S)
-	exy:SetValue(1) 
-	c:RegisterEffect(exy)
-	--Override
-	local ez=Effect.CreateEffect(c)
-	ez:SetType(EFFECT_TYPE_SINGLE)
-	ez:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	ez:SetCode(EFFECT_CHANGE_RANK)
-	ez:SetCondition(function(e) return not e:GetHandler():IsType(TYPE_XYZ) end)
-	ez:SetValue(function(e) return e:GetHandler():GetLevel() end)
-	c:RegisterEffect(ez)
     --Main Summon Procedure
     local e1=Effect.CreateEffect(c)
     e1:SetType(EFFECT_TYPE_FIELD)
@@ -58,7 +43,7 @@ function Vortex.AddProcedure(c,total_val,recipe)
     e1:SetOperation(Vortex.Operation)
     e1:SetValue(SUMMON_TYPE_VORTEX) 
     c:RegisterEffect(e1)
-    --NOT FUSION
+    --NOT FUSION/XYZ
     local e2=Effect.CreateEffect(c)
     e2:SetType(EFFECT_TYPE_SINGLE)
     e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SET_AVAILABLE)
@@ -66,6 +51,9 @@ function Vortex.AddProcedure(c,total_val,recipe)
     e2:SetCode(EFFECT_REMOVE_TYPE)
     e2:SetValue(TYPE_FUSION)
     c:RegisterEffect(e2)
+	local ex=e2:Clone()
+    ex:SetValue(TYPE_XYZ)
+    c:RegisterEffect(ex)
     if TYPE_VORTEX then
         local e3=e2:Clone()
         e3:SetCode(EFFECT_ADD_TYPE)
