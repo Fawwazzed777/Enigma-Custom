@@ -77,11 +77,11 @@ end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
     if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local c=e:GetHandler()
     local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
     if #g>0 and Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP_DEFENSE)>0 then
-	local atk=c:GetAttack()
-    local def=c:GetDefense()
+	local dc=g:GetFirst()
+	local atk=dc:GetAttack()
+    local def=dc:GetDefense()
     local dam=math.max(atk,def)
       if dam>0 then
           Duel.BreakEffect()
