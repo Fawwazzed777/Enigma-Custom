@@ -33,27 +33,24 @@ end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
     local c=e:GetHandler()
     if chk==0 then 
-        local res1=Duel.IsExistingMatchingCard(Card.IsSetCard,tp,LOCATION_HAND,0,1,c,0x344) 
-            and Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,c)
-        
-        local res2=Duel.IsExistingMatchingCard(Card.IsSetCard,tp,LOCATION_GRAVE,0,1,nil,0x344) 
-            and Duel.IsExistingMatchingCard(Card.IsAbleToRemoveAsCost,tp,LOCATION_GRAVE,0,1,nil)
-        return res1 or res2
-    end   
-    
-    local b1=Duel.IsExistingMatchingCard(Card.IsSetCard,tp,LOCATION_HAND,0,1,c,0x344) 
-        and Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,c)
-    local b2=Duel.IsExistingMatchingCard(Card.IsSetCard,tp,LOCATION_GRAVE,0,1,nil,0x344) 
-        and Duel.IsExistingMatchingCard(Card.IsAbleToRemoveAsCost,tp,LOCATION_GRAVE,0,1,nil)
+        local res1=Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,c) 
+            and Duel.IsExistingMatchingCard(Card.IsSetCard,tp,LOCATION_HAND,0,1,c,0x344)
+        local res2=Duel.IsExistingMatchingCard(Card.IsAbleToRemoveAsCost,tp,LOCATION_GRAVE,0,1,nil)
+            and Duel.IsExistingMatchingCard(Card.IsSetCard,tp,LOCATION_GRAVE,0,1,nil,0x344)
+        return (res1 or res2) and Duel.CheckLPCost(tp,Duel.GetLP(tp)/2)
+    end
+    --Pay Half LP
+    Duel.PayLPCost(tp,Duel.GetLP(tp)/2)
+    --...and Discard or Banish
+    local b1=Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,c) 
+        and Duel.IsExistingMatchingCard(Card.IsSetCard,tp,LOCATION_HAND,0,1,c,0x344)
+    local b2=Duel.IsExistingMatchingCard(Card.IsAbleToRemoveAsCost,tp,LOCATION_GRAVE,0,1,nil)
+        and Duel.IsExistingMatchingCard(Card.IsSetCard,tp,LOCATION_GRAVE,0,1,nil,0x344)
     
     local op=0
-    if b1 and b2 then
-        op=Duel.SelectOption(tp,aux.Stringid(id,2),aux.Stringid(id,3)) 
-    elseif b1 then
-        op=Duel.SelectOption(tp,aux.Stringid(id,2))
-    else
-        op=Duel.SelectOption(tp,aux.Stringid(id,3))+1
-    end
+    if b1 and b2 then op=Duel.SelectOption(tp,aux.Stringid(id,2),aux.Stringid(id,3))
+    elseif b1 then op=Duel.SelectOption(tp,aux.Stringid(id,0))
+    else op=Duel.SelectOption(tp,aux.Stringid(id,1))+1 end
     
     if op==0 then
         Duel.DiscardHand(tp,Card.IsSetCard,1,1,REASON_COST+REASON_DISCARD,c,0x344)
@@ -64,28 +61,13 @@ function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
     end
 end
 
-function s.spfilter(c,e,tp)
-    return (c:IsSetCard(0x344) or c:IsSetCard(0x145)) 
-        and (c:GetAttack()==0 or c:GetDefense()==0)
-        and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
-end
-function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-    if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-        and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK,0,1,nil,e,tp) end
-    Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)
-end
-function s.spop(e,tp,eg,ep,ev,re,r,rp)
+function s.activate(e,tp,eg,ep,ev,re,r,rp)
     if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
     local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
-    if #g>0 and Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP_DEFENSE)>0 then
-	local dc=g:GetFirst()
-	local atk=dc:GetAttack()
-    local def=dc:GetDefense()
-    local dam=math.max(atk,def)
-      if dam>0 then
-          Duel.BreakEffect()
-          Duel.Damage(tp,dam,REASON_EFFECT)
+    if #g>0 then
+        Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+    end
         --Extra Deck Lock
         local e1=Effect.CreateEffect(e:GetHandler())
         e1:SetType(EFFECT_TYPE_FIELD)
@@ -96,9 +78,8 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
         e1:SetTarget(s.splimit)
         e1:SetReset(RESET_PHASE+PHASE_END)
         Duel.RegisterEffect(e1,tp)
-	    end
-    end
 end
+
 function s.splimit(e,c,sump,sumtype,sumpos,targetp,se)
     return not (c:IsSetCard(0x344) or c:IsSetCard(0x145)) and c:IsLocation(LOCATION_EXTRA)
 end
