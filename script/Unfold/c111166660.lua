@@ -106,12 +106,8 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
             while tc do
                 local s_max=math.max(tc:GetTextAttack(),tc:GetTextDefense())
                 if s_max<0 then s_max=0 end
-                if tc:IsMonster() then
-                    total_stats = total_stats + s_max
-                end
-                tc=tg:GetNext()
             end
-            if Duel.Remove(tg,POS_FACEUP,REASON_EFFECT)~=0 and total_stats>0 then
+            if Duel.Remove(tg,POS_FACEUP,REASON_EFFECT)~=0 and aux.FilterBoolFunction(Card.IsOriginalType,TYPE_MONSTER) then
                 Duel.BreakEffect()
                 Duel.Recover(tp,total_stats,REASON_EFFECT)
             end
@@ -119,7 +115,17 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
     end
 end
 
-function s.imfilter(e,te)
-	if not te then return false end
-	return te:IsHasCategory(CATEGORY_TOHAND+CATEGORY_DESTROY+CATEGORY_REMOVE+CATEGORY_TODECK+CATEGORY_RELEASE+CATEGORY_TOGRAVE)
+function s.leaveChk(c,category)
+	local ex,tg=Duel.GetOperationInfo(0,category)
+	return ex and tg~=nil and tg:IsContains(c)
+end
+function s.imfilter(e,te,c)
+	local c=e:GetOwner()
+	local tc=te:GetOwner()
+	return (te:IsTrapEffect() and te:IsActivated())
+		or (((te:IsSpellEffect() and te:IsHasProperty(EFFECT_FLAG_CARD_TARGET) and Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):IsContains(c))
+		or (te:IsMonsterEffect() and tc~=c))
+		and ((c:GetDestination()>0 and c:GetReasonEffect()==te)
+		or (s.leaveChk(c,CATEGORY_TOHAND) or s.leaveChk(c,CATEGORY_DESTROY) or s.leaveChk(c,CATEGORY_REMOVE)
+		or s.leaveChk(c,CATEGORY_TODECK) or s.leaveChk(c,CATEGORY_RELEASE) or s.leaveChk(c,CATEGORY_TOGRAVE))))
 end
