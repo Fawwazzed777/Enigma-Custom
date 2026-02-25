@@ -33,21 +33,22 @@ end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
     local c=e:GetHandler()
     if chk==0 then 
-        local res1=Duel.IsExistingMatchingCard(Card.IsSetCard,tp,LOCATION_HAND,0,1,nil,0x344) 
-		and Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,nil)
-		
+        local res1=Duel.IsExistingMatchingCard(Card.IsSetCard,tp,LOCATION_HAND,0,1,c,0x344) 
+            and Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,c)
+        
         local res2=Duel.IsExistingMatchingCard(Card.IsSetCard,tp,LOCATION_GRAVE,0,1,nil,0x344) 
-		and Duel.IsExistingMatchingCard(Card.IsAbleToRemoveAsCost,tp,LOCATION_GRAVE,0,1,nil)
+            and Duel.IsExistingMatchingCard(Card.IsAbleToRemoveAsCost,tp,LOCATION_GRAVE,0,1,nil)
         return res1 or res2
     end   
-    local op=0
-    local b1=Duel.IsExistingMatchingCard(Card.IsSetCard,tp,LOCATION_HAND,0,1,nil,0x344) 
-	and Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,nil)
-	
+    
+    local b1=Duel.IsExistingMatchingCard(Card.IsSetCard,tp,LOCATION_HAND,0,1,c,0x344) 
+        and Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,c)
     local b2=Duel.IsExistingMatchingCard(Card.IsSetCard,tp,LOCATION_GRAVE,0,1,nil,0x344) 
-	and Duel.IsExistingMatchingCard(Card.IsAbleToRemoveAsCost,tp,LOCATION_GRAVE,0,1,nil)
+        and Duel.IsExistingMatchingCard(Card.IsAbleToRemoveAsCost,tp,LOCATION_GRAVE,0,1,nil)
+    
+    local op=0
     if b1 and b2 then
-        op=Duel.SelectOption(tp,aux.Stringid(id,2),aux.Stringid(id,3)) -- 2: Discard, 3: Banish
+        op=Duel.SelectOption(tp,aux.Stringid(id,2),aux.Stringid(id,3)) 
     elseif b1 then
         op=Duel.SelectOption(tp,aux.Stringid(id,2))
     else
@@ -55,13 +56,14 @@ function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
     end
     
     if op==0 then
-        Duel.DiscardHand(tp,Card.IsSetCard,1,1,REASON_COST+REASON_DISCARD,nil,0x344)
+        Duel.DiscardHand(tp,Card.IsSetCard,1,1,REASON_COST+REASON_DISCARD,c,0x344)
     else
         Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
         local g=Duel.SelectMatchingCard(tp,Card.IsSetCard,tp,LOCATION_GRAVE,0,1,1,nil,0x344)
         Duel.Remove(g,POS_FACEUP,REASON_COST)
     end
 end
+
 function s.spfilter(c,e,tp)
     return (c:IsSetCard(0x344) or c:IsSetCard(0x145)) 
         and (c:GetAttack()==0 or c:GetDefense()==0)
@@ -75,8 +77,15 @@ end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
     if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local c=e:GetHandler()
     local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
-    if #g>0 and Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP_DEFENSE)>0 then
+    if #g>0 and c:IsRelateToEffect(e) and Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP_DEFENSE)>0 then
+	local atk=c:GetAttack()
+    local def=c:GetDefense()
+    local dam=math.max(atk,def)
+      if dam>0 then
+          Duel.BreakEffect()
+          Duel.Damage(tp,dam,REASON_EFFECT)
         --Extra Deck Lock
         local e1=Effect.CreateEffect(e:GetHandler())
         e1:SetType(EFFECT_TYPE_FIELD)
@@ -87,6 +96,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
         e1:SetTarget(s.splimit)
         e1:SetReset(RESET_PHASE+PHASE_END)
         Duel.RegisterEffect(e1,tp)
+	    end
     end
 end
 function s.splimit(e,c,sump,sumtype,sumpos,targetp,se)
