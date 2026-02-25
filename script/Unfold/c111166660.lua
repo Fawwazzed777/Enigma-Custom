@@ -6,7 +6,7 @@ local s,id=GetID()
 --Material Logic
 function s.vortex_recipe(sg,e,tp,mg)
     if not e then return true end
-    local p = tp or e:GetHandlerPlayer()
+    local p= tp or e:GetHandlerPlayer()
     if not p then return false end
     local g=Duel.GetMatchingGroup(function(c) 
         return (c:IsSetCard(0x145) or c:IsSetCard(0x344)) and c:IsFaceup() 
