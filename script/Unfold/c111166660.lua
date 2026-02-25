@@ -52,6 +52,14 @@ function s.initial_effect(c)
 	e2:SetTarget(s.target)
 	e2:SetOperation(s.operation)
 	c:RegisterEffect(e2)
+	--Immune to removal
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_SINGLE)
+	e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e3:SetRange(LOCATION_MZONE)
+	e3:SetCode(EFFECT_IMMUNE_EFFECT)
+	e3:SetValue(s.imfilter)
+	c:RegisterEffect(e3)
     --Global Check
     if not s.global_check then
         s.global_check=true
@@ -96,4 +104,9 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
             Duel.Remove(tg,POS_FACEUP,REASON_EFFECT)
         end
     end
+end
+
+function s.imfilter(e,te)
+	if not te then return false end
+	return te:IsHasCategory(CATEGORY_TOHAND+CATEGORY_DESTROY+CATEGORY_REMOVE+CATEGORY_TODECK+CATEGORY_RELEASE+CATEGORY_TOGRAVE)
 end
