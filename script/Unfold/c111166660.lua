@@ -102,9 +102,10 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 		local stats=math.max(tg:GetBaseAttack(),tg:GetBaseDefense())
         if #tg>0 then
             Duel.HintSelection(tg)
-            Duel.Remove(tg,POS_FACEUP,REASON_EFFECT)~=0 and aux.FilterBoolFunction(Card.IsOriginalType,TYPE_MONSTER) then
+            if Duel.Remove(tg,POS_FACEUP,REASON_EFFECT)~=0 and aux.FilterBoolFunction(Card.IsOriginalType,TYPE_MONSTER) then
 			Duel.BreakEffect()
 			Duel.Recover(tp,stats,REASON_EFFECT)
+			end
         end
     end
 end
