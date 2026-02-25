@@ -99,13 +99,22 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
     if #g>0 then
         Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
         local tg=g:Select(tp,1,2,nil)
-		local stats=math.max(tg:GetTextAttack(),tg:GetTextDefense())
         if #tg>0 then
             Duel.HintSelection(tg)
-            if Duel.Remove(tg,POS_FACEUP,REASON_EFFECT)~=0 and aux.FilterBoolFunction(Card.IsOriginalType,TYPE_MONSTER) then
-			Duel.BreakEffect()
-			Duel.Recover(tp,stats,REASON_EFFECT)
-			end
+            local total_stats=0
+            local tc=tg:GetFirst()
+            while tc do
+                local s_max=math.max(tc:GetTextAttack(),tc:GetTextDefense())
+                if s_max<0 then s_max=0 end
+                if tc:IsMonster() then
+                    total_stats = total_stats + s_max
+                end
+                tc=tg:GetNext()
+            end
+            if Duel.Remove(tg,POS_FACEUP,REASON_EFFECT)~=0 and total_stats>0 then
+                Duel.BreakEffect()
+                Duel.Recover(tp,total_stats,REASON_EFFECT)
+            end
         end
     end
 end
