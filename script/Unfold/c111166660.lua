@@ -99,7 +99,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
     if #g>0 then
         Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
         local tg=g:Select(tp,1,2,nil)
-		local stats=math.max(tg:GetBaseAttack(),tg:GetBaseDefense())
+		local stats=math.max(tg:GetTextAttack(),tg:GetTextDefense())
         if #tg>0 then
             Duel.HintSelection(tg)
             if Duel.Remove(tg,POS_FACEUP,REASON_EFFECT)~=0 and aux.FilterBoolFunction(Card.IsOriginalType,TYPE_MONSTER) then
