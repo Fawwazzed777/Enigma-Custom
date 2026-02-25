@@ -49,7 +49,7 @@ function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
     
     local op=0
     if b1 and b2 then op=Duel.SelectOption(tp,aux.Stringid(id,2),aux.Stringid(id,3))
-    elseif b1 then op=Duel.SelectOption(tp,aux.Stringid(id,0))
+    elseif b1 then op=Duel.SelectOption(tp,aux.Stringid(id,2))
     else op=Duel.SelectOption(tp,aux.Stringid(id,1))+1 end
     
     if op==0 then
