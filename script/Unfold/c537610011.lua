@@ -76,5 +76,6 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.aclimit(e,re,tp)
-	return re:GetHandler():IsAttribute(ATTRIBUTE_WIND) and re:IsMonsterEffect()
+	local tc=re:GetHandler()
+	return tc:IsLocation(LOCATION_MZONE) and tc:IsAttribute(ATTRIBUTE_WIND) and re:IsMonsterEffect()
 end
