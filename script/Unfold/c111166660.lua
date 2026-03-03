@@ -95,21 +95,30 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
-    local g=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,e:GetHandler())    
+    local g=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,e:GetHandler())  
     if #g>0 then
         Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-        local tg=g:Select(tp,1,2,nil)
+        local tg=g:Select(tp,1,2,nil)        
         if #tg>0 then
             Duel.HintSelection(tg)
-            local total_stats=0
-            local tc=tg:GetFirst()
-            while tc do
-                local s_max=math.max(tc:GetTextAttack(),tc:GetTextDefense())
-                if s_max<0 then s_max=0 end
-            end
-            if Duel.Remove(tg,POS_FACEUP,REASON_EFFECT)~=0 and aux.FilterBoolFunction(Card.IsOriginalType,TYPE_MONSTER) then
-                Duel.BreakEffect()
-                Duel.Recover(tp,total_stats,REASON_EFFECT)
+            local ct=Duel.Remove(tg,POS_FACEUP,REASON_EFFECT)        
+            if ct>0 then
+                local total_stats=0
+                local og=Duel.GetOperatedGroup()
+                for tc in aux.Next(og) do
+                    if tc:IsOriginalType(TYPE_MONSTER) then
+                        local atk= tc:GetTextAttack()
+                        local def= tc:GetTextDefense()
+                        if atk<0 then atk=0 end
+                        if def<0 then def=0 end
+                        local s_max= math.max(atk,def)
+                        total_stats= total_stats+s_max
+                    end
+                end                
+                if total_stats>0 then
+                    Duel.BreakEffect()
+                    Duel.Recover(tp,total_stats,REASON_EFFECT)
+                end
             end
         end
     end
