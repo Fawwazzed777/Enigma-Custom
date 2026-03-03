@@ -1,9 +1,9 @@
---Dichroic Prismatica Hunter
+-- Dichroic Prismatica Hunter
 local s,id=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()
-	Fusion.AddProcMix(c,true,true,aux.FilterBoolFunctionEx(Card.IsSetCard,0x391),aux.FilterBoolFunctionEx(Card.IsAttribute,ATTRIBUTE_WIND))
-	--Your opponent cannot target WIND monsters 
+	Fusion.AddProcMix(c,true,true,aux.FilterBoolFunctionEx(Card.IsSetCard,0x391),aux.FilterBoolFunctionEx(Card.IsAttribute,ATTRIBUTE_WIND))	
+	--Your opponent cannot target WIND monsters
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
@@ -16,15 +16,15 @@ function s.initial_effect(c)
 	--Refractive Strike: Attack absorb
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,0))
-	e2:SetCategory(CATEGORY_ATKCHANGE)
+	e2:SetCategory(CATEGORY_ATKCHANGE+CATEGORY_ATTRIBUTE)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetCode(EVENT_ATTACK_ANNOUNCE)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1)
 	e2:SetTarget(s.atktg)
 	e2:SetOperation(s.atkop)
-	c:RegisterEffect(e2)
-	--Prevent Activation
+	c:RegisterEffect(e2)	
+	--Prevent Activation of WIND monster effects
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_FIELD)
 	e3:SetRange(LOCATION_MZONE)
@@ -35,13 +35,15 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 s.listed_series={0x391}
-s.material_setcode={0x391}
 function s.tgtg(e,c)
-	return c:IsAttribute(ATTRIBUTE_WIND) and c:GetOwner()==1-tp
+	local tp=e:GetHandlerPlayer()
+	return c:IsAttribute(ATTRIBUTE_WIND) and c:IsControler(1-tp)
 end
+
 function s.windfilter(c)
 	return c:IsFaceup() and not c:IsAttribute(ATTRIBUTE_WIND)
 end
+
 function s.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.windfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,e:GetHandler()) end
 end
@@ -59,7 +61,7 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetCode(EFFECT_CHANGE_ATTRIBUTE)
 		e1:SetValue(ATTRIBUTE_WIND)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-		tc:RegisterEffect(e1)				
+		tc:RegisterEffect(e1)						
 		--Gain half original ATK
 		if c:IsRelateToEffect(e) and c:IsFaceup() then
 			local atk=tc:GetBaseAttack()
@@ -72,6 +74,7 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
+
 function s.aclimit(e,re,tp)
 	return re:GetHandler():IsAttribute(ATTRIBUTE_WIND) and re:IsMonsterEffect()
 end
