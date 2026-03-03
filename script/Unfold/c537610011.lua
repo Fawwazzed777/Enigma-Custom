@@ -30,7 +30,7 @@ function s.initial_effect(c)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCode(EFFECT_CANNOT_ACTIVATE)
 	e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e3:SetTargetRange(0,1)
+	e3:SetTargetRange(0,LOCATION_MZONE)
 	e3:SetValue(s.aclimit)
 	c:RegisterEffect(e3)
 end
@@ -62,9 +62,9 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetValue(ATTRIBUTE_WIND)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 		tc:RegisterEffect(e1)						
-		--Gain half original ATK
+		--Gain half ATK
 		if c:IsRelateToEffect(e) and c:IsFaceup() then
-			local atk=tc:GetBaseAttack()
+			local atk=tc:GetAttack()
 			local e2=Effect.CreateEffect(c)
 			e2:SetType(EFFECT_TYPE_SINGLE)
 			e2:SetCode(EFFECT_UPDATE_ATTACK)
