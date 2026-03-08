@@ -41,7 +41,7 @@ function Vortex.AddProcedure(c,total_val,recipe)
     e1:SetCondition(Vortex.Condition)
     e1:SetTarget(Vortex.Target)
     e1:SetOperation(Vortex.Operation)
-    e1:SetValue(SUMMON_TYPE_VORTEX) 
+    e1:SetValue(SUMMON_TYPE_VORTEX+0x60) 
     c:RegisterEffect(e1)
     --NOT FUSION/SYNCHRO/XYZ
     local e2=Effect.CreateEffect(c)
@@ -102,18 +102,19 @@ function Vortex.Target(e,tp,eg,ep,ev,re,r,rp,chk,c)
     return false
 end
 
-function Vortex.Operation(e,tp,eg,ep,ev,re,r,rp,c,sg)
+function Vortex.Operation(e,tp,eg,ep,ev,re,r,rp,c)
     local g=e:GetLabelObject()
     if not g then return end   
-    --Xyz (Core)
+    c:SetMaterial(g)   
+    --Xyz(Core)
     local core=g:Filter(Card.IsType,nil,TYPE_XYZ)
+    --Fuel (Non-Xyz) to Grave
     local fuel=g-core   
     if #core>0 then
         Duel.SendtoDeck(core,nil,SEQ_DECKSHUFFLE,REASON_MATERIAL+REASON_VORTEX)
-    end    
-    --Other go to GY (Standard Procedure)
+    end   
     if #fuel>0 then
         Duel.SendtoGrave(fuel,REASON_MATERIAL+REASON_VORTEX)
-    end  
+    end   
     g:DeleteGroup()
 end
