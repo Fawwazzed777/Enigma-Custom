@@ -12,12 +12,6 @@ function s.vortex_recipe(sg,e,tp,mg)
         return (c:IsSetCard(0x145) or c:IsSetCard(0x344)) and c:IsFaceup() 
     end,p,LOCATION_REMOVED,0,nil)   
     if #g<5 then return false end
-	--Void Scale
-	local total_vs=0
-    for tc in aux.Next(sg) do     
-        local vs=tc:GetEffect(STAT_VOID_SCALE) and tc:GetEffect(STAT_VOID_SCALE):GetValue() or (tc:GetLevel()>0 and tc:GetLevel() or tc:GetRank())
-        total_vs=total_vs+vs
-    end	
     --Rank 4
     local g_rank4=sg:Filter(Card.IsRank,nil,4)
     if #g_rank4~=1 then return false end     
@@ -32,13 +26,6 @@ function s.initial_effect(c)
 	c:SetSPSummonOnce(id)
 	--Vortex Procedure
     Vortex.AddProcedure(c,12,s.vortex_recipe)
-	--Void Scale 12
-    local e_vs=Effect.CreateEffect(c)
-    e_vs:SetType(EFFECT_TYPE_SINGLE)
-    e_vs:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-    e_vs:SetCode(STAT_VOID_SCALE)
-    e_vs:SetValue(12)
-    c:RegisterEffect(e_vs)
 	--Level/Rank Cover
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_SINGLE)
