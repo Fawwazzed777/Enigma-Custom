@@ -24,13 +24,19 @@ end
 function Vortex.Rescon(sg,e,tp,mg,total_val,recipe)
     local sum=sg:GetSum(Vortex.GetValue)
     if sum~=total_val then return false end
-    if Duel.GetLocationCountFromEx(tp,tp,sg,e:GetHandler())<=0 then return false end
+    if Duel.GetLocationCountFromEx(tp,tp,sg,e:GetHandler(),0x60)<=0 then return false end
     if not recipe then return true end
     return recipe(sg,e,tp,mg)
 end
 
 function Vortex.AddProcedure(c,total_val,recipe)
     --Main Summon Procedure
+	local e0=Effect.CreateEffect(c)
+    e0:SetType(EFFECT_TYPE_SINGLE)
+    e0:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+    e0:SetCode(EFFECT_SPSUMMON_CONDITION)
+    e0:SetValue(function(e,se,sp,st) return (st&SUMMON_TYPE_VORTEX)==SUMMON_TYPE_VORTEX end)
+    c:RegisterEffect(e0)
     local e1=Effect.CreateEffect(c)
     e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetDescription(1199)
