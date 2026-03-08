@@ -6,7 +6,7 @@ local s,id=GetID()
 --Material Logic
 function s.vortex_recipe(sg,e,tp,mg)
     if not e then return true end
-    local p= tp or e:GetHandlerPlayer()
+    local p=tp or e:GetHandlerPlayer()
     if not p then return false end
     local g=Duel.GetMatchingGroup(function(c) 
         return (c:IsSetCard(0x145) or c:IsSetCard(0x344)) and c:IsFaceup() 
@@ -16,7 +16,7 @@ function s.vortex_recipe(sg,e,tp,mg)
 	local total_vs=0
     for tc in aux.Next(sg) do     
         local vs=tc:GetEffect(STAT_VOID_SCALE) and tc:GetEffect(STAT_VOID_SCALE):GetValue() or (tc:GetLevel()>0 and tc:GetLevel() or tc:GetRank())
-        total_vs=total_vs + vs
+        total_vs=total_vs+vs
     end	
     --Rank 4
     local g_rank4=sg:Filter(Card.IsRank,nil,4)
@@ -25,7 +25,7 @@ function s.vortex_recipe(sg,e,tp,mg)
     local other_mats=sg-g_rank4
     local count_valid = other_mats:FilterCount(function(c) 
         return (c:GetLevel()>0 and c:IsLevelBelow(4))end,nil)  
-    return count_valid == #other_mats
+    return count_valid== #other_mats
 end
 function s.initial_effect(c)
     c:EnableReviveLimit()
