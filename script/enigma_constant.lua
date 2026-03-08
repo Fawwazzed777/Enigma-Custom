@@ -21,6 +21,8 @@ LOCATION_DECKSHF = 0x20001
 --Locations used for SetRange
 LOCATION_FZONE = 0x100
 LOCATION_PZONE = 0x200
+--Void Scale
+STAT_VOID_SCALE = 10000000 --0x989680
 --Sequences used for SendtoDeck
 SEQ_DECKTOP     = 0
 SEQ_DECKBOTTOM  = 1

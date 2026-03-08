@@ -1,4 +1,4 @@
---Enigmation Lord - Void Crisis
+--Enigmation Lord - Void Crisis Nadleef
 --scripted by fawwazzed
 if not ENIGMA_PATCH then Duel.LoadScript("enigma_utility.lua") end
 if not VORTEX_IMPORTED then Duel.LoadScript("proc_vortex.lua") end
@@ -11,7 +11,13 @@ function s.vortex_recipe(sg,e,tp,mg)
     local g=Duel.GetMatchingGroup(function(c) 
         return (c:IsSetCard(0x145) or c:IsSetCard(0x344)) and c:IsFaceup() 
     end,p,LOCATION_REMOVED,0,nil)   
-    if #g<5 then return false end           
+    if #g<5 then return false end
+	--Void Scale
+	local total_vs=0
+    for tc in aux.Next(sg) do     
+        local vs=tc:GetEffect(STAT_VOID_SCALE) and tc:GetEffect(STAT_VOID_SCALE):GetValue() or (tc:GetLevel()>0 and tc:GetLevel() or tc:GetRank())
+        total_vs=total_vs + vs
+    end	
     --Rank 4
     local g_rank4=sg:Filter(Card.IsRank,nil,4)
     if #g_rank4~=1 then return false end     
