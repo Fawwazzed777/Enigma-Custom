@@ -10,7 +10,7 @@ if not Vortex then
 end
 
 VORTEX_GLOBAL_FLAG = 111166660 
-SUMMON_TYPE_VORTEX = SUMMON_TYPE_SPECIAL+0x50
+SUMMON_TYPE_VORTEX = SUMMON_TYPE_SPECIAL+0x60
 function Vortex.GetValue(c)
     if c:IsType(TYPE_LINK) then return c:GetLink() end
     if c:IsType(TYPE_XYZ) then return c:GetRank() end
