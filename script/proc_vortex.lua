@@ -22,11 +22,19 @@ function Vortex.MatFilter(c,filter,tp)
 end
 
 function Vortex.Rescon(sg,e,tp,mg,total_val,recipe)
-    local sum=sg:GetSum(Vortex.GetValue)
+    if #sg==0 then return false end
+    local g=sg
+    if type(sg)=="table" then
+        g=Group.CreateGroup()
+        for _,tc in ipairs(sg) do g:AddCard(tc) end
+    end
+
+    local sum=g:GetSum(Vortex.GetValue)
     if sum~=total_val then return false end
-    if Duel.GetLocationCountFromEx(tp,tp,sg,e:GetHandler(),0x60)<=0 then return false end
+    if Duel.GetLocationCountFromEx(tp,tp,g,e:GetHandler(),0x60)<=0 then return false end
+
     if not recipe then return true end
-    return recipe(sg,e,tp,mg)
+    return recipe(g,e,tp,mg)
 end
 
 function Vortex.AddProcedure(c,total_val,recipe)
@@ -37,9 +45,9 @@ function Vortex.AddProcedure(c,total_val,recipe)
     e0:SetCode(EFFECT_SPSUMMON_CONDITION)
     e0:SetValue(function(e,se,sp,st) return (st&SUMMON_TYPE_VORTEX)==SUMMON_TYPE_VORTEX end)
     c:RegisterEffect(e0)
-    local e1=Effect.CreateEffect(c)
+	local e1=Effect.CreateEffect(c)
     e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetDescription(1199)
+    e1:SetDescription(1199)
     e1:SetCode(EFFECT_SPSUMMON_PROC)
     e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
     e1:SetRange(LOCATION_EXTRA)
@@ -48,7 +56,7 @@ function Vortex.AddProcedure(c,total_val,recipe)
     e1:SetCondition(Vortex.Condition)
     e1:SetTarget(Vortex.Target)
     e1:SetOperation(Vortex.Operation)
-    e1:SetValue(SUMMON_TYPE_VORTEX+0x60) 
+    e1:SetValue(1) 
     c:RegisterEffect(e1)
     --NOT FUSION/SYNCHRO/XYZ
     local e2=Effect.CreateEffect(c)
@@ -104,15 +112,17 @@ function Vortex.Operation(e,tp,eg,ep,ev,re,r,rp,c)
     local g=e:GetLabelObject()
     if not g then return end   
     c:SetMaterial(g)   
-    --Xyz(Core)
     local core=g:Filter(Card.IsType,nil,TYPE_XYZ)
-    --Fuel (Non-Xyz) to Grave
     local fuel=g-core   
+    
     if #core>0 then
         Duel.SendtoDeck(core,nil,SEQ_DECKSHUFFLE,REASON_MATERIAL+REASON_VORTEX)
     end   
     if #fuel>0 then
         Duel.SendtoGrave(fuel,REASON_MATERIAL+REASON_VORTEX)
     end   
+
+    Duel.SpecialSummonStep(c,SUMMON_TYPE_VORTEX,tp,tp,false,false,POS_FACEUP)n
+    Duel.SpecialSummonComplete()    
     g:DeleteGroup()
 end
