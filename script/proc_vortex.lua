@@ -122,7 +122,8 @@ function Vortex.Operation(e,tp,eg,ep,ev,re,r,rp,c)
         Duel.SendtoGrave(fuel,REASON_MATERIAL+REASON_VORTEX)
     end   
 
-    Duel.SpecialSummonStep(c,SUMMON_TYPE_VORTEX,tp,tp,false,false,POS_FACEUP)n
-    Duel.SpecialSummonComplete()    
+    if Duel.SpecialSummon(c,SUMMON_TYPE_VORTEX,tp,tp,true,false,POS_FACEUP) then
+    c:CompleteProcedure()    
     g:DeleteGroup()
+end
 end
