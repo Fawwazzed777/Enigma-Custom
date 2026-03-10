@@ -214,7 +214,7 @@ function s.spectral(c,e,tp)
 	return c:IsSetCard(0x344) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.spfilter(c,e,tp)
-	return c:IsType(TYPE_EXTRA) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return (c:IsType(TYPE_EXTRA) or c:IsType(TYPE_VORTEX)) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.bntg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil,e,tp) end
