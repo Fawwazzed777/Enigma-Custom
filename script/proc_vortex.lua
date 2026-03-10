@@ -52,11 +52,12 @@ function Vortex.AddProcedure(c,total_val,recipe)
     e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
     e1:SetRange(LOCATION_EXTRA)
     e1:SetLabel(total_val)
-    if recipe then e1:SetLabelObject({recipe}) end
+	local wrapper={recipe}
+    e1:SetLabelObject(wrapper)
     e1:SetCondition(Vortex.Condition)
     e1:SetTarget(Vortex.Target)
     e1:SetOperation(Vortex.Operation)
-    e1:SetValue(SUMMON_TYPE_VORTEX+0x60) 
+    e1:SetValue(SUMMON_TYPE_VORTEX)
     c:RegisterEffect(e1)
     --NOT FUSION/SYNCHRO/XYZ
     local e2=Effect.CreateEffect(c)
