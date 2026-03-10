@@ -17,9 +17,11 @@ function s.vortex_recipe(sg,e,tp,mg)
     if #g_rank4~=1 then return false end     
     --Level 4 or lower
     local other_mats=sg-g_rank4
+    if #other_mats==0 then return false end     
     local count_valid = other_mats:FilterCount(function(c) 
-        return (c:GetLevel()>0 and c:IsLevelBelow(4))end,nil)  
-    return count_valid== #other_mats
+        return (c:GetLevel()>0 and c:IsLevelBelow(4))
+    end,nil)      
+    return count_valid==#other_mats
 end
 function s.initial_effect(c)
     c:EnableReviveLimit()
