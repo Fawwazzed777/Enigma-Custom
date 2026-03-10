@@ -32,7 +32,7 @@ end
 function Vortex.Rescon(sg,e,tp,mg,total_val,recipe)
     if #sg==0 then return false end
     local g=sg
-    if type(sg== "table" then
+    if type(sg=="table") then
         g=Group.CreateGroup()
         for _,tc in ipairs(sg) do g:AddCard(tc) end
     end
@@ -42,7 +42,7 @@ function Vortex.Rescon(sg,e,tp,mg,total_val,recipe)
     if not recipe then return true end
     return recipe(g,e,tp,mg)
 end
-end
+
 function Vortex.AddProcedure(c,total_val,recipe)
     --Main Summon Procedure
     local e1=Effect.CreateEffect(c)
