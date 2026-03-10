@@ -10,7 +10,7 @@ if not Vortex then
 end
 
 VORTEX_GLOBAL_FLAG=111166660 --Enigmation Lord - Void Crisis Nadleef
-SUMMON_TYPE_VORTEX   = 0x4ab00000
+SUMMON_TYPE_VORTEX=SUMMON_TYPE_SPECIAL+0x60
 
 --Helper cards, allow other cards to perform Vortex Summon without having to wait for a specific card to be banished first.
 function Vortex.Enable(tp)
@@ -30,17 +30,11 @@ function Vortex.MatFilter(c,filter,tp)
 end
 
 function Vortex.Rescon(sg,e,tp,mg,total_val,recipe)
-    if not sg or #sg==0 then return false end
-    local g=sg
-    if type(sg)== "table" then
-        g=Group.CreateGroup()
-        for _,tc in ipairs(sg) do g:AddCard(tc) end
-    end
-    local sum=g:GetSum(Vortex.GetValue)
+    local sum=sg:GetSum(Vortex.GetValue)
     if sum~=total_val then return false end
-    if Duel.GetLocationCountFromEx(tp,tp,g,e:GetHandler(),0x60)<=0 then return false end   
+    if Duel.GetLocationCountFromEx(tp,tp,sg,e:GetHandler(),0x60)<=0 then return false end
     if not recipe then return true end
-    return recipe(g,e,tp,mg)
+    return recipe(sg,e,tp,mg)
 end
 
 function Vortex.AddProcedure(c,total_val,recipe)
@@ -58,14 +52,13 @@ function Vortex.AddProcedure(c,total_val,recipe)
     e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
     e1:SetRange(LOCATION_EXTRA)
     e1:SetLabel(total_val)
-	local wrapper={recipe}
-    e1:SetLabelObject(wrapper)
+    if recipe then e1:SetLabelObject({recipe}) end
     e1:SetCondition(Vortex.Condition)
     e1:SetTarget(Vortex.Target)
     e1:SetOperation(Vortex.Operation)
-    e1:SetValue(SUMMON_TYPE_VORTEX)
+    e1:SetValue(SUMMON_TYPE_VORTEX+0x60) 
     c:RegisterEffect(e1)
-    --REMOVE OTHER TYPE EXTRA
+    --NOT FUSION/SYNCHRO/XYZ
     local e2=Effect.CreateEffect(c)
     e2:SetType(EFFECT_TYPE_SINGLE)
     e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SET_AVAILABLE)
