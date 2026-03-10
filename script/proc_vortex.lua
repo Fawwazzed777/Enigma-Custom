@@ -10,7 +10,7 @@ if not Vortex then
 end
 
 VORTEX_GLOBAL_FLAG=111166660 --Enigmation Lord - Void Crisis Nadleef
-SUMMON_TYPE_VORTEX=SUMMON_TYPE_SPECIAL+0x60
+SUMMON_TYPE_VORTEX   = 0x4ab00000
 
 --Helper cards, allow other cards to perform Vortex Summon without having to wait for a specific card to be banished first.
 function Vortex.Enable(tp)
