@@ -9,16 +9,8 @@ if not Vortex then
     Vortex = aux.VortexProcedure
 end
 
-VORTEX_GLOBAL_FLAG=111166660 --Enigmation Lord - Void Crisis Nadleef
-SUMMON_TYPE_VORTEX=SUMMON_TYPE_SPECIAL+0x60
-
---Helper cards, allow other cards to perform Vortex Summon without having to wait for a specific card to be banished first.
-function Vortex.Enable(tp)
-    if Duel.GetFlagEffect(tp,VORTEX_GLOBAL_FLAG)==0 then
-        Duel.RegisterFlagEffect(tp,VORTEX_GLOBAL_FLAG,RESET_PHASE+PHASE_END,0,1)
-    end
-end
-
+VORTEX_GLOBAL_FLAG = 111166660 
+SUMMON_TYPE_VORTEX = SUMMON_TYPE_SPECIAL+0x60
 function Vortex.GetValue(c)
     if c:IsType(TYPE_LINK) then return c:GetLink() end
     if c:IsType(TYPE_XYZ) then return c:GetRank() end
@@ -81,6 +73,15 @@ function Vortex.AddProcedure(c,total_val,recipe)
         e3:SetValue(TYPE_VORTEX)
         c:RegisterEffect(e3)
     end
+    local e4=Effect.CreateEffect(c)
+    e4:SetType(EFFECT_TYPE_SINGLE)
+    e4:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SET_AVAILABLE)
+    e4:SetRange(LOCATION_ALL)
+    e4:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
+    e4:SetValue(function(e,re,rp)
+        return (re:IsHasCategory(CATEGORY_FUSION_SUMMON) or re:IsHasCategory(CATEGORY_XYZ_SUMMON))
+    end)
+    c:RegisterEffect(e4)
 end
 
 function Vortex.Condition(e,c,tp,sg)
