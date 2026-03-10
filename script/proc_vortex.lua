@@ -9,8 +9,16 @@ if not Vortex then
     Vortex = aux.VortexProcedure
 end
 
-VORTEX_GLOBAL_FLAG = 111166660 
-SUMMON_TYPE_VORTEX = SUMMON_TYPE_SPECIAL+0x60
+VORTEX_GLOBAL_FLAG=111166660 --Enigmation Lord - Void Crisis Nadleef
+SUMMON_TYPE_VORTEX=SUMMON_TYPE_SPECIAL+0x60
+
+--Helper cards, allow other cards to perform Vortex Summon without having to wait for a specific card to be banished first.
+function Vortex.Enable(tp)
+    if Duel.GetFlagEffect(tp,VORTEX_GLOBAL_FLAG)==0 then
+        Duel.RegisterFlagEffect(tp,VORTEX_GLOBAL_FLAG,RESET_PHASE+PHASE_END,0,1)
+    end
+end
+
 function Vortex.GetValue(c)
     if c:IsType(TYPE_LINK) then return c:GetLink() end
     if c:IsType(TYPE_XYZ) then return c:GetRank() end
