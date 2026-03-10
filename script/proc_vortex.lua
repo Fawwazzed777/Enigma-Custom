@@ -31,7 +31,7 @@ function Vortex.Rescon(sg,e,tp,mg,total_val,recipe)
 
     local sum=g:GetSum(Vortex.GetValue)
     if sum~=total_val then return false end
-    if Duel.GetLocationCountFromEx(tp,tp,g,e:GetHandler(),0x60)<=0 then return false end
+    if Duel.GetLocationCountFromEx(tp,tp,g,e:GetHandler())<=0 then return false end
 
     if not recipe then return true end
     return recipe(g,e,tp,mg)
@@ -122,8 +122,7 @@ function Vortex.Operation(e,tp,eg,ep,ev,re,r,rp,c)
         Duel.SendtoGrave(fuel,REASON_MATERIAL+REASON_VORTEX)
     end   
 
-    if Duel.SpecialSummon(c,SUMMON_TYPE_VORTEX,tp,tp,true,false,POS_FACEUP) then
-    c:CompleteProcedure()    
+    Duel.SpecialSummonStep(c,SUMMON_TYPE_VORTEX,tp,tp,false,false,POS_FACEUP)
+    Duel.SpecialSummonComplete()    
     g:DeleteGroup()
-end
 end
