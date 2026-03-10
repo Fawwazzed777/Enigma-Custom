@@ -30,11 +30,13 @@ function Vortex.MatFilter(c,filter,tp)
 end
 
 function Vortex.Rescon(sg,e,tp,mg,total_val,recipe)
+    if not sg or type(sg)== "nil" then return false end    
     local sum=sg:GetSum(Vortex.GetValue)
     if sum~=total_val then return false end
     if Duel.GetLocationCountFromEx(tp,tp,sg,e:GetHandler(),0x60)<=0 then return false end
     if not recipe then return true end
-    return recipe(sg,e,tp,mg)
+    local ok,res= pcall(recipe,sg,e,tp,mg)
+    return ok and res
 end
 
 function Vortex.AddProcedure(c,total_val,recipe)
