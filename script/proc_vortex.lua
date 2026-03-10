@@ -82,15 +82,6 @@ function Vortex.AddProcedure(c,total_val,recipe)
         e3:SetValue(TYPE_VORTEX)
         c:RegisterEffect(e3)
     end
-    local e4=Effect.CreateEffect(c)
-    e4:SetType(EFFECT_TYPE_SINGLE)
-    e4:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SET_AVAILABLE)
-    e4:SetRange(LOCATION_ALL)
-    e4:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
-    e4:SetValue(function(e,re,rp)
-        return (re:IsHasCategory(CATEGORY_FUSION_SUMMON) or re:IsHasCategory(CATEGORY_XYZ_SUMMON))
-    end)
-    c:RegisterEffect(e4)
 end
 
 function Vortex.Condition(e,c,tp,sg)

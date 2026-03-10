@@ -72,7 +72,8 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.atkfilter(c)
-	return (c:IsSetCard(0x145) or c:IsSetCard(0x344)) and c:IsMonster() and c:IsAbleToRemove() and aux.SpElimFilter(c,true)
+	return (c:IsSetCard(0x145) or c:IsSetCard(0x344)) and c:IsMonster() and c:IsAbleToRemove() 
+	and c:GetTextAttack()>0 and aux.SpElimFilter(c,true)
 end
 function s.pytg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.atkfilter,tp,LOCATION_GRAVE,0,1,nil) end
