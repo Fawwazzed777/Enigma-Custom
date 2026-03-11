@@ -50,15 +50,16 @@ end
 
 function s.atktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
     local c=e:GetHandler()
+    local mg=c:GetMaterial()
     local filter=function(tc)
         return tc:IsLocation(LOCATION_GRAVE) 
             and (tc:GetTextAttack()>0 or tc:GetTextDefense()>0) 
             and not tc:IsType(TYPE_XYZ)
     end
-    if chkc then return filter(chkc) end
-    if chk==0 then return tc and tc:IsExists(filter,1,nil) end         
+    if chkc then return mg and mg:IsContains(chkc) and filter(chkc) end
+    if chk==0 then return mg and mg:IsExists(filter,1,nil) end         
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-    local g=tc:FilterSelect(tp,filter,1,1,nil)
+    local g=mg:FilterSelect(tp,filter,1,1,nil)
     Duel.SetTargetCard(g)
 end
 
