@@ -114,15 +114,17 @@ function Vortex.Operation(e,tp,eg,ep,ev,re,r,rp,c)
     c:SetMaterial(g)   
     local core=g:Filter(Card.IsType,nil,TYPE_XYZ)
     local fuel=g-core   
-    
+    --Xyz Core
     if #core>0 then
         Duel.SendtoDeck(core,nil,SEQ_DECKSHUFFLE,REASON_MATERIAL+REASON_VORTEX)
-    end   
+    end
+	--Fuel (other material go to GY)	
     if #fuel>0 then
         Duel.SendtoGrave(fuel,REASON_MATERIAL+REASON_VORTEX)
     end   
 
-    Duel.SpecialSummonStep(c,SUMMON_TYPE_VORTEX,tp,tp,false,false,POS_FACEUP)
-    Duel.SpecialSummonComplete()    
-    g:DeleteGroup()
+		if Duel.SpecialSummon(c,SUMMON_TYPE_VORTEX,tp,tp,false,false,POS_FACEUP)>0 then
+		c:CompleteProcedure()    
+		g:DeleteGroup()
+	end
 end
