@@ -5,12 +5,9 @@ if not aux.VortexProcedure then
     Vortex = aux.VortexProcedure
 end
 
-if not Vortex then
-    Vortex = aux.VortexProcedure
-end
-
 VORTEX_GLOBAL_FLAG = 111166660 
 SUMMON_TYPE_VORTEX = SUMMON_TYPE_SPECIAL+0x60
+
 function Vortex.GetValue(c)
     if c:IsType(TYPE_LINK) then return c:GetLink() end
     if c:IsType(TYPE_XYZ) then return c:GetRank() end
@@ -18,7 +15,8 @@ function Vortex.GetValue(c)
 end
 
 function Vortex.MatFilter(c,filter,tp)
-    return c:IsFaceup() and (c:IsAbleToDeck() or c:IsAbleToExtra()) and (not filter or filter(c,tp))
+    local can_be_cost = (c:IsType(TYPE_XYZ) and (c:IsAbleToDeck() or c:IsAbleToExtra())) or (not c:IsType(TYPE_XYZ) and c:IsAbleToGrave())
+    return c:IsFaceup() and can_be_cost and (not filter or filter(c,tp))
 end
 
 function Vortex.Rescon(sg,e,tp,mg,total_val,recipe)
@@ -38,14 +36,15 @@ function Vortex.Rescon(sg,e,tp,mg,total_val,recipe)
 end
 
 function Vortex.AddProcedure(c,total_val,recipe)
-    --Main Summon Procedure
-	local e0=Effect.CreateEffect(c)
+    --Must be Special Summoned condition
+    local e0=Effect.CreateEffect(c)
     e0:SetType(EFFECT_TYPE_SINGLE)
     e0:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
     e0:SetCode(EFFECT_SPSUMMON_CONDITION)
     e0:SetValue(function(e,se,sp,st) return (st&SUMMON_TYPE_VORTEX)==SUMMON_TYPE_VORTEX end)
     c:RegisterEffect(e0)
-	local e1=Effect.CreateEffect(c)
+    --The Inherent Summon Procedure
+    local e1=Effect.CreateEffect(c)
     e1:SetType(EFFECT_TYPE_FIELD)
     e1:SetDescription(1199)
     e1:SetCode(EFFECT_SPSUMMON_PROC)
@@ -56,25 +55,16 @@ function Vortex.AddProcedure(c,total_val,recipe)
     e1:SetCondition(Vortex.Condition)
     e1:SetTarget(Vortex.Target)
     e1:SetOperation(Vortex.Operation)
-    e1:SetValue(1) 
+    e1:SetValue(SUMMON_TYPE_VORTEX)
     c:RegisterEffect(e1)
-    --NOT FUSION/SYNCHRO/XYZ
+    --Type Stripping Hacks (EDOPro standard for custom ED cards)
     local e2=Effect.CreateEffect(c)
     e2:SetType(EFFECT_TYPE_SINGLE)
     e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SET_AVAILABLE)
     e2:SetRange(LOCATION_ALL)
     e2:SetCode(EFFECT_REMOVE_TYPE)
-    e2:SetValue(TYPE_FUSION)
-    c:RegisterEffect(e2)
-	local es=e2:Clone()
-    es:SetValue(TYPE_SYNCHRO)
-    c:RegisterEffect(es)
-	local ex=e2:Clone()
-    ex:SetValue(TYPE_XYZ)
-    c:RegisterEffect(ex)
-	local eli=e2:Clone()
-    eli:SetValue(TYPE_LINK)
-    c:RegisterEffect(eli)	
+    e2:SetValue(TYPE_FUSION|TYPE_SYNCHRO|TYPE_XYZ|TYPE_LINK)
+    c:RegisterEffect(e2)    
     if TYPE_VORTEX then
         local e3=e2:Clone()
         e3:SetCode(EFFECT_ADD_TYPE)
@@ -86,7 +76,7 @@ end
 function Vortex.Condition(e,c,tp,sg)
     if c==nil then return true end
     local tp=c:GetControler()
-    if Duel.GetFlagEffect(tp,VORTEX_GLOBAL_FLAG)==0 then return false end       
+    if Duel.GetFlagEffect(tp,VORTEX_GLOBAL_FLAG)==0 then return false end        
     local total_val=e:GetLabel()
     local wrapper=e:GetLabelObject()
     local recipe=wrapper and wrapper[1] or nil    
@@ -114,17 +104,13 @@ function Vortex.Operation(e,tp,eg,ep,ev,re,r,rp,c)
     c:SetMaterial(g)   
     local core=g:Filter(Card.IsType,nil,TYPE_XYZ)
     local fuel=g-core   
-    --Xyz Core
+    --Core
     if #core>0 then
         Duel.SendtoDeck(core,nil,SEQ_DECKSHUFFLE,REASON_MATERIAL+REASON_VORTEX)
-    end
-	--Fuel (other material go to GY)	
+    end  
+	--Fuel Material
     if #fuel>0 then
         Duel.SendtoGrave(fuel,REASON_MATERIAL+REASON_VORTEX)
     end   
-
-		if Duel.SpecialSummon(c,SUMMON_TYPE_VORTEX,tp,tp,false,false,POS_FACEUP)>0 then
-		c:CompleteProcedure()    
-		g:DeleteGroup()
-	end
+    g:DeleteGroup()
 end
