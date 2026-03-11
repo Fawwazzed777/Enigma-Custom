@@ -16,6 +16,7 @@ function s.vortex_recipe(sg,e,tp,mg)
     return count_valid==#other_mats
 end
 function s.initial_effect(c)
+	c:EnableReviveLimit()
     --VORTEX SUMMON
     Vortex.AddProcedure(c,8,s.vortex_recipe)           
     --Gain ATK(Non-Xyz)
