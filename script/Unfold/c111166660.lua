@@ -13,13 +13,14 @@ function s.vortex_recipe(sg,e,tp,mg)
     end,p,LOCATION_REMOVED,0,nil)   
     if #g<5 then return false end
     --Rank 4
-    local g_rank4=sg:Filter(Card.IsRank,nil,4)
-    if #g_rank4~=1 then return false end     
+    local g_rank4=sg:Filter(function(c) return c:IsType(TYPE_XYZ) and c:GetRank()==4 end,nil)
+    if #g_rank4~=1 then return false end    
     --Level 4 or lower
-    local other_mats=sg-g_rank4
-    local count_valid = other_mats:FilterCount(function(c) 
-        return (c:GetLevel()>0 and c:IsLevelBelow(4))end,nil)  
-    return count_valid== #other_mats
+    local other_mats=sg:Clone()
+    other_mats:Sub(g_rank4)
+    if #other_mats==0 then return false end   
+    local count_valid=other_mats:FilterCount(function(c) return c:GetLevel()>0 and c:IsLevelBelow(4) end,nil)    
+    return count_valid==#other_mats
 end
 function s.initial_effect(c)
     c:EnableReviveLimit()
