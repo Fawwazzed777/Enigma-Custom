@@ -6,7 +6,7 @@ local s,id=GetID()
 --Material Logic
 function s.vortex_recipe(sg,e,tp,mg)
     --Rank 4
-    local g_rank4=sg:Filter(function(c) return c:IsType(TYPE_XYZ) and c:GetRank()==4 end, nil)
+    local g_rank4=sg:Filter(function(c) return c:IsType(TYPE_XYZ) and c:IsRank(4) end, nil)
     if #g_rank4~=1 then return false end    
     --Level 4 or lower    
     local other_mats=sg:Clone()
@@ -56,7 +56,7 @@ function s.atktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
             and not tc:IsType(TYPE_XYZ)
     end
     if chkc then return filter(chkc) end
-    if chk==0 then return false end         
+    if chk==0 then return tc and tc :IsExists(filter,1,nil) end         
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
     local g=tc:FilterSelect(tp,filter,1,1,nil)
     Duel.SetTargetCard(g)
