@@ -90,7 +90,7 @@ function Vortex.Target(e,tp,eg,ep,ev,re,r,rp,chk,c)
     local recipe=wrapper and wrapper[1] or nil    
     local rg=Duel.GetMatchingGroup(Vortex.MatFilter,tp,LOCATION_MZONE,0,nil)
     local sg=aux.SelectUnselectGroup(rg,e,tp,2,99,function(sg,e,tp,mg) return Vortex.Rescon(sg,e,tp,mg,total_val,recipe) end,1,tp,HINTMSG_SPSUMMON,nil,nil,true)
-    if sg then
+    if sg and #sg>0 then
         sg:KeepAlive()
         e:SetLabelObject(sg)
         return true
@@ -106,11 +106,11 @@ function Vortex.Operation(e,tp,eg,ep,ev,re,r,rp,c)
     local fuel=g-core   
     --Core
     if #core>0 then
-        Duel.SendtoDeck(core,nil,SEQ_DECKSHUFFLE,REASON_VORTEX)
+        Duel.SendtoDeck(core,nil,SEQ_DECKSHUFFLE,REASON_MATERIAL+REASON_VORTEX)
     end  
 	--Fuel Material
     if #fuel>0 then
-        Duel.SendtoGrave(fuel,REASON_VORTEX)
+        Duel.SendtoGrave(fuel,REASON_MATERIAL+REASON_VORTEX)
     end   
     g:DeleteGroup()
 end
