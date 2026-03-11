@@ -106,11 +106,11 @@ function Vortex.Operation(e,tp,eg,ep,ev,re,r,rp,c)
     local fuel=g-core   
     --Core
     if #core>0 then
-        Duel.SendtoDeck(core,nil,SEQ_DECKSHUFFLE,REASON_MATERIAL+REASON_VORTEX)
+        Duel.SendtoDeck(core,nil,SEQ_DECKSHUFFLE,REASON_VORTEX)
     end  
 	--Fuel Material
     if #fuel>0 then
-        Duel.SendtoGrave(fuel,REASON_MATERIAL+REASON_VORTEX)
+        Duel.SendtoGrave(fuel,REASON_VORTEX)
     end   
     g:DeleteGroup()
 end
