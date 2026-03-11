@@ -16,8 +16,8 @@ function Vortex.GetValue(c)
 end
 
 function Vortex.MatFilter(c,filter,tp)
-    local can_be_cost = (c:IsType(TYPE_XYZ) and (c:IsAbleToDeck() or c:IsAbleToExtra())) or (not c:IsType(TYPE_XYZ) and c:IsAbleToGrave())
-    return c:IsFaceup() and can_be_cost and (not filter or filter(c,tp))
+    local can_be_material=(c:IsType(TYPE_XYZ) and (c:IsAbleToDeck() or c:IsAbleToExtra())) or (not c:IsType(TYPE_XYZ) and c:IsAbleToGrave())
+    return c:IsFaceup() and can_be_material and (not filter or filter(c,tp))
 end
 
 function Vortex.Rescon(sg,e,tp,mg,total_val,recipe)
@@ -37,6 +37,8 @@ function Vortex.Rescon(sg,e,tp,mg,total_val,recipe)
 end
 
 function Vortex.AddProcedure(c,total_val,recipe)
+	local s=c:GetOwner() or _G["c"..c:GetCode()]
+    if s then s.is_vortex=true end
     --Must first be Vortex Summoned condition
     local e0=Effect.CreateEffect(c)
     e0:SetType(EFFECT_TYPE_SINGLE)

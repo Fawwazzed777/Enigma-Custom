@@ -24,7 +24,7 @@ function s.initial_effect(c)
     e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
     e1:SetProperty(EFFECT_FLAG_DELAY)
     e1:SetCode(EVENT_SPSUMMON_SUCCESS)
-    e1:SetCountLimit(1,id)
+    e1:SetCountLimit(1,{id,0})
     e1:SetCondition(s.setcon)
     e1:SetTarget(s.settg)
     e1:SetOperation(s.setop)
@@ -35,7 +35,7 @@ function s.initial_effect(c)
     e2:SetCategory(CATEGORY_DESTROY+CATEGORY_SPECIAL_SUMMON)
     e2:SetType(EFFECT_TYPE_IGNITION)
     e2:SetRange(LOCATION_MZONE)
-    e2:SetCountLimit(1,id+1)
+    e2:SetCountLimit(1,{id,1})
     e2:SetTarget(s.sstg)
     e2:SetOperation(s.ssop)
     c:RegisterEffect(e2)
@@ -78,7 +78,11 @@ function s.sstg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 
 function s.spfilter(c,e,tp)
-    return (c:GetType()&TYPE_VORTEX)==TYPE_VORTEX and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+    if not c:IsCanBeSpecialSummoned(e,0,tp,false,false) then return false end
+    local code=c:GetCode()
+    local mt=_G["c"..code]   
+    --Vortex
+    return mt and mt.is_vortex
 end
 
 function s.ssop(e,tp,eg,ep,ev,re,r,rp)
