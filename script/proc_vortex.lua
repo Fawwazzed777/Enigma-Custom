@@ -55,7 +55,7 @@ function Vortex.AddProcedure(c,total_val,recipe)
     e1:SetCondition(Vortex.Condition)
     e1:SetTarget(Vortex.Target)
     e1:SetOperation(Vortex.Operation)
-    e1:SetValue(SUMMON_TYPE_VORTEX|1)
+    e1:SetValue(SUMMON_TYPE_VORTEX|1|0x60)
     c:RegisterEffect(e1)
     --Type Stripping Hacks (EDOPro standard for custom ED cards)
     local e2=Effect.CreateEffect(c)
@@ -89,14 +89,13 @@ function Vortex.Target(e,tp,eg,ep,ev,re,r,rp,chk,c)
     local wrapper=e:GetLabelObject()
     local recipe=wrapper and wrapper[1] or nil    
     local rg=Duel.GetMatchingGroup(Vortex.MatFilter,tp,LOCATION_MZONE,0,nil)
-    local sg=aux.SelectUnselectGroup(rg,e,tp,2,99,function(sg,e,tp,mg) return Vortex.Rescon(sg,e,tp,mg,total_val,recipe) end,1,tp,HINTMSG_SPSUMMON,nil,nil,true)if sg then
-    if sg and #sg>0 then    
-		sg:KeepAlive()
+    local sg=aux.SelectUnselectGroup(rg,e,tp,2,99,function(sg,e,tp,mg) return Vortex.Rescon(sg,e,tp,mg,total_val,recipe) end,1,tp,HINTMSG_SPSUMMON,nil,nil,true)
+    if sg then
+        sg:KeepAlive()
         e:SetLabelObject(sg)
         return true
     end
     return false
-end
 end
 
 function Vortex.Operation(e,tp,eg,ep,ev,re,r,rp,c)
