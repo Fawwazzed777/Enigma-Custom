@@ -7,7 +7,7 @@ end
 
 VORTEX_GLOBAL_FLAG = 111166660 
 SUMMON_TYPE_VORTEX = SUMMON_TYPE_SPECIAL+0x60
-TYPE_VORTEX      = 0x400000000
+TYPE_VORTEX      = 0x200000000
 
 function Vortex.GetValue(c)
     if c:IsType(TYPE_LINK) then return c:GetLink() end
@@ -37,12 +37,6 @@ function Vortex.Rescon(sg,e,tp,mg,total_val,recipe)
 end
 
 function Vortex.AddProcedure(c,total_val,recipe)
-	--Flag
-    local e_id=Effect.CreateEffect(c)
-    e_id:SetType(EFFECT_TYPE_SINGLE)
-    e_id:SetCode(575)
-    e_id:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SET_AVAILABLE)
-    c:RegisterEffect(e_id)
     --Must first be Vortex Summoned condition
     local e0=Effect.CreateEffect(c)
     e0:SetType(EFFECT_TYPE_SINGLE)
@@ -73,10 +67,12 @@ function Vortex.AddProcedure(c,total_val,recipe)
     e2:SetValue(TYPE_FUSION|TYPE_SYNCHRO|TYPE_XYZ|TYPE_LINK)
     c:RegisterEffect(e2)    
     --if TYPE_VORTEX then
-        local e3=e2:Clone()
-        e3:SetCode(EFFECT_ADD_TYPE)
-        e3:SetValue(TYPE_VORTEX)
-        c:RegisterEffect(e3)
+    local e3=Effect.CreateEffect(c)
+    e3:SetType(EFFECT_TYPE_SINGLE)
+    e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SET_AVAILABLE)
+    e3:SetCode(EFFECT_ADD_TYPE)
+    e3:SetValue(TYPE_VORTEX)
+    c:RegisterEffect(e3)
 end
 
 function Vortex.Condition(e,c,tp,sg)
