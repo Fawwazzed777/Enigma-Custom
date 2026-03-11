@@ -66,12 +66,11 @@ function Vortex.AddProcedure(c,total_val,recipe)
     e2:SetCode(EFFECT_REMOVE_TYPE)
     e2:SetValue(TYPE_FUSION|TYPE_SYNCHRO|TYPE_XYZ|TYPE_LINK)
     c:RegisterEffect(e2)    
-    if TYPE_VORTEX then
+    --if TYPE_VORTEX then
         local e3=e2:Clone()
         e3:SetCode(EFFECT_ADD_TYPE)
         e3:SetValue(TYPE_VORTEX)
         c:RegisterEffect(e3)
-    end
 end
 
 function Vortex.Condition(e,c,tp,sg)
