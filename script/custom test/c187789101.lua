@@ -5,13 +5,12 @@ if not VORTEX_IMPORTED then Duel.LoadScript("proc_vortex.lua") end
 local s,id=GetID()
 function s.vortex_recipe(sg,e,tp,mg)
     --1 Rank 4 or lower Monster
-    local g_rank=sg:Filter(function(c,xyz,sumtype,tp) return c:IsType(TYPE_XYZ,xyz,sumtype,tp) and c:IsRankBelow(4) end,nil)
+    local g_rank=sg:Filter(function(c) return c:IsType(TYPE_XYZ) and c:GetRank()<=4 end,nil)
     if #g_rank~=1 then return false end 
     --1+ non Rank monsters (Level or Link, essentially non-Xyz)
     local other_mats=sg-g_rank
-    if #other_mats==0 then return false end
-    local count_valid=other_mats:FilterCount(function(c) return c:GetLevel()>0 and c:IsLevelBelow(4)end,nil)    
-    return count_valid==#other_mats
+    if #other_mats<1 then return false end
+    return other_mats:FilterCount(function(c) return not c:IsType(TYPE_XYZ) end,nil)== #other_mats
 end
 function s.initial_effect(c)
     --VORTEX SUMMON
