@@ -93,14 +93,15 @@ function Vortex.Condition(e,c,tp,sg)
 end
 
 function Vortex.Target(e,tp,eg,ep,ev,re,r,rp,chk,c)
-	if chk==0 then return true end
+    local cancelable=Duel.IsSummonCancelable()
     local total_val=e:GetLabel()
     local wrapper=e:GetLabelObject()
     local recipe=wrapper and wrapper[1] or nil    
     local rg=Duel.GetMatchingGroup(Vortex.MatFilter,tp,LOCATION_MZONE,0,nil)
 	local sg=aux.SelectUnselectGroup(rg,e,tp,2,99,function(sg,e,tp,mg) 
     return Vortex.Rescon(sg,e,tp,mg,total_val,recipe) 
-    end,1,tp,HINTMSG_SPSUMMON,nil,nil,true)if sg and #sg>0 then
+    end,1,tp,HINTMSG_SPSUMMON,nil,nil,cancelable)
+	if sg and #sg>0 then
         sg:KeepAlive()
         e:SetLabelObject(sg)
         return true
