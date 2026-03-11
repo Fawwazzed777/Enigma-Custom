@@ -5,7 +5,8 @@ if not VORTEX_IMPORTED then Duel.LoadScript("proc_vortex.lua") end
 local s,id=GetID()
 --Material Logic
 function s.vortex_recipe(g,e,tp,mg)
-	if not g then return false end
+	if not g or type(g)~= "userdata" then return false end
+	if #g==0 then return false end
     --Rank 4
     local g_rank4=g:Filter(function(c) return c:GetRank()==4 end,nil)
     if #g_rank4~=1 then return false end    
