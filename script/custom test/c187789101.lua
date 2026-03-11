@@ -15,7 +15,7 @@ function s.vortex_recipe(g,e,tp,mg)
     local other_mats=g:Clone()
 	other_mats:Sub(g_rank)
     if #other_mats==0 then return false end	
-    local count_valid=other_mats:FilterCount(function(c) return not c:IsType(TYPE_XYZ) end,nil)
+    local count_valid=other_mats:FilterCount(function(c) return c:GetLevel()>0 and not c:IsType(TYPE_XYZ) end,nil)
 	return count_valid==#other_mats
 end
 function s.initial_effect(c)
