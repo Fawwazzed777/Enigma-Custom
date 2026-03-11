@@ -5,6 +5,7 @@ if not VORTEX_IMPORTED then Duel.LoadScript("proc_vortex.lua") end
 local s,id=GetID()
 --Material Logic
 function s.vortex_recipe(g,e,tp,mg)
+	if not g then return false end
     --1 Rank 4 or lower Monster
     local g_rank=g:Filter(function(c) return c:IsType(TYPE_XYZ) and c:GetRank()<=4 end,nil)
     if #g_rank~=1 then return false end 
@@ -81,7 +82,7 @@ end
 
 function s.spfilter(c,e,tp)
     return c:IsCanBeSpecialSummoned(e,0,tp,false,false) 
-        and c:IsHasEffect(511000000)
+        and c:IsType(TYPE_VORTEX)
 end
 
 function s.ssop(e,tp,eg,ep,ev,re,r,rp)
