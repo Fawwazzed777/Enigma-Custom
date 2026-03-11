@@ -36,13 +36,14 @@ function Vortex.Rescon(sg,e,tp,mg,total_val,recipe)
 end
 
 function Vortex.AddProcedure(c,total_val,recipe)
+    --Must first be Vortex Summoned condition
     local e0=Effect.CreateEffect(c)
     e0:SetType(EFFECT_TYPE_SINGLE)
     e0:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
     e0:SetCode(EFFECT_SPSUMMON_CONDITION)
     e0:SetValue(function(e,se,sp,st) return (st&SUMMON_TYPE_VORTEX)==SUMMON_TYPE_VORTEX end)
     c:RegisterEffect(e0)
-    --Main Procedure
+    --Vortex Summon Procedure
     local e1=Effect.CreateEffect(c)
     e1:SetType(EFFECT_TYPE_FIELD)
     e1:SetDescription(1199)
@@ -56,7 +57,7 @@ function Vortex.AddProcedure(c,total_val,recipe)
     e1:SetOperation(Vortex.Operation)
     e1:SetValue(SUMMON_TYPE_VORTEX|1)
     c:RegisterEffect(e1)
-    --
+    --Type Stripping Hacks (EDOPro standard for custom ED cards)
     local e2=Effect.CreateEffect(c)
     e2:SetType(EFFECT_TYPE_SINGLE)
     e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SET_AVAILABLE)
@@ -80,7 +81,7 @@ function Vortex.Condition(e,c,tp,sg)
     local wrapper=e:GetLabelObject()
     local recipe=wrapper and wrapper[1] or nil    
     local rg=Duel.GetMatchingGroup(Vortex.MatFilter,tp,LOCATION_MZONE,0,nil)   
-    return aux.SelectUnselectGroup(rg,e,tp,2,99,function(sg,e,tp,mg) return Vortex.Rescon(sg,e,tp,mg,total_val,recipe) end,0)
+    return aux.SelectUnselectGroup(rg,e,tp,2,99,function(sg,e,tp,mg) return Vortex.Rescon(sg,e,tp,mg,total_val,recipe) end,1,tp,HINTMSG_SPSUMMON,nil,nil,true)
 end
 
 function Vortex.Target(e,tp,eg,ep,ev,re,r,rp,chk,c)
@@ -88,10 +89,8 @@ function Vortex.Target(e,tp,eg,ep,ev,re,r,rp,chk,c)
     local wrapper=e:GetLabelObject()
     local recipe=wrapper and wrapper[1] or nil    
     local rg=Duel.GetMatchingGroup(Vortex.MatFilter,tp,LOCATION_MZONE,0,nil)
-    local sg=aux.SelectUnselectGroup(rg,e,tp,2,99,function(sg,e,tp,mg) 
-	return Vortex.Rescon(sg,e,tp,mg,total_val,recipe) end,1,tp,HINTMSG_SPSUMMON,nil,nil,true)
-
-    if sg and #sg > 0 then
+    local sg=aux.SelectUnselectGroup(rg,e,tp,2,99,function(sg,e,tp,mg) return Vortex.Rescon(sg,e,tp,mg,total_val,recipe) end,1,tp,HINTMSG_SPSUMMON,nil,nil,true)
+    if sg and #sg>0 then
         sg:KeepAlive()
         e:SetLabelObject(sg)
         return true
@@ -105,12 +104,13 @@ function Vortex.Operation(e,tp,eg,ep,ev,re,r,rp,c)
     c:SetMaterial(g)   
     local core=g:Filter(Card.IsType,nil,TYPE_XYZ)
     local fuel=g-core   
+    --Core
     if #core>0 then
         Duel.SendtoDeck(core,nil,SEQ_DECKSHUFFLE,REASON_VORTEX)
     end  
+	--Fuel Material
     if #fuel>0 then
         Duel.SendtoGrave(fuel,REASON_VORTEX)
     end   
-    
     g:DeleteGroup()
 end
