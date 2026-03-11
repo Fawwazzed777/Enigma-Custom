@@ -6,7 +6,7 @@ local s,id=GetID()
 --Material Logic
 function s.vortex_recipe(sg,e,tp,mg)
     --Rank 4
-    local g_rank4=sg:Filter(function(c) return c:IsType(TYPE_XYZ) and c:GetRank()==4 end,nil)
+    local g_rank4=sg:Filter(function(c) return c:IsType(TYPE_XYZ) and c:IsRank(4) end,nil)
     if #g_rank4~=1 then return false end    
     --Level 4 or lower    
     local other_mats=sg:Clone()
