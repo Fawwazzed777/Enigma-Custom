@@ -5,7 +5,7 @@ if not VORTEX_IMPORTED then Duel.LoadScript("proc_vortex.lua") end
 local s,id=GetID()
 function s.vortex_recipe(sg,e,tp,mg)
     --1 Rank 4 or lower Monster
-    local g_rank=sg:Filter(function(c) return c:IsType(TYPE_XYZ) and c:IsRankBelow(4) end,nil)
+    local g_rank=sg:Filter(function(c) return c:IsType(TYPE_XYZ) and c:GetRank()<=4 end,nil)
     if #g_rank~=1 then return false end 
     --1+ non Rank monsters (Level or Link, essentially non-Xyz)
     local other_mats=sg-g_rank
@@ -13,7 +13,6 @@ function s.vortex_recipe(sg,e,tp,mg)
     return other_mats:FilterCount(function(c) return not c:IsType(TYPE_XYZ) end,nil)== #other_mats
 end
 function s.initial_effect(c)
-	c:EnableReviveLimit()
     --VORTEX SUMMON
     Vortex.AddProcedure(c,8,s.vortex_recipe)
     c:EnableReviveLimit()

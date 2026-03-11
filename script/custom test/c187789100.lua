@@ -16,9 +16,9 @@ function s.vortex_recipe(sg,e,tp,mg)
     return count_valid==#other_mats
 end
 function s.initial_effect(c)
-	c:EnableReviveLimit()
     --VORTEX SUMMON
-    Vortex.AddProcedure(c,8,s.vortex_recipe)           
+    Vortex.AddProcedure(c,8,s.vortex_recipe)
+	c:EnableReviveLimit()
     --Gain ATK(Non-Xyz)
     local e1=Effect.CreateEffect(c)
     e1:SetDescription(aux.Stringid(id,0))
