@@ -81,7 +81,7 @@ end
 
 function s.spfilter(c,e,tp)
     return c:IsCanBeSpecialSummoned(e,0,tp,false,false) 
-        and c:IsType(TYPE_VORTEX)
+        and c:IsHasEffect(511000000)
 end
 
 function s.ssop(e,tp,eg,ep,ev,re,r,rp)
