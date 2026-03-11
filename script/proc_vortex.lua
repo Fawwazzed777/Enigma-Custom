@@ -37,8 +37,12 @@ function Vortex.Rescon(sg,e,tp,mg,total_val,recipe)
 end
 
 function Vortex.AddProcedure(c,total_val,recipe)
-	local s=c:GetOwner() or _G["c"..c:GetCode()]
-    if s then s.is_vortex=true end
+	--Flag
+    local e_id=Effect.CreateEffect(c)
+    e_id:SetType(EFFECT_TYPE_SINGLE)
+    e_id:SetCode(575)
+    e_id:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SET_AVAILABLE)
+    c:RegisterEffect(e_id)
     --Must first be Vortex Summoned condition
     local e0=Effect.CreateEffect(c)
     e0:SetType(EFFECT_TYPE_SINGLE)

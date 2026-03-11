@@ -78,11 +78,8 @@ function s.sstg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 
 function s.spfilter(c,e,tp)
-    if not c:IsCanBeSpecialSummoned(e,0,tp,false,false) then return false end
-    local code=c:GetCode()
-    local mt=_G["c"..code]   
-    --Vortex
-    return mt and mt.is_vortex
+    return c:IsCanBeSpecialSummoned(e,0,tp,false,false) 
+        and c:IsHasEffect(575)
 end
 
 function s.ssop(e,tp,eg,ep,ev,re,r,rp)
