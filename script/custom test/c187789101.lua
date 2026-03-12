@@ -83,10 +83,10 @@ end
 function s.sstg(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then 
         return Duel.IsExistingMatchingCard(Card.IsDestructable,tp,LOCATION_ONFIELD,0,1,nil)
-            and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp) 
+            and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil,e,tp) 
     end
     Duel.SetOperationInfo(0,CATEGORY_DESTROY,nil,1,tp,LOCATION_ONFIELD)
-    Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE)
+    Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE+LOCATION_REMOVED)
 end
 
 function s.ssop(e,tp,eg,ep,ev,re,r,rp)
@@ -94,7 +94,7 @@ function s.ssop(e,tp,eg,ep,ev,re,r,rp)
     local dg=Duel.SelectMatchingCard(tp,Card.IsDestructable,tp,LOCATION_ONFIELD,0,1,1,nil)
     if #dg>0 and Duel.Destroy(dg,REASON_EFFECT)>0 then
         Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-        local sg=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
+        local sg=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil,e,tp)
         if #sg>0 then
             -- Note: Jika monster Vortex tersebut dibuang langsung ke GY tanpa di-Summon dulu,
             -- Duel.SpecialSummon ini akan gagal karena Revive Limit.
