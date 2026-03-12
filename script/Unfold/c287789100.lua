@@ -48,7 +48,6 @@ function s.initial_effect(c)
     c:RegisterEffect(e2)
 end
 s.listed_series={0x993,0x994}
---Banish 1 Eternity Tech from Deck/GY
 function s.leapcost(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return Duel.IsExistingMatchingCard(function(c) 
         return c:IsSetCard(0x994) and c:IsMonster() and c:IsAbleToRemoveAsCost() 
