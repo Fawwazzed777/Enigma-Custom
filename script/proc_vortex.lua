@@ -91,14 +91,13 @@ function Vortex.Condition(e,c,tp,sg)
     if c==nil then return true end
     local tp=c:GetControler()  
 	--Check if there is a card banished this turn
-    if Duel.GetFlagEffect(tp,VORTEX_ACTIVITY_FLAG)==0 then 
-        return false 
-    end
-    local total_val=e:GetLabel()
+    if Duel.GetFlagEffect(tp,VORTEX_ACTIVITY_FLAG)==0 then return false 
+	local total_val=e:GetLabel()
     local wrapper=e:GetLabelObject()
     local recipe=wrapper and wrapper[1] or nil    
     local rg=Duel.GetMatchingGroup(Vortex.MatFilter,tp,LOCATION_MZONE,0,nil)   
-    return aux.SelectUnselectGroup(rg,e,tp,2,99,function(sg,e,tp,mg) return Vortex.Rescon(sg,e,tp,mg,total_val,recipe) end,0)
+    return aux.SelectUnselectGroup(rg,e,tp,2,99,function(sg,e,tp,mg) 
+      return Vortex.Rescon(sg,e,tp,mg,total_val,recipe) end,0)
 end
 
 function Vortex.Target(e,tp,eg,ep,ev,re,r,rp,chk,c)
