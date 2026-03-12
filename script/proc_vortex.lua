@@ -7,7 +7,7 @@ end
 
 SUMMON_TYPE_VORTEX = SUMMON_TYPE_SPECIAL+0x60
 TYPE_VORTEX      = 0x200000000
-
+VORTEX_ACTIVITY_FLAG = 511729901
 function Vortex.GetValue(c)
     if c:IsType(TYPE_LINK) then return c:GetLink() end
     if c:IsType(TYPE_XYZ) then return c:GetRank() end
@@ -37,11 +37,18 @@ end
 
 function Vortex.AddProcedure(c,total_val,recipe)
 	--Vortex Identity
-	local ev=Effect.CreateEffect(c)
-    ev:SetType(EFFECT_TYPE_SINGLE)
-    ev:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SET_AVAILABLE)
-    ev:SetCode(511729900)
-    c:RegisterEffect(ev)
+	if not Vortex.global_check then
+        Vortex.global_check= true
+        local ge1=Effect.CreateEffect(c)
+        ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+        ge1:SetCode(EVENT_REMOVE)
+        ge1:SetOperation(function()
+            Duel.RegisterFlagEffect(0,VORTEX_ACTIVITY_FLAG,RESET_PHASE+PHASE_END,0,1)
+            Duel.RegisterFlagEffect(1,VORTEX_ACTIVITY_FLAG,RESET_PHASE+PHASE_END,0,1)
+			end)
+			Duel.RegisterEffect(ge1,0)
+		end
+	end
     --Must first be Vortex Summoned condition
     local e0=Effect.CreateEffect(c)
     e0:SetType(EFFECT_TYPE_SINGLE)
@@ -84,9 +91,9 @@ function Vortex.Condition(e,c,tp,sg)
     if c==nil then return true end
     local tp=c:GetControler()  
 	--Check if there is a card banished this turn
-    if Duel.GetTurnCount()~=0 and Duel.GetActivityCount(tp,ACTIVITY_REMOVE)==0 then 
+    if Duel.GetFlagEffect(tp,VORTEX_ACTIVITY_FLAG)==0 then 
         return false 
-    end	
+    end
     local total_val=e:GetLabel()
     local wrapper=e:GetLabelObject()
     local recipe=wrapper and wrapper[1] or nil    
