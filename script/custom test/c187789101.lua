@@ -76,9 +76,8 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.spfilter(c,e,tp)
-    --Check Vortex
-    return not c:IsCode(id)
-        and c:IsVortex() and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+    return c:IsVortex() and not c:IsCode(id)
+        and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 
 function s.sstg(e,tp,eg,ep,ev,re,r,rp,chk)

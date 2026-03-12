@@ -41,8 +41,15 @@ function Card.IsVortexSummonable(c,e,tp,must_use,mg)
 		and c:IsVortex() and c:VortexRule(e,tp,must_use,mg)
 end
 
+function Card.IsVortex(c)
+    local mt=c:GetMetatable()
+    return (mt and mt.Vortex) or c:IsHasEffect(511729900)
+end
+
 function Vortex.AddProcedure(c,total_val,recipe)
 	--Vortex Identity
+	local mt= c:GetMetatable()
+    mt.Vortex_Summon= true
 	if not Vortex.global_check then
         Vortex.global_check= true
         local ge1=Effect.CreateEffect(c)
