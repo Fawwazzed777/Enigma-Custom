@@ -41,7 +41,7 @@ function Vortex.AddProcedure(c,total_val,recipe)
 	local ev=Effect.CreateEffect(c)
     ev:SetType(EFFECT_TYPE_SINGLE)
     ev:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SET_AVAILABLE)
-    ev:SetCode(511000000)
+    ev:SetCode(511729900)
     c:RegisterEffect(ev)
     --Must first be Vortex Summoned condition
     local e0=Effect.CreateEffect(c)

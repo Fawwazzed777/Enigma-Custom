@@ -21,7 +21,7 @@ function s.initial_effect(c)
     --VORTEX SUMMON
     Vortex.AddProcedure(c,8,s.vortex_recipe)
     c:EnableReviveLimit()
-    --Destroy S/P & Set from opponent GY
+    --Destroy S/T & Set from opponent GY
     local e1=Effect.CreateEffect(c)
     e1:SetDescription(aux.Stringid(id,0))
     e1:SetCategory(CATEGORY_DESTROY)
@@ -82,8 +82,9 @@ function s.sstg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 
 function s.spfilter(c,e,tp)
-    return c:IsCanBeSpecialSummoned(e,0,tp,false,false) 
-        and c:IsType(TYPE_VORTEX)
+    if not c:IsCanBeSpecialSummoned(e,0,tp,false,false) then return false end   
+    --Vortex
+    return c:IsHasEffect(511729900)
 end
 
 function s.ssop(e,tp,eg,ep,ev,re,r,rp)
