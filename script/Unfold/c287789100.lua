@@ -1,4 +1,4 @@
---Eternity Ace - Chrono Driver Paradigma
+--Eternity Ace - Chrono Drive Dragon
 --scripted by fawwazzed
 if not ENIGMA_PATCH then Duel.LoadScript("enigma_utility.lua") end
 if not VORTEX_IMPORTED then Duel.LoadScript("proc_vortex.lua") end
@@ -35,7 +35,7 @@ function s.initial_effect(c)
     e1:SetTarget(s.leaptg)
     e1:SetOperation(s.leapop)
     c:RegisterEffect(e1)
-	--Special Summon Different Attribute of "Eternity Ace"
+	--Track effect: Special Summon Different Attribute of "Eternity Ace"
     local e2=Effect.CreateEffect(c)
     e2:SetDescription(aux.Stringid(id,1))
     e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
