@@ -75,17 +75,17 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.spfilter(c,e,tp)
-    --VORTEX
-    return (c:IsType(TYPE_VORTEX) or Vortex.global_check)
-        and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+    --Check Vortex
+    return not c:IsCode(id)
+        and c:IsRace(RACE_DRAGON|RACE_WYRM) and c:IsAttribute(ATTRIBUTE_DARK) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 
 function s.sstg(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then 
         return Duel.IsExistingMatchingCard(Card.IsDestructable,tp,LOCATION_ONFIELD,0,1,nil)
-            and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
-    local g=Duel.GetMatchingGroup(Card.IsDestructable,tp,LOCATION_ONFIELD,0,nil)
-    Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
+            and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp) 
+    end
+    Duel.SetOperationInfo(0,CATEGORY_DESTROY,nil,1,tp,LOCATION_ONFIELD)
     Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE)
 end
 
@@ -96,6 +96,8 @@ function s.ssop(e,tp,eg,ep,ev,re,r,rp)
         Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
         local sg=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
         if #sg>0 then
+            -- Note: Jika monster Vortex tersebut dibuang langsung ke GY tanpa di-Summon dulu,
+            -- Duel.SpecialSummon ini akan gagal karena Revive Limit.
             Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
         end
     end
