@@ -67,11 +67,16 @@ function Vortex.AddProcedure(c,total_val,recipe)
     end
     --Must first be Vortex Summoned condition
     local e0=Effect.CreateEffect(c)
-    e0:SetType(EFFECT_TYPE_SINGLE)
-    e0:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-    e0:SetCode(EFFECT_SPSUMMON_CONDITION)
-    e0:SetValue(function(e,se,sp,st) return (st&SUMMON_TYPE_VORTEX)==SUMMON_TYPE_VORTEX end)
-    c:RegisterEffect(e0)
+	e0:SetType(EFFECT_TYPE_SINGLE)
+	e0:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e0:SetCode(EFFECT_SPSUMMON_CONDITION)
+	e0:SetValue(function(e,se,sp,st)
+		if e:GetHandler():IsLocation(LOCATION_EXTRA) then
+			return (st&SUMMON_TYPE_VORTEX)==SUMMON_TYPE_VORTEX
+		end
+		return true 
+	end)
+	c:RegisterEffect(e0)
     --Vortex Summon Procedure
     local e1=Effect.CreateEffect(c)
     e1:SetType(EFFECT_TYPE_FIELD)
