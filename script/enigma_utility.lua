@@ -11,7 +11,6 @@ if not ENIGMA_PATCH then Duel.LoadScript("enigma_utility.lua") end
 
 if not ENIGMA_CONSTANTS_IMPORTED then Duel.LoadScript("enigma_constant.lua") end
 
-if not VORTEX_IMPORTED then Duel.LoadScript("proc_vortex.lua") end
 
 --------------------------------------------
 local ATTRIBUTES = {}
@@ -158,3 +157,5 @@ end
 
 
 --------------------------------------------
+-------------------IMPORT-------------------
+if not VORTEX_IMPORTED then Duel.LoadScript("proc_vortex.lua") end

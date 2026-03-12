@@ -35,6 +35,12 @@ function Vortex.Rescon(sg,e,tp,mg,total_val,recipe)
     return recipe(g,e,tp,mg)
 end
 
+--Vortex Summon by card effect
+function Card.IsVortexSummonable(c,e,tp,must_use,mg)
+	return c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_SPECIAL,tp,false,false)
+		and c:IsVortex() and c:VortexRule(e,tp,must_use,mg)
+end
+
 function Vortex.AddProcedure(c,total_val,recipe)
 	--Vortex Identity
 	if not Vortex.global_check then

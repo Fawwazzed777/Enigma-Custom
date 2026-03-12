@@ -3,6 +3,7 @@
 if not ENIGMA_PATCH then Duel.LoadScript("enigma_utility.lua") end
 if not VORTEX_IMPORTED then Duel.LoadScript("proc_vortex.lua") end
 local s,id=GetID()
+s.Vortex=true
 --Material Logic
 function s.vortex_recipe(sg,e,tp,mg)
     if not e then return true end
