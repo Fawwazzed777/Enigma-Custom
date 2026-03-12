@@ -5,7 +5,6 @@ if not aux.VortexProcedure then
     Vortex = aux.VortexProcedure
 end
 
-VORTEX_GLOBAL_FLAG = 111166660 
 SUMMON_TYPE_VORTEX = SUMMON_TYPE_SPECIAL+0x60
 TYPE_VORTEX      = 0x200000000
 
@@ -83,8 +82,11 @@ end
 
 function Vortex.Condition(e,c,tp,sg)
     if c==nil then return true end
-    local tp=c:GetControler()
-    if Duel.GetFlagEffect(tp,VORTEX_GLOBAL_FLAG)==0 then return false end        
+    local tp=c:GetControler()  
+	--Check if there is a card banished this turn
+    if Duel.GetTurnCount()~=0 and Duel.GetActivityCount(tp,ACTIVITY_REMOVE)==0 then 
+        return false 
+    end	
     local total_val=e:GetLabel()
     local wrapper=e:GetLabelObject()
     local recipe=wrapper and wrapper[1] or nil    
