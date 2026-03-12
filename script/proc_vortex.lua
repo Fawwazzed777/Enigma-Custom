@@ -43,11 +43,15 @@ function Vortex.AddProcedure(c,total_val,recipe)
         ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
         ge1:SetCode(EVENT_REMOVE)
         ge1:SetOperation(function()
-            Duel.RegisterFlagEffect(0,VORTEX_ACTIVITY_FLAG,RESET_PHASE+PHASE_END,0,1)
-            Duel.RegisterFlagEffect(1,VORTEX_ACTIVITY_FLAG,RESET_PHASE+PHASE_END,0,1)
-			end)
-			Duel.RegisterEffect(ge1,0)
-	end
+            if Duel.GetFlagEffect(0,VORTEX_ACTIVITY_FLAG)==0 then
+                Duel.RegisterFlagEffect(0,VORTEX_ACTIVITY_FLAG,RESET_PHASE+PHASE_END,0,1)
+            end
+            if Duel.GetFlagEffect(1,VORTEX_ACTIVITY_FLAG)==0 then
+                Duel.RegisterFlagEffect(1,VORTEX_ACTIVITY_FLAG,RESET_PHASE+PHASE_END,0,1)
+            end
+        end)
+        Duel.RegisterEffect(ge1,0)
+    end
     --Must first be Vortex Summoned condition
     local e0=Effect.CreateEffect(c)
     e0:SetType(EFFECT_TYPE_SINGLE)
@@ -88,15 +92,18 @@ end
 
 function Vortex.Condition(e,c,tp,sg)
     if c==nil then return true end
-    local tp=c:GetControler()  
-	--Check if there is a card banished this turn
-    if Duel.GetFlagEffect(tp,VORTEX_ACTIVITY_FLAG)==0 then return false 
-	local total_val=e:GetLabel()
+    local tp=c:GetControler()    
+    --Flag 
+    if Duel.GetFlagEffect(tp,VORTEX_ACTIVITY_FLAG)==0 then 
+        return false 
+    end 
+    local total_val=e:GetLabel()
     local wrapper=e:GetLabelObject()
     local recipe=wrapper and wrapper[1] or nil    
     local rg=Duel.GetMatchingGroup(Vortex.MatFilter,tp,LOCATION_MZONE,0,nil)   
     return aux.SelectUnselectGroup(rg,e,tp,2,99,function(sg,e,tp,mg) 
-      return Vortex.Rescon(sg,e,tp,mg,total_val,recipe) end,0)
+        return Vortex.Rescon(sg,e,tp,mg,total_val,recipe) 
+    end,0)
 end
 
 function Vortex.Target(e,tp,eg,ep,ev,re,r,rp,chk,c)
