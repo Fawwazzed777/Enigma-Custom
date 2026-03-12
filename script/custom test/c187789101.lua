@@ -33,7 +33,7 @@ function s.initial_effect(c)
     e1:SetTarget(s.settg)
     e1:SetOperation(s.setop)
     c:RegisterEffect(e1)
-    --Destroy self/control & SS Vortex from GY
+    --Destroy self/control & SS from GY
     local e2=Effect.CreateEffect(c)
     e2:SetDescription(aux.Stringid(id,1))
     e2:SetCategory(CATEGORY_DESTROY+CATEGORY_SPECIAL_SUMMON)
