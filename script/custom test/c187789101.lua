@@ -74,17 +74,17 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
     end
 end
 
+function s.spfilter(c,e,tp)
+    if not c:IsCanBeSpecialSummoned(e,0,tp,false,false) then return false end   
+    --Vortex
+    return c:IsHasEffect(511729900)
+end
+
 function s.sstg(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return Duel.IsExistingMatchingCard(nil,tp,LOCATION_ONFIELD,0,1,nil)
         and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
     Duel.SetOperationInfo(0,CATEGORY_DESTROY,nil,1,tp,LOCATION_ONFIELD)
     Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE)
-end
-
-function s.spfilter(c,e,tp)
-    if not c:IsCanBeSpecialSummoned(e,0,tp,false,false) then return false end   
-    --Vortex
-    return c:IsHasEffect(511729900)
 end
 
 function s.ssop(e,tp,eg,ep,ev,re,r,rp)
