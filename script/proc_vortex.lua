@@ -47,7 +47,6 @@ function Vortex.AddProcedure(c,total_val,recipe)
             Duel.RegisterFlagEffect(1,VORTEX_ACTIVITY_FLAG,RESET_PHASE+PHASE_END,0,1)
 			end)
 			Duel.RegisterEffect(ge1,0)
-		end
 	end
     --Must first be Vortex Summoned condition
     local e0=Effect.CreateEffect(c)
