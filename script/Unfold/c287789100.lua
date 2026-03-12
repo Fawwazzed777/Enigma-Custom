@@ -51,11 +51,11 @@ s.listed_series={0x993,0x994}
 --Banish 1 Eternity Tech from Deck/GY
 function s.leapcost(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return Duel.IsExistingMatchingCard(function(c) 
-        return c:IsSetCard(0x993) and c:IsSpellTrap() and c:IsAbleToRemoveAsCost() 
+        return c:IsSetCard(0x994) and c:IsMonster() and c:IsAbleToRemoveAsCost() 
     end,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil) end
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
     local g=Duel.SelectMatchingCard(tp,function(c) 
-        return c:IsSetCard(0x993) and c:IsSpellTrap() and c:IsAbleToRemoveAsCost() 
+        return c:IsSetCard(0x994) and c:IsMonster() and c:IsAbleToRemoveAsCost() 
     end,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil)
     Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
