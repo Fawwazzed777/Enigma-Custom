@@ -6,103 +6,94 @@ if not aux.VortexProcedure then
 end
 
 SUMMON_TYPE_VORTEX = SUMMON_TYPE_SPECIAL+0x60
-TYPE_VORTEX      = 0x200000000
+TYPE_VORTEX        = 0x200000000
 VORTEX_ACTIVITY_FLAG = 511729901
-REASON_VORTEX 	   = 0x20000000
+REASON_VORTEX      = 0x20000000
+
 function Vortex.GetValue(c)
     if c:IsType(TYPE_LINK) then return c:GetLink() end
     if c:IsType(TYPE_XYZ) then return c:GetRank() end
     return c:GetLevel()
 end
 
+--Global Check for Banishment (Vortex Energy)
 if not Vortex.GlobalCheck then
     Vortex.GlobalCheck=true
     local ge1=Effect.GlobalEffect()
     ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
     ge1:SetCode(EVENT_REMOVE)
     ge1:SetOperation(function(e,tp,eg,ep,ev,re,r,rp)
-        --
         Duel.RegisterFlagEffect(0,VORTEX_ACTIVITY_FLAG,RESET_PHASE+PHASE_END,0,1)
         Duel.RegisterFlagEffect(1,VORTEX_ACTIVITY_FLAG,RESET_PHASE+PHASE_END,0,1)
     end)
     Duel.RegisterEffect(ge1,0)
 end
 
-function Vortex.CoreFilter(c,f1,vortex_card,tp)
-    if not c:IsType(TYPE_XYZ) or not c:IsFaceup() then return false end
-    if not f1 then return true end
-    if type(f1)=="function" then return f1(c,vortex_card,tp) end
-    return c:GetRank()==f1
-end
-
-function Vortex.FuelFilter(c,f2,vortex_card,tp)
-    if c:IsType(TYPE_XYZ) or not c:IsFaceup() then return false end
-    if not f2 then return true end
-    if type(f2)=="function" then return f2(c,vortex_card,tp) end
-    return true
-end
-
-function Vortex.Rescon(sg,e,tp,mg,total_val,f1,minc,f2,minf,maxf)
-    local cores=sg:Filter(Vortex.CoreFilter,nil,f1,e:GetHandler(),tp)
-    local fuels=sg:Filter(Vortex.FuelFilter,nil,f2,e:GetHandler(),tp)    
-    if #cores <minc or #fuels<minf or #sg>maxf then return false end
-    if sg:FilterCount(function(c) return cores:IsContains(c) or fuels:IsContains(c) end,nil)~=#sg then return false end 
-    return sg:GetSum(Vortex.GetValue)==total_val
+function Vortex.Rescon(sg,e,tp,mg,c,f1,minc,f2,minf)
+    local target_val=c:GetLevel()
+    --
+    local current_val=sg:GetSum(Vortex.GetValue)
+    local g_core=sg:Filter(f1,nil,c,tp)
+    local g_fuel=sg:Filter(f2,nil,c,tp)
+    
+    --
+    if current_val>target_val then return false end
+    
+    local res=g_core:GetCount()>=minc and g_fuel:GetCount()>=minf and current_val==target_val
+    return res,not(current_val<target_val)
 end
 
 function Vortex.AddProcedure(c,f1,minc,f2,minf,maxf)
-    if not minc then minc=1 end
-    if not minf then minf=1 end
-    if not maxf then maxf=99 end
-    --Type Stripping Hacks
+    --f1: Core Filter (Default: Xyz)
+    --f2: Fuel Filter (Default: Non-Xyz)
+    if not f1 then f1=function(tc) return tc:IsType(TYPE_XYZ) end end
+    if not f2 then f2=function(tc) return not tc:IsType(TYPE_XYZ) end end
+	--
+    local e0=Effect.CreateEffect(c)
+    e0:SetType(EFFECT_TYPE_SINGLE)
+    e0:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SET_AVAILABLE)
+    e0:SetRange(LOCATION_ALL)
+    e0:SetCode(EFFECT_REMOVE_TYPE)
+    e0:SetValue(TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ+TYPE_LINK)
+    c:RegisterEffect(e0)
+	--Procedure
     local e1=Effect.CreateEffect(c)
-    e1:SetType(EFFECT_TYPE_SINGLE)
-    e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SET_AVAILABLE)
-    e1:SetRange(LOCATION_ALL)
-    e1:SetCode(EFFECT_REMOVE_TYPE)
-    e1:SetValue(TYPE_FUSION|TYPE_SYNCHRO|TYPE_XYZ|TYPE_LINK)
-    c:RegisterEffect(e1)    
-    local e2=Effect.CreateEffect(c)
-    e2:SetType(EFFECT_TYPE_SINGLE)
-    e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SET_AVAILABLE)
-    e2:SetCode(EFFECT_ADD_TYPE)
-    e2:SetValue(TYPE_VORTEX)
-    c:RegisterEffect(e2)
-    --Summon Procedure
-    local e3=Effect.CreateEffect(c)
-    e3:SetType(EFFECT_TYPE_FIELD)
-    e3:SetCode(EFFECT_SPSUMMON_PROC)
-    e3:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
-    e3:SetRange(LOCATION_EXTRA)
-    e3:SetLabel(c:GetLevel())
-    e3:SetCondition(Vortex.Condition(f1,minc,f2,minf,maxf))
-    e3:SetTarget(Vortex.Target(f1,minc,f2,minf,maxf))
-    e3:SetOperation(Vortex.Operation(f1,f2))
-    e3:SetValue(SUMMON_TYPE_VORTEX)
-    c:RegisterEffect(e3)
+    e1:SetType(EFFECT_TYPE_FIELD)
+    e1:SetDescription(aux.Stringid(id,0))
+    e1:SetCode(EFFECT_SPSUMMON_PROC)
+    e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
+    e1:SetRange(LOCATION_EXTRA)
+    e1:SetCondition(Vortex.Condition(f1,minc,f2,minf,maxf))
+    e1:SetTarget(Vortex.Target(f1,minc,f2,minf,maxf))
+    e1:SetOperation(Vortex.Operation)
+    e1:SetValue(SUMMON_TYPE_VORTEX)
+    c:RegisterEffect(e1)
+	
 end
 
 function Vortex.Condition(f1,minc,f2,minf,maxf)
-    return function(e,c,tp,must,og,min,max)
+    return function(e,c,tp)
         if c==nil then return true end
         if Duel.GetFlagEffect(tp,VORTEX_ACTIVITY_FLAG)==0 then return false end
+        
         local rg=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,0,nil)
-        local total_val=e:GetLabel() or 0
-        return aux.SelectUnselectGroup(rg,e,tp,minc+minf,maxf,function(sg,e,tp,mg)
-            return Vortex.Rescon(sg,e,tp,mg,total_val,f1,minc,f2,minf,maxf)
-        end,0)
+        return aux.SelectUnselectGroup(rg,e,tp,minc+minf,maxf,Vortex.ResconCheck(c,f1,minc,f2,minf),0)
+    end
+end
+
+function Vortex.ResconCheck(sc,f1,minc,f2,minf)
+    return function(sg,e,tp,mg)
+        local res, stop=Vortex.Rescon(sg,e,tp,mg,sc,f1,minc,f2,minf)
+        return res
     end
 end
 
 function Vortex.Target(f1,minc,f2,minf,maxf)
     return function(e,tp,eg,ep,ev,re,r,rp,chk,c,must,og,min,max)
-        local cancelable=Duel.IsSummonCancelable()
         local rg=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,0,nil)
-        local total_val=e:GetLabel()
-        local sg=aux.SelectUnselectGroup(rg,e,tp,minc+minf,maxf,function(sg,e,tp,mg)
-            return Vortex.Rescon(sg,e,tp,mg,total_val,f1,minc,f2,minf,maxf)
-        end,1,tp,HINTMSG_SPSUMMON,nil,nil,cancelable)
-        if sg and #sg>0 then
+        local cancelable=Duel.IsSummonCancelable() 
+        local sg=aux.SelectUnselectGroup(rg,e,tp,minc+minf,maxf,Vortex.ResconCheck(c,f1,minc,f2,minf),1,tp,HINTMSG_SPSUMMON,Vortex.ResconCheck(c,f1,minc,f2,minf),nil,cancelable)        
+        if sg and sg:GetCount()>0 then
             sg:KeepAlive()
             e:SetLabelObject(sg)
             return true
@@ -111,19 +102,16 @@ function Vortex.Target(f1,minc,f2,minf,maxf)
     end
 end
 
-function Vortex.Operation(f1)
-    return function(e,tp,eg,ep,ev,re,r,rp,c,must,og,min,max)
-        local g=e:GetLabelObject()
-        if not g then return end
-        c:SetMaterial(g)
-        local cores=g:Filter(Vortex.CoreFilter,nil,f1,c,tp)
-        local fuels=g:Clone()
-        fuels:Sub(cores)
-        
-        --Dispersion
-        Duel.SendtoDeck(cores,nil,SEQ_DECKSHUFFLE,REASON_MATERIAL+REASON_VORTEX)
-        Duel.SendtoGrave(fuels,REASON_MATERIAL+REASON_VORTEX)
-        
-        g:DeleteGroup()
-    end
+function Vortex.Operation(e,tp,eg,ep,ev,re,r,rp,c,must,og,min,max)
+    local g=e:GetLabelObject()
+    if not g then return end
+    c:SetMaterial(g)   
+    --Dispersion
+    local g_core=g:Filter(Card.IsType,nil,TYPE_XYZ)
+    local g_fuel=g:Filter(function(tc) return not tc:IsType(TYPE_XYZ) end, nil)  
+    --Core Return
+    Duel.SendtoDeck(g_core,nil,2,REASON_MATERIAL+REASON_VORTEX)
+    --Fuel to Graveyard
+    Duel.SendtoGrave(g_fuel,REASON_MATERIAL+REASON_VORTEX)  
+    g:DeleteGroup()
 end
