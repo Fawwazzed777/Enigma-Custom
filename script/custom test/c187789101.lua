@@ -4,23 +4,9 @@ if not ENIGMA_PATCH then Duel.LoadScript("enigma_utility.lua") end
 if not VORTEX_IMPORTED then Duel.LoadScript("proc_vortex.lua") end
 local s,id=GetID()
 s.Vortex=true
---Material Logic
-function s.vortex_recipe(g,e,tp,mg)
-	if not e then return true end
-    --1 Rank 4 or lower Monster
-	if #g==0 then return false end
-    local g_rank=g:Filter(function(c) return c:IsType(TYPE_XYZ) and c:GetRank()<=4 end,nil)
-    if #g_rank~=1 then return false end 
-    --1+ non Rank monsters (Level or Link, essentially non-Xyz)
-    local other_mats=g:Clone()
-	other_mats:Sub(g_rank)
-    if #other_mats==0 then return false end	
-    local count_valid=other_mats:FilterCount(function(c) return c:GetLevel()>0 and not c:IsType(TYPE_XYZ) end,nil)
-	return count_valid==#other_mats
-end
 function s.initial_effect(c)
     --VORTEX SUMMON
-    Vortex.AddProcedure(c,8,s.vortex_recipe)
+    Vortex.AddProcedure(c,function(tc)return tc:GetRank()<=4 end,1,nil,1)
     c:EnableReviveLimit()
     --Destroy S/T & Set from opponent GY
     local e1=Effect.CreateEffect(c)

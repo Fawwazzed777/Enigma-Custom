@@ -4,30 +4,12 @@ if not ENIGMA_PATCH then Duel.LoadScript("enigma_utility.lua") end
 if not VORTEX_IMPORTED then Duel.LoadScript("proc_vortex.lua") end
 local s,id=GetID()
 s.Vortex=true
---Material Logic
-function s.vortex_recipe(sg,e,tp,mg)
-    if not e then return true end
-    local p=tp or e:GetHandlerPlayer()
-    if not p then return false end
-    local g=Duel.GetMatchingGroup(function(c) 
-        return (c:IsSetCard(0x145) or c:IsSetCard(0x344)) and c:IsFaceup() 
-    end,p,LOCATION_REMOVED,0,nil)   
-    if #g<5 then return false end
-    --Rank 4
-    local g_rank4=sg:Filter(function(c) return c:IsType(TYPE_XYZ) and c:IsRank(4) end,nil)
-    if #g_rank4~=1 then return false end    
-    --Level 4 or lower
-    local other_mats=sg:Clone()
-    other_mats:Sub(g_rank4)
-    if #other_mats==0 then return false end   
-    local count_valid=other_mats:FilterCount(function(c) return c:GetLevel()>0 and c:IsLevelBelow(4) end,nil)    
-    return count_valid==#other_mats
-end
 function s.initial_effect(c)
     c:EnableReviveLimit()
 	c:SetSPSummonOnce(id)
-	--Vortex Procedure
-    Vortex.AddProcedure(c,12,s.vortex_recipe)
+	--Standard Vortex (1 Core Rank 4 + 1+ Fuel)
+    --Parameter:(c,Core_Filter,Min_Core,Fuel_Filter,Min_Fuel)
+    Vortex.AddProcedure(c,4,1,s.nadleef_fuel,1)
 	--Level/Rank Cover
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_SINGLE)
@@ -73,6 +55,15 @@ function s.initial_effect(c)
     end
 end
 s.listed_series={0x145,0x344}
+
+function s.nadleef_fuel(tc,vortex_card,tp)
+    --Check Banishment is more than 5
+    local g=Duel.GetMatchingGroup(function(bc) 
+        return (bc:IsSetCard(0x145) or bc:IsSetCard(0x344)) and bc:IsFaceup() 
+    end,tp,LOCATION_REMOVED,0,nil)
+    return #g>=5 and tc:GetLevel()>0 and tc:IsLevelBelow(4)
+end
+
 --Lock (Anti-Climbing)
 function s.splimit(e,c,sump,sumtype,sumpos,targetp,se)
     if not (c:IsLocation(LOCATION_EXTRA) or c:IsType(TYPE_EXTRA)) then return false end    

@@ -14,25 +14,39 @@ function Vortex.GetValue(c)
     return c:GetLevel()
 end
 
+function Vortex.CoreFilter(c,f1,vortex_card,tp)
+    if not c:IsType(TYPE_XYZ) or not c:IsFaceup() then return false end
+    if type(f1)=="function" then
+        return f1(c,vortex_card,tp)
+    else
+        return c:GetRank()==f1
+    end
+end
+
+function Vortex.FuelFilter(c,f2,vortex_card,tp)
+    if c:IsType(TYPE_XYZ) or not c:IsFaceup() then return false end
+    if f2 then
+        return f2(c,vortex_card,tp)
+    else
+        return true
+    end
+end
+
 function Vortex.MatFilter(c,filter,tp)
     local can_be_material=(c:IsType(TYPE_XYZ) and (c:IsAbleToDeck() or c:IsAbleToExtra())) or (not c:IsType(TYPE_XYZ) and c:IsAbleToGrave())
     return c:IsFaceup() and can_be_material and (not filter or filter(c,tp))
 end
 
-function Vortex.Rescon(sg,e,tp,mg,total_val,recipe)
-    if #sg==0 then return false end
-    local g=sg
-    if type(sg)=="table" then
-        g=Group.CreateGroup()
-        for _,tc in ipairs(sg) do g:AddCard(tc) end
-    end
-
-    local sum=g:GetSum(Vortex.GetValue)
-    if sum~=total_val then return false end
-    if Duel.GetLocationCountFromEx(tp,tp,g,e:GetHandler())<=0 then return false end
-
-    if not recipe then return true end
-    return recipe(g,e,tp,mg)
+function Vortex.Rescon(sg,e,tp,mg,c,f1,minc,f2,minf,maxf)
+    --Atleast 1 Core and 1 Fuel
+    local cores=sg:Filter(Vortex.CoreFilter,nil,f1,c,tp)
+    local fuels=sg:Filter(Vortex.FuelFilter,nil,f2,c,tp)   
+    --(Double/Triple tuning logic)
+    if #cores~=minc then return false end    
+    --Fuel Validation
+    if #fuels<minf or #fuels>maxf then return false end  
+    if #sg~=(#cores+#fuels) then return false end
+    return true
 end
 
 --Vortex Summon by card effect
@@ -46,10 +60,11 @@ function Card.IsVortex(c)
     return (mt and mt.Vortex) or c:IsHasEffect(511729900)
 end
 
-function Vortex.AddProcedure(c,total_val,recipe)
+function Vortex.AddProcedure(c,f1,minc,f2,minf,maxf)
 	--Vortex Identity
-	local mt= c:GetMetatable()
-    mt.Vortex_Summon= true
+	if not minc then minc=1 end
+    if not minf then minf=1 end
+    if not maxf then maxf=99 end
 	if not Vortex.global_check then
         Vortex.global_check= true
         local ge1=Effect.CreateEffect(c)
@@ -78,7 +93,7 @@ function Vortex.AddProcedure(c,total_val,recipe)
 	end)
 	c:RegisterEffect(e0)
     --Vortex Summon Procedure
-    local e1=Effect.CreateEffect(c)
+    local e1=Effect.CreateEffect(c,f1,f2,min,max)
     e1:SetType(EFFECT_TYPE_FIELD)
     e1:SetDescription(1199)
     e1:SetCode(EFFECT_SPSUMMON_PROC)
@@ -86,8 +101,8 @@ function Vortex.AddProcedure(c,total_val,recipe)
     e1:SetRange(LOCATION_EXTRA)
     e1:SetLabel(total_val)
     if recipe then e1:SetLabelObject({recipe}) end
-    e1:SetCondition(Vortex.Condition)
-    e1:SetTarget(Vortex.Target)
+    e1:SetCondition(Vortex.Condition(f1,minc,f2,minf,maxf))
+    e1:SetTarget(Vortex.Target(f1,minc,f2,minf,maxf))
     e1:SetOperation(Vortex.Operation)
     e1:SetValue(SUMMON_TYPE_VORTEX)
     c:RegisterEffect(e1)
@@ -106,7 +121,10 @@ function Vortex.AddProcedure(c,total_val,recipe)
     e3:SetCode(EFFECT_ADD_TYPE)
     e3:SetValue(TYPE_VORTEX)
     c:RegisterEffect(e3)
+	local mt=c:GetMetatable()
+    mt.vortex_parameters={f1,f2,min,max}
 end
+
 
 function Vortex.Condition(e,c,tp,sg)
     if c==nil then return true end
@@ -144,17 +162,26 @@ end
 
 function Vortex.Operation(e,tp,eg,ep,ev,re,r,rp,c)
     local g=e:GetLabelObject()
-    if not g then return end   
-    c:SetMaterial(g)   
-    local core=g:Filter(Card.IsType,nil,TYPE_XYZ)
-    local fuel=g-core   
-    --Core
-    if #core>0 then
-        Duel.SendtoDeck(core,nil,SEQ_DECKSHUFFLE,REASON_MATERIAL+REASON_VORTEX)
+    if not g then return end 
+    c:SetMaterial(g)  
+    local mt=c:GetMetatable()
+    local params=mt.vortex_parameters
+    local f1=params and params[1] or nil  
+    --Core and Fuel 
+    local cores=g:Filter(Vortex.CoreFilter,nil,f1,c,tp)
+    local fuels=g:Clone()
+    fuels:Sub(cores)
+    Duel.SendtoDeck(cores,nil,SEQ_DECKSHUFFLE,REASON_MATERIAL+REASON_VORTEX)  
+    --(Stacking special method)
+    if c.vortex_stack_fuel then
+        Duel.Overlay(c,fuels,REASON_MATERIAL+REASON_VORTEX)        
+        --Optional flag
+        for tc in aux.Next(fuels) do
+            tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,1)
+        end
+    else
+        --Standar Procedure
+        Duel.SendtoGrave(fuels,REASON_MATERIAL+REASON_VORTEX)
     end  
-	--Fuel Material
-    if #fuel>0 then
-        Duel.SendtoGrave(fuel,REASON_MATERIAL+REASON_VORTEX)
-    end   
     g:DeleteGroup()
 end
