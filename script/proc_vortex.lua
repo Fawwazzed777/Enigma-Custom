@@ -89,7 +89,7 @@ function Vortex.ResconCheck(sc,f1,minc,f2,minf)
 end
 
 function Vortex.Target(f1,minc,f2,minf,maxf)
-    return function(e,tp,eg,ep,ev,re,r,rp,chk,c,must,og,min,max)
+    return function(e,tp,eg,ep,ev,re,r,rp,chk,c,must,og,minf,maxf)
         local rg=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,0,nil)
         local cancelable=Duel.IsSummonCancelable() 
         local sg=aux.SelectUnselectGroup(rg,e,tp,minc+minf,maxf,Vortex.ResconCheck(c,f1,minc,f2,minf),1,tp,HINTMSG_SPSUMMON,Vortex.ResconCheck(c,f1,minc,f2,minf),nil,cancelable)        
@@ -102,7 +102,7 @@ function Vortex.Target(f1,minc,f2,minf,maxf)
     end
 end
 
-function Vortex.Operation(e,tp,eg,ep,ev,re,r,rp,c,must,og,min,max)
+function Vortex.Operation(e,tp,eg,ep,ev,re,r,rp,c,must,og,minf,maxf)
     local g=e:GetLabelObject()
     if not g then return end
     c:SetMaterial(g)   
