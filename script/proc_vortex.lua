@@ -61,47 +61,24 @@ function Card.IsVortex(c)
 end
 
 function Vortex.AddProcedure(c,f1,minc,f2,minf,maxf)
-	--Vortex Identity
-	if not minc then minc=1 end
+    if not minc then minc=1 end
     if not minf then minf=1 end
-    if not maxf then maxf=99 end
-	if not Vortex.global_check then
-        Vortex.global_check= true
-        local ge1=Effect.CreateEffect(c)
-        ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-        ge1:SetCode(EVENT_REMOVE)
-        ge1:SetOperation(function()
-            if Duel.GetFlagEffect(0,VORTEX_ACTIVITY_FLAG)==0 then
-                Duel.RegisterFlagEffect(0,VORTEX_ACTIVITY_FLAG,RESET_PHASE+PHASE_END,0,1)
-            end
-            if Duel.GetFlagEffect(1,VORTEX_ACTIVITY_FLAG)==0 then
-                Duel.RegisterFlagEffect(1,VORTEX_ACTIVITY_FLAG,RESET_PHASE+PHASE_END,0,1)
-            end
-        end)
-        Duel.RegisterEffect(ge1,0)
-    end
-    --Must first be Vortex Summoned condition
-    local e0=Effect.CreateEffect(c)
-	e0:SetType(EFFECT_TYPE_SINGLE)
-	e0:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e0:SetCode(EFFECT_SPSUMMON_CONDITION)
-	e0:SetValue(function(e,se,sp,st)
-		if e:GetHandler():IsLocation(LOCATION_EXTRA) then
-			return (st&SUMMON_TYPE_VORTEX)==SUMMON_TYPE_VORTEX
-		end
-		return true 
-	end)
-	c:RegisterEffect(e0)
-    --Vortex Summon Procedure
-    local e1=Effect.CreateEffect(c,f1,f2,min,max)
+    if not maxf then maxf=99 end    
+    local e1=Effect.CreateEffect(c)
     e1:SetType(EFFECT_TYPE_FIELD)
-    e1:SetDescription(1199)
     e1:SetCode(EFFECT_SPSUMMON_PROC)
     e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
     e1:SetRange(LOCATION_EXTRA)
-    e1:SetLabel(total_val)
-    if recipe then e1:SetLabelObject({recipe}) end
-    e1:SetCondition(Vortex.Condition(f1,minc,f2,minf,maxf))
+    e1:SetLabel(c:GetLevel())  
+    --event:BANISH
+    e1:SetCondition(function(e,c,tp)
+        if c==nil then return true end
+        if Duel.GetFlagEffect(tp,VORTEX_ACTIVITY_FLAG)==0 then return false end
+        local rg=Duel.GetMatchingGroup(Vortex.MatFilter,tp,LOCATION_MZONE,0,nil)
+        return aux.SelectUnselectGroup(rg,e,tp,minc+minf,99,function(sg,e,tp,mg)
+            return Vortex.Rescon(sg,e,tp,mg,c,f1,minc,f2,minf,maxf)
+        end,0)
+    end)   
     e1:SetTarget(Vortex.Target(f1,minc,f2,minf,maxf))
     e1:SetOperation(Vortex.Operation)
     e1:SetValue(SUMMON_TYPE_VORTEX)
@@ -121,10 +98,10 @@ function Vortex.AddProcedure(c,f1,minc,f2,minf,maxf)
     e3:SetCode(EFFECT_ADD_TYPE)
     e3:SetValue(TYPE_VORTEX)
     c:RegisterEffect(e3)
-	local mt=c:GetMetatable()
-    mt.vortex_parameters={f1,f2,min,max}
+    --
+    local mt=c:GetMetatable()
+    mt.vortex_parameters={f1,minc,f2,minf,maxf}
 end
-
 
 function Vortex.Condition(e,c,tp,sg)
     if c==nil then return true end

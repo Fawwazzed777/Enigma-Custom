@@ -6,7 +6,7 @@ local s,id=GetID()
 s.Vortex=true
 function s.initial_effect(c)
     --VORTEX SUMMON
-    Vortex.AddProcedure(c,8,function(tc)return tc:GetRank()==4 end)
+    Vortex.AddProcedure(c,4,1,nil,1)
     c:EnableReviveLimit()
     --Destroy S/T & Set from opponent GY
     local e1=Effect.CreateEffect(c)

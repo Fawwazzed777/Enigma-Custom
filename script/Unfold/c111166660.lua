@@ -7,9 +7,7 @@ s.Vortex=true
 function s.initial_effect(c)
     c:EnableReviveLimit()
 	c:SetSPSummonOnce(id)
-	--Standard Vortex (1 Core Rank 4 + 1+ Fuel)
-    --Parameter:(c,Core_Filter,Min_Core,Fuel_Filter,Min_Fuel)
-    Vortex.AddProcedure(c,8,function(tc)return tc:GetRank()==4 end,s.nadleef_fuel)
+    Vortex.AddProcedure(c,4,1,s.nadleef_fuel,1)
 	--Level/Rank Cover
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_SINGLE)
@@ -57,11 +55,11 @@ end
 s.listed_series={0x145,0x344}
 
 function s.nadleef_fuel(tc,vortex_card,tp)
-    --Check Banishment is more than 5
+    --5 Enigmation/Phantasm in Banishment
     local g=Duel.GetMatchingGroup(function(bc) 
         return (bc:IsSetCard(0x145) or bc:IsSetCard(0x344)) and bc:IsFaceup() 
     end,tp,LOCATION_REMOVED,0,nil)
-    return #g>=5 and tc:GetLevel()>0 and tc:IsLevelBelow(4)
+    return #g>=5 and tc:IsLevelBelow(4)
 end
 
 --Lock (Anti-Climbing)

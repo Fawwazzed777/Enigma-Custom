@@ -6,7 +6,7 @@ local s,id=GetID()
 s.Vortex=true
 function s.initial_effect(c)
     --VORTEX SUMMON
-    Vortex.AddProcedure(c,4,1,nil,1)
+    Vortex.AddProcedure(c,4,1,function(tc)return tc:IsLevelBelow(4) end,1)
 	c:EnableReviveLimit()
     --Gain ATK(Non-Xyz)
     local e1=Effect.CreateEffect(c)
