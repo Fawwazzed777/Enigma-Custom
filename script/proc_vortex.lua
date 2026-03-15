@@ -44,8 +44,9 @@ function Vortex.Rescon(sg,e,tp,mg,c,f1,minc,f2,minf)
 end
 
 function Vortex.AddProcedure(c,f1,minc,f2,minf,maxf)
-    --f1: Core Filter (Default: Xyz)
-    --f2: Fuel Filter (Default: Non-Xyz)
+    local minc = min or 1
+    local minf = min or 1
+    local maxf = max or 99
     if not f1 then f1=function(tc) return tc:IsType(TYPE_XYZ) end end
     if not f2 then f2=function(tc) return not tc:IsType(TYPE_XYZ) end end
 	--
@@ -57,8 +58,8 @@ function Vortex.AddProcedure(c,f1,minc,f2,minf,maxf)
     e0:SetValue(TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ+TYPE_LINK)
     c:RegisterEffect(e0)
 	--Procedure
-    local e1=Effect.CreateEffect(c)
-    e1:SetType(EFFECT_TYPE_FIELD) 
+	local e1=Effect.CreateEffect(c)
+    e1:SetType(EFFECT_TYPE_FIELD)
     e1:SetCode(EFFECT_SPSUMMON_PROC)
     e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
     e1:SetRange(LOCATION_EXTRA)
