@@ -9,7 +9,7 @@ function s.initial_effect(c)
 	c:SetSPSummonOnce(id)
 	--Standard Vortex (1 Core Rank 4 + 1+ Fuel)
     --Parameter:(c,Core_Filter,Min_Core,Fuel_Filter,Min_Fuel)
-    Vortex.AddProcedure(c,4,1,s.nadleef_fuel,1)
+    Vortex.AddProcedure(c,8,function(tc)return tc:GetRank()==4 end,s.nadleef_fuel)
 	--Level/Rank Cover
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_SINGLE)
