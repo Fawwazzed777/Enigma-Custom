@@ -29,7 +29,7 @@ if not Vortex.GlobalCheck then
     Duel.RegisterEffect(ge1,0)
 end
 
-function Vortex.Rescon(sg,e,tp,mg,c,f1,minc,f2,minf)
+function Vortex.Rescon(sg,e,tp,mg,c,f1,min,f2,min)
     local target_val=c:GetLevel()
     --
     local current_val=sg:GetSum(Vortex.GetValue)
@@ -39,14 +39,14 @@ function Vortex.Rescon(sg,e,tp,mg,c,f1,minc,f2,minf)
     --
     if current_val>target_val then return false end
     
-    local res=g_core:GetCount()>=minc and g_fuel:GetCount()>=minf and current_val==target_val
+    local res=g_core:GetCount()>=min and g_fuel:GetCount()>=min and current_val==target_val
     return res,not(current_val<target_val)
 end
 
-function Vortex.AddProcedure(c,f1,minc,f2,minf,maxf)
-    local minc = min or 1
-    local minf = min or 1
-    local maxf = max or 99
+function Vortex.AddProcedure(c,f1,min,f2,min,max)
+    local min = min or 1
+    local min = min or 1
+    local max = max or 99
     if not f1 then f1=function(tc) return tc:IsType(TYPE_XYZ) end end
     if not f2 then f2=function(tc) return not tc:IsType(TYPE_XYZ) end end
 	--
@@ -63,36 +63,36 @@ function Vortex.AddProcedure(c,f1,minc,f2,minf,maxf)
     e1:SetCode(EFFECT_SPSUMMON_PROC)
     e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
     e1:SetRange(LOCATION_EXTRA)
-    e1:SetCondition(Vortex.Condition(f1,minc,f2,minf,maxf))
-    e1:SetTarget(Vortex.Target(f1,minc,f2,minf,maxf))
+    e1:SetCondition(Vortex.Condition(f1,min,f2,min,max))
+    e1:SetTarget(Vortex.Target(f1,min,f2,min,max))
     e1:SetOperation(Vortex.Operation)
     e1:SetValue(SUMMON_TYPE_VORTEX)
     c:RegisterEffect(e1)
 	
 end
 
-function Vortex.Condition(f1,minc,f2,minf,maxf)
+function Vortex.Condition(f1,min,f2,min,max)
     return function(e,c,tp)
         if c==nil then return true end
         if Duel.GetFlagEffect(tp,VORTEX_ACTIVITY_FLAG)==0 then return false end
         
         local rg=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,0,nil)
-        return aux.SelectUnselectGroup(rg,e,tp,minc+minf,maxf,Vortex.ResconCheck(c,f1,minc,f2,minf),0)
+        return aux.SelectUnselectGroup(rg,e,tp,min+min,max,Vortex.ResconCheck(c,f1,min,f2,min),0)
     end
 end
 
-function Vortex.ResconCheck(sc,f1,minc,f2,minf)
+function Vortex.ResconCheck(sc,f1,min,f2,min)
     return function(sg,e,tp,mg)
-        local res, stop=Vortex.Rescon(sg,e,tp,mg,sc,f1,minc,f2,minf)
+        local res, stop=Vortex.Rescon(sg,e,tp,mg,sc,f1,min,f2,min)
         return res
     end
 end
 
-function Vortex.Target(f1,minc,f2,minf,maxf)
-    return function(e,tp,eg,ep,ev,re,r,rp,chk,c,must,og,minf,maxf)
+function Vortex.Target(f1,min,f2,min,max)
+    return function(e,tp,eg,ep,ev,re,r,rp,chk,c,must,og,min,max)
         local rg=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,0,nil)
         local cancelable=Duel.IsSummonCancelable() 
-        local sg=aux.SelectUnselectGroup(rg,e,tp,minc+minf,maxf,Vortex.ResconCheck(c,f1,minc,f2,minf),1,tp,HINTMSG_SPSUMMON,Vortex.ResconCheck(c,f1,minc,f2,minf),nil,cancelable)        
+        local sg=aux.SelectUnselectGroup(rg,e,tp,min+min,max,Vortex.ResconCheck(c,f1,min,f2,min),1,tp,HINTMSG_SPSUMMON,Vortex.ResconCheck(c,f1,min,f2,min),nil,cancelable)        
         if sg and sg:GetCount()>0 then
             sg:KeepAlive()
             e:SetLabelObject(sg)
@@ -102,7 +102,7 @@ function Vortex.Target(f1,minc,f2,minf,maxf)
     end
 end
 
-function Vortex.Operation(e,tp,eg,ep,ev,re,r,rp,c,must,og,minf,maxf)
+function Vortex.Operation(e,tp,eg,ep,ev,re,r,rp,c,must,og,min,max)
     local g=e:GetLabelObject()
     if not g then return end
     c:SetMaterial(g)   
