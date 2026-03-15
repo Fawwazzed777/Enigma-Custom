@@ -55,7 +55,7 @@ function s.initial_effect(c)
 end
 s.listed_series={0x145,0x344}
 
-function s.nadleef_fuel(tc, vortex_card, tp)
+function s.nadleef_fuel(tc,vortex_card,tp)
     --
     local filter=tc:IsLevelBelow(4) and not tc:IsType(TYPE_XYZ)
     if not filter then return false end
@@ -102,12 +102,12 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
                 local og=Duel.GetOperatedGroup()
                 for tc in aux.Next(og) do
                     if tc:IsOriginalType(TYPE_MONSTER) then
-                        local atk= tc:GetTextAttack()
-                        local def= tc:GetTextDefense()
+                        local atk=tc:GetTextAttack()
+                        local def=tc:GetTextDefense()
                         if atk<0 then atk=0 end
                         if def<0 then def=0 end
-                        local s_max= math.max(atk,def)
-                        total_stats= total_stats+s_max
+                        local s_max=math.max(atk,def)
+                        total_stats=total_stats+s_max
                     end
                 end                
                 if total_stats>0 then
