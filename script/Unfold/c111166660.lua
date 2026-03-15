@@ -4,10 +4,11 @@ if not ENIGMA_PATCH then Duel.LoadScript("enigma_utility.lua") end
 if not VORTEX_IMPORTED then Duel.LoadScript("proc_vortex.lua") end
 local s,id=GetID()
 s.Vortex=true
-function s.initial_effect(c)
-    c:EnableReviveLimit()
+function s.initial_effect(c)	
+	local core=function(tc) return tc:IsType(TYPE_XYZ) and tc:IsRank(4) end
+    Vortex.AddProcedure(c,core,1,s.nadleef_fuel,1,99)
 	c:SetSPSummonOnce(id)
-    Vortex.AddProcedure(c,4,1,s.nadleef_fuel,1)
+	c:EnableReviveLimit()
 	--Level/Rank Cover
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_SINGLE)
@@ -54,12 +55,15 @@ function s.initial_effect(c)
 end
 s.listed_series={0x145,0x344}
 
-function s.nadleef_fuel(tc,vortex_card,tp)
-    --5 Enigmation/Phantasm in Banishment
+function s.nadleef_fuel(tc, vortex_card, tp)
+    --
+    local filter=tc:IsLevelBelow(4) and not tc:IsType(TYPE_XYZ)
+    if not filter then return false end
+    --Check Banishment (Vortex Energy)
     local g=Duel.GetMatchingGroup(function(bc) 
         return (bc:IsSetCard(0x145) or bc:IsSetCard(0x344)) and bc:IsFaceup() 
-    end,tp,LOCATION_REMOVED,0,nil)
-    return #g>=5 and tc:IsLevelBelow(4)
+    end,tp,LOCATION_REMOVED,0,nil)   
+    return #g>=5
 end
 
 --Lock (Anti-Climbing)
