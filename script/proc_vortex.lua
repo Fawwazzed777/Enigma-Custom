@@ -31,7 +31,7 @@ if not Vortex.GlobalCheck then
     local ge1=Effect.GlobalEffect()
     ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
     ge1:SetCode(EVENT_REMOVE)
-    ge1:SetOperation(function(e, tp, eg, ep, ev, re, r, rp)
+    ge1:SetOperation(function(e,tp,eg,ep,ev,re,r,rp)
         Duel.RegisterFlagEffect(0,VORTEX_ACTIVITY_FLAG,RESET_PHASE+PHASE_END,0,1)
         Duel.RegisterFlagEffect(1,VORTEX_ACTIVITY_FLAG,RESET_PHASE+PHASE_END,0,1)
     end)
