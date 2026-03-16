@@ -43,20 +43,23 @@ function Vortex.AddProcedure(c,f1,minc,f2,minf,max,extra_con)
     Vortex.AddCommonEffects(c)
 end
 
-function Vortex.Rescon(f1,minc,f2,minf)
-    return function(sg,e,tp,mg,sc)
-        local g_core=sg:Filter(f1,nil,sc,tp)
-        local g_fuel=sg:Filter(f2,nil,sc,tp)       
-        if #sg~=(#g_core+#g_fuel) then return false end
+function Vortex.Rescon(f1, minc, f2, minf)
+    return function(sg, e, tp, mg, sc)
+        local g_core = sg:Filter(f1, nil, sc, tp)
+        local g_fuel = sg:Filter(f2, nil, sc, tp)
+
+        if #sg~=(#g_core + #g_fuel) then return false end      
         local total_val=0
         for tc in aux.Next(sg) do
             total_val=total_val+Vortex.GetValue(tc)
         end
         local req_val=Vortex.GetValue(sc)
 
-        if total_val<req_val then return true end
         if total_val==req_val then
             return #g_core>=minc and #g_fuel>=minf
+        end
+        if total_val<req_val then
+            return true
         end
         return false
     end
