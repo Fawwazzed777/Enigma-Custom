@@ -23,9 +23,9 @@ VORTEX_ACTIVITY_FLAG = 511729901
 REASON_VORTEX      = 0x200000000
 
 function Vortex.GetValue(c)
-    local orig_tpe=c:GetType()
-    if (orig_tpe&TYPE_XYZ)~=0 then return c:GetRank() end
-    if (orig_tpe&TYPE_LINK)~=0 then return c:GetlLink() end
+    local tpe=c:GetType()
+    if (tpe&TYPE_XYZ)~=0 then return c:GetRank() end
+    if (tpe&TYPE_LINK)~=0 then return c:GetlLink() end
     return math.max(c:GetLevel(),1)
 end
 
