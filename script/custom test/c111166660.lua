@@ -5,8 +5,28 @@ if not VORTEX_IMPORTED then Duel.LoadScript("proc_vortex.lua") end
 local s,id=GetID()
 s.Vortex=true
 function s.initial_effect(c)	
-	local core=function(tc) return tc:IsType(TYPE_XYZ) and tc:IsRank(4) end
-    Vortex.AddProcedure(c,core,1,s.nadleef_fuel,1,99)
+	--f1:Core(Rank 4), min 1
+    local f1=function(tc) return tc:IsType(TYPE_XYZ) and tc:IsRank(4) end
+    --f2:Fuel(Level 4 or lower,Non-Xyz), min 1
+    local f2=function(tc) return not tc:IsType(TYPE_XYZ) and tc:IsLevelBelow(4) end
+    --VORTEX SUMMON
+	Vortex.AddProcedure(c,f1,1,f2,1,99)
+	--"5 Vortex Energy" 5 or more card in Banishment
+    local e_proc=c:GetEffectCount(EFFECT_SPSUMMON_PROC)
+    local e_vortex={c:IsHasEffect(EFFECT_SPSUMMON_PROC)}
+    for _, e in ipairs(e_vortex) do
+        if e:GetValue()==SUMMON_TYPE_VORTEX then
+            local old_con=e:GetCondition()
+            e:SetCondition(function(e,c)
+                if not old_con(e,c) then return false end
+                local tp=c:GetControler()
+                local g=Duel.GetMatchingGroup(function(bc) 
+                    return (bc:IsSetCard(0x145) or bc:IsSetCard(0x344)) and bc:IsFaceup() 
+                end,tp,LOCATION_REMOVED,0,nil)
+                return #g>=5
+            end)
+        end
+    end
 	c:SetSPSummonOnce(id)
 	c:EnableReviveLimit()
 	--Level/Rank Cover

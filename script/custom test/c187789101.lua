@@ -7,7 +7,8 @@ s.Vortex=true
 function s.initial_effect(c)
     --VORTEX SUMMON
     local f1=function(tc) return tc:IsType(TYPE_XYZ) and tc:IsRank(4) end
-    local f2=function(tc) return not tc:IsType(TYPE_XYZ) end
+    --f2:Fuel(Level 4 or lower,Non-Xyz), min 1
+    local f2=function(tc) return not tc:IsType(TYPE_XYZ) and tc:IsLevelBelow(4) end
     Vortex.AddProcedure(c,f1,1,f2,1,99)
     c:EnableReviveLimit()
     --Destroy S/T & Set from opponent GY
