@@ -1,17 +1,25 @@
-VORTEX_IMPORTED = true
+if not Vortex then 
+	Vortex = {} 
+end
 
 if not SUMMON_TYPE_VORTEX then 
     SUMMON_TYPE_VORTEX=SUMMON_TYPE_SPECIAL|0x609
 end
 if not REASON_VORTEX then
-    REASON_VORTEX  = 0x200000000
+    REASON_VORTEX  = 0x220000000
 end
-if not Vortex then Vortex = {} end
-if not aux.VortexProcedure then aux.VortexProcedure = Vortex end
+function Card.IsVortex(c)
+    return c:IsType(TYPE_VORTEX)
+end
+if not aux.VortexProcedure then 
+	aux.VortexProcedure = Vortex 
+end
+
 SUMMON_TYPE_VORTEX   = SUMMON_TYPE_SPECIAL|0x609
 TYPE_VORTEX          = 0x210000000
 VORTEX_ACTIVITY_FLAG = 109090901
-REASON_VORTEX        = 0x200000000
+REASON_VORTEX        = 0x220000000
+
 if not SUMMON_TYPE_VORTEX then 
     SUMMON_TYPE_VORTEX = SUMMON_TYPE_SPECIAL|0x609
 end
@@ -120,3 +128,5 @@ function Vortex.Operation(e,tp,eg,ep,ev,re,r,rp,c)
     Duel.SendtoGrave(g_fuel,REASON_MATERIAL+REASON_VORTEX)    
     sg:DeleteGroup()
 end
+
+VORTEX_IMPORTED = true
