@@ -15,8 +15,8 @@ if not Vortex.GlobalCheck then
     ge1:SetCode(EVENT_REMOVE)
     ge1:SetOperation(function(e,tp,eg,ep,ev,re,r,rp)
         for tc in aux.Next(eg) do
-            local p=tc:GetPreviousControler()
-            Duel.RegisterFlagEffect(p,VORTEX_ACTIVITY_FLAG,RESET_PHASE+PHASE_END,0,1)
+            Duel.RegisterFlagEffect(0,VORTEX_ACTIVITY_FLAG,RESET_PHASE+PHASE_END,0,1)
+			Duel.RegisterFlagEffect(1,VORTEX_ACTIVITY_FLAG,RESET_PHASE+PHASE_END,0,1)
         end
     end)
     Duel.RegisterEffect(ge1,0)
@@ -28,9 +28,9 @@ VORTEX_ACTIVITY_FLAG = 511729901
 REASON_VORTEX      = 0x200000000
 
 function Vortex.GetValue(c)
-    if c:IsType(TYPE_LINK) then return c:GetLink() end
     if c:IsType(TYPE_XYZ) then return c:GetRank() end
-    return c:GetLevel()
+    if c:IsType(TYPE_LINK) then return c:GetLink() end
+    return math.max(c:GetLevel(),1)
 end
 
 function Vortex.AddProcedure(c,f1,minc,f2,minf,max)
@@ -39,29 +39,31 @@ function Vortex.AddProcedure(c,f1,minc,f2,minf,max)
     e1:SetCode(EFFECT_SPSUMMON_PROC)
     e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
     e1:SetRange(LOCATION_EXTRA)
-    e1:SetLabelObject({f1,minc,f2,minf}) 
+    local info={f1,minc,f2,minf}
+    e1:SetLabelObject(info) 
     e1:SetCondition(Vortex.Condition(max))
     e1:SetTarget(Vortex.Target(max))
     e1:SetOperation(Vortex.Operation)
     e1:SetValue(SUMMON_TYPE_VORTEX)
-    c:RegisterEffect(e1)
-	
+    c:RegisterEffect(e1)	
 	Vortex.AddCommonEffects(c)
 end
 
 function Vortex.Rescon(sg,e,tp,mg,sc)
-	local info=e:GetLabelObject()
-    local f1,minc,f2,minf=info[1],info[2],info[3],info[4]
-    
+    local info=e:GetLabelObject()
+    local f1,minc,f2,minf=info[1],info[2],info[3],info[4]   
     local g_core=sg:Filter(f1,nil,sc,tp)
     local g_fuel=sg:Filter(f2,nil,sc,tp)
     
     if #g_core<minc or #g_fuel<minf then return false end
     if #sg~=(#g_core+#g_fuel) then return false end
-    
-    local total_val=sg:GetSum(Vortex.GetValue)
-    local req_val=Vortex.GetValue(sc)
-    
+
+    local total_val=0
+    for tc in aux.Next(sg) do
+        total_val=total_val+Vortex.GetValue(tc)
+    end
+
+    local req_val=Vortex.GetValue(sc)  
     return total_val==req_val
 end
 
