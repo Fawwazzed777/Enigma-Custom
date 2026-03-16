@@ -75,7 +75,7 @@ function s.retop(e,tp,eg,ep,ev,re,r,rp)
         local g=Duel.GetMatchingGroup(function(c) 
             return c:IsSetCard(0x993) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsSSetable() 
         end,tp,LOCATION_REMOVED,0,nil)
-        if #g>0 and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
+        if #g>0 and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
             Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SET)
             local sg=g:Select(tp,1,1,nil)
             Duel.SSet(tp,sg)
