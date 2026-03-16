@@ -39,7 +39,7 @@ function Vortex.AddProcedure(c,f1,minc,f2,minf,max)
     e1:SetCode(EFFECT_SPSUMMON_PROC)
     e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
     e1:SetRange(LOCATION_EXTRA)
-    local info={f1,minc,f2,minf}
+    local info={f1,minc,f2,minf,extra_con}
     e1:SetLabelObject(info) 
     e1:SetCondition(Vortex.Condition(max))
     e1:SetTarget(Vortex.Target(max))
@@ -76,6 +76,9 @@ function Vortex.Condition(max)
         if c== nil then return true end
         local tp=c:GetControler()
         if Duel.GetFlagEffect(tp,VORTEX_ACTIVITY_FLAG)==0 then return false end
+		local info=e:GetLabelObject()
+        local extra_con=info[5]
+        if extra_con and not extra_con(e, c) then return false end
         local rg=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,0,nil)
 		local res=aux.SelectUnselectGroup(rg,e,tp,1,max,Vortex.Rescon,0,c)
         return res
@@ -84,8 +87,9 @@ end
 
 function Vortex.Target(max)
     return function(e,tp,eg,ep,ev,re,r,rp,chk,c)
+		local cancelable=Duel.IsSummonCancelable()
         local rg=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,0,nil)
-        local sg=aux.SelectUnselectGroup(rg,e,tp,1,max,Vortex.Rescon,1,tp,HINTMSG_SPSUMMON,Vortex.Rescon,nil,Duel.IsSummonCancelable())
+        local sg=aux.SelectUnselectGroup(rg,e,tp,1,max,Vortex.Rescon,1,tp,HINTMSG_SPSUMMON,Vortex.Rescon,nil,cancelable)
         if sg and #sg>0 then
             return true
         end

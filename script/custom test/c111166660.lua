@@ -12,21 +12,13 @@ function s.initial_effect(c)
     --VORTEX SUMMON
 	Vortex.AddProcedure(c,f1,1,f2,1,99)
 	--"5 Vortex Energy" 5 or more card in Banishment
-    local e_proc=c:GetEffectCount(EFFECT_SPSUMMON_PROC)
-    local e_vortex={c:IsHasEffect(EFFECT_SPSUMMON_PROC)}
-    for _, e in ipairs(e_vortex) do
-        if e:GetValue()==SUMMON_TYPE_VORTEX then
-            local old_con=e:GetCondition()
-            e:SetCondition(function(e,c)
-                if not old_con(e,c) then return false end
-                local tp=c:GetControler()
-                local g=Duel.GetMatchingGroup(function(bc) 
-                    return (bc:IsSetCard(0x145) or bc:IsSetCard(0x344)) and bc:IsFaceup() 
-                end,tp,LOCATION_REMOVED,0,nil)
-                return #g>=5
-            end)
-        end
-    end
+    local extra_con=function(e, c)
+    local tp=c:GetControler()
+    local g=Duel.GetMatchingGroup(function(bc) 
+        return (bc:IsSetCard(0x145) or bc:IsSetCard(0x344)) and bc:IsFaceup() 
+    end,tp,LOCATION_REMOVED,0,nil)
+    return #g>=5
+	end
 	c:SetSPSummonOnce(id)
 	c:EnableReviveLimit()
 	--Level/Rank Cover
@@ -74,17 +66,6 @@ function s.initial_effect(c)
     end
 end
 s.listed_series={0x145,0x344}
-
-function s.nadleef_fuel(tc,vortex_card,tp)
-    --
-    local filter=tc:IsLevelBelow(4) and not tc:IsType(TYPE_XYZ)
-    if not filter then return false end
-    --Check Banishment (Vortex Energy)
-    local g=Duel.GetMatchingGroup(function(bc) 
-        return (bc:IsSetCard(0x145) or bc:IsSetCard(0x344)) and bc:IsFaceup() 
-    end,tp,LOCATION_REMOVED,0,nil)   
-    return #g>=5
-end
 
 --Lock (Anti-Climbing)
 function s.splimit(e,c,sump,sumtype,sumpos,targetp,se)
