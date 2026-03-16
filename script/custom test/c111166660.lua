@@ -5,17 +5,8 @@ if not VORTEX_IMPORTED then Duel.LoadScript("proc_vortex.lua") end
 local s,id=GetID()
 s.Vortex=true
 function s.initial_effect(c)	
-	local extra_con=function(e,c)
-    local tp=c:GetControler()
-    local g=Duel.GetMatchingGroup(function(bc) 
-        return (bc:IsSetCard(0x145) or bc:IsSetCard(0x344)) and bc:IsFaceup() 
-    end,tp,LOCATION_REMOVED,0,nil)
-    return #g>=5
-	end
-	local f1=function(tc,sc,tp) return tc:IsType(TYPE_XYZ) and tc:IsRank(4) end
-    local f2=function(tc,sc,tp) return not tc:IsType(TYPE_XYZ) and tc:IsLevelBelow(4) end
-    --VORTEX SUMMON
-	Vortex.AddProcedure(c,f1,1,f2,1,99,extra_con)
+	local core=function(tc) return tc:IsType(TYPE_XYZ) and tc:IsRank(4) end
+    Vortex.AddProcedure(c,core,1,s.nadleef_fuel,1,99)
 	c:SetSPSummonOnce(id)
 	c:EnableReviveLimit()
 	--Level/Rank Cover
@@ -63,6 +54,17 @@ function s.initial_effect(c)
     end
 end
 s.listed_series={0x145,0x344}
+
+function s.nadleef_fuel(tc,vortex_card,tp)
+    --
+    local filter=tc:IsLevelBelow(4) and not tc:IsType(TYPE_XYZ)
+    if not filter then return false end
+    --Check Banishment (Vortex Energy)
+    local g=Duel.GetMatchingGroup(function(bc) 
+        return (bc:IsSetCard(0x145) or bc:IsSetCard(0x344)) and bc:IsFaceup() 
+    end,tp,LOCATION_REMOVED,0,nil)   
+    return #g>=5
+end
 
 --Lock (Anti-Climbing)
 function s.splimit(e,c,sump,sumtype,sumpos,targetp,se)
