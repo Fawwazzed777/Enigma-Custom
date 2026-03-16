@@ -43,7 +43,7 @@ function Vortex.AddProcedure(c,f1,minc,f2,minf,max,extra_con)
     Vortex.AddCommonEffects(c)
 end
 
-function Vortex.Rescon(f1 minc,f2,minf)
+function Vortex.Rescon(f1,minc,f2,minf)
     return function(sg,e,tp,mg,sc)
         local g_core=sg:Filter(f1,nil,sc,tp)
         local g_fuel=sg:Filter(f2,nil,sc,tp)
@@ -54,7 +54,7 @@ function Vortex.Rescon(f1 minc,f2,minf)
             total_val= total_val+Vortex.GetValue(tc)
         end
         local req_val= Vortex.GetValue(sc)
-        --Duel.DebugMessage(tp, "Total: " .. total_val .. " Req: " .. req_val)
+        Duel.DebugMessage(tp, "Total: " .. total_val .. " Req: " .. req_val)
         if total_val==req_val then
             return #g_core>=minc and #g_fuel>=minf
         elseif total_val<req_val then
