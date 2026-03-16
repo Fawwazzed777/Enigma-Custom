@@ -1,19 +1,13 @@
 VORTEX_IMPORTED = true
 
-if not Vortex then
-    Vortex = {}
-end
 if not SUMMON_TYPE_VORTEX then 
     SUMMON_TYPE_VORTEX=SUMMON_TYPE_SPECIAL|0x609
 end
 if not REASON_VORTEX then
     REASON_VORTEX  = 0x200000000
 end
-if not aux.VortexProcedure then
-    aux.VortexProcedure = {}
-    Vortex = aux.VortexProcedure
-end
-
+if not Vortex then Vortex = {} end
+if not aux.VortexProcedure then aux.VortexProcedure = Vortex end
 SUMMON_TYPE_VORTEX   = SUMMON_TYPE_SPECIAL|0x609
 TYPE_VORTEX          = 0x210000000
 VORTEX_ACTIVITY_FLAG = 109090901
@@ -51,7 +45,7 @@ function Vortex.AddProcedure(c,f1,f2)
     e1:SetCode(EFFECT_SPSUMMON_PROC)
     e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
     e1:SetRange(LOCATION_EXTRA)
-    e1:SetLabelObject({f1,f2,extra_con}) 
+    e1:SetLabelObject({f1,f2,extra_con})
     e1:SetCondition(Vortex.Condition)
     e1:SetTarget(Vortex.Target)
     e1:SetOperation(Vortex.Operation)

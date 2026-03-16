@@ -6,10 +6,9 @@ local s,id=GetID()
 s.Vortex=true
 function s.initial_effect(c)
     --VORTEX SUMMON
-	--Core:Rank 4, Fuel:Non-Xyz Level 4 or lower
-    local f1=function(tc,sc,tp) return tc:IsType(TYPE_XYZ) and tc:IsRank(4) end
+	local f1=function(tc,sc,tp) return tc:IsType(TYPE_XYZ) and tc:IsRank(4) end
     local f2=function(tc,sc,tp) return not tc:IsType(TYPE_XYZ) and tc:IsLevelBelow(4) end
-    Vortex.AddProcedure(c,f1,f2)
+    Vortex.AddProcedure(c,f1,f2,nil)
 	c:EnableReviveLimit()
     --Gain ATK(Non-Xyz)
     local e1=Effect.CreateEffect(c)
