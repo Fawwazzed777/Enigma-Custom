@@ -7,11 +7,11 @@ s.Vortex=true
 --Material Logic
 function s.initial_effect(c)
 	--Vortex Procedure
-    local f1=function(tc,sc,tp) return tc:IsType(TYPE_XYZ) and tc:IsRank(4) and c:IsSetCard(0x994) end
+    local f1=function(tc,sc,tp) return tc:IsType(TYPE_XYZ) and tc:IsRank(4) and sc:IsSetCard(0x994) end
     local f2=function(tc,sc,tp) return not tc:IsType(TYPE_XYZ) and tc:GetLevel()>=0 and tc:IsAttribute(ATTRIBUTE_LIGHT|ATTRIBUTE_DARK) end
     Vortex.AddProcedure(c,f1,f2,nil)
 	c:EnableReviveLimit()
-	--Time Leap (Quick Effect)
+	--Time Leap (Banish this card until the End Phase, then Track)
     local e1=Effect.CreateEffect(c)
     e1:SetDescription(aux.Stringid(id,0))
     e1:SetCategory(CATEGORY_REMOVE)
