@@ -8,6 +8,20 @@ if not aux.VortexProcedure then
     aux.VortexProcedure = Vortex
 end
 
+if not Vortex.GlobalCheck then
+    Vortex.GlobalCheck=true
+    local ge1=Effect.GlobalEffect()
+    ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+    ge1:SetCode(EVENT_REMOVE)
+    ge1:SetOperation(function(e,tp,eg,ep,ev,re,r,rp)
+        for tc in aux.Next(eg) do
+            Duel.RegisterFlagEffect(0,VORTEX_ACTIVITY_FLAG,RESET_PHASE+PHASE_END,0,1)
+			Duel.RegisterFlagEffect(1,VORTEX_ACTIVITY_FLAG,RESET_PHASE+PHASE_END,0,1)
+        end
+    end)
+    Duel.RegisterEffect(ge1,0)
+end
+
 SUMMON_TYPE_VORTEX = SUMMON_TYPE_SPECIAL|0x609
 TYPE_VORTEX        = 0x210000000
 VORTEX_ACTIVITY_FLAG = 511729901
@@ -36,7 +50,7 @@ function Vortex.AddProcedure(c,f1,minc,f2,minf,max)
 end
 
 function Vortex.Rescon(sg,e,tp,mg,sc)
-    local info=e:GetLabelObject()
+	local info=e:GetLabelObject()
     local f1,minc,f2,minf=info[1],info[2],info[3],info[4]
     
     local g_core=sg:Filter(f1,nil,sc,tp)
@@ -45,11 +59,14 @@ function Vortex.Rescon(sg,e,tp,mg,sc)
     if #g_core<minc or #g_fuel<minf then return false end
     if #sg~=(#g_core+#g_fuel) then return false end
     
-    return sg:GetSum(Vortex.GetValue)==sc:GetLevel()
+    local total_val=sg:GetSum(Vortex.GetValue)
+    local req_val=Vortex.GetValue(sc)
+    
+    return total_val==req_val
 end
 
 function Vortex.Condition(max)
-    return function(e, c)
+    return function(e,c)
         if c== nil then return true end
         local tp=c:GetControler()
         if Duel.GetFlagEffect(tp,VORTEX_ACTIVITY_FLAG)==0 then return false end
