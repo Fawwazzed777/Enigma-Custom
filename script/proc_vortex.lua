@@ -23,10 +23,10 @@ VORTEX_ACTIVITY_FLAG = 511729901
 REASON_VORTEX      = 0x200000000
 
 function Vortex.GetValue(c)
-    local orig_tpe=c:GetOriginalType()
-    if (orig_tpe&TYPE_XYZ)~=0 then return c:GetOriginalRank() end
-    if (orig_tpe&TYPE_LINK)~=0 then return c:GetOriginalLink() end
-    return math.max(c:GetOriginalLevel(),1)
+    local orig_tpe=c:GetType()
+    if (orig_tpe&TYPE_XYZ)~=0 then return c:GetRank() end
+    if (orig_tpe&TYPE_LINK)~=0 then return c:GetlLink() end
+    return math.max(c:GetLevel(),1)
 end
 
 function Vortex.AddProcedure(c,f1,minc,f2,minf,max,extra_con)
@@ -46,16 +46,19 @@ end
 function Vortex.Rescon(f1,minc,f2,minf)
     return function(sg,e,tp,mg,sc)
         local g_core=sg:Filter(f1,nil,sc,tp)
-        local g_fuel=sg:Filter(f2,nil,sc,tp)
-        if #g_core<minc or #g_fuel<minf then return false end    
-        --Core/Fuel
+        local g_fuel=sg:Filter(f2,nil,sc,tp)       
         if #sg~=(#g_core+#g_fuel) then return false end
         local total_val=0
         for tc in aux.Next(sg) do
             total_val=total_val+Vortex.GetValue(tc)
         end
         local req_val=Vortex.GetValue(sc)
-        return total_val==req_val
+
+        if total_val<req_val then return true end
+        if total_val==req_val then
+            return #g_core>=minc and #g_fuel>=minf
+        end
+        return false
     end
 end
 
@@ -75,9 +78,10 @@ end
 
 function Vortex.Target(f1,minc,f2,minf,max)
     return function(e,tp,eg,ep,ev,re,r,rp,chk,c)
-        local rg=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,0,nil)
         local rescon_func=Vortex.Rescon(f1,minc,f2,minf)
-        local sg=aux.SelectUnselectGroup(rg,e,tp,1,max,rescon_func,1,tp,HINTMSG_SPSUMMON,rescon_func,nil,Duel.IsSummonCancelable())       
+        local rg=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,0,nil)
+        local cancelable=Duel.IsSummonCancelable()      
+        local sg=aux.SelectUnselectGroup(rg,e,tp,1,max,rescon_func,1,tp,HINTMSG_SPSUMMON,rescon_func,nil,cancelable)
         if sg and #sg>0 then
             sg:KeepAlive()
             c:SetMaterial(sg)
