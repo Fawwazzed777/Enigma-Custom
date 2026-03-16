@@ -5,12 +5,11 @@ if not VORTEX_IMPORTED then Duel.LoadScript("proc_vortex.lua") end
 local s,id=GetID()
 s.Vortex=true
 function s.initial_effect(c)
-	--f1:Core(Rank 4), min 1
-    local f1=function(tc) return tc:IsType(TYPE_XYZ) and tc:IsRank(4) end
-    --f2:Fuel(Level 4 or lower,Non-Xyz), min 1
-    local f2=function(tc) return not tc:IsType(TYPE_XYZ) end
+	--f1:Core(Rank 4), min 1, f2:Fuel
+    local f1=function(tc,sc,tp) return tc:IsType(TYPE_XYZ) and tc:IsRank(4) end
+    local f2=function(tc,sc,tp) return not tc:IsType(TYPE_XYZ) and tc:IsLevelBelow(4) end
     --VORTEX SUMMON
-	Vortex.AddProcedure(c,f1,1,f2,1,99)
+	Vortex.AddProcedure(c,f1,1,f2,1,99,nil)
 	c:EnableReviveLimit()
     --Gain ATK(Non-Xyz)
     local e1=Effect.CreateEffect(c)
