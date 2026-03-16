@@ -11,7 +11,6 @@ function s.initial_effect(c)
     local f2=function(tc,sc,tp) return not tc:IsType(TYPE_XYZ) and tc:GetLevel()>=0 and tc:IsAttribute(ATTRIBUTE_LIGHT|ATTRIBUTE_DARK) end
     Vortex.AddProcedure(c,f1,f2,nil)
 	c:EnableReviveLimit()
-	c:SetSPSummonOnce(id)
 	--Time Leap (Quick Effect)
     local e1=Effect.CreateEffect(c)
     e1:SetDescription(aux.Stringid(id,0))
