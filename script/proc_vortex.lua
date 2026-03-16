@@ -50,24 +50,21 @@ end
 
 function Vortex.Rescon(sg,e,tp,mg,sc)
     local info=e:GetLabelObject()
-    local f1,minc,f2,minf=info[1],info[2],info[3],info[4]   
+    local f1,minc,f2,minf =info[1],info[2],info[3],info[4]
+    
     local g_core=sg:Filter(f1,nil,sc,tp)
     local g_fuel=sg:Filter(f2,nil,sc,tp)
-    
-    if #g_core<minc or #g_fuel<minf then return false end
-    if #sg~=(#g_core+#g_fuel) then return false end
-
     local total_val=0
     for tc in aux.Next(sg) do
         total_val=total_val+Vortex.GetValue(tc)
     end
+    local req_val=Vortex.GetValue(sc)
 
-    local req_val=Vortex.GetValue(sc)  
-    if total_val~=req_val then
-        --Duel.Hint(HINT_CARD,0,0)
-        return false
-    end    
-    return true
+    if total_val==req_val then
+        return #g_core>= minc and #g_fuel>=minf
+    end
+    
+    return total_val<req_val
 end
 
 function Vortex.Condition(max)
