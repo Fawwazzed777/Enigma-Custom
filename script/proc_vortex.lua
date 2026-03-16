@@ -61,7 +61,7 @@ function Vortex.Rescon(f1,minc,f2,minf)
         end
         return false
     end
-
+end
 function Vortex.Condition(f1,minc,f2,minf,max,extra_con)
     return function(e,c)
         if c==nil then return true end
