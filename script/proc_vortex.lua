@@ -15,8 +15,8 @@ if not Vortex.GlobalCheck then
     ge1:SetCode(EVENT_REMOVE)
     ge1:SetOperation(function(e,tp,eg,ep,ev,re,r,rp)
         for tc in aux.Next(eg) do
-            Duel.RegisterFlagEffect(0,VORTEX_ACTIVITY_FLAG,RESET_PHASE+PHASE_END,0,1)
-			Duel.RegisterFlagEffect(1,VORTEX_ACTIVITY_FLAG,RESET_PHASE+PHASE_END,0,1)
+            local p=tc:GetPreviousControler()
+            Duel.RegisterFlagEffect(p,VORTEX_ACTIVITY_FLAG,RESET_PHASE+PHASE_END,0,1)
         end
     end)
     Duel.RegisterEffect(ge1,0)
