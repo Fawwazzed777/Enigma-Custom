@@ -58,7 +58,7 @@ function Vortex.AddProcedure(c,f1,f2)
     e2:SetValue(TYPE_VORTEX)
     c:RegisterEffect(e2)
 end
-function Vortex.ResconFilter(sg,e,tp mg)
+function Vortex.ResconFilter(sg,e,tp,mg)
     local info=e:GetLabelObject()
     local f1,f2=info[1],info[2]
     local sc=e:GetHandler()
