@@ -12,7 +12,12 @@ SUMMON_TYPE_VORTEX   = SUMMON_TYPE_SPECIAL|0x609
 TYPE_VORTEX          = 0x210000000
 VORTEX_ACTIVITY_FLAG = 109090901
 REASON_VORTEX        = 0x200000000
-
+if not SUMMON_TYPE_VORTEX then 
+    SUMMON_TYPE_VORTEX = SUMMON_TYPE_SPECIAL|0x609
+end
+if not REASON_VORTEX then
+    REASON_VORTEX = 0x400000000
+end
 function Vortex.GetValue(c)
     if c:IsType(TYPE_LINK) then return c:GetLink() end
     if c:IsType(TYPE_XYZ) then return c:GetRank() end
@@ -72,6 +77,12 @@ function Vortex.ResconFilter(sg,e,tp,mg)
     return sg:GetSum(Vortex.GetValue)==sc:GetLevel()
 end
 
+function Vortex.GetFilters(e)
+    local info=e:GetLabelObject()
+    if type(info) == "table" then return info[1], info[2] end
+    return nil, nil
+end
+
 function Vortex.Condition(e,c)
     if c==nil then return true end
     local tp=c:GetControler()
@@ -83,7 +94,8 @@ end
 
 function Vortex.Target(e,tp,eg,ep,ev,re,r,rp,chk,c)
     local rg=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,0,nil)
-    local sg=aux.SelectUnselectGroup(rg,e,tp,2,99,Vortex.ResconFilter,1,tp,HINTMSG_SPSUMMON,Vortex.ResconFilter,nil,Duel.IsSummonCancelable())
+	local cancelable=Duel.IsSummonCancelable()
+    local sg=aux.SelectUnselectGroup(rg,e,tp,2,99,Vortex.ResconFilter,1,tp,HINTMSG_REMOVE,Vortex.ResconFilter,nil,cancelable)
     if sg and #sg>0 then
         sg:KeepAlive()
         e:SetLabelObject(sg)
@@ -92,15 +104,17 @@ function Vortex.Target(e,tp,eg,ep,ev,re,r,rp,chk,c)
     return false
 end
 
-function Vortex.Operation(f1)
-    return function(e,tp,eg,ep,ev,re,r,rp,c)
-        local sg=e:GetLabelObject()
-        c:SetMaterial(sg)
-        local g_core=sg:Filter(f1,nil,c,tp)
-        local g_fuel=sg:Filter(function(tc) return not f1(tc,c,tp) end,nil)     
-        --Dispersion
-        Duel.SendtoDeck(g_core,nil,2,REASON_MATERIAL+REASON_VORTEX)
-        Duel.SendtoGrave(g_fuel,REASON_MATERIAL+REASON_VORTEX)       
-        sg:DeleteGroup()
-    end
+function Vortex.Operation(e,tp,eg,ep,ev,re,r,rp,c)
+    local sg=e:GetLabelObject()
+    if not sg then return end
+    
+    local info=e:GetOwner():GetCardEffect(EFFECT_SPSUMMON_PROC):GetLabelObject()
+    local f1=info[1]
+    
+    c:SetMaterial(sg)
+    local g_core=sg:Filter(f1,nil,c,tp)
+    local g_fuel=sg:Filter(function(tc) return not f1(tc,c,tp) end,nil)  
+    Duel.SendtoDeck(g_core,nil,2,REASON_MATERIAL+REASON_VORTEX)
+    Duel.SendtoGrave(g_fuel,REASON_MATERIAL+REASON_VORTEX)  
+    sg:DeleteGroup()
 end
