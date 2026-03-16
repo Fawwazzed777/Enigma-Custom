@@ -54,7 +54,6 @@ function Vortex.Rescon(f1,minc,f2,minf)
             total_val= total_val+Vortex.GetValue(tc)
         end
         local req_val= Vortex.GetValue(sc)
-        Duel.DebugMessage(tp, "Total: " .. total_val .. " Req: " .. req_val)
         if total_val==req_val then
             return #g_core>=minc and #g_fuel>=minf
         elseif total_val<req_val then
