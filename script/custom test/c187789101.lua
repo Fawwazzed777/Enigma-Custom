@@ -9,7 +9,7 @@ function s.initial_effect(c)
     -- Core: Rank 4, Fuel: Non-Xyz (Apapun)
     local f1=function(tc,sc,tp) return tc:IsType(TYPE_XYZ) and tc:IsRank(4) end
     local f2=function(tc,sc,tp) return not tc:IsType(TYPE_XYZ) end
-    Vortex.AddProcedure(c,f1,f2)
+    Vortex.AddProcedure(c,f1,f2,nil)
     c:EnableReviveLimit()
     --Destroy S/T & Set from opponent GY
     local e1=Effect.CreateEffect(c)
