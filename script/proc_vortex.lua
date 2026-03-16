@@ -1,4 +1,4 @@
-VORTEX_IMPORTED =true
+VORTEX_IMPORTED=true
 
 if not Vortex then
     Vortex = {}
@@ -64,7 +64,11 @@ function Vortex.Rescon(sg,e,tp,mg,sc)
     end
 
     local req_val=Vortex.GetValue(sc)  
-    return total_val==req_val
+    if total_val~=req_val then
+        --Duel.Hint(HINT_CARD,0,0)
+        return false
+    end    
+    return true
 end
 
 function Vortex.Condition(max)
@@ -73,7 +77,8 @@ function Vortex.Condition(max)
         local tp=c:GetControler()
         if Duel.GetFlagEffect(tp,VORTEX_ACTIVITY_FLAG)==0 then return false end
         local rg=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,0,nil)
-        return aux.SelectUnselectGroup(rg,e,tp,1,max,Vortex.Rescon,0,c)
+		local res=aux.SelectUnselectGroup(rg,e,tp,1,max,Vortex.Rescon,0,c)
+        return res
     end
 end
 
