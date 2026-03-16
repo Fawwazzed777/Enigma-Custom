@@ -35,10 +35,9 @@ function Vortex.AddProcedure(c,f1,minc,f2,minf,max,extra_con)
     e1:SetCode(EFFECT_SPSUMMON_PROC)
     e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
     e1:SetRange(LOCATION_EXTRA)
-    e1:SetLabelObject({f1,minc,f2,minf,extra_con}) 
-    e1:SetCondition(Vortex.Condition(max))
-    e1:SetTarget(Vortex.Target(max))
-    e1:SetOperation(Vortex.Operation)
+    e1:SetCondition(Vortex.Condition(f1,minc,f2,minf,max,extra_con))
+    e1:SetTarget(Vortex.Target(f1,minc,f2,minf,max))
+    e1:SetOperation(Vortex.Operation(f1))
     e1:SetValue(SUMMON_TYPE_VORTEX)
     c:RegisterEffect(e1)	
     Vortex.AddCommonEffects(c)
@@ -51,7 +50,7 @@ function Vortex.Rescon(sg,e,tp,mg,sc)
     local g_core=sg:Filter(f1,nil,sc,tp)
     local g_fuel=sg:Filter(f2,nil,sc,tp)
     
-    if #g_core<minc or #g_fuel< minf then return false end
+    if #g_core<minc or #g_fuel<minf then return false end
     if #sg~=(#g_core+#g_fuel) then return false end
 
     local total_val=0
@@ -63,28 +62,26 @@ function Vortex.Rescon(sg,e,tp,mg,sc)
     return total_val==req_val
 end
 
-function Vortex.Condition(max)
+function Vortex.Condition(f1,minc,f2,minf,max,extra_con)
     return function(e,c)
         if c==nil then return true end
-        local tp=c:GetControler()       
-        --Flag Banish
-        if Duel.GetFlagEffect(tp,VORTEX_ACTIVITY_FLAG)==0 then return false end       
-        --Extra Condition (Nadleef)
-        local info=e:GetLabelObject()
-        local extra_con=info[5]
-        if extra_con and not extra_con(e, c) then return false end       
+        local tp=c:GetControler()     
+        --Flag Check
+        if Duel.GetFlagEffect(tp,VORTEX_ACTIVITY_FLAG)==0 then return false end        
+        --Extra Condition Check (Nadleef 5 Banish, etc)
+        if extra_con and not extra_con(e,c) then return false end        
         local rg=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,0,nil)
-        local res=aux.SelectUnselectGroup(rg,e,tp,1,max,Vortex.Rescon,0,c)
-        return res
+        local rescon_func=Vortex.Rescon(f1,minc,f2,minf)
+        return aux.SelectUnselectGroup(rg,e,tp,1,max,rescon_func,0,c)
     end
 end
 
-function Vortex.Target(max)
+function Vortex.Target(f1,minc,f2,minf,max)
     return function(e,tp,eg,ep,ev,re,r,rp,chk,c)
-        local cancelable=Duel.IsSummonCancelable()
         local rg=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,0,nil)
-        local sg=aux.SelectUnselectGroup(rg,e,tp,1,max,Vortex.Rescon,1,tp,HINTMSG_SPSUMMON,Vortex.Rescon,nil,cancelable)
-        if sg and #sg>0 then
+        local rescon_func=Vortex.Rescon(f1,minc,f2,minf)
+        local sg=aux.SelectUnselectGroup(rg,e,tp,1,max,rescon_func,1,tp,HINTMSG_SPSUMMON,rescon_func,nil,Duel.IsSummonCancelable())       
+        if sg and #sg > 0 then
             sg:KeepAlive()
             c:SetMaterial(sg)
             return true
@@ -93,15 +90,16 @@ function Vortex.Target(max)
     end
 end
 
-function Vortex.Operation(e,tp,eg,ep,ev,re,r,rp,c)
-    local g=c:GetMaterial()
-    local info=e:GetLabelObject() 
-    local f1=info[1]   
-    local g_core=g:Filter(f1,nil,c,tp)
-    local g_fuel=g:Filter(function(tc) return not f1(tc,c,tp) end,nil)    
-    Duel.SendtoDeck(g_core,nil,2,REASON_MATERIAL+REASON_VORTEX)
-    Duel.SendtoGrave(g_fuel,REASON_MATERIAL+REASON_VORTEX)
-    g:DeleteGroup()
+function Vortex.Operation(f1)
+    return function(e,tp,eg,ep,ev,re,r,rp,c)
+        local g=c:GetMaterial()
+        if not g or #g==0 then return end
+        local g_core=g:Filter(f1,nil,c,tp)
+        local g_fuel=g:Filter(function(tc) return not f1(tc,c,tp) end,nil)       
+        Duel.SendtoDeck(g_core,nil,2,REASON_MATERIAL+REASON_VORTEX)
+        Duel.SendtoGrave(g_fuel,REASON_MATERIAL+REASON_VORTEX)
+        g:DeleteGroup()
+    end
 end
 
 function Vortex.AddCommonEffects(c)
