@@ -5,23 +5,11 @@ if not VORTEX_IMPORTED then Duel.LoadScript("proc_vortex.lua") end
 local s,id=GetID()
 s.Vortex=true
 --Material Logic
-function s.vortex_recipe(g,e,tp,mg)
-    if not e then return true end
-    --1 Rank 4 "Eternity Ace"
-	local g_ace=g:Filter(function(c) 
-        return c:IsType(TYPE_XYZ) and c:GetRank()==4 and c:IsSetCard(0x994) end,nil)
-    if #g_ace~=1 then return false end            
-    --Filter Material (LIGHT/DARK with a lEVEL)
-    local other_mats=g:Clone()
-    other_mats:Sub(g_ace)
-    if #other_mats==0 then return false end         
-    local count_valid=other_mats:FilterCount(function(c) 
-        return c:IsAttribute(ATTRIBUTE_LIGHT|ATTRIBUTE_DARK) and c:GetLevel()>0 end,nil)       
-    return count_valid==#other_mats
-end
 function s.initial_effect(c)
 	--Vortex Procedure
-    Vortex.AddProcedure(c,8,s.vortex_recipe)
+    local f1=function(tc,sc,tp) return tc:IsType(TYPE_XYZ) and tc:IsRank(4) and c:IsSetCard(0x994) end
+    local f2=function(tc,sc,tp) return not tc:IsType(TYPE_XYZ) and tc:GetLevel()>=0 and tc:IsAttribute(ATTRIBUTE_LIGHT|ATTRIBUTE_DARK) end
+    Vortex.AddProcedure(c,f1,f2,nil)
 	c:EnableReviveLimit()
 	c:SetSPSummonOnce(id)
 	--Time Leap (Quick Effect)
