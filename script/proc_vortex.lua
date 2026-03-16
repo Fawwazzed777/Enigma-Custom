@@ -94,26 +94,29 @@ end
 
 function Vortex.Target(e,tp,eg,ep,ev,re,r,rp,chk,c)
     local rg=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,0,nil)
-	local cancelable=Duel.IsSummonCancelable()
+    local cancelable=Duel.IsSummonCancelable()
     local sg=aux.SelectUnselectGroup(rg,e,tp,2,99,Vortex.ResconFilter,1,tp,HINTMSG_REMOVE,Vortex.ResconFilter,nil,cancelable)
     if sg and #sg>0 then
         sg:KeepAlive()
-        e:SetLabelObject(sg)
+        local info = e:GetLabelObject()
+        e:SetLabelObject({info,sg})
         return true
     end
     return false
 end
 
-function Vortex.Operation(e, tp, eg, ep, ev, re, r, rp, c)
-    local sg=e:GetLabelObject()
-    local e_proc=c:GetCardEffect(EFFECT_SPSUMMON_PROC)
-    local info=e_proc:GetLabelObject() 
+function Vortex.Operation(e,tp,eg,ep,ev,re,r,rp,c)
+    local data=e:GetLabelObject()
+    if not data or type(data)~= "table" then return end 
+    local info = data[1] --{f1, f2}
+    local sg   = data[2] --Group material
     local f1=info[1]
-    local f2=info[2]   
-    c:SetMaterial(sg)
+    local f2=info[2]
+    c:SetMaterial(sg) 
+    --Filter core and fuel
     local g_core=sg:Filter(f1,nil,c,tp)
-    local g_fuel=sg:Filter(function(tc) return not f1(tc,c,tp) end, nil)   
+    local g_fuel=sg:Filter(function(tc) return not f1(tc,c,tp) end,nil)   
     Duel.SendtoDeck(g_core,nil,2,REASON_MATERIAL+REASON_VORTEX)
-    Duel.SendtoGrave(g_fuel,REASON_MATERIAL+REASON_VORTEX)   
+    Duel.SendtoGrave(g_fuel,REASON_MATERIAL+REASON_VORTEX)    
     sg:DeleteGroup()
 end
