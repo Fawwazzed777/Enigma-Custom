@@ -39,6 +39,13 @@ if not Vortex.GlobalCheck then
 end
 
 function Vortex.AddProcedure(c,f1,f2)
+    local e0=Effect.CreateEffect(c)
+    e0:SetType(EFFECT_TYPE_SINGLE)
+    e0:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SET_AVAILABLE)
+    e0:SetRange(LOCATION_ALL)
+    e0:SetCode(EFFECT_REMOVE_TYPE)
+    e0:SetValue(TYPE_FUSION|TYPE_XYZ)
+    c:RegisterEffect(e0)
     local e1=Effect.CreateEffect(c)
     e1:SetType(EFFECT_TYPE_FIELD)
     e1:SetCode(EFFECT_SPSUMMON_PROC)
@@ -50,33 +57,39 @@ function Vortex.AddProcedure(c,f1,f2)
     e1:SetOperation(Vortex.Operation)
     e1:SetValue(SUMMON_TYPE_VORTEX)
     c:RegisterEffect(e1)
+	local e2=Effect.CreateEffect(c)
+    e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
+    e2:SetType(EFFECT_TYPE_SINGLE)
+    e2:SetCode(EFFECT_ADD_TYPE)
+    e2:SetValue(TYPE_VORTEX)
+    c:RegisterEffect(e2)
+end
+function Vortex.ResconFilter(sg,e,tp mg)
+    local info=e:GetLabelObject()
+    local f1,f2=info[1],info[2]
+    local sc=e:GetHandler()
+    
+    local g_core=sg:Filter(f1,nil,sc,tp)
+    local g_fuel=sg:Filter(f2,nil,sc,tp)
+    
+    if #g_core<1 or #g_fuel<1 then return false end
+    if #sg~=(#g_core+#g_fuel) then return false end
+    
+    return sg:GetSum(Vortex.GetValue)==sc:GetLevel()
 end
 
-function Vortex.Condition(e, c)
+function Vortex.Condition(e,c)
     if c==nil then return true end
     local tp=c:GetControler()
     if Duel.GetFlagEffect(tp,VORTEX_ACTIVITY_FLAG)==0 then return false end
     
     local rg=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,0,nil)
-    return aux.SelectUnselectGroup(rg,e,tp,2,99,Vortex.Rescon,0,c)
-end
-
-function Vortex.Rescon(sg,e,tp,mg,sc)
-    local info=e:GetLabelObject()
-    local f1,f2=info[1],info[2] 
-    --MIN 1 Core (f1) and 1 Fuel (f2)
-    local g_core=sg:Filter(f1,nil,sc,tp)
-    local g_fuel=sg:Filter(f2,nil,sc,tp)
-    
-    if #g_core<1 or #g_fuel<1 then return false end
-    if #sg~=(#g_core+#g_fuel) then return false end    
-    --Total Value= Vortex Value
-    return sg:GetSum(Vortex.GetValue)==sc:GetLevel()
+    return aux.SelectUnselectGroup(rg,e,tp,2,99,Vortex.ResconFilter,0,c)
 end
 
 function Vortex.Target(e,tp,eg,ep,ev,re,r,rp,chk,c)
     local rg=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,0,nil)
-    local sg=aux.SelectUnselectGroup(rg,e,tp,2,99,Vortex.Rescon,1,tp,HINTMSG_SPSUMMON,Vortex.Rescon,nil,Duel.IsSummonCancelable())
+    local sg=aux.SelectUnselectGroup(rg,e,tp,2,99,Vortex.ResconFilter,1,tp,HINTMSG_SPSUMMON,Vortex.ResconFilter,nil,Duel.IsSummonCancelable())
     if sg and #sg>0 then
         sg:KeepAlive()
         e:SetLabelObject(sg)
