@@ -23,10 +23,10 @@ VORTEX_ACTIVITY_FLAG = 511729901
 REASON_VORTEX      = 0x200000000
 
 function Vortex.GetValue(c)
-    local tpe=c:GetType()
-    if (tpe&TYPE_XYZ)~=0 then return c:GetRank() end
-    if (tpe&TYPE_LINK)~=0 then return c:GetlLink() end
-    return math.max(c:GetLevel(),1)
+    local tpe=c:GetOriginalType()
+    if (tpe&TYPE_XYZ)~=0 then return c:GetOriginalRank() end
+    if (tpe&TYPE_LINK)~=0 then return c:GetOriginalLink() end
+    return math.max(c:GetOriginalLevel(),1)
 end
 
 function Vortex.AddProcedure(c,f1,minc,f2,minf,max,extra_con)
@@ -43,27 +43,25 @@ function Vortex.AddProcedure(c,f1,minc,f2,minf,max,extra_con)
     Vortex.AddCommonEffects(c)
 end
 
-function Vortex.Rescon(f1, minc, f2, minf)
-    return function(sg, e, tp, mg, sc)
-        local g_core = sg:Filter(f1, nil, sc, tp)
-        local g_fuel = sg:Filter(f2, nil, sc, tp)
-
-        if #sg~=(#g_core + #g_fuel) then return false end      
+function Vortex.Rescon(f1 minc,f2,minf)
+    return function(sg,e,tp,mg,sc)
+        local g_core=sg:Filter(f1,nil,sc,tp)
+        local g_fuel=sg:Filter(f2,nil,sc,tp)
+        if #sg~=(#g_core+#g_fuel) then return false end
+        
         local total_val=0
         for tc in aux.Next(sg) do
-            total_val=total_val+Vortex.GetValue(tc)
+            total_val= total_val+Vortex.GetValue(tc)
         end
-        local req_val=Vortex.GetValue(sc)
-
+        local req_val= Vortex.GetValue(sc)
+        --Duel.DebugMessage(tp, "Total: " .. total_val .. " Req: " .. req_val)
         if total_val==req_val then
             return #g_core>=minc and #g_fuel>=minf
-        end
-        if total_val<req_val then
+        elseif total_val<req_val then
             return true
         end
         return false
     end
-end
 
 function Vortex.Condition(f1,minc,f2,minf,max,extra_con)
     return function(e,c)
