@@ -43,23 +43,20 @@ function Vortex.AddProcedure(c,f1,minc,f2,minf,max,extra_con)
     Vortex.AddCommonEffects(c)
 end
 
-function Vortex.Rescon(sg,e,tp,mg,sc)
-    local info=e:GetLabelObject()
-    local f1,minc,f2,minf =info[1],info[2],info[3],info[4]
-    
-    local g_core=sg:Filter(f1,nil,sc,tp)
-    local g_fuel=sg:Filter(f2,nil,sc,tp)
-    
-    if #g_core<minc or #g_fuel<minf then return false end
-    if #sg~=(#g_core+#g_fuel) then return false end
-
-    local total_val=0
-    for tc in aux.Next(sg) do
-        total_val=total_val+Vortex.GetValue(tc)
+function Vortex.Rescon(f1,minc,f2,minf)
+    return function(sg,e,tp,mg,sc)
+        local g_core=sg:Filter(f1,nil,sc,tp)
+        local g_fuel=sg:Filter(f2,nil,sc,tp)
+        if #g_core<minc or #g_fuel<minf then return false end    
+        --Core/Fuel
+        if #sg~=(#g_core+#g_fuel) then return false end
+        local total_val=0
+        for tc in aux.Next(sg) do
+            total_val=total_val+Vortex.GetValue(tc)
+        end
+        local req_val=Vortex.GetValue(sc)
+        return total_val==req_val
     end
-    local req_val=Vortex.GetValue(sc)
-
-    return total_val==req_val
 end
 
 function Vortex.Condition(f1,minc,f2,minf,max,extra_con)
@@ -81,7 +78,7 @@ function Vortex.Target(f1,minc,f2,minf,max)
         local rg=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,0,nil)
         local rescon_func=Vortex.Rescon(f1,minc,f2,minf)
         local sg=aux.SelectUnselectGroup(rg,e,tp,1,max,rescon_func,1,tp,HINTMSG_SPSUMMON,rescon_func,nil,Duel.IsSummonCancelable())       
-        if sg and #sg > 0 then
+        if sg and #sg>0 then
             sg:KeepAlive()
             c:SetMaterial(sg)
             return true
