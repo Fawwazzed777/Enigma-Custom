@@ -1,8 +1,8 @@
 Put this on user_configs.json
 
-	"repos": [
+{"repos": [
 		{
-				"url": "https://github.com/Fawwazzed777/Enigma-Custom",
+				"url": "https://github.com/Fawwazzed777/Enigma-Custom.git",
 				"repo_name": "Enigma-Custom",
 				"repo_path": "./repositories/Enigma-Custom",
 				"data_path": "expansions",
@@ -10,4 +10,4 @@ Put this on user_configs.json
 				"should_update": true,
 				"should_read": true
 		}
-	]
+	]}
