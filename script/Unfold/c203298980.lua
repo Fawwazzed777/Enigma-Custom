@@ -49,14 +49,14 @@ end
 
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
     if chkc then return false end  
-    local g=Duel.GetMatchingGroup(s.tdfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,nil)   
+    local g=Duel.GetMatchingGroup(s.tdfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,e:GetHandler())   
     if chk==0 then 
         return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
             and g:GetClassCount(Card.GetCode)>=2
             and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) 
     end
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-    local sg=aux.SelectUnselectGroup(g,e,tp,2,2,aux.dncheck,1,tp,HINTMSG_TODECK)   
+    local sg=aux.SelectUnselectGroup(g,e,tp,2,2,aux.dncheck,1,tp,HINTMSG_TODECK,e:GetHandler())   
     Duel.SetTargetCard(sg)
     Duel.SetOperationInfo(0,CATEGORY_TODECK,sg,2,0,0)
     Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
