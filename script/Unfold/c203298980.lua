@@ -56,7 +56,7 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
             and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) 
     end
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-    local sg=aux.SelectUnselectGroup(g,e,tp,2,2,aux.dncheck,1,tp,HINTMSG_TODECK,e:GetHandler())   
+    local sg=aux.SelectUnselectGroup(g,e,tp,2,2,aux.dncheck,1,tp,HINTMSG_TODECK)   
     Duel.SetTargetCard(sg)
     Duel.SetOperationInfo(0,CATEGORY_TODECK,sg,2,0,0)
     Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
