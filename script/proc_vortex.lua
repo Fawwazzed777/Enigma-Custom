@@ -46,6 +46,11 @@ if not Vortex.GlobalCheck then
 end
 
 function Vortex.AddProcedure(c,f1,f2,extra_con)
+	if type(min_core)=="function" then
+        extra_con=min_core
+        min_core= 1
+    end
+    min_core=min_core or 1
     local e0=Effect.CreateEffect(c)
     e0:SetType(EFFECT_TYPE_SINGLE)
     e0:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SET_AVAILABLE)
@@ -58,6 +63,7 @@ function Vortex.AddProcedure(c,f1,f2,extra_con)
     e1:SetCode(EFFECT_SPSUMMON_PROC)
     e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
     e1:SetRange(LOCATION_EXTRA)
+	e1:SetLabel(min_core)
     e1:SetLabelObject({f1,f2,extra_con})
     e1:SetCondition(Vortex.Condition)
     e1:SetTarget(Vortex.Target)
@@ -71,18 +77,14 @@ function Vortex.AddProcedure(c,f1,f2,extra_con)
     e2:SetValue(TYPE_VORTEX)
     c:RegisterEffect(e2)
 end
-function Vortex.ResconFilter(sg,e,tp,mg)
+function Vortex.ResconFilter(g,e,tp,mg,c)
     local info=e:GetLabelObject()
-    local filters=(type(info[1])=="table") and info[1] or info
-    local f1,f2=filters[1],filters[2]
-    local sc=e:GetHandler()  
-    local g_core=sg:Filter(function(tc) return Vortex.CheckFilter(tc,f1,sc,tp,true) end,nil)
-    local g_fuel=sg:Filter(function(tc) return not g_core:IsContains(tc) and Vortex.CheckFilter(tc,f2,sc,tp,false) end,nil)
-    
-    if #g_core<1 or #g_fuel<1 then return false end
-    if #sg~=(#g_core+#g_fuel) then return false end
-    
-    return sg:GetSum(Vortex.GetValue)==sc:GetLevel()
+    local f1=info[1]
+    local f2=info[2]
+    local min_core=e:GetLabel()    
+    local core_count=g:FilterCount(f1,nil,c,tp)
+    local fuel_count=g:FilterCount(f2,nil,c,tp)   
+    return core_count>=min_core and (#g==core_count+fuel_count)
 end
 
 function Vortex.CheckFilter(tc,f,sc,tp,is_core)
