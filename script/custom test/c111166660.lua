@@ -11,10 +11,9 @@ function s.initial_effect(c)
             return (bc:IsSetCard(0x145) or bc:IsSetCard(0x344)) and bc:IsFaceup() 
         end,tp,LOCATION_REMOVED,0,nil)>=5
     end
-    local f1=function(tc,sc,tp) return tc:IsType(TYPE_XYZ) and tc:IsRank(4) end
     local f2=function(tc,sc,tp) return not tc:IsType(TYPE_XYZ) and tc:IsLevelBelow(4) end
 
-    Vortex.AddProcedure(c,f1,f2,extra_con)
+    Vortex.AddProcedure(c,4,f2,extra_con)
 	c:SetSPSummonOnce(id)
 	c:EnableReviveLimit()
 	--Level/Rank Cover
