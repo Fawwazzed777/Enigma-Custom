@@ -86,17 +86,18 @@ function Vortex.ResconFilter(sg,e,tp,mg)
 end
 
 function Vortex.CheckFilter(tc,f,sc,tp,is_core)
-    if not f then return true end
-    if type(f)=="function" then return f(tc,sc,tp) end
+    if not f then return true end   
     if type(f)=="number" then
         if is_core then
-            --Core
             return tc:IsType(TYPE_XYZ) and tc:GetRank()==f
         else
-            --Fuel
             return Vortex.GetValue(tc)==f
         end
     end
+    if type(f)=="function" then
+        return f(tc,sc,tp)
+    end
+    
     return true
 end
 
