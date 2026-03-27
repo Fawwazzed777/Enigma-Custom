@@ -45,7 +45,7 @@ if not Vortex.GlobalCheck then
     Duel.RegisterEffect(ge1,0)
 end
 
-function Vortex.AddProcedure(c,f1,f2,extra_con)
+function Vortex.AddProcedure(c,f1,f2,min_core,extra_con)
 	if type(min_core)=="function" then
         extra_con=min_core
         min_core= 1
@@ -81,9 +81,12 @@ function Vortex.ResconFilter(g,e,tp,mg,c)
     local info=e:GetLabelObject()
     local f1=info[1]
     local f2=info[2]
-    local min_core=e:GetLabel()    
-    local core_count=g:FilterCount(f1,nil,c,tp)
-    local fuel_count=g:FilterCount(f2,nil,c,tp)   
+    local min_core=e:GetLabel()
+    local sc=e:GetHandler()    
+    local core_filter=function(tc) return Vortex.CheckFilter(tc,f1,sc,tp,true) end
+    local fuel_filter=function(tc) return Vortex.CheckFilter(tc,f2,sc,tp,false) end
+    local core_count=g:FilterCount(core_filter,nil)
+    local fuel_count=g:FilterCount(fuel_filter,nil)
     return core_count>=min_core and (#g==core_count+fuel_count)
 end
 
