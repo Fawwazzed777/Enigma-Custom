@@ -74,18 +74,29 @@ end
 function Vortex.ResconFilter(sg,e,tp,mg)
     local info=e:GetLabelObject()
     local filters=(type(info[1])=="table") and info[1] or info
-    local f1,f2=filters[1], filters[2]
+    local f1,f2=filters[1],filters[2]
     local sc=e:GetHandler()  
-    local g_core=sg:Filter(function(tc) return tc:IsType(TYPE_XYZ) and Vortex.CheckFilter(tc,f1,sc,tp) end,nil)
-    local g_fuel=sg:Filter(function(tc) return not g_core:IsContains(tc) and Vortex.CheckFilter(tc,f2,sc,tp) end,nil)   
+    local g_core=sg:Filter(function(tc) return Vortex.CheckFilter(tc,f1,sc,tp,true) end,nil)
+    local g_fuel=sg:Filter(function(tc) return not g_core:IsContains(tc) and Vortex.CheckFilter(tc,f2,sc,tp,false) end,nil)
+    
     if #g_core<1 or #g_fuel<1 then return false end
-    if #sg~=(#g_core+#g_fuel) then return false end   
+    if #sg~=(#g_core+#g_fuel) then return false end
+    
     return sg:GetSum(Vortex.GetValue)==sc:GetLevel()
 end
 
-function Vortex.CheckFilter(tc,f,sc,tp)
+function Vortex.CheckFilter(tc,f,sc,tp,is_core)
+    if not f then return true end
     if type(f)=="function" then return f(tc,sc,tp) end
-    if type(f)=="number" then return Vortex.GetValue(tc)==f end
+    if type(f)=="number" then
+        if is_core then
+            --Core
+            return tc:IsType(TYPE_XYZ) and tc:GetRank()==f
+        else
+            --Fuel
+            return Vortex.GetValue(tc)==f
+        end
+    end
     return true
 end
 
