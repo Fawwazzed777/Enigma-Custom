@@ -82,12 +82,18 @@ function Vortex.ResconFilter(g,e,tp,mg,c)
     local f1=info[1]
     local f2=info[2]
     local min_core=e:GetLabel()
-    local sc=e:GetHandler()    
+    local sc=e:GetHandler()        
     local core_filter=function(tc) return Vortex.CheckFilter(tc,f1,sc,tp,true) end
-    local fuel_filter=function(tc) return Vortex.CheckFilter(tc,f2,sc,tp,false) end
+    local fuel_filter=function(tc) return Vortex.CheckFilter(tc,f2,sc,tp,false) end    
     local core_count=g:FilterCount(core_filter,nil)
     local fuel_count=g:FilterCount(fuel_filter,nil)
-    return core_count>=min_core and (#g==core_count+fuel_count)
+    local total_value=0
+    for tc in aux.Next(g) do
+        total_value = total_value + Vortex.GetValue(tc)
+    end
+    return core_count>=min_core 
+        and (#g==core_count+fuel_count) 
+        and total_value==sc:GetLevel()
 end
 
 function Vortex.CheckFilter(tc,f,sc,tp,is_core)
@@ -110,19 +116,20 @@ function Vortex.Condition(e,c)
     if c==nil then return true end
     local tp=c:GetControler()
     local info=e:GetLabelObject()
+    if not info then return false end
     local extra_con=info[3]
     
     if Duel.GetFlagEffect(tp,VORTEX_ACTIVITY_FLAG)==0 then return false end
     if extra_con and not extra_con(e,c) then return false end
     
     local rg=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,0,nil)
-    return aux.SelectUnselectGroup(rg,e,tp,2,99,Vortex.ResconFilter,0,c)
+    return aux.SelectUnselectGroup(rg,e,tp,1,99,Vortex.ResconFilter,0,c)
 end
 
 function Vortex.Target(e,tp,eg,ep,ev,re,r,rp,chk,c)
     local rg=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,0,nil)
     local cancelable=Duel.IsSummonCancelable()
-    local sg=aux.SelectUnselectGroup(rg,e,tp,2,99,Vortex.ResconFilter,1,tp,HINTMSG_REMOVE,Vortex.ResconFilter,nil,cancelable)
+    local sg=aux.SelectUnselectGroup(rg,e,tp,1,99,Vortex.ResconFilter,1,tp,HINTMSG_REMOVE,Vortex.ResconFilter,nil,cancelable)
     if sg and #sg>0 then
         sg:KeepAlive()
         local info=e:GetLabelObject()
