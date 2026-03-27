@@ -45,7 +45,7 @@ if not Vortex.GlobalCheck then
     Duel.RegisterEffect(ge1,0)
 end
 
-function Vortex.AddProcedure(c,f1,f2)
+function Vortex.AddProcedure(c,f1,f2,extra_con)
     local e0=Effect.CreateEffect(c)
     e0:SetType(EFFECT_TYPE_SINGLE)
     e0:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SET_AVAILABLE)
@@ -58,7 +58,7 @@ function Vortex.AddProcedure(c,f1,f2)
     e1:SetCode(EFFECT_SPSUMMON_PROC)
     e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
     e1:SetRange(LOCATION_EXTRA)
-    e1:SetLabelObject({f1,f2})
+    e1:SetLabelObject({f1,f2,extra_con})
     e1:SetCondition(Vortex.Condition)
     e1:SetTarget(Vortex.Target)
     e1:SetOperation(Vortex.Operation)

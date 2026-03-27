@@ -6,10 +6,12 @@ local s,id=GetID()
 s.Vortex=true
 function s.initial_effect(c)	
 	local extra_con=function(e,c)
+	if c==nil then return true end
         local tp=c:GetControler()
-        return Duel.GetMatchingGroupCount(function(bc) 
+        local g=Duel.GetMatchingGroup(function(bc) 
             return (bc:IsSetCard(0x145) or bc:IsSetCard(0x344)) and bc:IsFaceup() 
-        end,tp,LOCATION_REMOVED,0,nil)>=5
+        end,tp,LOCATION_REMOVED,0,nil)
+		return #g>=5
     end
 
     local f2=function(tc,sc,tp) return not tc:IsType(TYPE_XYZ) and tc:IsLevelBelow(4) end
