@@ -6,7 +6,7 @@ local s,id=GetID()
 s.Vortex=true
 function s.initial_effect(c)
     --VORTEX SUMMON
-    -- Core: Rank 4, Fuel: Non-Xyz (Apapun)
+    --Core: Rank 4, Fuel: Non-Xyz (Non-Rank)
     local f1=function(tc,sc,tp) return tc:IsType(TYPE_XYZ) and tc:IsRank(4) end
     local f2=function(tc,sc,tp) return not tc:IsType(TYPE_XYZ) end
     Vortex.AddProcedure(c,f1,f2,nil)

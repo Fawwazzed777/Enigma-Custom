@@ -73,11 +73,11 @@ function Vortex.AddProcedure(c,f1,f2)
 end
 function Vortex.ResconFilter(sg,e,tp,mg)
     local info=e:GetLabelObject()
-    local f1,f2=info[1],info[2]
-    local sc=e:GetHandler()
-    
-    local g_core=sg:Filter(f1,nil,sc,tp)
-    local g_fuel=sg:Filter(f2,nil,sc,tp)
+    local filters=(type(info[1])=="table") and info[1] or info
+    local f1,f2=filters[1],filters[2]
+    local sc=e:GetHandler()  
+    local g_core=sg:Filter(f1 or aux.TRUE,nil,sc,tp)
+    local g_fuel=sg:Filter(f2 or aux.TRUE,nil,sc,tp)
     
     if #g_core<1 or #g_fuel<1 then return false end
     if #sg~=(#g_core+#g_fuel) then return false end
@@ -106,7 +106,7 @@ function Vortex.Target(e,tp,eg,ep,ev,re,r,rp,chk,c)
     local sg=aux.SelectUnselectGroup(rg,e,tp,2,99,Vortex.ResconFilter,1,tp,HINTMSG_REMOVE,Vortex.ResconFilter,nil,cancelable)
     if sg and #sg>0 then
         sg:KeepAlive()
-        local info = e:GetLabelObject()
+        local info=e:GetLabelObject()
         e:SetLabelObject({info,sg})
         return true
     end
@@ -122,10 +122,11 @@ function Vortex.Operation(e,tp,eg,ep,ev,re,r,rp,c)
     local f2=info[2]
     c:SetMaterial(sg) 
     --Filter core and fuel
-    local g_core=sg:Filter(f1,nil,c,tp)
+    local g_core=sg:Filter(f1 or aux.TRUE,nil,c,tp)
     local g_fuel=sg:Filter(function(tc) return not f1(tc,c,tp) end,nil)   
     Duel.SendtoDeck(g_core,nil,2,REASON_MATERIAL+REASON_VORTEX)
-    Duel.SendtoGrave(g_fuel,REASON_MATERIAL+REASON_VORTEX)    
+    Duel.SendtoGrave(g_fuel,REASON_MATERIAL+REASON_VORTEX)
+	e:SetLabelObject(info)	
     sg:DeleteGroup()
 end
 
