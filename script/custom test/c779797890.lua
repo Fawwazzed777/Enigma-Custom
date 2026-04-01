@@ -3,7 +3,7 @@ local s,id=GetID()
 function s.initial_effect(c)
 	--Fusion Material
 	c:EnableReviveLimit()
-	Fusion.AddProcFunRep(c,s.matfilter,3,3,s.gcheck)
+	Fusion.AddProcMixN(c,true,true,s.matfilter,3,s.gcheck)
 	--Banish on Special Summon
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
@@ -43,7 +43,7 @@ s.material_setcode={0x145,0x344}
 function s.matfilter(c,fc,sumtype,tp)
 	return c:HasLevel() and (c:IsSetCard(0x344) or c:IsSetCard(0x145) or c:IsSummonType(SUMMON_TYPE_SPECIAL))
 end
-function s.gcheck(g)
+function s.gcheck(g,fc,tp)
 	return g:GetClassCount(Card.GetLevel)==#g
 end
 function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
