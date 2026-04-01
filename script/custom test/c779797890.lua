@@ -3,7 +3,7 @@ local s,id=GetID()
 function s.initial_effect(c)
 	--Fusion Material
 	c:EnableReviveLimit()
-	Fusion.AddProcMixN(c,true,true,s.matfilter,3,s.gcheck)
+	Fusion.AddProcMix(c,true,true,s.matfilter1,s.matfilter2,s.matfilter3)
 	--Banish on Special Summon
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
@@ -40,12 +40,20 @@ function s.initial_effect(c)
 end
 s.listed_series={0x145,0x344}
 s.material_setcode={0x145,0x344}
-function s.matfilter(c,fc,sumtype,tp)
+function s.basefilter(c)
 	return c:HasLevel() and (c:IsSetCard(0x344) or c:IsSetCard(0x145) or c:IsSummonType(SUMMON_TYPE_SPECIAL))
 end
-function s.gcheck(g,fc,tp)
-	return g:GetClassCount(Card.GetLevel)==#g
+
+function s.matfilter1(c,fc,sumtype,tp,mg)
+	return s.basefilter(c) and (not mg or not mg:IsExists(Card.IsLevel,1,c,c:GetLevel()))
 end
+function s.matfilter2(c,fc,sumtype,tp,mg)
+	return s.basefilter(c) and (not mg or not mg:IsExists(Card.IsLevel,1,c,c:GetLevel()))
+end
+function s.matfilter3(c,fc,sumtype,tp,mg)
+	return s.basefilter(c) and (not mg or not mg:IsExists(Card.IsLevel,1,c,c:GetLevel()))
+end
+
 function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) and chkc:IsAbleToRemove() end
 	if chk==0 then return Duel.IsExistingTarget(Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,1,nil) end
