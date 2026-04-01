@@ -26,6 +26,23 @@ function s.initial_effect(c)
 	e3:SetCondition(s.tscon)
 	e3:SetOperation(s.tsop)
 	c:RegisterEffect(e3)
+	--Equip from GY
+	local e4=Effect.CreateEffect(c)
+	e4:SetDescription(aux.Stringid(id,0))
+	e4:SetCategory(CATEGORY_EQUIP)
+	e4:SetType(EFFECT_TYPE_IGNITION)
+	e4:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e4:SetRange(LOCATION_GY)
+	e4:SetCountLimit(1,id)
+	e4:SetTarget(s.gytg)
+	e4:SetOperation(s.gyop)
+	c:RegisterEffect(e4)
+	local e5=Effect.CreateEffect(c)
+	e5:SetType(EFFECT_TYPE_EQUIP)
+	e5:SetCode(EFFECT_IMMUNE_EFFECT)
+	e5:SetCondition(s.immcon)
+	e5:SetValue(s.efilter)
+	c:RegisterEffect(e5)
 end
 function s.tgeq(e,tp,eg,ev,ep,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and chkc:IsFaceup() end
@@ -59,4 +76,30 @@ function s.tsop(e,tp,eg,ep,ev,re,r,rp)
 		token:RegisterEffect(e1)	
 		Duel.SpecialSummonComplete()
 	end
+end
+function s.gyfilter(c)
+	return c:IsFaceup() and c:IsCode(999881888)
+end
+function s.gytg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE) and s.gyfilter(chkc) end
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0
+		and Duel.IsExistingTarget(s.gyfilter,tp,LOCATION_MZONE,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
+	Duel.SelectTarget(tp,s.gyfilter,tp,LOCATION_MZONE,0,1,1,nil)
+	Duel.SetOperationInfo(0,CATEGORY_EQUIP,e:GetHandler(),1,0,0)
+end
+function s.gyop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local tc=Duel.GetFirstTarget()
+	if c:IsRelateToEffect(e) and tc:IsRelateToEffect(e) and tc:IsFaceup() then
+		Duel.Equip(tp,c,tc)
+	end
+end
+function s.immcon(e)
+	local ec=e:GetHandler():GetEquippedTo()
+	return ec and ec:IsAttribute(ATTRIBUTE_DIVINE)
+end
+function s.efilter(e,te)
+	if not te then return false end
+	return te:IsHasCategory(CATEGORY_TOHAND+CATEGORY_DESTROY+CATEGORY_REMOVE+CATEGORY_TODECK+CATEGORY_RELEASE+CATEGORY_TOGRAVE)
 end
