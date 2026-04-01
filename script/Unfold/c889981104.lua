@@ -100,7 +100,17 @@ function s.immcon(e)
 	local ec=e:GetHandler():GetEquipTarget()
 	return ec and ec:IsAttribute(ATTRIBUTE_DIVINE) and ec:IsControler(tp)
 end
+function s.leaveChk(c,category)
+	local ex,tg=Duel.GetOperationInfo(0,category)
+	return ex and tg~=nil and tg:IsContains(c)
+end
 function s.efilter(e,te)
-	if not te then return false end
-	return te:IsHasCategory(CATEGORY_TOHAND+CATEGORY_DESTROY+CATEGORY_REMOVE+CATEGORY_TODECK+CATEGORY_RELEASE+CATEGORY_TOGRAVE)
+	local c=e:GetOwner()
+	local tc=te:GetOwner()
+	return (te:IsTrapEffect() and te:IsActivated())
+		or (((te:IsSpellEffect())
+		or (te:IsMonsterEffect() and tc~=c))
+		and ((c:GetDestination()>0 and c:GetReasonEffect()==te)
+		or (s.leaveChk(c,CATEGORY_TOHAND) or s.leaveChk(c,CATEGORY_DESTROY) or s.leaveChk(c,CATEGORY_REMOVE)
+		or s.leaveChk(c,CATEGORY_TODECK) or s.leaveChk(c,CATEGORY_RELEASE) or s.leaveChk(c,CATEGORY_TOGRAVE))))
 end
