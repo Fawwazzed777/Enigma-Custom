@@ -1,5 +1,6 @@
 --Lukee The Windstalker
-Duel.LoadScript("c999110001.lua")
+if not ENIGMA_PATCH then Duel.LoadScript("enigma_utility.lua") end
+if not ENIGMA_CONSTANTS_IMPORTED then Duel.LoadScript("enigma_constant.lua") end
 local s,id=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()
@@ -11,7 +12,7 @@ function s.initial_effect(c)
 	attribute:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CANNOT_NEGATE)
 	attribute:SetCode(EFFECT_CHANGE_RACE)
 	attribute:SetRange(LOCATION_ALL)
-	attribute:SetValue(0x1c0101)
+	attribute:SetValue(RACE_VIRTUOUS)
 	c:RegisterEffect(attribute)
 	--replace
 	local e1=Effect.CreateEffect(c)
