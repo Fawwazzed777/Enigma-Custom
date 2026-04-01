@@ -20,7 +20,7 @@ function s.spfilter(c,e,tp,mc,rk,pg)
 	if c.rum_limit and not c.rum_limit(mc,e) then return false end
 	return c:IsType(TYPE_XYZ) and mc:IsType(TYPE_XYZ,c,SUMMON_TYPE_XYZ,tp)
 		and Duel.GetLocationCountFromEx(tp,tp,mc,c)>0
-		and c:IsSetCard(0x344) and c:IsRank(rk) and mc:IsCanBeXyzMaterial(c,tp)
+		and c:IsAttribute(ATTRIBUTE_DARK) and c:IsRank(rk) and mc:IsCanBeXyzMaterial(c,tp)
 		and (#pg<=0 or pg:IsContains(mc)) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false)
 end
 function s.target(e,tp,eg,ev,ep,re,r,rp,chk,chkc)
@@ -82,8 +82,41 @@ function s.sumop(e,tp,eg,ev,ep,re,r,rp)
 		end
 		sc:SetMaterial(Group.FromCards(tc))
 		Duel.Overlay(sc,Group.FromCards(tc))
-		Duel.SpecialSummon(sc,SUMMON_TYPE_XYZ,tp,tp,false,false,POS_FACEUP)
-		sc:CompleteProcedure()
+		if Duel.SpecialSummon(sc,SUMMON_TYPE_XYZ,tp,tp,false,false,POS_FACEUP)>0 then
+			sc:CompleteProcedure()
+			if sc:IsSetCard(0x344) then			
+				--Tribute to destroy all opponent's monsters(Enigmation exclusive)
+				local e3=Effect.CreateEffect(e:GetHandler())
+				e3:SetDescription(aux.Stringid(id,1))
+				e3:SetCategory(CATEGORY_DESTROY+CATEGORY_RELEASE)
+				e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+				e3:SetCode(EVENT_BATTLE_START)
+				e3:SetRange(LOCATION_MZONE)
+				e3:SetCondition(s.descon)
+				e3:SetTarget(s.destg)
+				e3:SetOperation(s.desop)
+				e3:SetReset(RESET_EVENT+RESETS_STANDARD)
+				sc:RegisterEffect(e3,true)
+			end
+		end
 	end
 end
-
+function s.descon(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	return c:IsRelateToBattle()
+end
+function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	local g=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_MZONE,nil)
+	Duel.SetOperationInfo(0,CATEGORY_RELEASE,e:GetHandler(),1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,#g,0,0)
+end
+function s.desop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if c:IsRelateToEffect(e) and Duel.Release(c,REASON_EFFECT)>0 then
+		local g=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_MZONE,nil)
+		if #g>0 then
+			Duel.Destroy(g,REASON_EFFECT)
+		end
+	end
+end
