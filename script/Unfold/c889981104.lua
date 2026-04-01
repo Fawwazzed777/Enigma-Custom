@@ -1,4 +1,4 @@
---Vent
+--Summoning Beast: Vertak
 local s,id=GetID()
 function s.initial_effect(c)
 	--equip to a opm
@@ -43,19 +43,20 @@ end
 function s.tscon(e,tp,eg,ev,ep,re,r,rp)
 	return eg:IsContains(e:GetHandler())
 end
-function s.tsop(e,tp,eg,ev,ep,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
-	if Duel.IsPlayerCanSpecialSummon(tp) then
-		local token=Duel.CreateToken(tp,999881888)
-		local atk=e:GetHandler():GetEquipTarget():GetAttack()
-		local c=e:GetHandler()
-		Duel.SpecialSummonStep(token,0,tp,tp,false,false,POS_FACEUP)
+function s.tsop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local ec=c:GetEquipTarget()
+	if not ec or Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	local token=Duel.CreateToken(tp,999881888)
+	if Duel.SpecialSummonStep(token,0,tp,tp,false,false,POS_FACEUP) then
+		local atk=ec:GetAttack()
+		--Buff ATK +1000
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_SET_ATTACK)
 		e1:SetValue(atk+1000)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-		token:RegisterEffect(e1)
+		token:RegisterEffect(e1)	
 		Duel.SpecialSummonComplete()
 	end
 end
