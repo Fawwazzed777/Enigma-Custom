@@ -59,18 +59,29 @@ function s.copyop(e,tp,eg,ep,ev,re,r,rp)
 		e3:SetValue(tpe)
 		e3:SetReset(RESET_EVENT+RESETS_STANDARD)
 		token:RegisterEffect(e3)		
-		--Copy Effects
-		token:CopyEffect(code,RESET_EVENT+RESETS_STANDARD)
-		--Fail Safe
+		--Fail Safe (Prevent the effect from triggering if the source is itself but is already outside the field)
 		local e4=Effect.CreateEffect(c)
         e4:SetType(EFFECT_TYPE_SINGLE)
         e4:SetCode(EFFECT_CANNOT_TRIGGER)
         e4:SetRange(LOCATION_MZONE)
         e4:SetCondition(s.trigcon)
-        token:RegisterEffect(e4)		
+        token:RegisterEffect(e4)
+		local e5=Effect.CreateEffect(c)
+		e5:SetType(EFFECT_TYPE_FIELD)
+		e5:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+		e5:SetCode(EFFECT_CANNOT_ACTIVATE)
+		e5:SetRange(LOCATION_MZONE)
+		e5:SetTargetRange(1,0)
+		e5:SetValue(s.aclimit)
+		token:RegisterEffect(e5)
+		--Copy Effects
+		token:CopyEffect(code,RESET_EVENT+RESETS_STANDARD)		
 		Duel.SpecialSummonComplete()
 	end
 end
 function s.trigcon(e)
     return not e:GetHandler():IsLocation(LOCATION_MZONE)
+end
+function s.aclimit(e,re,tp)
+	return re:GetHandler()==e:GetHandler() and not re:GetHandler():IsLocation(LOCATION_ONFIELD)
 end
