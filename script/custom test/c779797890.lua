@@ -26,7 +26,7 @@ function s.initial_effect(c)
 	e2:SetTarget(s.pytg)
 	e2:SetOperation(s.pyop)
 	c:RegisterEffect(e2)	
-	--Add to hand when banished
+	--Add to hand if banished
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,2))
 	e3:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
