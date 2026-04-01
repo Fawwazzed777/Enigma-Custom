@@ -1,4 +1,4 @@
---Summoning Beast: Vertak
+--Summoning Beast: Vacuosa
 local s,id=GetID()
 function s.initial_effect(c)
 	--equip to a opm
