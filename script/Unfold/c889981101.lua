@@ -8,14 +8,13 @@ function s.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_QUICK_O)
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e1:SetRange(LOCATION_EXTRA)
 	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_IMMEDIATELY_APPLY)
 	e1:SetCountLimit(1,id)
-	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetCondition(function() return Duel.IsBattlePhase() and Duel.GetFlagEffect(0,id)+Duel.GetFlagEffect(1,id)>=4 end)
-	e1:SetTarget(s.tg)
-	e1:SetOperation(s.op)
+	e1:SetCode(EVENT_ATTACK_ANNOUNCE)
+	e1:SetCondition(s.spcon)
+	e1:SetOperation(s.spop)
 	c:RegisterEffect(e1)
 	--Send card(s) per attack declared
 	local e2=Effect.CreateEffect(c)
@@ -40,27 +39,37 @@ function s.initial_effect(c)
 	end)
 end
 s.listed_names={889981100}
---Condition
-function s.filter(c,sc)
-	return c:IsMonster() and c:IsCode(889981100) and c:IsFaceup()
+function s.spfilter(c,tp,sc)
+	return c:IsFaceup() and c:IsCode(889981100) and c:IsCanBeXyzMaterial(sc)
+		and Duel.GetLocationCountFromEx(tp,tp,c,sc)>0
 end
-function s.tg(e,tp,eg,ev,ep,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_MZONE,0,1,nil) and e:GetHandler():IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false) end
-	Duel.SetChainLimit(aux.FALSE)
-	e:SetLabelObject(nil)
+
+function s.spcon(e,tp,eg,ep,ev,re,r,rp)
+	local ph=Duel.GetCurrentPhase()
+	local attack_count=Duel.GetFlagEffect(0,id)+Duel.GetFlagEffect(1,id)	
+	return ph>=PHASE_BATTLE_START and ph<=PHASE_BATTLE 
+		and attack_count>=4
+		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_MZONE,0,1,nil,tp,e:GetHandler())
 end
-function s.op(e,tp,eg,ev,ep,re,r,rp)
+function s.spop(e,tp,eg,ev,ep,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false) then
-		local g=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_MZONE,0,1,1,nil)
-		if #g>0 then
+	if Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_MZONE,0,1,nil,tp,c)
+		and Duel.SelectEffectYesNo(tp,c,aux.Stringid(id,3)) then		
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
+		local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_MZONE,0,1,1,nil,tp,c)
+		local tc=g:GetFirst()
+		if tc then
+			local mg=tc:GetOverlayGroup()
+			if #mg>0 then
+				Duel.Overlay(c,mg)
+			end
 			c:SetMaterial(g)
 			Duel.Overlay(c,g)
 			Duel.SpecialSummon(c,SUMMON_TYPE_XYZ,tp,tp,false,false,POS_FACEUP)
-			e:SetLabelObject(g:GetFirst())
 			c:CompleteProcedure()
-end
-end
+			Duel.RaiseEvent(c,EVENT_SPSUMMON_SUCCESS,e,REASON_EFFECT,tp,tp,0)
+		end
+	end
 end
 
 function s.wcon(e,tp,eg,ep,ev,re,r,rp)
