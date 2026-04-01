@@ -10,7 +10,7 @@ function s.initial_effect(c)
 	attribute:SetType(EFFECT_TYPE_SINGLE)
 	attribute:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CANNOT_NEGATE)
 	attribute:SetCode(EFFECT_CHANGE_RACE)
-	attribute:SetRange(0x7)
+	attribute:SetRange(LOCATION_ALL)
 	attribute:SetValue(0x1c0101)
 	c:RegisterEffect(attribute)
 	--replace
@@ -56,17 +56,17 @@ function s.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	else return false end
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(1-tp,LOCATION_MZONE,nil,LOCATION_REASON_COUNT)+Duel.GetLocationCount(tp,LOCATION_MZONE,nil,LOCATION_REASON_COUNT)>0 end
+	if chk==0 then return true end
 	local zone=Duel.SelectDisableField(tp,1,LOCATION_MZONE,LOCATION_MZONE,0,true)
 	Duel.Hint(HINT_ZONE,tp,zone)
-	e:SetLabel(zone)
+	Duel.RegisterFlagEffect(tp,id,0,0,0,zone) 
 end
 function s.thfilter(c,tp,zone)
 	return c:IsFaceup() and aux.IsZone(c,zone,tp) 
 end
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)
-	local zone=e:GetLabelObject():GetLabel()
-	return eg:IsExists(s.thfilter,1,nil,tp,zone)
+	local zone=Duel.GetFlagEffectLabel(tp,id)
+	return zone and eg:IsExists(s.thfilter,1,nil,tp,zone)
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
