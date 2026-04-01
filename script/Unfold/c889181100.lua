@@ -73,30 +73,26 @@ function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
-	local zone=e:GetLabelObject():GetLabel()
+	local zone=Duel.GetFlagEffectLabel(tp,id)
 	local g=eg:Filter(s.thfilter,nil,tp,zone)
-	g:AddCard(e:GetHandler())
-	Duel.SetOperationInfo(0,CATEGORY_ATKCHANGE,g,2,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_ATKCHANGE,g,#g+1,0,0)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local zone=e:GetLabelObject():GetLabel()
+	local zone=Duel.GetFlagEffectLabel(tp,id)
+	if not zone then return end
 	local g=eg:Filter(s.thfilter,nil,tp,zone)
-	local c1=g:GetFirst()
-	if c:IsRelateToEffect(e) and #g>0 then
-			local e1=Effect.CreateEffect(c)
-			e1:SetType(EFFECT_TYPE_SINGLE)
-			e1:SetRange(LOCATION_MZONE)
-			e1:SetCode(EFFECT_UPDATE_ATTACK)
-			e1:SetValue(1000)
-			e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
-			c:RegisterEffect(e1)
-			local e2=Effect.CreateEffect(c)
-			e2:SetType(EFFECT_TYPE_SINGLE)
-			e2:SetRange(LOCATION_MZONE)
-			e2:SetCode(EFFECT_UPDATE_ATTACK)
-			e2:SetValue(1000)
-			e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
-			c1:RegisterEffect(e2)
-end
+	local tc=g:GetFirst()
+	if c:IsRelateToEffect(e) and c:IsFaceup() and tc then
+		--Update Lukee ATK
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_UPDATE_ATTACK)
+		e1:SetValue(1000)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+		c:RegisterEffect(e1)		
+		--Update The Summoned monster ATK 
+		local e2=e1:Clone()
+		tc:RegisterEffect(e2)
+	end
 end
