@@ -3,7 +3,7 @@ local s,id=GetID()
 function s.initial_effect(c)
 	--Fusion Material
 	c:EnableReviveLimit()
-	Fusion.AddProcMix(c,true,true,s.matfilter,s.matfilter,s.matfilter)
+	Fusion.AddProcMixN(c,true,true,s.matfilter,3,s.gcheck)
 	s.material_filter=function(mc,mg) return mg:IsExists(s.matfilter,1,mc) and not mg:IsExists(Card.IsRace,1,mc,mc:GetRace())end
 	--Banish on Special Summon
 	local e1=Effect.CreateEffect(c)
