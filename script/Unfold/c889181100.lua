@@ -48,13 +48,13 @@ function s.initial_effect(c)
 	c:RegisterEffect(e5)
 	local e_visual=Effect.CreateEffect(c)
 	e_visual:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e_visual:SetCode(EVENT_TURN_START)
+	e_visual:SetCode(EVENT_PHASE+PHASE_STANDBY)
+	e_visual:SetCountLimit(1)
 	e_visual:SetOperation(function(e,tp)
-		local zone=Duel.GetFlagEffectLabel(tp,id)
-		if zone then Duel.Hint(HINT_ZONE,tp,zone) end
-	end)
-	Duel.RegisterEffect(e_visual,tp)
-end
+	local zone=Duel.GetFlagEffectLabel(tp,id)
+	if zone then Duel.Hint(HINT_ZONE,tp,zone) end
+end)
+Duel.RegisterEffect(e_visual,tp)
 function s.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return c:IsReason(REASON_EFFECT) and c:IsFaceup() 
@@ -65,22 +65,19 @@ function s.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	else return false end
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-    if chk==0 then 
-        return Duel.GetLocationCount(1-tp,LOCATION_MZONE,nil,LOCATION_REASON_COUNT)
-               +Duel.GetLocationCount(tp,LOCATION_MZONE,nil,LOCATION_REASON_COUNT)>0 
-    end
-    local zone=Duel.SelectDisableField(tp,1,LOCATION_MZONE,LOCATION_MZONE,0,true)
-    Duel.Hint(HINT_ZONE,tp,zone)
-    Duel.ResetFlagEffect(tp,id)
-    Duel.RegisterFlagEffect(tp,id,0,0,1,zone) 
+	if chk==0 then return Duel.GetLocationCount(1-tp,LOCATION_MZONE,nil,LOCATION_REASON_COUNT)
+		+Duel.GetLocationCount(tp,LOCATION_MZONE,nil,LOCATION_REASON_COUNT)>0 end
+	local zone=Duel.SelectDisableField(tp,1,LOCATION_MZONE,LOCATION_MZONE,0,true)
+	Duel.Hint(HINT_ZONE,tp,zone)
+	Duel.ResetFlagEffect(tp,id)
+	Duel.RegisterFlagEffect(tp,id,0,0,1,zone) 
 end
 function s.thfilter(c,tp,zone)
 	return c:IsFaceup() and aux.IsZone(c,zone,tp) 
 end
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)
-    local zone=Duel.GetFlagEffectLabel(tp,id)
-    if not zone then return false end
-    return eg:IsExists(s.thfilter,1,nil,tp,zone)
+	local zone=Duel.GetFlagEffectLabel(tp,id)
+	return zone and eg:IsExists(s.thfilter,1,nil,tp,zone)
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
