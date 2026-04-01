@@ -1,9 +1,10 @@
 --Enigmation - Phantasm Chimera
 local s,id=GetID()
 function s.initial_effect(c)
-	-- Fusion Material
+	--Fusion Material
 	c:EnableReviveLimit()
 	Fusion.AddProcMix(c,true,true,s.matfilter1,s.matfilter2,s.matfilter3)
+	s.material_filter=function(mc,mg) return mg:IsExists(s.matfilter,1,mc) and not mg:IsExists(Card.IsRace,1,mc,mc:GetRace())end
 	--Banish on Special Summon
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
@@ -40,8 +41,8 @@ function s.initial_effect(c)
 end
 s.listed_series={0x145,0x344}
 s.material_setcode={0x145,0x344}
-function s.matfilter1(c,fc,sumtype,tp)
-    return c:IsSetCard(0x145) or c:IsSetCard(0x344)
+function s.matfilter(c,fc,sumtype,tp)
+    return (c:IsSetCard(0x344) or c:IsSetCard(0x145) or c:IsSummonType(SUMMON_TYPE_SPECIAL))
 end
 function s.matfilter2(c,fc,sumtype,tp,mg,sg)
 	if not sg then return false end
