@@ -39,6 +39,9 @@ function s.initial_effect(c)
     c:RegisterEffect(e3)
 end
 s.listed_series={0x344}
+function s.spfilter(c,tp)
+	return c:IsSummonPlayer(1-tp) and c:IsControler(1-tp) and c:IsFaceup() and c:IsAbleToRemove()
+end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
     return eg:IsExists(function(c)return c:IsControler(1-tp) and c:IsAbleToRemove()end,1,nil) 
 	and Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsSetCard,0x344),tp,LOCATION_ONFIELD,0,1,nil)
@@ -48,30 +51,26 @@ function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
     Duel.PayLPCost(tp,1000)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-    local g=eg:Filter(Card.IsControler,nil,1-tp):Filter(Card.IsAbleToRemove,nil)
-    local c=e:GetHandler()
-    if chk==0 then 
-        return #g>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-        and c:IsCanBeSpecialSummoned(e,0,tp,false,false) 
-    end
-    Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,0,0)
-    Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,0,0)
+	local g=eg:Filter(s.spfilter,nil,tp)
+	if chk==0 then return #g>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end	
+	Duel.SetTargetCard(g)
+	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
-local c=e:GetHandler()
-    local g=eg:Filter(Card.IsControler,nil,1-tp):Filter(Card.IsLocation,nil,LOCATION_MZONE):Filter(Card.IsAbleToRemove,nil)   
-    if #g>0 then
-        Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-        local sg=g:Select(tp,1,1,nil)
-        if #sg>0 then
-            Duel.HintSelection(sg)
-            if Duel.Remove(sg,POS_FACEUP,REASON_EFFECT)>0 then
-                if c:IsRelateToEffect(e) then
-                    Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
-                end
-            end
-        end
-    end
+	local c=e:GetHandler()
+	local g=eg:Filter(s.spfilter,nil,tp):Filter(Card.IsRelateToEffect,nil,e)	
+	if #g>0 then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+		local sg=g:Select(tp,1,1,nil)
+		Duel.HintSelection(sg)		
+		if Duel.Remove(sg,POS_FACEUP,REASON_EFFECT)>0 then
+			if c:IsRelateToEffect(e) then
+				Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
+			end
+		end
+	end
 end
 --Other
 function s.othercon(e,tp,eg,ep,ev,re,r,rp)
