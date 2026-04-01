@@ -3,7 +3,7 @@ local s,id=GetID()
 function s.initial_effect(c)
 	--Fusion Material
 	c:EnableReviveLimit()
-	Fusion.AddProcMix(c,true,true,s.matfilter1,s.matfilter2,s.matfilter3)
+	Fusion.AddProcMix(c,true,true,s.matfilter,s.matfilter,s.matfilter)
 	s.material_filter=function(mc,mg) return mg:IsExists(s.matfilter,1,mc) and not mg:IsExists(Card.IsRace,1,mc,mc:GetRace())end
 	--Banish on Special Summon
 	local e1=Effect.CreateEffect(c)
@@ -44,20 +44,8 @@ s.material_setcode={0x145,0x344}
 function s.matfilter(c,fc,sumtype,tp)
     return (c:IsSetCard(0x344) or c:IsSetCard(0x145) or c:IsSummonType(SUMMON_TYPE_SPECIAL))
 end
-function s.matfilter2(c,fc,sumtype,tp,mg,sg)
-	if not sg then return false end
-	local mc=sg:GetFirst()
-	return ((c:IsSummonType(SUMMON_TYPE_SPECIAL) and c:IsLocation(LOCATION_MZONE)) or c:IsSetCard(0x344))
-		and not c:IsRace(mc:GetRace())
-end
-function s.matfilter3(c,fc,sumtype,tp,mg,sg)
-	if not sg then return false end
-	local mc=sg:GetFirst()
-	return (c:IsSetCard(0x145) or c:IsSetCard(0x344)) 
-		and not c:IsRace(mc:GetRace())
-end
-function s.fusfilter(c,mc,fc,sumtype,tp)
-    return c:IsCode(mc:GetCode()) or c:IsRace(mc:GetRace())
+function s.gcheck(g)
+    return g:GetClassCount(Card.GetRace)==#g
 end
 function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) and chkc:IsAbleToRemove() end
