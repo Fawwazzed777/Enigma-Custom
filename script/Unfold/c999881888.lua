@@ -60,7 +60,17 @@ function s.copyop(e,tp,eg,ep,ev,re,r,rp)
 		e3:SetReset(RESET_EVENT+RESETS_STANDARD)
 		token:RegisterEffect(e3)		
 		--Copy Effects
-		token:CopyEffect(code,RESET_EVENT+RESETS_STANDARD)		
+		token:CopyEffect(code,RESET_EVENT+RESETS_STANDARD)
+		--Fail Safe
+		local e4=Effect.CreateEffect(c)
+        e4:SetType(EFFECT_TYPE_SINGLE)
+        e4:SetCode(EFFECT_CANNOT_TRIGGER)
+        e4:SetRange(LOCATION_MZONE)
+        e4:SetCondition(s.trigcon)
+        token:RegisterEffect(e4)		
 		Duel.SpecialSummonComplete()
 	end
+end
+function s.trigcon(e)
+    return not e:GetHandler():IsLocation(LOCATION_MZONE)
 end
