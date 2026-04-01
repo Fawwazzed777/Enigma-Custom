@@ -108,3 +108,4 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 			c1:RegisterEffect(e2)
 end
 end
+end
