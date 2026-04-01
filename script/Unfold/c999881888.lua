@@ -54,12 +54,13 @@ function s.copyop(e,tp,eg,ep,ev,re,r,rp)
 		--Type Gain
 		local e3=Effect.CreateEffect(c)
 		e3:SetType(EFFECT_TYPE_SINGLE)
+		e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE)
 		e3:SetCode(EFFECT_ADD_TYPE)
 		e3:SetValue(tpe)
 		e3:SetReset(RESET_EVENT+RESETS_STANDARD)
 		token:RegisterEffect(e3)		
 		--Copy Effects
-		token:ReplaceEffect(code,RESET_EVENT+RESETS_STANDARD)		
+		token:CopyEffect(code,RESET_EVENT+RESETS_STANDARD)		
 		Duel.SpecialSummonComplete()
 	end
 end
