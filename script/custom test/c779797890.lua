@@ -44,14 +44,14 @@ function s.basefilter(c)
 	return c:HasLevel() and (c:IsSetCard(0x344) or c:IsSetCard(0x145) or c:IsSummonType(SUMMON_TYPE_SPECIAL))
 end
 
-function s.matfilter1(c,fc,sumtype,tp,mg)
-	return s.basefilter(c) and (not mg or not mg:IsExists(Card.IsLevel,1,c,c:GetLevel()))
+function s.matfilter1(c,fc,sumtype,tp,sub,mg,sg)
+	return s.basefilter(c) and (not sg or not sg:IsExists(Card.IsLevel,1,c,c:GetLevel()))
 end
-function s.matfilter2(c,fc,sumtype,tp,mg)
-	return s.basefilter(c) and (not mg or not mg:IsExists(Card.IsLevel,1,c,c:GetLevel()))
+function s.matfilter2(c,fc,sumtype,tp,sub,mg,sg)
+	return s.basefilter(c) and (not sg or not sg:IsExists(Card.IsLevel,1,c,c:GetLevel()))
 end
-function s.matfilter3(c,fc,sumtype,tp,mg)
-	return s.basefilter(c) and (not mg or not mg:IsExists(Card.IsLevel,1,c,c:GetLevel()))
+function s.matfilter3(c,fc,sumtype,tp,sub,mg,sg)
+	return s.basefilter(c) and (not sg or not sg:IsExists(Card.IsLevel,1,c,c:GetLevel()))
 end
 
 function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
