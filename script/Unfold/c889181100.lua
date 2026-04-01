@@ -55,6 +55,7 @@ function s.initial_effect(c)
 	if zone then Duel.Hint(HINT_ZONE,tp,zone) end
 end)
 Duel.RegisterEffect(e_visual,tp)
+end
 function s.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return c:IsReason(REASON_EFFECT) and c:IsFaceup() 
@@ -106,6 +107,5 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 			e2:SetValue(1000)
 			e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 			c1:RegisterEffect(e2)
-end
 end
 end
