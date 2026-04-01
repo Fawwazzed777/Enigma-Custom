@@ -1,7 +1,7 @@
 --Dichroic Rookie
 local s,id=GetID()
 function s.initial_effect(c)
-
+	--Protect
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
@@ -31,8 +31,8 @@ function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	if not d then return false end
 	if a:IsControler(1-tp) then a,d=d,a end
 	e:SetLabelObject(a)
-	return a and a~=e:GetHandler() and a:IsControler(tp) and a:IsFaceup() and a:IsSummonType(SUMMON_TYPE_SPECIAL) 
-	and a:IsRace(RACE_WARRIOR) and a:IsAttribute(ATTRIBUTE_WIND) and a:GetControler()~=d:GetControler()
+	return a and a~=e:GetHandler() and a:IsControler(tp) and a:IsFaceup() and 
+	a:IsRace(RACE_WARRIOR) and a:IsAttribute(ATTRIBUTE_WIND) and a:GetControler()~=d:GetControler()
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
