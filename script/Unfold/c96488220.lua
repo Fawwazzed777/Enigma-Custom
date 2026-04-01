@@ -89,8 +89,8 @@ function s.sumop(e,tp,eg,ev,ep,re,r,rp)
 				local e3=Effect.CreateEffect(e:GetHandler())
 				e3:SetDescription(aux.Stringid(id,1))
 				e3:SetCategory(CATEGORY_DESTROY+CATEGORY_RELEASE)
-				e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-				e3:SetCode(EVENT_BATTLE_START)
+				e3:SetType(EFFECT_TYPE_QUICK_O)
+				e3:SetCode(EVENT_FREE_CHAIN)
 				e3:SetRange(LOCATION_MZONE)
 				e3:SetCondition(s.descon)
 				e3:SetTarget(s.destg)
@@ -102,8 +102,7 @@ function s.sumop(e,tp,eg,ev,ep,re,r,rp)
 	end
 end
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	return c:IsRelateToBattle()
+	return Duel.IsBattlePhase()
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -114,7 +113,7 @@ end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) and Duel.Release(c,REASON_EFFECT)>0 then
-		local g=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_MZONE,nil)
+		local g=Duel.GetMatchingGroup(Card.IsDestructable,tp,0,LOCATION_MZONE,nil)
 		if #g>0 then
 			Duel.Destroy(g,REASON_EFFECT)
 		end
