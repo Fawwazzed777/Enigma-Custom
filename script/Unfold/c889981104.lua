@@ -98,7 +98,7 @@ function s.gyop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.immcon(e)
 	local ec=e:GetHandler():GetEquipTarget()
-	return ec and ec:IsAttribute(ATTRIBUTE_DIVINE) and ec:IsControler(tp)
+    return ec and ec:IsAttribute(ATTRIBUTE_DIVINE)
 end
 function s.leaveChk(c,category)
 	local ex,tg=Duel.GetOperationInfo(0,category)
