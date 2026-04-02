@@ -82,12 +82,13 @@ function Vortex.ResconFilter(g,e,tp,mg,c)
     local f1=info[1]
     local f2=info[2]
     local min_core=e:GetLabel()
-    local sc=e:GetHandler()           
+    local sc=e:GetHandler()              
     local core_filter=function(tc) return Vortex.CheckFilter(tc,f1,sc,tp,true) end
     local fuel_filter=function(tc) return Vortex.CheckFilter(tc,f2,sc,tp,false) end    
     local core_count=g:FilterCount(core_filter,nil)
-    local all_valid=g:AllCon(function(tc) return core_filter(tc) or fuel_filter(tc) end)
-    if not all_valid then return false end
+    local fuel_count=g:FilterCount(fuel_filter,nil)
+
+    if #g~=(core_count + fuel_count) then return false end
     local total_value=0
     for tc in aux.Next(g) do
         total_value=total_value+Vortex.GetValue(tc)
