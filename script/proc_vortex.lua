@@ -109,16 +109,16 @@ function Vortex.CheckFilter(tc,f,sc,tp,is_core)
     if not f then return true end   
     if type(f)=="number" then
         if is_core then
-            if tc:IsType(TYPE_XYZ) and Vortex.GetValue(tc)==f then return true end            
+            local rk=tc:GetRank()
+            if rk==f then return true end            
+            if tc.Vcore and Vortex.GetValue(tc)==f then return true end            
             local eff=tc:IsHasEffect(EFFECT_ADD_TYPE)
             if eff then
                 local e_list=type(eff)=="table" and eff or {eff}
                 for _,e in ipairs(e_list) do
                     local val=e:GetValue()
                     if type(val)=="function" then val=val(e,tc) end
-                    if (val & TYPE_XYZ)~=0 then
-                        if Vortex.GetValue(tc)==f then return true end
-                    end
+                    if (val&TYPE_XYZ)~=0 and Vortex.GetValue(tc)==f then return true end
                 end
             end
             return false
@@ -129,6 +129,7 @@ function Vortex.CheckFilter(tc,f,sc,tp,is_core)
     if type(f)=="function" then
         return f(tc,sc,tp)
     end
+    
     return true
 end
 
