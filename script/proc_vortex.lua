@@ -27,8 +27,9 @@ if not REASON_VORTEX then
     REASON_VORTEX = 0x400000000
 end
 function Vortex.GetValue(c)
+    local rk=c:GetRank()
+    if rk>0 then return rk end
     if c:IsType(TYPE_LINK) then return c:GetLink() end
-    if c:IsType(TYPE_XYZ) then return c:GetRank() end
     return c:GetLevel()
 end
 
@@ -36,12 +37,8 @@ function Vortex.AddCoreSubstitute(c)
     local e1=Effect.CreateEffect(c)
     e1:SetType(EFFECT_TYPE_SINGLE)
     e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-    e1:SetCode(EFFECT_ADD_TYPE)
-    e1:SetValue(TYPE_XYZ)
+    e1:SetCode(EFFECT_LEVEL_RANK_S)
     c:RegisterEffect(e1)
-    local e2=e1:Clone()
-    e2:SetCode(EFFECT_LEVEL_RANK_S)
-    c:RegisterEffect(e2)
 end
 
 --Global Check for Vortex Energy
