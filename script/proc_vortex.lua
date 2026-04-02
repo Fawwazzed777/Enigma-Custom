@@ -88,7 +88,7 @@ function Vortex.ResconFilter(g,e,tp,mg,c)
     local core_count=g:FilterCount(core_filter,nil)
     local fuel_count=g:FilterCount(fuel_filter,nil)
 
-    if #g~=(core_count + fuel_count) then return false end
+    if #g~=(core_count+fuel_count) then return false end
     local total_value=0
     for tc in aux.Next(g) do
         total_value=total_value+Vortex.GetValue(tc)

@@ -1,71 +1,127 @@
---
+--Majestic Rose Dragon
 local s,id=GetID()
 function s.initial_effect(c)
-	--Apply effects
-	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(id,0))
-	e1:SetCategory(CATEGORY_DESTROY)
-	e1:SetType(EFFECT_TYPE_QUICK_O)
-	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetRange(LOCATION_MZONE)
-	e1:SetCountLimit(1)
-	e1:SetCost(s.descost)
-	e1:SetTarget(s.destg)
-	e1:SetOperation(s.desop)
-	c:RegisterEffect(e1)
+    c:EnableReviveLimit()
+    Synchro.AddMajesticProcedure(c,aux.FilterBoolFunction(Card.IsCode,21159309),true,aux.FilterBoolFunction(Card.IsCode,CARD_BLACK_ROSE_DRAGON),true,Synchro.NonTuner(nil),false)
+	--Cannot be destroyed by card effects
+    local e1=Effect.CreateEffect(c)
+    e1:SetType(EFFECT_TYPE_SINGLE)
+    e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+    e1:SetRange(LOCATION_MZONE)
+    e1:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
+    e1:SetValue(1)
+    c:RegisterEffect(e1)
+    --Banish and Apply Effect
+    local e2=Effect.CreateEffect(c)
+    e2:SetDescription(aux.Stringid(id,0))
+    e2:SetCategory(CATEGORY_REMOVE+CATEGORY_DESTROY)
+    e2:SetType(EFFECT_TYPE_QUICK_O)
+    e2:SetCode(EVENT_FREE_CHAIN)
+    e2:SetRange(LOCATION_MZONE)
+    e2:SetCountLimit(1)
+    e2:SetCost(s.effcost)
+    e2:SetTarget(s.efftg)
+    e2:SetOperation(s.effop)
+    c:RegisterEffect(e2)
+    --Return to Extra Deck and Special Summon Black Rose Dragon
+    local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(id,2))
+	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
+	e3:SetCategory(CATEGORY_TODECK+CATEGORY_SPECIAL_SUMMON)
+	e3:SetRange(LOCATION_MZONE)
+	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e3:SetCountLimit(1)
+	e3:SetCode(EVENT_PHASE+PHASE_END)
+	e3:SetTarget(s.sptg)
+	e3:SetOperation(s.spop)
+	c:RegisterEffect(e3)
+	--Multiple tuners
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_SINGLE)
+	e4:SetCode(EFFECT_MATERIAL_CHECK)
+	e4:SetValue(s.valcheck)
+	c:RegisterEffect(e4)
 end
-function s.cfilter(c,tp)
-	local atk=c:GetBaseAttack()
-	if atk<0 then atk=0 end
-	return c:IsMonster() and c:IsAbleToRemoveAsCost()
-		and Duel.IsExistingMatchingCard(s.dfilter,tp,0,LOCATION_MZONE,1,nil,atk)
+s.listed_names={CARD_BLACK_ROSE_DRAGON,21159309}
+s.material={CARD_BLACK_ROSE_DRAGON,21159309}
+s.synchro_nt_required=1
+function s.costfilter(c)
+    return c:IsMonster() and c:IsAbleToRemoveAsCost() and (c:IsLocation(LOCATION_GRAVE) or (c:IsLocation(LOCATION_MZONE) and c:IsFaceup()))
 end
-function s.dfilter(c,atk)
-	return c:IsFaceup() and c:GetBaseAttack()<=atk
+function s.effcost(e,tp,eg,ep,ev,re,r,rp,chk)
+    local c=e:GetHandler()
+    if chk==0 then return Duel.IsExistingMatchingCard(s.costfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,c) end
+    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+    local g=Duel.SelectMatchingCard(tp,s.costfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,1,c)
+    local tc=g:GetFirst()
+    e:SetLabel(tc:GetBaseAttack(),tc:GetBaseDefense())
+    Duel.Remove(tc,POS_FACEUP,REASON_COST)
 end
-function s.dfilter2(c,atk)
-	return c:IsFaceup() and c:GetBaseAttack()>=def
+
+function s.desfilter1(c,atk)
+    return c:IsFaceup() and c:IsAttackBelow(atk)
 end
-function s.descost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_ONFIELD+LOCATION_GRAVE,0,1,e:GetHandler(),tp) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,s.cfilter,tp,LOCATION_ONFIELD+LOCATION_GRAVE,0,1,1,e:GetHandler(),tp)
-	local atk=g:GetFirst():GetBaseAttack()
-	if atk<0 then atk=0 end
-	e:SetLabel(atk)
-	local def=g:GetFirst():GetDefense()
-	if def>0 then def=0 end
-	e:SetLabel(def)
-	Duel.Remove(g,POS_FACEUP,REASON_COST)
+function s.desfilter2(c,def)
+    return c:IsFaceup() and c:IsDefenseAbove(def)
 end
-function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	local b1=Duel.IsExistingMatchingCard(s.dfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil)
-		and Duel.GetFlagEffect(tp,id)==0
-	local b2=Duel.IsExistingMatchingCard(s.dfilter2,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil)
-		and Duel.GetFlagEffect(tp,id+1)==0
-	if chk==0 then return b1 or b2 end
-	Duel.SetPossibleOperationInfo(0,CATEGORY_DESTROY,nil,1,PLAYER_EITHER,LOCATION_MZONE)
-	Duel.SetPossibleOperationInfo(0,CATEGORY_DESTROY,nil,1,PLAYER_EITHER,LOCATION_MZONE)
+function s.efftg(e,tp,eg,ep,ev,re,r,rp,chk)
+    if chk==0 then return true end
+    Duel.SetOperationInfo(0,CATEGORY_DESTROY,nil,1,PLAYER_ALL,LOCATION_MZONE)
 end
-function s.desop(e,tp,eg,ep,ev,re,r,rp)
-local b1=Duel.IsExistingMatchingCard(s.dfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil)
-		and Duel.GetFlagEffect(tp,id)==0
-local b2=Duel.IsExistingMatchingCard(s.dfilter2,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil)
-		and Duel.GetFlagEffect(tp,id+1)==0
-	local op=0
-	if b1 and b2 then op=Duel.SelectOption(tp,aux.Stringid(id,1),aux.Stringid(id,2))
-	elseif b1 then op=Duel.SelectOption(tp,aux.Stringid(id,1))
-	elseif b2 then op=Duel.SelectOption(tp,aux.Stringid(id,2))+1
-	else return end
-if op==0 then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-		local g=Duel.SelectMatchingCard(tp,s.dfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
-		Duel.Destroy(g,REASON_EFFECT)
-		Duel.RegisterFlagEffect(tp,id+1,RESET_PHASE+PHASE_END,0,1)
-	else
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-		local g=Duel.SelectMatchingCard(tp,s.dfilter2,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
-		Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
-		Duel.RegisterFlagEffect(tp,id+1,RESET_PHASE+PHASE_END,0,1)
+
+function s.effop(e,tp,eg,ep,ev,re,r,rp)
+    local atk,def = e:GetLabel()
+    local b1=Duel.IsExistingMatchingCard(s.desfilter1,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil,atk)
+    local b2=Duel.IsExistingMatchingCard(s.desfilter2,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil,def)
+    
+    local op=0
+    if b1 and b2 then 
+        op=Duel.SelectOption(tp,aux.Stringid(id,1),aux.Stringid(id,2))
+    elseif b1 then 
+        op=Duel.SelectOption(tp,aux.Stringid(id,1))
+    elseif b2 then 
+        op=Duel.SelectOption(tp,aux.Stringid(id,2))+1
+    else return end
+
+    local g
+    if op==0 then
+        g=Duel.GetMatchingGroup(s.desfilter1,tp,LOCATION_MZONE,LOCATION_MZONE,nil,atk)
+    else
+        g=Duel.GetMatchingGroup(s.desfilter2,tp,LOCATION_MZONE,LOCATION_MZONE,nil,def)
+    end
+    
+    if #g>0 then
+        Duel.Destroy(g,REASON_EFFECT)
+    end
+end
+
+function s.spfilter(c,e,tp)
+    return c:IsCode(CARD_BLACK_ROSE_DRAGON) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+end
+function s.retop(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+    if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and s.spfilter(chkc,e,tp) end
+    if chk==0 then return true end
+    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+    local g=Duel.SelectTarget(tp,s.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
+    Duel.SetOperationInfo(0,CATEGORY_TOEXTRA,e:GetHandler(),1,0,0)
+    Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
+end
+function s.retop(e,tp,eg,ep,ev,re,r,rp)
+    local c=e:GetHandler()
+    local tc=Duel.GetFirstTarget()
+    if c:IsRelateToEffect(e) and c:IsFaceup() and Duel.SendtoDeck(c,nil,SEQ_DECKTOP,REASON_EFFECT)>0 
+        and c:IsLocation(LOCATION_EXTRA) and tc and tc:IsRelateToEffect(e) then
+        Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
+    end
+end
+function s.valcheck(e,c)
+	local g=c:GetMaterial()
+	if g:IsExists(Card.IsType,2,nil,TYPE_TUNER) then
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+		e1:SetCode(EFFECT_MULTIPLE_TUNERS)
+		e1:SetReset(RESET_EVENT|RESETS_STANDARD&~(RESET_TOFIELD)|RESET_PHASE|PHASE_END)
+		c:RegisterEffect(e1)
 	end
 end
