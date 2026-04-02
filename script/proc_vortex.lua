@@ -28,7 +28,10 @@ if not REASON_VORTEX then
 end
 function Vortex.GetValue(c)
     if c:IsType(TYPE_LINK) then return c:GetLink() end
-    if c:IsType(TYPE_XYZ) then return c:GetRank() end
+    if c:IsType(TYPE_XYZ) or c:IsHasEffect(EFFECT_ADD_TYPE) then 
+        local rk=c:GetRank()
+        if rk>0 then return rk end
+    end
     return c:GetLevel()
 end
 
@@ -100,19 +103,19 @@ function Vortex.CheckFilter(tc,f,sc,tp,is_core)
     if not f then return true end   
     if type(f)=="number" then
         if is_core then
-            local has_xyz_trait=tc:IsType(TYPE_XYZ) or tc:IsHasEffect(EFFECT_ADD_TYPE)
-            local val=Vortex.GetValue(tc)
-            return has_xyz_trait and val==f
+            if tc:IsType(TYPE_XYZ) and Vortex.GetValue(tc)==f then return true end
+            local e_list={tc:IsHasEffect(EFFECT_ADD_TYPE)}
+            for _,e in ipairs(e_list) do
+                if e:GetValue()==TYPE_XYZ then
+                    if Vortex.GetValue(tc)==f then return true end
+                end
+            end
+            return false
         else
             return Vortex.GetValue(tc)==f
         end
     end
-    if type(f)=="function" then
-        return f(tc,sc,tp)
-    end
-    return true
 end
-
 function Vortex.Condition(e,c)
     if c==nil then return true end
     local tp=c:GetControler()
