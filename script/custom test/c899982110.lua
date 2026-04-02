@@ -1,4 +1,5 @@
 --Hydra Core Hynx
+--scripted by fawwazzed
 if not VORTEX_IMPORTED then Duel.LoadScript("proc_vortex.lua") end
 local s,id=GetID()
 s.Vcore=true
