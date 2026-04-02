@@ -100,7 +100,8 @@ function Vortex.CheckFilter(tc,f,sc,tp,is_core)
     if not f then return true end   
     if type(f)=="number" then
         if is_core then
-            return tc:IsType(TYPE_XYZ) and tc:GetRank()==f
+            local is_pseudo_xyz=tc:IsType(TYPE_XYZ) or tc:IsHasEffect(EFFECT_ADD_TYPE)
+            return is_pseudo_xyz and Vortex.GetValue(tc)==f
         else
             return Vortex.GetValue(tc)==f
         end
@@ -108,7 +109,6 @@ function Vortex.CheckFilter(tc,f,sc,tp,is_core)
     if type(f)=="function" then
         return f(tc,sc,tp)
     end
-    
     return true
 end
 
