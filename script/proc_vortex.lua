@@ -91,37 +91,37 @@ function Vortex.ResconFilter(g,e,tp,mg,c)
     local f1=info[1]
     local f2=info[2]
     local min_core=e:GetLabel()
-    local sc=e:GetHandler()              
+    local sc=e:GetHandler()                
     local core_filter=function(tc) return Vortex.CheckFilter(tc,f1,sc,tp,true) end
-    local fuel_filter=function(tc) return Vortex.CheckFilter(tc,f2,sc,tp,false) end    
+    local fuel_filter=function(tc) return Vortex.CheckFilter(tc,f2,sc,tp,false) end       
+    if g:IsExists(function(tc) return not (core_filter(tc) or fuel_filter(tc)) end,1,nil) then 
+        return false 
+    end
     local core_count=g:FilterCount(core_filter,nil)
-    local fuel_count=g:FilterCount(fuel_filter,nil)
-
-    if #g~=(core_count+fuel_count) then return false end
     local total_value=0
     for tc in aux.Next(g) do
         total_value=total_value+Vortex.GetValue(tc)
-    end
+    end    
     return core_count>=min_core and total_value==sc:GetLevel()
 end
 
 function Vortex.CheckFilter(tc,f,sc,tp,is_core)
     if not f then return true end   
+    local val=Vortex.GetValue(tc)    
     if type(f)=="number" then
-        --(Rank prioritized, then Level)
-        local val=Vortex.GetValue(tc)        
         if is_core then
-            if tc:GetRank()==f then return true end
-            if tc.Vcore and val==f then return true end          
+            if val==f and (tc:GetRank()>0 or tc.Vcore or tc:IsType(TYPE_XYZ)) then 
+                return true 
+            end
             return false
         else
             return val==f
         end
     end
+
     if type(f)=="function" then
         return f(tc,sc,tp)
-    end
-    
+    end 
     return true
 end
 
