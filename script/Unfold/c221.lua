@@ -65,14 +65,18 @@ function s.desfilter2(c,def)
     return c:IsFaceup() and c:IsDefenseAbove(def)
 end
 function s.efftg(e,tp,eg,ep,ev,re,r,rp,chk)
-    if chk==0 then return true end
+    local c=e:GetHandler()
+    if chk==0 then 
+        return Duel.IsExistingMatchingCard(Card.IsDestructable,tp,LOCATION_MZONE,LOCATION_MZONE,1,c) 
+    end
     Duel.SetOperationInfo(0,CATEGORY_DESTROY,nil,1,PLAYER_ALL,LOCATION_MZONE)
 end
 
 function s.effop(e,tp,eg,ep,ev,re,r,rp)
-    local atk,def = e:GetLabel()
-    local b1=Duel.IsExistingMatchingCard(s.desfilter1,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil,atk)
-    local b2=Duel.IsExistingMatchingCard(s.desfilter2,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil,def)
+	local c=e:GetHandler()
+    local atk,def=e:GetLabel()
+    local b1=Duel.IsExistingMatchingCard(s.desfilter1,tp,LOCATION_MZONE,LOCATION_MZONE,1,c,atk)
+    local b2=Duel.IsExistingMatchingCard(s.desfilter2,tp,LOCATION_MZONE,LOCATION_MZONE,1,c,def)
     
     local op=0
     if b1 and b2 then 
@@ -85,9 +89,9 @@ function s.effop(e,tp,eg,ep,ev,re,r,rp)
 
     local g
     if op==0 then
-        g=Duel.GetMatchingGroup(s.desfilter1,tp,LOCATION_MZONE,LOCATION_MZONE,nil,atk)
+        g=Duel.GetMatchingGroup(s.desfilter1,tp,LOCATION_MZONE,LOCATION_MZONE,c,atk)
     else
-        g=Duel.GetMatchingGroup(s.desfilter2,tp,LOCATION_MZONE,LOCATION_MZONE,nil,def)
+        g=Duel.GetMatchingGroup(s.desfilter2,tp,LOCATION_MZONE,LOCATION_MZONE,c,def)
     end
     
     if #g>0 then
