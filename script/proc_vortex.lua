@@ -100,8 +100,9 @@ function Vortex.CheckFilter(tc,f,sc,tp,is_core)
     if not f then return true end   
     if type(f)=="number" then
         if is_core then
-            local is_pseudo_xyz=tc:IsType(TYPE_XYZ) or tc:IsHasEffect(EFFECT_ADD_TYPE)
-            return is_pseudo_xyz and Vortex.GetValue(tc)==f
+            local has_xyz_trait=tc:IsType(TYPE_XYZ) or tc:IsHasEffect(EFFECT_ADD_TYPE)
+            local val=Vortex.GetValue(tc)
+            return has_xyz_trait and val==f
         else
             return Vortex.GetValue(tc)==f
         end
@@ -146,7 +147,7 @@ function Vortex.Operation(e,tp,eg,ep,ev,re,r,rp,c)
     local f1=info[1]
     
     c:SetMaterial(sg) 
-    local g_core=sg:Filter(function(tc) return tc:IsType(TYPE_XYZ) and Vortex.CheckFilter(tc,f1,c,tp) end,nil)
+    local g_core=sg:Filter(function(tc) return Vortex.CheckFilter(tc,f1,c,tp,true) end,nil)
     local g_fuel=sg:Filter(function(tc) return not g_core:IsContains(tc) end,nil)      
     Duel.SendtoDeck(g_core,nil,2,REASON_MATERIAL+REASON_VORTEX)
     Duel.SendtoGrave(g_fuel,REASON_MATERIAL+REASON_VORTEX)   
