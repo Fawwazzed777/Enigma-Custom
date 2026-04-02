@@ -32,6 +32,18 @@ function Vortex.GetValue(c)
     return c:GetLevel()
 end
 
+function Vortex.AddCoreSubstitute(c)
+    local e1=Effect.CreateEffect(c)
+    e1:SetType(EFFECT_TYPE_SINGLE)
+    e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+    e1:SetCode(EFFECT_ADD_TYPE)
+    e1:SetValue(TYPE_XYZ)
+    c:RegisterEffect(e1)
+    local e2=e1:Clone()
+    e2:SetCode(EFFECT_LEVEL_RANK_S)
+    c:RegisterEffect(e2)
+end
+
 --Global Check for Vortex Energy
 if not Vortex.GlobalCheck then
     Vortex.GlobalCheck=true
