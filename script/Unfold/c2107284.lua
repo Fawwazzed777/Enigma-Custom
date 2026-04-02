@@ -1,8 +1,10 @@
--- Iterator 17: Intimidating Trapezohedronite
+--Iterator 17: Intimidating Trapezohedronite
 local s,id=GetID()
 function s.initial_effect(c)
-
-	-- Reduce ATK/DEF by 3000
+	c:EnableReviveLimit()
+	--Xyz summon procedure
+	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(Card.IsAttribute,ATTRIBUTE_DARK),8,2,nil,nil,Xyz.InfiniteMats)
+	--Reduce ATK/DEF by 3000
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetRange(LOCATION_MZONE)
@@ -25,7 +27,6 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 s.xyz_number=17
---e3 Effect Code
 function s.oper(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) and c:IsFaceup() then
