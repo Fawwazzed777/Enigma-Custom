@@ -115,7 +115,7 @@ function s.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
 	local ovg=c:GetOverlayGroup()
 	local rg=Duel.Remove(ovg,POS_FACEUP,REASON_COST)
-	local g=Duel.SelectMatchingCard(tp,Card.IsRemovable,tp,0,LOCATION_ONFIELD,rg,rg,nil)
+	local g=Duel.SelectMatchingCard(tp,Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,rg,rg,nil)
 		if rg then
 		Duel.HintSelection(g)
 		if #g==0 and Duel.Remove(g,POS_FACEUP,REASON_EFFECT)==0 then return end
