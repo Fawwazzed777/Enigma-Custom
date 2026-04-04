@@ -27,7 +27,7 @@ function s.fusfilter(c,code,fc,tp)
 	return c:IsSummonCode(fc,SUMMON_TYPE_FUSION,tp,code) and not c:IsHasEffect(511002961)
 end
 function s.filteraux(c)
-	return c:IsAbleToRemoveAsCost() and c:IsMonster()
+	return c:IsAbleToRemoveAsCost()
 end
 function s.contactfil(tp)
 	return Duel.GetMatchingGroup(s.filteraux,tp,LOCATION_ONFIELD+LOCATION_GRAVE,0,nil)
