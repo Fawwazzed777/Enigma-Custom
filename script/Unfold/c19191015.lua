@@ -17,6 +17,7 @@ function s.initial_effect(c)
     e2:SetCondition(aux.exccon)
 	e2:SetCountLimit(1,id)
     e2:SetCost(aux.bfgcost)
+	e2:SetTarget(s.gytg)
     e2:SetOperation(s.gyop)
     c:RegisterEffect(e2)
 end
@@ -24,9 +25,6 @@ s.listed_series={0xbc9,0xabc9}
 function s.filter(c,e,tp,ft)
     return c:IsSetCard(0xbc9) and c:IsMonster() and (c:IsAbleToHand() 
         or (ft>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)))
-end
-function s.dfilter(c,e,tp,ft)
-    return c:IsSetCard(0xbc9) and c:IsAbleToDeck()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
     local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
@@ -52,10 +50,23 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
     end
 end
 
-function s.gyop(e,tp,eg,ep,ev,re,r,rp)
-    local g=Duel.SelectMatchingCard(tp,s.dfilter,tp,LOCATION_GRAVE,0,1,1,nil)
-    if #g>0 and Duel.SendtoDeck(g,nil,2,REASON_EFFECT)>0 then
-        Duel.BreakEffect()
-		Duel.Draw(tp,1,REASON_EFFECT)
-    end
+function s.dfilter(c)
+    return c:IsSetCard(0xbc9) and c:IsAbleToDeck()
 end
+
+function s.gytg(e,tp,eg,ep,ev,re,r,rp,chk)
+    if chk==0 then return Duel.IsPlayerCanDraw(tp,1) 
+        and Duel.IsExistingMatchingCard(s.dfilter,tp,LOCATION_GRAVE,0,1,nil) end
+    Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,1,tp,LOCATION_GRAVE)
+    Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,1,tp,0)
+end
+function s.gyop(e,tp,eg,ep,ev,re,r,rp)
+    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
+    local g=Duel.SelectMatchingCard(tp,s.dfilter,tp,LOCATION_GRAVE,0,1,1,nil)
+    if #g>0 then
+        if Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)>0 then
+            if g:GetFirst():IsLocation(LOCATION_DECK) then Duel.ShuffleDeck(tp) end           
+            Duel.BreakEffect()
+            Duel.Draw(tp,1,REASON_EFFECT)
+        end
+    end
