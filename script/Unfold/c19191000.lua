@@ -33,9 +33,9 @@ end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	if not Duel.IsPlayerCanDiscardDeck(tp,1) then return end
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	if ft<=0 then return end
+	if ft<=0 then return end	
 	local ct=Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)
-	if ct==0 then return end
+	if ct==0 then return end	
 	local max_num=math.min(ct,3,ft)	
 	local t={}
 	for i=1,max_num do t[i]=i end	
@@ -46,16 +46,17 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	if #g>0 then
 		Duel.DisableShuffleCheck()
 		local sg=g:Filter(s.exfilter2,nil,e,tp)
+		local spg=Group.CreateGroup()	
 		if #sg>0 then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-			local spg=sg:Select(tp,1,ft,nil) 
+			spg=sg:Select(tp,1,ft,nil)
 			if #spg>0 then
 				Duel.SpecialSummon(spg,0,tp,tp,false,false,POS_FACEUP)
 			end
 		end
-		local rem=g:Filter(function(c) return not spg or not spg:IsContains(c) end,nil)
-		if #rem>0 then
-			Duel.SendtoGrave(rem,REASON_EFFECT+REASON_REVEAL)
+		g:Sub(spg)
+		if #g>0 then
+			Duel.SendtoGrave(g,REASON_EFFECT+REASON_REVEAL)
 		end
 	end
 end
