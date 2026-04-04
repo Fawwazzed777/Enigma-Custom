@@ -39,7 +39,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	local deck_ct=Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)
 	if deck_ct==0 then return end
 
-	local max_num=math.min(deck_ct,3)
+	local max_num=math.min(deck_ct,4)
 	local t={}
 	for i=1,max_num do t[i]=i end
 	 Duel.Hint(HINTMSG_NUMBER,tp,HINT_NUMBER)
