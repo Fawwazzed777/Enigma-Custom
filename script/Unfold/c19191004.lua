@@ -26,7 +26,7 @@ function s.initial_effect(c)
 	e2:SetOperation(s.sop)
 	c:RegisterEffect(e2)
 end
-s.listed_series={0xbc9}
+s.listed_series={0xbc9,0xabc9}
 s.listed_names={19191004}
 function s.spfilter(c,e,tp)
 	return c:IsCode(19191004) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
@@ -52,7 +52,7 @@ function s.spcheck(sg,e,tp,mg)
 	return sg:GetClassCount(Card.GetCode)==1
 end
 function s.sfilter(c,e,tp)
-	return c:IsCode(19191003) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0xabc9) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.scost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckReleaseGroupCost(tp,s.scfilter,2,false,s.spcheck,nil) end
