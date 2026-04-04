@@ -20,7 +20,7 @@ function s.initial_effect(c)
 	local e3=Effect.CreateEffect(c)
 	e3:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e3:SetType(EFFECT_TYPE_IGNITION)
-	e3:SetCountLimit(1,id,EFFECT_COUNT_CODE_OATH)
+	e3:SetCountLimit(1,id)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCondition(s.excon)
 	e3:SetTarget(s.extg)
@@ -57,7 +57,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.excon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetMatchingGroupCount(aux.FaceupFilter(Card.IsCode,19191001),tp,LOCATION_MZONE,0,nil)==3
+	return Duel.GetMatchingGroupCount(aux.FaceupFilter(Card.IsCode,19191001),tp,LOCATION_ONFIELD,0,nil)==3
 end
 function s.exfilter(c,tp)
 	return c:IsSetCard(0xbc9) and c:IsSpellTrap() and c:IsAbleToHand()
