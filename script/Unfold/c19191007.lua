@@ -14,9 +14,9 @@ function s.initial_effect(c)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
 end
-s.listed_series={0xabc9}
+s.listed_series={0xbc9}
 function s.filter(c)
-	return c:IsSetCard(0xabc9) and c:IsAbleToDeckAsCost()
+	return c:IsSetCard(0xbc9) and c:IsAbleToDeckAsCost()
 end
 function s.cfilter(c)
 	return c:IsFaceup() and not c:IsType(TYPE_TOKEN)
@@ -62,7 +62,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetProperty(EFFECT_FLAG_CLIENT_HINT)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_ADD_SETCODE)
-		e1:SetValue(0xabc9)
+		e1:SetValue(0xbc9)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 		rc:RegisterEffect(e1)
 		-- Cannot declare an attack

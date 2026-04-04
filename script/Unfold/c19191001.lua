@@ -33,7 +33,7 @@ function s.initial_effect(c)
 	e4:SetValue(s.matlimit)
 	c:RegisterEffect(e4)
 end
-s.listed_series={0xabc9}
+s.listed_series={0xbc9}
 s.listed_names={19191001}
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsPreviousLocation(LOCATION_HAND)
@@ -59,11 +59,11 @@ function s.excon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetMatchingGroupCount(aux.FaceupFilter(Card.IsCode,19191001),tp,LOCATION_MZONE,0,nil)==3
 end
 function s.exfilter(c,tp)
-	return c:IsSetCard(0xabc9) and c:IsSpellTrap() and c:IsAbleToHand()
+	return c:IsSetCard(0xbc9) and c:IsSpellTrap() and c:IsAbleToHand()
 		and Duel.IsExistingMatchingCard(s.exfilter2,tp,LOCATION_DECK,0,1,nil,c)
 end
 function s.exfilter2(c,mc)
-	return c:IsSetCard(0xabc9) and c:IsMonster() and c:IsAbleToHand()
+	return c:IsSetCard(0xbc9) and c:IsMonster() and c:IsAbleToHand()
 end
 function s.extg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.exfilter,tp,LOCATION_DECK,0,1,nil,tp) end
@@ -85,5 +85,5 @@ function s.exop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.matlimit(e,c)
 	if not c then return false end
-	return not c:IsSetCard(0xabc9)
+	return not c:IsSetCard(0xbc9)
 end

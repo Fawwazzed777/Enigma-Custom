@@ -16,6 +16,7 @@ function s.initial_effect(c)
 	e1:SetOperation(s.operation)
 	c:RegisterEffect(e1)
 end
+s_listed_series={0xbc9}
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk) 
 	if chk==0 then return Duel.IsPlayerCanDiscardDeck(tp,1) and e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
 	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
@@ -28,12 +29,12 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
     Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE+LOCATION_REMOVED)
 end
 function s.spfilter(c,e,tp)
-    return c:IsSetCard(0xabc9) and c:IsMonster() 
+    return c:IsSetCard(0xbc9) and c:IsMonster() 
         and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 
 function s.stfilter(c)
-    return c:IsSetCard(0xabc9) and c:IsSpellTrap()
+    return c:IsSetCard(0xbc9) and c:IsSpellTrap()
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	local deck_ct=Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)

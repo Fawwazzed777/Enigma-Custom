@@ -23,9 +23,9 @@ function s.initial_effect(c)
 	e2:SetOperation(s.clop)
 	c:RegisterEffect(e2)
 end
-s_listed_series={0xabc9}
+s_listed_series={0xbc9}
 function s.filter(c,e,tp)
-	return c:IsSetCard(0xabc9)
+	return c:IsSetCard(0xbc9)
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckReleaseGroupCost(tp,s.filter,1,false,aux.ReleaseCheckMMZ,nil) end
@@ -43,7 +43,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.clfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0xabc9)
+	return c:IsFaceup() and c:IsSetCard(0xbc9)
 end
 function s.cltg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and s.clfilter(chkc) end
@@ -52,7 +52,7 @@ function s.cltg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SelectTarget(tp,s.clfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,e:GetHandler())
 end
 function s.clfilter2(c)
-	return c:IsFaceup() and c:IsSetCard(0xabc9)
+	return c:IsFaceup() and c:IsSetCard(0xbc9)
 end
 function s.clop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()

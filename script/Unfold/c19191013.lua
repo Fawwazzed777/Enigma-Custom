@@ -10,15 +10,15 @@ function s.initial_effect(c)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
 end
-s.listed_series={0xabc9}
+s.listed_series={0xbc9}
 function s.cfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0xabc9)
+	return c:IsFaceup() and c:IsSetCard(0xbc9)
 end
 function s.dfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0xabc9)
+	return c:IsFaceup() and c:IsSetCard(0xbc9)
 end
 function s.spfilter(c,e,tp)
-	return c:IsSetCard(0xabc9) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
+	return c:IsSetCard(0xbc9) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
 end
 function s.get_count(g)
 	if #g==0 then return 0 end

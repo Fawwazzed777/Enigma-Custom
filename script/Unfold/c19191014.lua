@@ -27,10 +27,10 @@ function s.initial_effect(c)
 	e3:SetCountLimit(1)
     c:RegisterEffect(e3)
 end
-s_listed_series={0xabc9}
+s_listed_series={0xbc9}
 function s.revfilter(c,e,tp)
     local code=c:GetCode()
-    return c:IsSetCard(0xabc9) and c:IsMonster() and not c:IsPublic() and not c:IsForbidden()
+    return c:IsSetCard(0xbc9) and c:IsMonster() and not c:IsPublic() and not c:IsForbidden()
         and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil,code,e,tp)
 end
 function s.spfilter(c,code,e,tp)
@@ -60,7 +60,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
     end
 end
 function s.prottg(e,c)
-    return c:IsSetCard(0xabc9) and c~=e:GetHandler()
+    return c:IsSetCard(0xbc9) and c~=e:GetHandler()
 end
 function s.valcon(e,re,r,rp)
 	return (r&REASON_BATTLE|REASON_EFFECT)~=0

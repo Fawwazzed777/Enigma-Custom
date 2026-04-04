@@ -25,12 +25,12 @@ function s.initial_effect(c)
 	e2:SetOperation(s.top)
 	c:RegisterEffect(e2)
 end
-s.listed_series={0xabc9}
+s.listed_series={0xbc9}
 function s.ccfilter(c,e,tp,code)
-	return not c:IsCode(id) and c:IsSetCard(0xabc9)
+	return not c:IsCode(id) and c:IsSetCard(0xbc9)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE) and chkc:IsFaceup() and chkc:IsSetCard(0xabc9) end
+	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE) and chkc:IsFaceup() and chkc:IsSetCard(0xbc9) end
 	local c=e:GetHandler()
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
@@ -56,7 +56,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SpecialSummonComplete()
 end
 function s.spfilter(c,e,tp)
-	return c:IsSetCard(0xabc9) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0xbc9) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.ttg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return not Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT)

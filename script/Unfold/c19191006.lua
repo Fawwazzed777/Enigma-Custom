@@ -21,12 +21,12 @@ function s.initial_effect(c)
 	e2:SetOperation(s.act)
 	c:RegisterEffect(e2)
 end
-s.listed_series={0xabc9}
+s.listed_series={0xbc9}
 function s.spfilter(c,e,tp,code)
 	return c:IsCode(code) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.filter(c,e,tp)
-	return c:IsSetCard(0xabc9)
+	return c:IsSetCard(0xbc9)
 		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND+LOCATION_DECK,0,1,nil,e,tp,c:GetCode())
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
@@ -48,7 +48,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.cfilter(c)
-	return c:IsSetCard(0xabc9) and c:IsMonster() and c:IsAbleToRemoveAsCost()
+	return c:IsSetCard(0xbc9) and c:IsMonster() and c:IsAbleToRemoveAsCost()
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_GRAVE,0,1,nil) end

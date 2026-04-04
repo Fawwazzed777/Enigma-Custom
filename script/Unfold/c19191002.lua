@@ -12,16 +12,16 @@ function s.initial_effect(c)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
 end
-s.listed_series={0xabc9}
+s.listed_series={0xbc9}
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:SetLabel(1)
 	return true
 end
 function s.nsfilter(c)
-	return c:IsSetCard(0xabc9) and c:IsSummonable(true,nil)
+	return c:IsSetCard(0xbc9) and c:IsSummonable(true,nil)
 end
 function s.cfilter(c,tp)
-	return c:IsSetCard(0xabc9) and c:IsLevelBelow(4) and not c:IsPublic()
+	return c:IsSetCard(0xbc9) and c:IsLevelBelow(4) and not c:IsPublic()
 		and Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK,0,1,nil,c)
 end
 function s.filter(c,rc)

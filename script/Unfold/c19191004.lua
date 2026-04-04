@@ -26,7 +26,7 @@ function s.initial_effect(c)
 	e2:SetOperation(s.sop)
 	c:RegisterEffect(e2)
 end
-s.listed_series={0xabc9}
+s.listed_series={0xbc9}
 s.listed_names={19191004}
 function s.spfilter(c,e,tp)
 	return c:IsCode(19191004) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
@@ -46,7 +46,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.scfilter(c)
-	return c:IsSetCard(0xabc9) 
+	return c:IsSetCard(0xbc9) 
 end
 function s.spcheck(sg,e,tp,mg)
 	return sg:GetClassCount(Card.GetCode)==1
