@@ -45,23 +45,22 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
     local ac=Duel.AnnounceNumber(tp,table.unpack(t))
     Duel.ConfirmDecktop(tp,ac)
     local g=Duel.GetDecktopGroup(tp,ac)
-    if #g<=0 then return end    
-    --Send S/T to GY
+    if #g<=0 then return end
     local stg=g:Filter(s.stfilter,nil)
     local ct=0
     if #stg>0 then
         ct=Duel.SendtoGrave(stg,REASON_EFFECT+REASON_REVEAL)
-    end   
-    --Special Summon from GY/Banish (ct)
+    end
     if ct>0 then
         local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-        if ft<=0 then return end
-        local sp_max=math.min(ct,ft)        
-        Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-        local spg=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.spfilter),tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,sp_max,nil,e,tp)
-        if #spg>0 then
-            Duel.BreakEffect()
-            Duel.SpecialSummon(spg,0,tp,tp,false,false,POS_FACEUP)
+        if ft>0 then
+            local sp_max=math.min(ct,ft)            
+            Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+            local spg=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.spfilter),tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,sp_max,nil,e,tp)
+            if #spg>0 then
+                Duel.BreakEffect()
+                Duel.SpecialSummon(spg,0,tp,tp,false,false,POS_FACEUP)
+            end
         end
     end
     local remaining=g:Filter(function(c) return c:IsLocation(LOCATION_DECK) end,nil)
