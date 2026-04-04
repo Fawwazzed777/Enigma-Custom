@@ -54,7 +54,8 @@ end
 
 function s.gyop(e,tp,eg,ep,ev,re,r,rp)
     local g=Duel.SelectMatchingCard(tp,s.dfilter,tp,LOCATION_GRAVE,0,1,1,nil)
-    if #g>0 and Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)>0 then
-        Duel.Draw(tp,1,REASON_EFFECT)
+    if #g>0 and Duel.SendtoDeck(g,nil,2,REASON_EFFECT)>0 then
+        Duel.BreakEffect()
+		Duel.Draw(tp,1,REASON_EFFECT)
     end
 end
