@@ -56,13 +56,13 @@ end
 
 function s.gytg(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return Duel.IsPlayerCanDraw(tp,1) 
-        and Duel.IsExistingMatchingCard(s.dfilter,tp,LOCATION_GRAVE,0,1,nil) end
+        and Duel.IsExistingMatchingCard(s.dfilter,tp,LOCATION_GRAVE,0,1,e:GetHandler()) end
     Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,1,tp,LOCATION_GRAVE)
     Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,1,tp,0)
 end
 function s.gyop(e,tp,eg,ep,ev,re,r,rp)
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-    local g=Duel.SelectMatchingCard(tp,s.dfilter,tp,LOCATION_GRAVE,0,1,1,nil)
+    local g=Duel.SelectMatchingCard(tp,s.dfilter,tp,LOCATION_GRAVE,0,1,1,e:GetHandler())
     if #g>0 then
         if Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)>0 then
             if g:GetFirst():IsLocation(LOCATION_DECK) then Duel.ShuffleDeck(tp) end           
