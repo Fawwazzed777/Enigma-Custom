@@ -39,11 +39,10 @@ end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	local deck_ct=Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)
 	if deck_ct==0 then return end
-
 	local max_num=math.min(deck_ct,4)
 	local t={}
 	for i=1,max_num do t[i]=i end
-	 Duel.Hint(HINTMSG_NUMBER,tp,HINT_NUMBER)
+	Duel.Hint(HINT_SELECTMSG,tp,HINT_NUMBER)
 	local ac=Duel.AnnounceNumber(tp,table.unpack(t))
 	Duel.ConfirmDecktop(tp,ac)
 	local g=Duel.GetDecktopGroup(tp,ac)
@@ -53,26 +52,23 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	if #stg>0 then
 		ct=Duel.SendtoGrave(stg,REASON_EFFECT+REASON_REVEAL)
 	end
+	local rest=g:Filter(function(c) return c:IsLocation(LOCATION_DECK) end, nil)
+	if #rest>0 then
+		Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,2))
+		local sg=rest:Select(tp,#rest,#rest,nil)
+		Duel.MoveToDeckBottom(sg,tp)
+		Duel.SortDeckbottom(tp,tp,#sg)
+	end
 	if ct>0 then
 		local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 		if Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) then ft=1 end
-		local spg_pool=Duel.GetMatchingGroup(aux.NecroValleyFilter(s.spfilter),tp,LOCATION_GRAVE+LOCATION_REMOVED,0,nil,e,tp)		
-		if ft>0 and #spg_pool>0 then
+		if ft<=0 then return end
+		local count=math.min(ft,ct)		
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+		local spg=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.spfilter),tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,count,nil,e,tp)
+		if #spg>0 then
 			Duel.BreakEffect()
-			local sp_max=math.min(ct,ft,#spg_pool)			
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-			local spg=spg_pool:Select(tp,1,sp_max,nil)
-			if #spg>0 then
-				Duel.SpecialSummon(spg,0,tp,tp,false,false,POS_FACEUP)
-			end
-		end
-	end
-	local remaining=g:Filter(Card.IsLocation,nil,LOCATION_DECK)
-	if #remaining>0 then
-		Duel.SortDecktop(tp,tp,#remaining)
-		for i=1,#remaining do
-			local tc=Duel.GetDecktopGroup(tp,1):GetFirst()
-			Duel.MoveSequence(tc,SEQ_DECKBOTTOM)
+			Duel.SpecialSummon(spg,0,tp,tp,false,false,POS_FACEUP)
 		end
 	end
 end
