@@ -1,4 +1,5 @@
 --Shadow Beast Doppler
+--Scripted by fawwazzed
 local s,id=GetID()
 function s.initial_effect(c)
 	--Add 1 monster with the same name

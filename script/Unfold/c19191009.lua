@@ -1,4 +1,5 @@
 --High Shadow Beast - Exorcia
+--Scripted by fawwazzed
 local s,id=GetID()
 function s.initial_effect(c)
 	--Fusion Summon/Contact Fusion

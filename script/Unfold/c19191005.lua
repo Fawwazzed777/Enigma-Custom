@@ -1,4 +1,5 @@
 --Desolate Shadow Beast
+--Scripted by fawwazzed
 local s,id=GetID()
 function s.initial_effect(c)
 	--Special Summon itself from hand

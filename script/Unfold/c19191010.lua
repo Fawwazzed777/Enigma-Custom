@@ -1,4 +1,5 @@
 --Shadow Beast Tamer - Ruroa
+--Scripted by fawwazzed
 local s,id=GetID()
 function s.initial_effect(c)
 	--Special Summon self from Hand or GY

@@ -1,4 +1,5 @@
 --Shadow Beast Tamer - Ouro
+--Scripted by fawwazzed
 local s,id=GetID()
 function s.initial_effect(c)
 	--Quick Fusion/Xyz during Opponent's Turn

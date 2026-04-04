@@ -1,4 +1,5 @@
 --Shadow Beast Tamer - Zaraka
+--Scripted by fawwazzed
 local s,id=GetID()
 function s.initial_effect(c)
 	--special summon
