@@ -40,7 +40,7 @@ function s.thfilter(c,tp)
         and not g:IsExists(Card.IsCode,1,nil,c:GetCode())
 end
 function s.quickcon(e,tp,eg,ep,ev,re,r,rp)
-    return Duel.IsMainPhase() and Duel.IsExistingMatchingCard(Card.IsFaceup,tp,LOCATION_FZONE,LOCATION_FZONE,1,nil)
+    return Duel.IsMainPhase() and Duel.IsExistingMatchingCard(Card.IsFaceup,tp,LOCATION_FZONE,0,1,nil)
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil,tp) end
