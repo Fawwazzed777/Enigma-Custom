@@ -49,14 +49,14 @@ function s.initial_effect(c)
 	e1b:SetValue(1)
 	c:RegisterEffect(e1b)
 	--Cannot be destroyed by card effect
-	local e4=Effect.CreateEffect(c)
-	e4:SetType(EFFECT_TYPE_FIELD)
-	e4:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
-	e4:SetRange(LOCATION_MZONE)
-	e4:SetTargetRange(LOCATION_MZONE,0)
-	e4:SetTarget(function(e,c) return c:IsType(TYPE_SYNCHRO) and c:IsControler(e:GetHandlerPlayer()) end)
-	e4:SetValue(1)
-	c:RegisterEffect(e4)
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_FIELD)
+	e3:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
+	e3:SetRange(LOCATION_MZONE)
+	e3:SetTargetRange(LOCATION_MZONE,0)
+	e3:SetTarget(function(e,c) return c:IsType(TYPE_SYNCHRO) and c:IsControler(e:GetHandlerPlayer()) end)
+	e3:SetValue(1)
+	c:RegisterEffect(e3)
 end
 s.material={749968954}
 s.listed_names={749968954}
@@ -79,11 +79,12 @@ function s.shftg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.negfilter,tp,0,LOCATION_ONFIELD,1,nil) end
 	local g=Duel.GetMatchingGroup(s.negfilter,tp,0,LOCATION_ONFIELD,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DISABLE,g,#g,0,0)
-	Duel.SetOperationInfo(0,CATEGORY_TODECK,g,#g,0,0)
 end
 function s.shfop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(s.negfilter,tp,0,LOCATION_ONFIELD,nil)
+	local count=0
 	for tc in aux.Next(g) do
+		count=count+1
 		e:SetProperty(e:GetProperty()|EFFECT_FLAG_IGNORE_IMMUNE)
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
@@ -105,13 +106,20 @@ function s.shfop(e,tp,eg,ep,ev,re,r,rp)
 		e3:SetValue(function(e,te) return te:GetOwner()~=e:GetOwner() end)
 		e3:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_CHAIN)
 		tc:RegisterEffect(e3,true)
+		Duel.AdjustInstantly(tc)
 		e:SetProperty(e:GetProperty()&~EFFECT_FLAG_IGNORE_IMMUNE)
 	end
-	Duel.AdjustInstantly()
-	local dg=Duel.GetMatchingGroup(Card.IsAbleToDeck,tp,0,LOCATION_ONFIELD,nil)
-	if #dg>0 then
+	if count>0 then
 		Duel.BreakEffect()
-		Duel.SendtoDeck(dg,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
+		local sg=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,0,nil)
+		for sc in aux.Next(sg) do
+			local e4=Effect.CreateEffect(c)
+			e4:SetType(EFFECT_TYPE_SINGLE)
+			e4:SetCode(EFFECT_UPDATE_ATTACK)
+			e4:SetValue(count*1000)
+			e4:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+			sc:RegisterEffect(e4)
+		end
 	end
 end
 
@@ -127,6 +135,6 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,Card.IsAbleToHand,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,e:GetHandler())
 	if #g>0 then
 		Duel.HintSelection(g)
-		Duel.SendtoHand(g,nil,REASON_EFFECT)
+		Duel.SendtoDeck(g,nil,2,REASON_EFFECT)
 	end
 end
