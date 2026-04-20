@@ -113,7 +113,7 @@ function s.shfop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.BreakEffect()
 		local sg=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,0,nil)
 		for sc in aux.Next(sg) do
-			local e4=Effect.CreateEffect(c)
+			local e4=Effect.CreateEffect(e:GetHandler())
 			e4:SetType(EFFECT_TYPE_SINGLE)
 			e4:SetCode(EFFECT_UPDATE_ATTACK)
 			e4:SetValue(count*1000)
