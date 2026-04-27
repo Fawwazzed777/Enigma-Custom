@@ -30,7 +30,7 @@ function s.initial_effect(c)
 end
 s.listed_series={0x145,0x344}
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(Card.IsSetCard,1,nil,0x344)
+	return (eg:IsExists(Card.IsSetCard,1,nil,0x344) or eg:IsExists(Card.IsSetCard,1,nil,0x145))
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
     local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
