@@ -63,7 +63,10 @@ end
 function s.rop(e,tp,eg,ep,ev,re,r,rp)
 	local sg=eg:Filter(Card.IsType,nil,TYPE_MONSTER)
 	for sc in aux.Next(sg) do
-		if Duel.SelectEffectYesNo(tp,e:GetOwner()) then
+		if Duel.HasFlagEffect(tp,id) then return end
+		if Duel.SelectEffectYesNo(tp,e:GetHandler()) then
+		Duel.Hint(HINT_CARD,0,id)
+		Duel.RegisterFlagEffect(tp,id,RESET_PHASE|PHASE_END,0,1)
 		local g=Duel.SelectMatchingCard(tp,s.nefafilter,tp,LOCATION_DECK,0,1,1,nil)
 		if #g>0 then
 			Duel.SendtoHand(g,nil,REASON_EFFECT)
