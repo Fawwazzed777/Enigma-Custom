@@ -57,7 +57,7 @@ function s.negop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.release(c,e,tp)
-	return c:IsReleasableByEffect() and c:IsSpecialSummoned()
+	return c:IsFaceup() and Card.IsReleasableByEffect() and c:IsSpecialSummoned()
 end
 function s.trtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsReleasableByEffect() end
