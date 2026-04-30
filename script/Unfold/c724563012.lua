@@ -65,11 +65,11 @@ function s.trtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
 end
 function s.trop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.SelectMatchingCard(tp,s.release,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
-	if #g>0 then
-		Duel.SetOperationInfo(0,CATEGORY_RELEASE,g,1,0,0)
-		Duel.HintSelection(g)
-		Duel.Release(g,REASON_EFFECT)		
+	local tc=Duel.SelectMatchingCard(tp,s.release,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
+	if tc then
+		Duel.SetOperationInfo(0,CATEGORY_RELEASE,tc,1,0,0)
+		Duel.HintSelection(tc)
+		Duel.Release(tc,REASON_EFFECT)		
 	end
 end
 function s.thfilter(c)
