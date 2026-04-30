@@ -56,8 +56,8 @@ function s.negop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Release(eg,REASON_EFFECT)
 	end
 end
-function s.release(c,e,tp)
-	return c:IsFaceup() and Card.IsReleasableByEffect() and c:IsSpecialSummoned()
+function s.release(c)
+	return c:IsFaceup() and c:IsReleasableByEffect() and c:IsSpecialSummoned()
 end
 function s.trtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsReleasableByEffect() end
