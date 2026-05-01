@@ -1,6 +1,7 @@
 Put this on user_configs.json
 
-{"repos": [
+{
+"repos": [
 		{
 				"url": "https://github.com/Fawwazzed777/Enigma-Custom.git",
 				"repo_name": "Enigma-Custom",
@@ -10,4 +11,24 @@ Put this on user_configs.json
 				"should_update": true,
 				"should_read": true
 		}
-	]}
+	],
+"urls": [
+
+		{
+			"url": "https://raw.githubusercontent.com/Fawwazzed777/Enigma-pics/master/{}.png",
+			"type": "pic"
+		},
+		{
+			"url": "https://raw.githubusercontent.com/Fawwazzed777/Enigma-pics/master/{}.jpg",
+			"type": "pic"
+		},
+		{
+			"url": "https://raw.githubusercontent.com/Fawwazzed777/Enigma-pics/master/field/{}.png",
+			"type": "field"
+		},
+		{
+			"url": "https://raw.githubusercontent.com/Fawwazzed777/Enigma-pics/master/field/{}.jpg",
+			"type": "field"
+		}
+	]
+}
