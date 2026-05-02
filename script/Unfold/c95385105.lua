@@ -72,7 +72,7 @@ function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if not (tc and tc:IsRelateToEffect(e) and tc:IsControler(1-tp)) then return end
+	if not (tc and tc:IsRelateToEffect(e) or tc:IsImmuneToEffect(e) and tc:IsControler(1-tp)) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOZONE)
 	local zone=Duel.SelectFieldZone(tp,1,0,LOCATION_SZONE,function(d,p,l,s) return p==1-tp and s<5 end)
 	local seq=math.log(zone>>16,2)
