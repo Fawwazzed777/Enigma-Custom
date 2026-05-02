@@ -70,7 +70,10 @@ function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and s.plfilter(chkc) end
 	if chk==0 then return Duel.IsExistingTarget(s.plfilter,tp,0,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-	local g=Duel.SelectTarget(tp,s.plfilter,tp,0,LOCATION_MZONE,1,1,nil)	
+	local g=Duel.SelectTarget(tp,s.plfilter,tp,0,LOCATION_MZONE,1,1,nil)
+	if g:GetFirst()then
+		Duel.SetOperationInfo(0,CATEGORY_POSITION,g,1,0,0)
+	end
 end
 function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
