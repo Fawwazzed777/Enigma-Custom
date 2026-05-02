@@ -82,12 +82,22 @@ function s.valcheck(e,c)
 		e:GetLabelObject():SetLabel(0)
 	end
 end
-function s.effcon(e,tp,eg,ep,ev,re,r,rp)
+function s.effcon(e)
 	if e:GetHandler():GetFlagEffect(id)==0 then return false end
 	if e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) or not Duel.IsChainNegatable(ev) then return false end
 	if re:IsHasCategory(CATEGORY_NEGATE)
 		and Duel.GetChainInfo(ev-1,CHAININFO_TRIGGERING_EFFECT):IsHasType(EFFECT_TYPE_ACTIVATE) then return false end
-	local ex,tg,tc=Duel.GetOperationInfo(ev,CATEGORY_DESTROY|CATEGORY_RELEASE|CATEGORY_REMOVE|CATEGORY_TOHAND|CATEGORY_TODECK|CATEGORY_TOGRAVE|CATEGORY_CONTROL)
+	local ex,tg,tc=Duel.GetOperationInfo(ev,CATEGORY_DESTROY)
+	return ex and tg~=nil and tc+tg:FilterCount(Card.IsOnField,nil)-#tg>0
+	local ex,tg,tc=Duel.GetOperationInfo(ev,CATEGORY_RELEASE)
+	return ex and tg~=nil and tc+tg:FilterCount(Card.IsOnField,nil)-#tg>0
+	local ex,tg,tc=Duel.GetOperationInfo(ev,CATEGORY_REMOVE)
+	return ex and tg~=nil and tc+tg:FilterCount(Card.IsOnField,nil)-#tg>0
+	local ex,tg,tc=Duel.GetOperationInfo(ev,CATEGORY_TOHAND)
+	return ex and tg~=nil and tc+tg:FilterCount(Card.IsOnField,nil)-#tg>0	
+	local ex,tg,tc=Duel.GetOperationInfo(ev,CATEGORY_TODECK)
+	return ex and tg~=nil and tc+tg:FilterCount(Card.IsOnField,nil)-#tg>0	
+	local ex,tg,tc=Duel.GetOperationInfo(ev,CATEGORY_TOGRAVE)
 	return ex and tg~=nil and tc+tg:FilterCount(Card.IsOnField,nil)-#tg>0
 end
 --
@@ -99,11 +109,13 @@ function s.dtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 end
 function s.dop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.NegateActivation(ev)
 	local c=e:GetHandler()
-	if Duel.NegateEffect(ev) and re:GetHandler():IsRelateToEffect(re) then
+	if re:GetHandler():IsRelateToEffect(re) then
 		Duel.BreakEffect()
 		Duel.Overlay(c,eg,true)
-end
+	end
+	e:GetHandler():RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
 end
 --
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
