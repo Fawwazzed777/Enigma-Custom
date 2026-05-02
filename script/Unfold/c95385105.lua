@@ -78,7 +78,7 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local seq=math.log(zone>>16,2)
 	local dc=Duel.GetFieldCard(1-tp,LOCATION_SZONE,seq)
 	if dc then Duel.Destroy(dc,REASON_RULE) end
-	if Duel.MoveToField(tc,tp,1-tp,LOCATION_SZONE,POS_FACEDOWN,true,1<<seq) then
+	if Duel.MoveToField(tc,tp,1-tp,LOCATION_SZONE,POS_FACEUP,true,1<<seq) then
 		--Treat as Continuous Spell
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
