@@ -54,13 +54,13 @@ function s.effcon(e,tp,eg,ep,ev,re,r,rp)
 	if ex and tg and tg:IsExists(Card.IsOnField,1,nil) then return true end
 	ex,tg,tc=Duel.GetOperationInfo(ev,CATEGORY_TODECK)
 	if ex and tg and tg:IsExists(Card.IsOnField,1,nil) then return true end
-	ex,tg,tc=Duel.GetOperationInfo(ev,CATEGORY_REMOVED)
+	ex,tg,tc=Duel.GetOperationInfo(ev,CATEGORY_REMOVE)
 	if ex and tg and tg:IsExists(Card.IsOnField,1,nil) then return true end
 	ex,tg,tc=Duel.GetOperationInfo(ev,CATEGORY_TOGRAVE)
 	if ex and tg and tg:IsExists(Card.IsOnField,1,nil) then return true end
 	ex,tg,tc=Duel.GetOperationInfo(ev,CATEGORY_DESTROY)
 	if ex and tg and tg:IsExists(Card.IsOnField,1,nil) then return true end
-	return false
+	return ex and tg~=nil and tc+tg:FilterCount(Card.IsOnField,nil)-#tg>0
 end
 --
 function s.dtg(e,tp,eg,ep,ev,re,r,rp,chk)
