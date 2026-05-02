@@ -85,8 +85,6 @@ end
 function s.effcon(e)
 	if e:GetHandler():GetFlagEffect(id)==0 then return false end
 	if e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) or not Duel.IsChainNegatable(ev) then return false end
-	if re:IsHasCategory(CATEGORY_NEGATE)
-		and Duel.GetChainInfo(ev-1,CHAININFO_TRIGGERING_EFFECT):IsHasType(EFFECT_TYPE_ACTIVATE) then return false end
 	if not Duel.IsChainDisablable(ev) then return false end
 	local eb,tg,tc=Duel.GetOperationInfo(ev,CATEGORY_REMOVE)
 	if eb and tg and tg:IsExists(Card.IsOnField,1,nil) then return true end
@@ -98,7 +96,7 @@ function s.effcon(e)
 	if eb and tg and tg:IsExists(Card.IsOnField,1,nil) then return true end
 	local eb,tg,tc=Duel.GetOperationInfo(ev,CATEGORY_TOHAND)
 	if eb and tg and tg:IsExists(Card.IsOnField,1,nil) then return true end
-	return eb and tg and tg:IsExists(Card.IsOnField,1,nil)
+	return false
 end
 --
 function s.dtg(e,tp,eg,ep,ev,re,r,rp,chk)
