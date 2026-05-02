@@ -65,7 +65,7 @@ function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingTarget(aux.FaceupFilter(Card.IsType,TYPE_MONSTER),tp,0,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
 	local tc=Duel.SelectTarget(tp,aux.FaceupFilter(Card.IsType,TYPE_MONSTER),tp,0,LOCATION_MZONE,1,1,nil):GetFirst()
-	local dc=Duel.GetFieldCard(1-tp,LOCATION_SZONE)
+	local dc=Duel.GetFieldCard(1-tp,LOCATION_SZONE,true)
 	if dc then
 		Duel.SetOperationInfo(0,CATEGORY_DESTROY,dc,1,0,0)
 	end
@@ -73,7 +73,7 @@ end
 function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if not (tc:IsRelateToEffect(e) and tc:IsControler(1-tp)) or tc:IsImmuneToEffect(e) then return end
-	if Duel.CheckLocation(1-tp,LOCATION_SZONE,nil)
+	if Duel.CheckLocation(1-tp,LOCATION_SZONE,true)
 		and Duel.MoveToField(tc,tp,1-tp,LOCATION_SZONE,POS_FACEDOWN,tc:IsMonsterCard()) then
 		--Treated as a Continuous Spell
 		local e1=Effect.CreateEffect(e:GetHandler())
