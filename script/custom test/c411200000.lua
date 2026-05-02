@@ -9,7 +9,7 @@ function s.initial_effect(c)
     e1:SetTarget(s.target)
     e1:SetOperation(s.activate)
     c:RegisterEffect(e1)
-    --ATK Boost: 100 for each card underneath
+    --ATK Boost: 200 for each card underneath
     local e2=Effect.CreateEffect(c)
     e2:SetType(EFFECT_TYPE_FIELD)
     e2:SetCode(EFFECT_UPDATE_ATTACK)
