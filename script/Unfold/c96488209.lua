@@ -82,7 +82,7 @@ function s.valcheck(e,c)
 		e:GetLabelObject():SetLabel(0)
 	end
 end
-function s.effcon(e)
+function s.effcon(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetHandler():GetFlagEffect(id)==0 then return false end
 	if e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) or not Duel.IsChainNegatable(ev) then return false end
 	if re:IsHasCategory(CATEGORY_NEGATE)
