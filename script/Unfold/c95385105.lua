@@ -64,7 +64,7 @@ function s.plfilter(c)
 	local p=c:GetOwner()
 	return c:IsFaceup() and c:IsMonster() and Duel.GetLocationCount(p,LOCATION_SZONE)>0
 		and c:CheckUniqueOnField(p,LOCATION_SZONE)
-		and (c:IsLocation(LOCATION_MZONE) or not c:IsForbidden())
+		and c:IsLocation(LOCATION_MZONE)
 end
 function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and s.plfilter(chkc) end
