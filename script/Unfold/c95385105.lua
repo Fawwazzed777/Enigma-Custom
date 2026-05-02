@@ -72,9 +72,11 @@ end
 function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if not (tc:IsRelateToEffect(e) and tc:IsControler(1-tp)) or tc:IsImmuneToEffect(e) then return end
-	if tc then
-	Duel.Destroy(tc,REASON_RULE)>0 end
-	if Duel.MoveToField(tc,tp,1-tp,LOCATION_SZONE,POS_FACEDOWN,tc:IsMonsterCard()) then
+	local seq=tc:GetSequence()
+	local dc=Duel.GetFieldCard(1-tp,LOCATION_SZONE,seq)
+	if Duel.Destroy(dc,REASON_RULE)>0 then end
+	if Duel.CheckLocation(1-tp,LOCATION_SZONE,seq)
+		and Duel.MoveToField(tc,tp,1-tp,LOCATION_SZONE,POS_FACEDOWN,tc:IsMonsterCard()) then
 		--Treated as a Continuous Spell
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
