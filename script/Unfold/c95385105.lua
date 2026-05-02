@@ -61,31 +61,31 @@ function s.rmcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
 end
 function s.plfilter(c)
-	return not c:IsType(TYPE_TOKEN)
+	return c:IsType(TYPE_MONSTER) and not c:IsType(TYPE_TOKEN)
 end
-function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and s.plfilter(chkc,tp) end
-	if chk==0 then return Duel.IsExistingTarget(s.plfilter,tp,0,LOCATION_MZONE,1,nil,tp) 
+function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and s.plfilter(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(s.plfilter,tp,0,LOCATION_MZONE,1,nil) 
 		and Duel.GetLocationCount(1-tp,LOCATION_SZONE)>0 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-	Duel.SelectTarget(tp,s.plfilter,tp,0,LOCATION_MZONE,1,1,nil,tp)
+	Duel.SelectTarget(tp,s.plfilter,tp,0,LOCATION_MZONE,1,1,nil)
 end
 function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if not (tc and tc:IsRelateToEffect(e) or tc:IsImmuneToEffect(e) and tc:IsControler(1-tp)) then return end
+	if not tc or not tc:IsRelateToEffect(e) or tc:IsControler(tp) then return end	
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOZONE)
 	local zone=Duel.SelectFieldZone(tp,1,0,LOCATION_SZONE,function(d,p,l,s) return p==1-tp and s<5 end)
+	if zone==0 then return end
 	local seq=math.log(zone>>16,2)
 	local dc=Duel.GetFieldCard(1-tp,LOCATION_SZONE,seq)
 	if dc then Duel.Destroy(dc,REASON_RULE) end
 	if Duel.MoveToField(tc,tp,1-tp,LOCATION_SZONE,POS_FACEUP,true,1<<seq) then
-		--Treat as Continuous Spell
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_CHANGE_TYPE)
 		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-		e1:SetValue(TYPE_SPELL|TYPE_CONTINUOUS)
-		e1:SetReset(RESET_EVENT|(RESETS_STANDARD&~RESET_TURN_SET))
+		e1:SetValue(TYPE_SPELL+TYPE_CONTINUOUS)
+		e1:SetReset(RESET_EVENT+(RESETS_STANDARD&~RESET_TURN_SET))
 		tc:RegisterEffect(e1)
 	end
 end
