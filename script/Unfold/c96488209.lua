@@ -31,7 +31,7 @@ function s.initial_effect(c)
 	--Would Leave the Field
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(id,0))
-	e4:SetCategory(CATEGORY_DISABLE+CATEGORY_DESTROY)
+	e4:SetCategory(CATEGORY_DISABLE)
 	e4:SetRange(LOCATION_MZONE)
 	e4:SetCountLimit(1)
 	e4:SetType(EFFECT_TYPE_QUICK_O)
@@ -95,7 +95,7 @@ function s.effcon(e)
 	if eb and tg and tg:IsExists(Card.IsOnField,1,nil) then return true end
 	local eb,tg,tc=Duel.GetOperationInfo(ev,CATEGORY_TOHAND)
 	if eb and tg and tg:IsExists(Card.IsOnField,1,nil) then return true end
-	return false
+	return eb and tg and tg:IsExists(Card.IsOnField,1,nil)
 end
 --
 function s.dtg(e,tp,eg,ep,ev,re,r,rp,chk)
