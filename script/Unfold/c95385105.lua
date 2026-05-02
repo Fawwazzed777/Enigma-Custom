@@ -61,32 +61,43 @@ function s.rmcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
 end
 function s.plfilter(c)
-	return c:IsType(TYPE_MONSTER) and not c:IsType(TYPE_TOKEN)
+	if c:IsFacedown() then return false end
+	local owner=c:GetOwner()
+	local ft=Duel.GetLocationCount(owner,LOCATION_SZONE)
+	if owner==tp and hand_chk then ft=ft-1 end
+	return ft>0
 end
 function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and s.plfilter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(s.plfilter,tp,0,LOCATION_MZONE,1,nil) 
-		and Duel.GetLocationCount(1-tp,LOCATION_SZONE)>0 end
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and s.plfilter(chkc,tp) end
+	if chk==0 then return Duel.IsExistingTarget(s.plfilter,tp,0,LOCATION_MZONE,1,nil,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-	Duel.SelectTarget(tp,s.plfilter,tp,0,LOCATION_MZONE,1,1,nil)
+	Duel.SelectTarget(tp,s.plfilter,tp,0,LOCATION_MZONE,1,1,nil,tp)
 end
 function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if not tc or not tc:IsRelateToEffect(e) or tc:IsControler(tp) then return end	
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOZONE)
-	local zone=Duel.SelectFieldZone(tp,1,0,LOCATION_SZONE,function(d,p,l,s) return p==1-tp and s<5 end)
-	if zone==0 then return end
-	local seq=math.log(zone>>16,2)
-	local dc=Duel.GetFieldCard(1-tp,LOCATION_SZONE,seq)
-	if dc then Duel.Destroy(dc,REASON_RULE) end
-	if Duel.MoveToField(tc,tp,1-tp,LOCATION_SZONE,POS_FACEUP,true,1<<seq) then
+	if not (tc:IsRelateToEffect(e) and not tc:IsImmuneToEffect(e)) then return end
+	if Duel.GetLocationCount(tc:GetOwner(),LOCATION_SZONE)==0 then
+		Duel.SendtoGrave(tc,REASON_RULE,nil,PLAYER_NONE)
+	elseif Duel.MoveToField(tc,tp,tc:GetOwner(),LOCATION_SZONE,POS_FACEUP,tc:IsMonsterCard()) then
+		--Treated as a Continuous Spell
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_CHANGE_TYPE)
 		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-		e1:SetValue(TYPE_SPELL+TYPE_CONTINUOUS)
-		e1:SetReset(RESET_EVENT+(RESETS_STANDARD&~RESET_TURN_SET))
+		e1:SetCode(EFFECT_CHANGE_TYPE)
+		e1:SetValue(TYPE_SPELL|TYPE_CONTINUOUS)
+		e1:SetReset(RESET_EVENT|(RESETS_STANDARD&~RESET_TURN_SET))
 		tc:RegisterEffect(e1)
+		local e=Effect.CreateEffect(c)
+		e:SetType(EFFECT_TYPE_SINGLE)
+		e:SetCode(EFFECT_DISABLE)
+		e:SetReset(RESET_EVENT|RESETS_STANDARD)
+		tc:RegisterEffect(e)
+		local e2=Effect.CreateEffect(c)
+		e2:SetType(EFFECT_TYPE_SINGLE)
+		e2:SetCode(EFFECT_DISABLE_EFFECT)
+		e2:SetValue(RESET_TURN_SET)
+		e2:SetReset(RESET_EVENT|RESETS_STANDARD)
+		tc:RegisterEffect(e2)
 	end
 end
 function s.rcon(e)
