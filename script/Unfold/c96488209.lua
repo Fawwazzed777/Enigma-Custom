@@ -74,7 +74,6 @@ function s.dop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.BreakEffect()
 		Duel.Overlay(c,eg,true)
 	end
-	e:GetHandler():RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
 end
 --
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
