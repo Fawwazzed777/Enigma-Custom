@@ -60,9 +60,9 @@ function s.rmcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
 	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
 end
-function s.plfilter(c,e,tp)
-	return c:IsFaceup() and c:IsMonster() and Duel.GetLocationCount(tp,LOCATION_SZONE)>0
-		and c:CheckUniqueOnField(tp,LOCATION_SZONE)
+function s.plfilter(c)
+	return c:IsFaceup() and c:IsMonster() and Duel.GetLocationCount(p,LOCATION_SZONE)>0
+		and c:CheckUniqueOnField(p,LOCATION_SZONE)
 		and c:IsLocation(LOCATION_MZONE)
 end
 function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -74,9 +74,9 @@ end
 function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if not tc:IsRelateToEffect(e) or tc:IsImmuneToEffect(e) then return end
-	if tc:IsLocation(LOCATION_MZONE) and Duel.GetLocationCount(tc,LOCATION_SZONE)==0 then
+	if tc:IsLocation(LOCATION_MZONE) and Duel.GetLocationCount(tc:GetOwner(),LOCATION_SZONE)==0 then
 		Duel.Destroy(tc,REASON_RULE,nil,PLAYER_NONE)
-	elseif Duel.MoveToField(tc,tp,tc,LOCATION_SZONE,POS_FACEUP,tc:IsMonsterCard()) then
+	elseif Duel.MoveToField(tc,tp,tc:GetOwner(),LOCATION_SZONE,POS_FACEUP,tc:IsMonsterCard()) then
 		--Treat it as a Continuous Spell
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
