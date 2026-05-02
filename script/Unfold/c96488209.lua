@@ -46,22 +46,21 @@ s.listed_names={96488201}
 function s.splimit(e,se,sp,st)
 	return not e:GetHandler():IsLocation(LOCATION_EXTRA) or aux.xyzlimit(e,se,sp,st)
 end
-function s.effcon(e)
+function s.effcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local has_mat=c:GetOverlayGroup():IsExists(Card.IsCode,1,nil,96488201)
 	if not has_mat or not Duel.IsChainNegatable(ev) then return false end
-	local ex,tg,tc=Duel.GetOperationInfo(ev,CATEGORY_DESTROY)
-	return ex and tg~=nil and tc+tg:FilterCount(Card.IsOnField,nil)-#tg>0
-	local ex,tg,tc=Duel.GetOperationInfo(ev,CATEGORY_RELEASE)
-	return ex and tg~=nil and tc+tg:FilterCount(Card.IsOnField,nil)-#tg>0
-	local ex,tg,tc=Duel.GetOperationInfo(ev,CATEGORY_REMOVE)
-	return ex and tg~=nil and tc+tg:FilterCount(Card.IsOnField,nil)-#tg>0
 	local ex,tg,tc=Duel.GetOperationInfo(ev,CATEGORY_TOHAND)
-	return ex and tg~=nil and tc+tg:FilterCount(Card.IsOnField,nil)-#tg>0	
-	local ex,tg,tc=Duel.GetOperationInfo(ev,CATEGORY_TODECK)
-	return ex and tg~=nil and tc+tg:FilterCount(Card.IsOnField,nil)-#tg>0	
-	local ex,tg,tc=Duel.GetOperationInfo(ev,CATEGORY_TOGRAVE)
-	return ex and tg~=nil and tc+tg:FilterCount(Card.IsOnField,nil)-#tg>0
+	if ex and tg and tg:IsExists(Card.IsOnField,1,nil) then return true end
+	ex,tg,tc=Duel.GetOperationInfo(ev,CATEGORY_TODECK)
+	if ex and tg and tg:IsExists(Card.IsOnField,1,nil) then return true end
+	ex,tg,tc=Duel.GetOperationInfo(ev,CATEGORY_REMOVED)
+	if ex and tg and tg:IsExists(Card.IsOnField,1,nil) then return true end
+	ex,tg,tc=Duel.GetOperationInfo(ev,CATEGORY_TOGRAVE)
+	if ex and tg and tg:IsExists(Card.IsOnField,1,nil) then return true end
+	ex,tg,tc=Duel.GetOperationInfo(ev,CATEGORY_DESTROY)
+	if ex and tg and tg:IsExists(Card.IsOnField,1,nil) then return true end
+	return false
 end
 --
 function s.dtg(e,tp,eg,ep,ev,re,r,rp,chk)
