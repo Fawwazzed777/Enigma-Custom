@@ -60,34 +60,31 @@ function s.rmcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
 	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
 end
-function s.rms(c) 
-	return c:IsType(TYPE_MONSTER) and not c:IsType(TYPE_TOKEN) 
+function s.plfilter(c)
+	local p=c:GetOwner()
+	return c:IsFaceup() and c:IsMonster() and Duel.GetLocationCount(p,LOCATION_SZONE)>0
+		and c:CheckUniqueOnField(p,LOCATION_SZONE)
+		and (c:IsLocation(LOCATION_MZONE) or not c:IsForbidden())
 end
 function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and chkc:IsType(TYPE_MONSTER) and not chkc:IsType(TYPE_TOKEN) end
-	if chk==0 then return Duel.IsExistingTarget(s.rms,tp,0,LOCATION_MZONE,1,nil) end
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and s.plfilter(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(s.plfilter,tp,0,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-	Duel.SelectTarget(tp,s.rms,tp,0,LOCATION_MZONE,1,1,nil)
+	local g=Duel.SelectTarget(tp,s.plfilter,tp,0,LOCATION_MZONE,1,1,nil)	
 end
 function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if not (tc and tc:IsRelateToEffect(e) and tc:IsControler(1-tp) and not tc:IsType(TYPE_TOKEN)) then return end
-	local zone=Duel.SelectFieldZone(tp,1,0,LOCATION_SZONE,function(d,p,l,s) return p==1-tp and s<5 end)
-	local seq=0
-	for i=0,4 do
-		if zone==(1<<(i+16)) then seq=i break end
-	end	
-	local dc=Duel.GetFieldCard(1-tp,LOCATION_SZONE,seq)
-	if dc then
-		Duel.Destroy(dc,REASON_EFFECT)
-	end
-	if Duel.MoveToField(tc,tp,1-tp,LOCATION_SZONE,POS_FACEDOWN,true,1<<seq) then
+	if not tc:IsRelateToEffect(e) or tc:IsImmuneToEffect(e) then return end
+	if tc:IsLocation(LOCATION_MZONE) and Duel.GetLocationCount(tc,LOCATION_SZONE)==0 then
+		Duel.SendtoGrave(tc,REASON_RULE,nil,PLAYER_NONE)
+	elseif Duel.MoveToField(tc,tp,tc,LOCATION_SZONE,POS_FACEUP,tc:IsMonsterCard()) then
+		--Treat it as a Continuous Spell
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_CHANGE_TYPE)
 		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+		e1:SetCode(EFFECT_CHANGE_TYPE)
 		e1:SetValue(TYPE_SPELL|TYPE_CONTINUOUS)
-		e1:SetReset(RESET_EVENT|RESETS_STANDARD&~RESET_TURN_SET)
+		e1:SetReset(RESET_EVENT|(RESETS_STANDARD&~RESET_TURN_SET))
 		tc:RegisterEffect(e1)
 	end
 end
