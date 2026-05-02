@@ -72,9 +72,11 @@ end
 function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if not (tc and tc:IsRelateToEffect(e) and tc:IsControler(1-tp) and not tc:IsType(TYPE_TOKEN)) then return end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOZONE)
-	local zone=Duel.SelectFieldZone(tp,1,0,LOCATION_SZONE,0x1f0000)
-	local seq=math.log(zone>>16,2)
+	local zone=Duel.SelectFieldZone(tp,1,0,LOCATION_SZONE,function(d,p,l,s) return p==1-tp and s<5 end)
+	local seq=0
+	for i=0,4 do
+		if zone==(1<<(i+16)) then seq=i break end
+	end	
 	local dc=Duel.GetFieldCard(1-tp,LOCATION_SZONE,seq)
 	if dc then
 		Duel.Destroy(dc,REASON_EFFECT)
