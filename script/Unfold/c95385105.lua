@@ -78,7 +78,7 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	if not (tc:IsRelateToEffect(e) and not tc:IsImmuneToEffect(e)) then return end
 	if Duel.GetLocationCount(tc:GetOwner(),LOCATION_SZONE)==0 then
 		Duel.SendtoGrave(tc,REASON_RULE,nil,PLAYER_NONE)
-	elseif Duel.MoveToField(tc,tp,tc:GetOwner(),LOCATION_SZONE,POS_FACEUP,tc:IsMonsterCard()) then
+	elseif Duel.MoveToField(tc,tp,tc:GetOwner(),LOCATION_SZONE,POS_FACEDOWN,tc:IsMonsterCard()) then
 		--Treated as a Continuous Spell
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
@@ -87,17 +87,7 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetValue(TYPE_SPELL|TYPE_CONTINUOUS)
 		e1:SetReset(RESET_EVENT|(RESETS_STANDARD&~RESET_TURN_SET))
 		tc:RegisterEffect(e1)
-		local e=Effect.CreateEffect(e:GetHandler())
-		e:SetType(EFFECT_TYPE_SINGLE)
-		e:SetCode(EFFECT_DISABLE)
-		e:SetReset(RESET_EVENT|RESETS_STANDARD)
-		tc:RegisterEffect(e)
-		local e2=Effect.CreateEffect(e:GetHandler())
-		e2:SetType(EFFECT_TYPE_SINGLE)
-		e2:SetCode(EFFECT_DISABLE_EFFECT)
-		e2:SetValue(RESET_TURN_SET)
-		e2:SetReset(RESET_EVENT|RESETS_STANDARD)
-		tc:RegisterEffect(e2)
+		
 	end
 end
 function s.rcon(e)
