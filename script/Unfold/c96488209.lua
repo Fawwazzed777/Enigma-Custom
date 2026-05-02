@@ -69,9 +69,8 @@ function s.dtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_DISABLE,eg,1,0,0)
 end
 function s.dop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.NegateActivation(ev)
 	local c=e:GetHandler()
-	if re:GetHandler():IsRelateToEffect(re) then
+	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) then
 		Duel.BreakEffect()
 		Duel.Overlay(c,eg,true)
 	end
