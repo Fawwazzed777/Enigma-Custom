@@ -43,7 +43,9 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
     local c=e:GetHandler()
-	local is_apply = not e:IsHasType(EFFECT_TYPE_ACTIVATE)
+	local is_apply=not e:IsHasType(EFFECT_TYPE_ACTIVATE)
+	local g=Duel.GetMatchingGroup(s.negfilter,tp,0,LOCATION_MZONE,nil)
+    if #g>0 then
     --Cannot Special Summon except FIRE monsters (only active if Recasted)
     local e1=Effect.CreateEffect(c)
     e1:SetType(EFFECT_TYPE_FIELD)
@@ -54,8 +56,6 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
     e1:SetTarget(s.splimit)
     e1:SetReset(RESET_PHASE+PHASE_END)
     Duel.RegisterEffect(e1,tp)
-    local g=Duel.GetMatchingGroup(s.negfilter,tp,0,LOCATION_MZONE,nil)
-    if #g>0 then
         for tc in aux.Next(g) do
             local e2=Effect.CreateEffect(c)
             e2:SetType(EFFECT_TYPE_SINGLE)
