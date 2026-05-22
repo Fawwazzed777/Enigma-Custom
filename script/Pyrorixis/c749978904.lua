@@ -46,16 +46,6 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local is_apply=not e:IsHasType(EFFECT_TYPE_ACTIVATE)
 	local g=Duel.GetMatchingGroup(s.negfilter,tp,0,LOCATION_MZONE,nil)
     if #g>0 then
-    --Cannot Special Summon except FIRE monsters (only active if Recasted)
-    local e1=Effect.CreateEffect(c)
-    e1:SetType(EFFECT_TYPE_FIELD)
-    e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
-    e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CLIENT_HINT)
-    e1:SetDescription(aux.Stringid(id,1))
-    e1:SetTargetRange(1,0)
-    e1:SetTarget(s.splimit)
-    e1:SetReset(RESET_PHASE+PHASE_END)
-    Duel.RegisterEffect(e1,tp)
         for tc in aux.Next(g) do
             local e2=Effect.CreateEffect(c)
             e2:SetType(EFFECT_TYPE_SINGLE)
@@ -71,7 +61,17 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
     if is_apply and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 
         and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp)
         and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then                   
-        if #g>0 then Duel.BreakEffect() end        
+        if #g>0 then Duel.BreakEffect() end   
+		--Cannot Special Summon except FIRE monsters (only active if Recasted)
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_FIELD)
+		e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+		e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CLIENT_HINT)
+		e1:SetDescription(aux.Stringid(id,1))
+		e1:SetTargetRange(1,0)
+		e1:SetTarget(s.splimit)
+		e1:SetReset(RESET_PHASE+PHASE_END)
+		Duel.RegisterEffect(e1,tp)		
         Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
         local sc=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp):GetFirst()
         if sc and Duel.SpecialSummon(sc,0,tp,tp,false,false,POS_FACEUP)>0 then
