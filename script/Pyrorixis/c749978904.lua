@@ -24,9 +24,6 @@ function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
     local g=Duel.SelectMatchingCard(tp,s.costfilter,tp,LOCATION_HAND+LOCATION_ONFIELD,0,1,1,e:GetHandler())
     Duel.SendtoGrave(g,REASON_COST)
 end
-function s.negfilter(c)
-    return c:IsFaceup() and not c:IsDisabled()
-end
 function s.spfilter(c,e,tp)
     return c:IsSetCard(0x7f3) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
@@ -44,17 +41,15 @@ end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
     local c=e:GetHandler()
 	local is_apply=not e:IsHasType(EFFECT_TYPE_ACTIVATE)
-	local g=Duel.GetMatchingGroup(s.negfilter,tp,0,LOCATION_MZONE,nil)
+	local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,0,nil)
     if #g>0 then
         for tc in aux.Next(g) do
             local e2=Effect.CreateEffect(c)
             e2:SetType(EFFECT_TYPE_SINGLE)
-            e2:SetCode(EFFECT_DISABLE)
+            e2:SetCode(EFFECT_UPDATE_ATTACK)
+			e2:SetValue(1000)
             e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
             tc:RegisterEffect(e2)
-            local e3=e2:Clone()
-            e3:SetCode(EFFECT_DISABLE_EFFECT)
-            tc:RegisterEffect(e3)
         end
     end
     --RECAST (Special Summon + Gain LP)
