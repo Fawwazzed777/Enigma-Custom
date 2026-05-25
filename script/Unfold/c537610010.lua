@@ -79,18 +79,9 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not tc or not tc:IsRelateToEffect(e) or tc:IsFacedown() or not c:IsRelateToEffect(e) or c:IsFacedown() then return end
 	local diff=math.abs(tc:GetDefense()-c:GetDefense())
-	if diff>0 and Duel.Recover(tp,diff,REASON_EFFECT)>0 then
-		Duel.BreakEffect()
-	end
-	local ffilter=function(c)
-		return c:IsType(TYPE_FUSION) and c:IsRace(RACE_WARRIOR)
-	end
-	local params={
-		filter=ffilter,
-		stage2=nil,
-		location=LOCATION_HAND+LOCATION_MZONE,
-		chkf=tp}
-	if Fusion.CheckSummonableEff(c,tp,params) then
-		Fusion.SummonEff(c,tp,params)
+	if diff>0 and Duel.Recover(tp,diff,REASON_EFFECT)>0 and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+	Duel.BreakEffect()
+	Fusion.SummonEffTG(aux.FilterBoolFunction(Card.IsRace,RACE_WARRIOR))
+	Fusion.SummonEffOP(aux.FilterBoolFunction(Card.IsRace,RACE_WARRIOR))(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
