@@ -15,7 +15,7 @@ function s.initial_effect(c)
 	--recover
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
-	e2:SetCategory(CATEGORY_RECOVER)
+	e2:SetCategory(CATEGORY_RECOVER+CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetRange(LOCATION_MZONE)
@@ -69,15 +69,28 @@ function s.atkfilter(c,ec)
 end
 function s.atktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and s.atkfilter(chkc) end
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and s.atkfilter(chkc) and chkc~=c end
 	if chk==0 then return Duel.IsExistingTarget(s.atkfilter,tp,LOCATION_MZONE,0,1,c) end
 	Duel.SelectTarget(tp,s.atkfilter,tp,LOCATION_MZONE,0,1,1,c)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
 function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	local c=e:GetHandler()
-	if tc:IsRelateToEffect(e) and tc:IsFaceup() then
-		local diff=math.abs(tc:GetDefense()-c:GetDefense())
-		Duel.Recover(tp,diff,REASON_EFFECT)
-end
+	if not tc or not tc:IsRelateToEffect(e) or tc:IsFacedown() or not c:IsRelateToEffect(e) or c:IsFacedown() then return end
+	local diff=math.abs(tc:GetDefense()-c:GetDefense())
+	if diff>0 and Duel.Recover(tp,diff,REASON_EFFECT)>0 then
+		Duel.BreakEffect()
+	end
+	local ffilter=function(c)
+		return c:IsType(TYPE_FUSION) and c:IsRace(RACE_WARRIOR)
+	end
+	local params={
+		filter=ffilter,
+		stage2=nil,
+		location=LOCATION_HAND+LOCATION_MZONE,
+		chkf=tp}
+	if Fusion.CheckSummonableEff(c,tp,params) then
+		Fusion.SummonEff(c,tp,params)
+	end
 end
