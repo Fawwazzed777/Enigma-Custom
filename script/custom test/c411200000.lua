@@ -4,11 +4,14 @@ function s.initial_effect(c)
     --Activate: Attach up to 3 cards from GY/Banish
     local e1=Effect.CreateEffect(c)
     e1:SetCategory(CATEGORY_LEAVE_GRAVE)
+	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
     e1:SetType(EFFECT_TYPE_ACTIVATE)
     e1:SetCode(EVENT_FREE_CHAIN)
     e1:SetTarget(s.target)
     e1:SetOperation(s.activate)
     c:RegisterEffect(e1)
+	if not GhostBelleTable then GhostBelleTable={} end
+	table.insert(GhostBelleTable,e1)
     --ATK Boost: 200 for each card underneath
     local e2=Effect.CreateEffect(c)
     e2:SetType(EFFECT_TYPE_FIELD)
@@ -45,15 +48,18 @@ function s.filter(c)
 end
 
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-    if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil) end
+    if chk==0 then return Duel.IsExistingTarget(s.filter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil) end
 end
 
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
     local c=e:GetHandler()
     if not c:IsRelateToEffect(e) then return end
-    local g=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,2,nil)
+    local g=Duel.GetMatchingGroup(s.filter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,nil)
     if #g>0 then
-        Duel.Overlay(c,g)
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SELECT)
+		local sg=g:Select(tp,1,2,nil)
+		Duel.SetTargetCard(sg)
+        Duel.Overlay(c,sg)
     end
 end
 
