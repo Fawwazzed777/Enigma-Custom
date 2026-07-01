@@ -42,6 +42,10 @@ function s.effcon(e,tp,eg,ep,ev,re,r,rp)
 		return Duel.IsMainPhase() and Duel.GetTurnPlayer()==tp and Duel.GetCurrentChain()==0
 	end
 end
+function s.lpcon1(e,tp,eg,ep,ev,re,r,rp)
+	local tp=e:GetHandlerPlayer()
+	return Duel.GetLP(tp)>Duel.GetLP(1-tp)
+end
 function s.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,1,e:GetHandler()) end
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,tg,1,0,0)
