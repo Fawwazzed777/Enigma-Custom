@@ -7,46 +7,40 @@ function s.initial_effect(c)
 	--Send to GY
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
-	e1:SetCategory(CATEGORY_ATKCHANGE)
-	e1:SetType(EFFECT_TYPE_IGNITION)
+	e1:SetCategory(CATEGORY_TOGRAVE+CATEGORY_ATKCHANGE)
+	e1:SetType(EFFECT_TYPE_QUICK_O)
+	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(1)
-	e1:SetCondition(s.ctcon)
+	e1:SetCondition(s.effcon)
 	e1:SetTarget(s.tg)
 	e1:SetOperation(s.op)
 	c:RegisterEffect(e1)
-	--Turn into Quick Effect
-	local e2=e1:Clone()
-	e2:SetType(EFFECT_TYPE_QUICK_O)
-	e2:SetCode(EVENT_FREE_CHAIN)
-	e2:SetCondition(s.lpcon)
-	c:RegisterEffect(e2)
 	--indes
-	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_SINGLE)
-	e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-	e3:SetRange(LOCATION_MZONE)
-	e3:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
-	e3:SetCondition(s.lpcon1)
-	e3:SetValue(1)
-	c:RegisterEffect(e3)
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_SINGLE)
+	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
+	e2:SetCondition(s.lpcon1)
+	e2:SetValue(1)
+	c:RegisterEffect(e2)
 end
 s.listed_series={0xbf45}
 function s.cfilter(c,atk)
 	return c:IsFaceup() and c:GetAttack()>atk
 end
-function s.ctcon(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.IsExistingMatchingCard(s.cfilter,tp,0,LOCATION_MZONE,1,nil,e:GetHandler():GetAttack())
-	return g 
-end
-function s.lpcon(e,tp,eg,ep,ev,re,r,rp)
-	local tp=e:GetHandlerPlayer()
-	local g=Duel.IsExistingMatchingCard(s.cfilter,tp,0,LOCATION_MZONE,1,nil,e:GetHandler():GetAttack())
-	return g and Duel.GetLP(tp)>Duel.GetLP(1-tp)
-end
-function s.lpcon1(e,tp,eg,ep,ev,re,r,rp)
-	local tp=e:GetHandlerPlayer()
-	return Duel.GetLP(tp)>Duel.GetLP(1-tp)
+function s.effcon(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if not Duel.IsExistingMatchingCard(s.cfilter,tp,0,LOCATION_MZONE,1,nil,c:GetAttack()) then return false end
+	local high_lp=Duel.GetLP(tp)>Duel.GetLP(1-tp)	
+	if high_lp then
+		--Quick Effect
+		return true
+	else
+		--Ignition
+		return Duel.IsMainPhase() and Duel.GetTurnPlayer()==tp and Duel.GetCurrentChain()==0
+	end
 end
 function s.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,1,e:GetHandler()) end
