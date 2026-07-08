@@ -70,9 +70,10 @@ function s.dtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.dop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) then
-		Duel.BreakEffect()
-		Duel.Overlay(c,eg,true)
+	local rc=re:GetHandler()
+	if Duel.NegateActivation(ev) and rc:IsRelateToEffect(re) then
+		rc:CancelToGrave()
+		Duel.Overlay(c,rc,true)
 	end
 end
 --
