@@ -76,6 +76,7 @@ function s.distg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
+	local g=Duel.SelectMatchingCard(tp,s.disfilter,tp,0,LOCATION_MZONE,1,1,nil)
 	local tc=Duel.GetFirst()
 	if tc:IsNegatable() and tc:IsRelateToEffect(e) then
 		Duel.HintSelection(tc)
