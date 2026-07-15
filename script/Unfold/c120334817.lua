@@ -45,7 +45,7 @@ function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SET)
 end
 function s.tdop(e,tp,eg,ep,ev,re,r,rp)
-	local rg=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,e:GetHandler()) 
+	local rg=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_ONFIELD,0,e:GetHandler()) 
 	local sr=Duel.IsExistingMatchingCard(s.ha,tp,LOCATION_DECK+LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil)
 	if rg and sr then
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
