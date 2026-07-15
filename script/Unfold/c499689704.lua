@@ -41,6 +41,7 @@ local c=e:GetHandler()
 	if #g>0 then
 		Duel.HintSelection(g)
 		local tc=g:GetFirst()
+		Duel.NegateRelatedChain(tc,RESET_TURN_SET)
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_DISABLE)
@@ -52,6 +53,7 @@ local c=e:GetHandler()
 		e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 		tc:RegisterEffect(e2)
 		if Duel.GetLP(tp)>Duel.GetLP(1-tp) and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+		Duel.AdjustInstantly(tc)
 		Duel.SendtoGrave(tc,REASON_EFFECT)
 		end
 	end
