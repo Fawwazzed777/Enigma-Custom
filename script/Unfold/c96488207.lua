@@ -75,26 +75,25 @@ function s.distg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_DISABLE,nil,1,1-tp,LOCATION_MZONE)
 end
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
-local c=e:GetHandler()
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_NEGATE)
-	local g=Duel.SelectMatchingCard(tp,s.disfilter,tp,0,LOCATION_MZONE,1,1,nil)
-	if #g>0 then
-		Duel.HintSelection(g)
-		local tc=g:GetFirst()
+	local c=e:GetHandler()
+	local tc=Duel.GetFirst()
+	if tc:IsNegatable() and tc:IsRelateToEffect(e) then
+		Duel.HintSelection(tc)
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_DISABLE)
-		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+		e1:SetReset(RESETS_STANDARD_PHASE_END)
 		tc:RegisterEffect(e1)
 		local e2=Effect.CreateEffect(c)
 		e2:SetType(EFFECT_TYPE_SINGLE)
 		e2:SetCode(EFFECT_DISABLE_EFFECT)
-		e2:SetReset(RESET_EVENT+RESETS_STANDARD)
+		e2:SetReset(RESETS_STANDARD_PHASE_END)
 		tc:RegisterEffect(e2)
-		if Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
-		Duel.Remove(g,POS_FACEUP,REASON_EFFECT)	
+		if Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
+			Duel.AdjustInstantly(tc)
+			Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)
+		end
 	end
-end
 end
 function s.spfilter2(c,e,tp)
 	return c:IsFaceup() and c:IsSetCard(0x344) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) 
