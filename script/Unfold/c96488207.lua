@@ -68,7 +68,7 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.disfilter(c)
-	return c:IsFaceup() and not c:IsDisabled()
+	return c:IsFaceup() and Card.IsNegatableMonster() and not c:IsDisabled()
 end
 function s.distg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.disfilter,tp,0,LOCATION_MZONE,1,nil) end
@@ -77,9 +77,13 @@ end
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local g=Duel.GetMatchingGroup(s.disfilter,tp,0,LOCATION_MZONE,nil)
-	local tc=g:Select(tp,1,1,nil)
-	if tc:IsNegatable() and tc:IsRelateToEffect(e) then
-		Duel.HintSelection(tc)
+	if c:IsRelateToEffect(e) then
+		Duel.BreakEffect()
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
+		local sg=g:Select(tp,1,1,nil)
+		Duel.HintSelection(sg)
+		local tc=sg:GetFirst()
+		Duel.NegateRelatedChain(tc,RESET_TURN_SET)
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_DISABLE)
@@ -90,7 +94,7 @@ function s.disop(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetCode(EFFECT_DISABLE_EFFECT)
 		e2:SetReset(RESET_EVENT+RESETS_STANDARD)
 		tc:RegisterEffect(e2)
-		if Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
+		if tc:IsAbleToRemove() and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
 			Duel.AdjustInstantly(tc)
 			Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)
 		end
