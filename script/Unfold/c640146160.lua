@@ -23,7 +23,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 s.listed_series={0x344}
-function s.filter1(c,e,tp)
+function s.filter1(c,tp)
 	return c:IsMonster() and c:IsSetCard(0x344) and c:HasLevel() and c:IsAbleToHand()
 		and Duel.IsExistingMatchingCard(s.filter2,tp,LOCATION_DECK,0,1,c,c:GetLevel())
 end
@@ -55,7 +55,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		if #g1==0 then break end 		
 		local tc1=g1:GetFirst()		
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-		g2=Duel.SelectMatchingCard(tp,s.filter2,tp,LOCATION_DECK,0,1,1,tc1,tc1:GetLevel())		
+		g2=Duel.SelectMatchingCard(tp,s.filter2,tp,LOCATION_DECK,0,0,1,tc1,tc1:GetLevel())		
 		if #g2>0 then
 			break
 		else
