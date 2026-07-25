@@ -102,7 +102,6 @@ function s.negop(e,tp,eg,ep,ev,re,r,rp)
 	e3:SetTarget(s.distg)
 	e3:SetReset(RESET_EVENT|RESETS_STANDARD|RESET_PHASE|PHASE_BATTLE)
 	Duel.RegisterEffect(e3,tp)
-end
 	if Duel.IsExistingMatchingCard(s.attachfilter,tp,LOCATION_GRAVE,0,1,nil,tp) then
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATTACH)
 	local mc=Duel.SelectMatchingCard(tp,s.attachfilter,tp,LOCATION_GRAVE,0,1,1,nil,tp):GetFirst()
@@ -111,6 +110,7 @@ end
 	if not xyzc:IsImmuneToEffect(e) then
 	Duel.BreakEffect()
 	Duel.Overlay(xyzc,mc)
+end
 end
 end
 function s.distg(e,c)
