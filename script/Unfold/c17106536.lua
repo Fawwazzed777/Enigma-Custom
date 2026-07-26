@@ -85,10 +85,11 @@ end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then
 		local g=Group.CreateGroup()
+		local c=e:GetHandler()
 		for i=1,ev do
 			local te=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_EFFECT)
 			local tc=te:GetHandler()
-			if tc and tc:IsCanBeEffectTarget(e) and te:IsActiveType(TYPE_MONSTER) then
+			if tc and tc:IsCanBeEffectTarget(e) and te:IsActiveType(TYPE_MONSTER) and not c then
 				local loc=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_LOCATION)
 				g:AddCard(tc)
 			end
@@ -99,7 +100,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		for i=1,ev do
 			local te=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_EFFECT)
 			local tc=te:GetHandler()
-			if tc and tc:IsCanBeEffectTarget(e) and te:IsActiveType(TYPE_MONSTER) then
+			if tc and tc:IsCanBeEffectTarget(e) and te:IsActiveType(TYPE_MONSTER) and not c then
 				local loc=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_LOCATION)
 				g:AddCard(tc)
 			end
@@ -110,7 +111,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	for i=1,ev do
 		local te=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_EFFECT)
 		local tc=te:GetHandler()
-		if tc and tc:IsCanBeEffectTarget(e) and te:IsActiveType(TYPE_MONSTER) then
+		if tc and tc:IsCanBeEffectTarget(e) and te:IsActiveType(TYPE_MONSTER) and not c then
 			local loc=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_LOCATION)
 			g:AddCard(tc)
 			tc:RegisterFlagEffect(511002034,RESET_CHAIN,0,1,i)
