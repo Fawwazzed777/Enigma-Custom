@@ -118,7 +118,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		end
 	end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-	local sg=g:Select(tp,1,1,nil)
+	local sg=g:Select(tp,1,1,c)
 	Duel.SetTargetCard(sg)
 	local i=sg:GetFirst():GetFlagEffectLabel(511002034)
 	local te=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_EFFECT)
