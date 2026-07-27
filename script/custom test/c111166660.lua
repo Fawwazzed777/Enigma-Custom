@@ -22,7 +22,7 @@ function s.initial_effect(c)
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_SINGLE)
 	e0:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e0:SetCode(EFFECT_RANK_LEVEL_S)
+	e0:SetCode(EFFECT_LEVEL_RANK_S)
 	c:RegisterEffect(e0)
     --Anti-Climbing Lock
     local e1=Effect.CreateEffect(c)
