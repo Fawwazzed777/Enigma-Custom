@@ -10,7 +10,7 @@ Auxiliary.addLizardCheck(c)
 	--Special Summon condition
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SINGLE_RANGE)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE|EFFECT_FLAG_UNCOPYABLE|EFFECT_FLAG_SINGLE_RANGE)
 	e1:SetCode(EFFECT_SPSUMMON_CONDITION)
 	e1:SetRange(LOCATION_EXTRA)
 	e1:SetValue(aux.DarkLightFLimit)
@@ -21,24 +21,24 @@ Auxiliary.addLizardCheck(c)
 	e2:SetCategory(CATEGORY_DISABLE)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e2:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
+	e2:SetProperty(EFFECT_FLAG_CARD_TARGET|EFFECT_FLAG_DELAY|EFFECT_FLAG_DAMAGE_STEP)
 	e2:SetCountLimit(1,id)
 	e2:SetCondition(s.copycon)
 	e2:SetTarget(s.copytg)
 	e2:SetOperation(s.copyop)
 	c:RegisterEffect(e2)
-	--negate+steal(copy)
+	--Choose a Chain to negate and copy operation of that effect
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,1))
 	e3:SetCategory(CATEGORY_DISABLE)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_QUICK_O)
 	e3:SetCode(EVENT_CHAINING)
-	e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL+EFFECT_FLAG_CARD_TARGET)
+	e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP|EFFECT_FLAG_DAMAGE_CAL|EFFECT_FLAG_NO_TURN_RESET)
 	e3:SetRange(LOCATION_MZONE)
-	e3:SetCountLimit(1,EFFECT_COUNT_CODE_SINGLE)
+	e3:SetCountLimit(1)
 	e3:SetCondition(s.negcon)
-	e3:SetTarget(s.target)
-	e3:SetOperation(s.operation)
+	e3:SetTarget(s.negtg)
+	e3:SetOperation(s.negop)
 	c:RegisterEffect(e3)
 end
 s.listed_names={17106529}
@@ -115,22 +115,74 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local te=Duel.GetChainInfo(sel,CHAININFO_TRIGGERING_EFFECT)
 	Duel.SetOperationInfo(0,CATEGORY_DISABLE,nil,1,0,0)
 end
-function s.operation(e,tp,eg,ep,ev,re,r,rp)
+function s.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	local c=e:GetHandler()
+	--Helper to store chain link (Because you can't legally target monster in hand, plus i may need to ask judge for this)
+	local function valid_chain(ch_index)
+		local te=Duel.GetChainInfo(ch_index,CHAININFO_TRIGGERING_EFFECT)
+		if not te or not te:IsActiveType(TYPE_MONSTER) or not Duel.IsChainNegatable(ch_index) then 
+			return false 
+		end
+		local tc=te:GetHandler()
+		return tc~=c and te:GetHandler()~=c
+	end
+	if chk==0 then
+		for i=1,ev do
+			if valid_chain(i) then return true end
+		end
+		return false
+	end
+	local t={}
+	for i=1,ev do
+		if valid_chain(i) then
+			table.insert(t,i)
+		end
+	end
+
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
+	local sel=Duel.AnnounceNumber(tp,table.unpack(t))
+	e:SetLabel(sel)	
+	Duel.SetOperationInfo(0,CATEGORY_DISABLE,nil,1,0,0)
+end
+
+function s.negop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local sel_ev=e:GetLabel()
 	if sel_ev<=0 then return end	
 	local te=Duel.GetChainInfo(sel_ev,CHAININFO_TRIGGERING_EFFECT)
-	if not te then return end
+	if not te then return end	
+	--NEGATE ACTIVATION ON CHAIN
 	if Duel.NegateActivation(sel_ev) then	
-		local op=te:GetOperation()
-		local tg=te:GetTarget()	
-		--APPLY ACTIVATED EFFECT AS THIS CARD'S EFFECT
-		local chk_tg=true
-		if tg then
-			chk_tg=tg(e,tp,eg,ep,ev,re,r,rp,0)
-		end		
-		if chk_tg and op then
-			op(e,tp,eg,ep,ev,re,r,rp)
+		if c:IsRelateToEffect(e) and c:IsFaceup() then
+			Duel.BreakEffect()		
+			local copied_tg=te:GetTarget()
+			local copied_op=te:GetOperation()	
+			--STOLEN EFFECT
+			local e1=Effect.CreateEffect(c)
+			e1:SetDescription(aux.Stringid(id,2))--"Execute Stolen Monster Effect"
+			e1:SetType(EFFECT_TYPE_QUICK_O)
+			e1:SetCode(EVENT_FREE_CHAIN)
+			e1:SetHintTiming(0,TIMINGS_CHECK_MONSTER_E)
+			e1:SetRange(LOCATION_MZONE)
+			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+			e1:SetTarget(function(e,tp,eg,ep,ev,re,r,rp,chk)
+				if chk==0 then
+					if copied_tg then
+						return copied_tg(e,tp,eg,ep,ev,re,r,rp,0)
+					end
+					return true
+				end
+				if copied_tg then
+					copied_tg(e,tp,eg,ep,ev,re,r,rp,1)
+				end
+			end)
+			e1:SetOperation(function(e,tp,eg,ep,ev,re,r,rp)
+				if copied_op then
+					copied_op(e,tp,eg,ep,ev,re,r,rp)
+				end
+			end)		
+			c:RegisterEffect(e1)
+			Duel.Hint(HINT_CARD,0,te:GetHandler():GetOriginalCode())
 		end
 	end
 end
