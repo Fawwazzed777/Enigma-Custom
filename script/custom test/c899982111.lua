@@ -119,7 +119,7 @@ function s.fusop(e,tp,eg,ep,ev,re,r,rp)
 		if Duel.SpecialSummon(tc,SUMMON_TYPE_FUSION,tp,tp,true,false,POS_FACEUP)>0 then
 			tc:CompleteProcedure()			
 			--Future Proof
-			tc:RegisterFlagEffect(17106529, RESET_EVENT+RESETS_STANDARD,0,1)
+			tc:RegisterFlagEffect(17106529,RESET_EVENT+RESETS_STANDARD,0,1)
 		end
 	end
 end
