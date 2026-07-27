@@ -36,6 +36,7 @@ Auxiliary.addLizardCheck(c)
 	e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL+EFFECT_FLAG_CARD_TARGET)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCountLimit(1,EFFECT_COUNT_CODE_SINGLE)
+	e3:SetCondition(s.negcon)
 	e3:SetTarget(s.target)
 	e3:SetOperation(s.operation)
 	c:RegisterEffect(e3)
@@ -81,77 +82,55 @@ function s.copyop(e,tp,eg,ep,ev,re,r,rp)
 		c:CopyEffect(tc:GetOriginalCode(),RESET_EVENT+RESETS_STANDARD,1)
 end
 end
-
+function s.negcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetCurrentChain()>0
+end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
-	if chkc then
-		local g=Group.CreateGroup()
-		for i=1,ev do
-			local te=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_EFFECT)
-			local tc=te:GetHandler()
-			if tc and tc:IsCanBeEffectTarget(e) and te:IsActiveType(TYPE_MONSTER) and tc~=c then
-				g:AddCard(tc)
-			end
+	--Helper
+	local function valid_chain(ch_index)
+		local te=Duel.GetChainInfo(ch_index,CHAININFO_TRIGGERING_EFFECT)
+		if not te or not te:IsActiveType(TYPE_MONSTER) or not Duel.IsChainNegatable(ch_index) then 
+			return false 
 		end
-		return g:IsContains(chkc) 
-	end	
-	if chk==0 then
-		local g=Group.CreateGroup()
-		for i=1,ev do
-			local te=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_EFFECT)
-			local tc=te:GetHandler()
-			if tc and tc:IsCanBeEffectTarget(e) and te:IsActiveType(TYPE_MONSTER) and tc~=c then
-				g:AddCard(tc)
-			end
-		end
-		return #g>0
-	end	
-	local g=Group.CreateGroup()
-	for i=1,ev do
-		local te=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_EFFECT)
 		local tc=te:GetHandler()
-		if tc and tc:IsCanBeEffectTarget(e) and te:IsActiveType(TYPE_MONSTER) and tc~=c then
-			g:AddCard(tc)
-			tc:RegisterFlagEffect(511002034,RESET_CHAIN,0,1,i)
+		return tc~=c and te:GetHandler()~=c
+	end
+	if chk==0 then
+		for i=1,ev do
+			if valid_chain(i) then return true end
 		end
-	end	
+		return false
+	end
+	local t={}
+	for i=1,ev do
+		if valid_chain(i) then
+			table.insert(t,i)
+		end
+	end
+	--Choose which Chain Link you want to negate and copy
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-	local sg=g:Select(tp,1,1,nil)
-	Duel.SetTargetCard(sg)
-	local i=sg:GetFirst():GetFlagEffectLabel(511002034)
-	local te=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_EFFECT)
-	Duel.SetOperationInfo(0,CATEGORY_DISABLE,sg,1,0,0)
+	local sel=Duel.AnnounceNumber(tp,table.unpack(t))
+	e:SetLabel(sel)	
+	local te=Duel.GetChainInfo(sel,CHAININFO_TRIGGERING_EFFECT)
+	Duel.SetOperationInfo(0,CATEGORY_DISABLE,nil,1,0,0)
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local tc=Duel.GetFirstTarget()
-	if not tc or not tc:IsRelateToEffect(e) or tc:IsDisabled() then return end
-	Duel.NegateRelatedChain(tc,RESET_TURN_SET)
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-	e1:SetCode(EFFECT_DISABLE)
-	e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-	tc:RegisterEffect(e1)
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_SINGLE)
-	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-	e2:SetCode(EFFECT_DISABLE_EFFECT)
-	e2:SetValue(RESET_TURN_SET)
-	e2:SetReset(RESET_EVENT+RESETS_STANDARD)
-	tc:RegisterEffect(e2)
-	if tc:IsType(TYPE_TRAPMONSTER) then
-		local e3=Effect.CreateEffect(c)
-		e3:SetType(EFFECT_TYPE_SINGLE)
-		e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-		e3:SetCode(EFFECT_DISABLE_TRAPMONSTER)
-		e3:SetReset(RESET_EVENT+RESETS_STANDARD)
-		tc:RegisterEffect(e3)
-	end
-	local i=tc:GetFlagEffectLabel(511002034)
-	local te=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_EFFECT)
-	if not tc:IsImmuneToEffect(e1) and not tc:IsImmuneToEffect(e2) and (not e3 or not tc:IsImmuneToEffect(e3)) and tc:IsRelateToEffect(te) 
-		and c:IsRelateToEffect(e) and c:IsFaceup() then
-		c:CopyEffect(tc:GetOriginalCode(),RESET_EVENT+RESETS_STANDARD,1)
+	local sel_ev=e:GetLabel()
+	if sel_ev<=0 then return end	
+	local te=Duel.GetChainInfo(sel_ev,CHAININFO_TRIGGERING_EFFECT)
+	if not te then return end
+	if Duel.NegateActivation(sel_ev) then	
+		local op=te:GetOperation()
+		local tg=te:GetTarget()	
+		--APPLY ACTIVATED EFFECT AS THIS CARD'S EFFECT
+		local chk_tg=true
+		if tg then
+			chk_tg=tg(e,tp,eg,ep,ev,re,r,rp,0)
+		end		
+		if chk_tg and op then
+			op(e,tp,eg,ep,ev,re,r,rp)
+		end
 	end
 end
