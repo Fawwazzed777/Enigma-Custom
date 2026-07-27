@@ -82,7 +82,10 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
-
+function s.fusfilter(c,e,tp,mg)
+	return c:IsType(TYPE_FUSION) and (c:IsCode(17106536) or c:CheckFusionMaterial(mg,nil,tp))
+		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,true,false)
+end
 function s.fuscon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsMainPhase()
 end
@@ -92,12 +95,22 @@ function s.fuscost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.fustg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
-		local params={chkf=tp, mg=Duel.GetFusionMaterial(tp)}
-		return Fusion.SummonEffTG(params)(e,tp,eg,ep,ev,re,r,rp,chk)
+		local mg=Duel.GetFusionMaterial(tp)
+		return Duel.IsExistingMatchingCard(s.fusfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg)
 	end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
 function s.fusop(e,tp,eg,ep,ev,re,r,rp)
-	local params={chkf=tp, mg=Duel.GetFusionMaterial(tp)}
-	Fusion.SummonEffOP(params)(e,tp,eg,ep,ev,re,r,rp)
+	local mg=Duel.GetFusionMaterial(tp)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local g=Duel.SelectMatchingCard(tp,s.fusfilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp,mg)
+	local tc=g:GetFirst()
+	if tc then
+		local mat=Duel.SelectFusionMaterial(tp,tc,mg,nil,tp)
+		tc:SetMaterial(mat)
+		Duel.SendtoGrave(mat,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
+		Duel.BreakEffect()
+		Duel.SpecialSummon(tc,SUMMON_TYPE_FUSION,tp,tp,true,false,POS_FACEUP)
+		tc:CompleteProcedure()
+	end
 end
