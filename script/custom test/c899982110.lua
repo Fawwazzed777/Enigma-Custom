@@ -5,7 +5,7 @@ local s,id=GetID()
 s.Vcore=true
 function s.initial_effect(c)
 	if s.Vcore then Vortex.AddCoreSubstitute(c) end	
-    --Banish 1 of your card
+    --Banish 1 card to add "Darklight Fusion"
     local e1=Effect.CreateEffect(c)
     e1:SetDescription(aux.Stringid(id,0))
     e1:SetCategory(CATEGORY_REMOVE)
@@ -28,6 +28,10 @@ function s.initial_effect(c)
     e3:SetOperation(s.tunop)
     c:RegisterEffect(e3)
 end
+s.listed_names={17106529}
+function s.thfilter(c)
+	return c:IsCode(17106529) and c:IsAbleToHand()
+end
 function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,nil) end
     Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,tp,LOCATION_HAND+LOCATION_GRAVE)
@@ -36,7 +40,13 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
     local g=Duel.SelectMatchingCard(tp,Card.IsAbleToRemove,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,1,nil)
     if #g>0 then
-        Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
+        if Duel.Remove(g,POS_FACEUP,REASON_EFFECT)~=0 and Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_REMOVED+LOCATION_DECK+LOCATION_GRAVE,0,1,nil) then
+		local sg=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_REMOVED+LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil)
+			if #sg>0 then
+			Duel.SendtoHand(sg,nil,REASON_EFFECT)
+			Duel.ConfirmCards(1-tp,sg)
+			end
+		end
     end
 end
 function s.tunop(e,tp,eg,ep,ev,re,r,rp)
