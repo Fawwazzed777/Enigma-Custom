@@ -123,7 +123,9 @@ function s.negop(e,tp,eg,ep,ev,re,r,rp)
 			Duel.BreakEffect()				
 			local stolen_e=te:Clone()
 			local copied_tg=te:GetTarget()
-			local copied_op=te:GetOperation()			
+			local copied_op=te:GetOperation()
+			--Use the copy effect count limit
+			local count,code=te:GetCountLimit()			
 			--STOLEN EFFECT REGISTER TO DARK TEMPLAR
 			local e1=Effect.CreateEffect(c)
 			e1:SetDescription(aux.Stringid(id,2))
@@ -131,7 +133,15 @@ function s.negop(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetCode(EVENT_FREE_CHAIN)
 			e1:SetHintTiming(0,TIMINGS_CHECK_MONSTER_E)
 			e1:SetRange(LOCATION_MZONE)
-			e1:SetReset(RESET_EVENT+RESETS_STANDARD)			
+			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+			if count>0 then
+				--copy count limit
+				if code>0 then
+					e1:SetCountLimit(count,{id,1})
+				else
+					e1:SetCountLimit(count)
+				end
+			end			
 			e1:SetTarget(function(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 				if chkc then
 					if copied_tg then
