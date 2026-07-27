@@ -86,6 +86,12 @@ function s.fusfilter(c,e,tp,mg)
 	return c:IsType(TYPE_FUSION) and (c:IsCode(17106536) or c:CheckFusionMaterial(mg,nil,tp))
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,true,false)
 end
+function s.getfusmats(tp)
+	local g1=Duel.GetFusionMaterial(tp)--Hand & Your Field
+	local g2=Duel.GetMatchingGroup(Card.IsCanBeFusionMaterial,tp,0,LOCATION_MZONE,nil)--Opponent's Field
+	g1:Merge(g2)
+	return g1
+end
 function s.fuscon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsMainPhase()
 end
@@ -110,7 +116,10 @@ function s.fusop(e,tp,eg,ep,ev,re,r,rp)
 		tc:SetMaterial(mat)
 		Duel.SendtoGrave(mat,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
 		Duel.BreakEffect()
-		Duel.SpecialSummon(tc,SUMMON_TYPE_FUSION,tp,tp,true,false,POS_FACEUP)
-		tc:CompleteProcedure()
+		if Duel.SpecialSummon(tc,SUMMON_TYPE_FUSION,tp,tp,true,false,POS_FACEUP)>0 then
+			tc:CompleteProcedure()			
+			--Future Proof
+			tc:RegisterFlagEffect(17106529, RESET_EVENT+RESETS_STANDARD,0,1)
+		end
 	end
 end
