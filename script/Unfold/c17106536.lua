@@ -83,49 +83,44 @@ end
 end
 
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	local c=e:GetHandler()
 	if chkc then
 		local g=Group.CreateGroup()
-		local c=e:GetHandler()
 		for i=1,ev do
 			local te=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_EFFECT)
 			local tc=te:GetHandler()
-			if tc and tc:IsCanBeEffectTarget(e) and te:IsActiveType(TYPE_MONSTER) and not c then
-				local loc=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_LOCATION)
+			if tc and tc:IsCanBeEffectTarget(e) and te:IsActiveType(TYPE_MONSTER) and tc~=c then
 				g:AddCard(tc)
 			end
 		end
-		return g:IsContains(chkc) end
+		return g:IsContains(chkc) 
+	end	
 	if chk==0 then
 		local g=Group.CreateGroup()
 		for i=1,ev do
 			local te=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_EFFECT)
 			local tc=te:GetHandler()
-			if tc and tc:IsCanBeEffectTarget(e) and te:IsActiveType(TYPE_MONSTER) and not c then
-				local loc=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_LOCATION)
+			if tc and tc:IsCanBeEffectTarget(e) and te:IsActiveType(TYPE_MONSTER) and tc~=c then
 				g:AddCard(tc)
 			end
 		end
 		return #g>0
-	end
+	end	
 	local g=Group.CreateGroup()
 	for i=1,ev do
 		local te=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_EFFECT)
 		local tc=te:GetHandler()
-		if tc and tc:IsCanBeEffectTarget(e) and te:IsActiveType(TYPE_MONSTER) and not c then
-			local loc=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_LOCATION)
+		if tc and tc:IsCanBeEffectTarget(e) and te:IsActiveType(TYPE_MONSTER) and tc~=c then
 			g:AddCard(tc)
 			tc:RegisterFlagEffect(511002034,RESET_CHAIN,0,1,i)
 		end
-	end
+	end	
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-	local sg=g:Select(tp,1,1,c)
+	local sg=g:Select(tp,1,1,nil)
 	Duel.SetTargetCard(sg)
 	local i=sg:GetFirst():GetFlagEffectLabel(511002034)
 	local te=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_EFFECT)
 	Duel.SetOperationInfo(0,CATEGORY_DISABLE,sg,1,0,0)
-	if sg:GetFirst():IsRelateToEffect(te) then
-		Duel.SetOperationInfo(0,CATEGORY_DISABLE,sg,1,0,0)
-	end
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
