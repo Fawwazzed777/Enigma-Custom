@@ -31,7 +31,7 @@ Auxiliary.addLizardCheck(c)
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,1))
 	e3:SetCategory(CATEGORY_DISABLE)
-	e3:SetType(EFFECT_TYPE_QUICK_O)
+	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_QUICK_O)
 	e3:SetCode(EVENT_CHAINING)
 	e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP|EFFECT_FLAG_DAMAGE_CAL|EFFECT_FLAG_NO_TURN_RESET)
 	e3:SetRange(LOCATION_MZONE)
@@ -82,7 +82,8 @@ function s.copyop(e,tp,eg,ep,ev,re,r,rp)
 end
 end
 function s.negcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetCurrentChain()>0
+	local c=e:GetHandler()
+	return Duel.GetCurrentChain()>0 and not c:IsStatus(STATUS_BATTLE_DESTROYED)
 end
 function s.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
