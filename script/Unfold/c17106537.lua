@@ -137,6 +137,8 @@ local c=e:GetHandler()
 	if #g>0 then
 		Duel.HintSelection(g)
 		local tc=g:GetFirst()
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
+		Duel.NegateRelatedChain(tc,RESET_TURN_SET)
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_DISABLE)
