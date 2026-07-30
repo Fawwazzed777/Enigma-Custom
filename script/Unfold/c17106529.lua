@@ -40,6 +40,7 @@ end
 function s.stage2(e,tc,tp,sg,chk)
 if chk==1 then
 		local c=e:GetHandler()
+		tc:RegisterFlagEffect(17106529,RESET_EVENT+RESETS_STANDARD,0,1)
 		local e1=Effect.CreateEffect(c)
 		e1:SetDescription(aux.Stringid(id,0))
 		e1:SetType(EFFECT_TYPE_SINGLE)
