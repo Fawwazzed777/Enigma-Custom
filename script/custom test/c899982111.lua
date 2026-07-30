@@ -83,8 +83,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.fusfilter(c,e,tp,mg)
-	return c:IsType(TYPE_FUSION) and (c:IsCode(17106536) or c:CheckFusionMaterial(mg,nil,tp))
-		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,true,false)
+	return c:IsType(TYPE_FUSION) and c:CheckFusionMaterial(mg,nil,tp) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false)
 end
 function s.getfusmats(tp)
 	local g1=Duel.GetFusionMaterial(tp)--Hand & Your Field
@@ -113,13 +112,15 @@ function s.fusop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=g:GetFirst()
 	if tc then
 		local mat=Duel.SelectFusionMaterial(tp,tc,mg,nil,tp)
-		tc:SetMaterial(mat)
-		Duel.SendtoGrave(mat,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
-		Duel.BreakEffect()
-		if Duel.SpecialSummon(tc,SUMMON_TYPE_FUSION,tp,tp,true,false,POS_FACEUP)>0 then
-			tc:CompleteProcedure()			
-			--Future Proof
-			tc:RegisterFlagEffect(17106529,RESET_EVENT+RESETS_STANDARD,0,1)
+		if #mat>0 then
+			tc:SetMaterial(mat)
+			Duel.SendtoGrave(mat,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
+			Duel.BreakEffect()
+			if Duel.SpecialSummon(tc,SUMMON_TYPE_FUSION,tp,tp,false,false,POS_FACEUP)>0 then
+				tc:CompleteProcedure()			
+				--Future Proof Flag
+				tc:RegisterFlagEffect(17106529,RESET_EVENT+RESETS_STANDARD,0,1)
+			end
 		end
 	end
 end
