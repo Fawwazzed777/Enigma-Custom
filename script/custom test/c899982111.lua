@@ -23,7 +23,7 @@ function s.initial_effect(c)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1,{id,1})
 	e2:SetCondition(s.fuscon)
-	e2:SetCost(s.fuscost)
+	e2:SetCost(Cost.PayLP(1500))
 	e2:SetTarget(s.fustg)
 	e2:SetOperation(s.fusop)
 	c:RegisterEffect(e2)
@@ -83,7 +83,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.fusfilter(c,e,tp,mg)
-	return c:IsType(TYPE_FUSION) and c:CheckFusionMaterial(mg,nil,tp) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false)
+	return (c:IsAttribute(ATTRIBUTE_DARK) and c:IsType(TYPE_FUSION)) and c:CheckFusionMaterial(mg,nil,tp) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false)
 end
 function s.getfusmats(tp)
 	local g1=Duel.GetFusionMaterial(tp)--Hand & Your Field
@@ -94,19 +94,15 @@ end
 function s.fuscon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsMainPhase()
 end
-function s.fuscost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckLPCost(tp,1500) end
-	Duel.PayLPCost(tp,1500)
-end
 function s.fustg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
-		local mg=Duel.GetFusionMaterial(tp)
+		local mg=s.getfusmats(tp)
 		return Duel.IsExistingMatchingCard(s.fusfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg)
 	end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
 function s.fusop(e,tp,eg,ep,ev,re,r,rp)
-	local mg=Duel.GetFusionMaterial(tp)
+	local mg=s.getfusmats(tp)--local mg=Duel.GetFusionMaterial(tp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,s.fusfilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp,mg)
 	local tc=g:GetFirst()
