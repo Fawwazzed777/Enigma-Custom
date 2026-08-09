@@ -52,14 +52,15 @@ function s.con(e,tp,eg,ep,ev,re,r,rp)
 	if not bc then return false end
 	if tc:IsControler(1-tp) then tc,bc=bc,tc end
 	if tc:IsFaceup() and (tc:IsSetCard(0xfc13) and tc:IsType(TYPE_SYNCHRO)) or 
-	(tc:GetOriginalLevel()>=8 and tc:IsAttribute(ATTRIBUTE_WATER) and tc:IsRace(RACE_WYRM) and tc:IsType(TYPE_SYNCHRO)) then
+	(tc:GetOriginalLevel()>=8 and tc:IsAttribute(ATTRIBUTE_WATER) and tc:IsRace(RACE_WYRM) 
+	and tc:IsType(TYPE_SYNCHRO)) and not bc:IsDisabled() and bc:CanAttack() then
 		e:SetLabelObject(bc)
 		return true
 	else return false end
 end
 function s.tg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
-	local bc=e:GetLabelObject()
+	local bc=e:GetLabelObject()	
+	if chk==0 then return bc and not bc:IsDisabled() and bc:CanAttack()end
 	Duel.SetOperationInfo(0,CATEGORY_DISABLE,bc,1,0,0)
 end
 function s.op(e,tp,eg,ep,ev,re,r,rp)
