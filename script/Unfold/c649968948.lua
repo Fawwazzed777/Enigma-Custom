@@ -60,7 +60,7 @@ function s.con(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local bc=e:GetLabelObject()	
-	if chk==0 then return bc and not bc:IsDisabled() and bc:CanAttack()end
+	if chk==0 then return bc and not bc:IsDisabled() and bc:CanAttack() and not bc:IsStatus(STATUS_BATTLE_DESTROYED) end
 	Duel.SetOperationInfo(0,CATEGORY_DISABLE,bc,1,0,0)
 end
 function s.op(e,tp,eg,ep,ev,re,r,rp)
