@@ -53,20 +53,20 @@ function s.con(e,tp,eg,ep,ev,re,r,rp)
 	if tc:IsControler(1-tp) then tc,bc=bc,tc end
 	if tc:IsFaceup() and (tc:IsSetCard(0xfc13) and tc:IsType(TYPE_SYNCHRO)) or 
 	(tc:GetOriginalLevel()>=8 and tc:IsAttribute(ATTRIBUTE_WATER) and tc:IsRace(RACE_WYRM) 
-	and tc:IsType(TYPE_SYNCHRO)) and not bc:IsDisabled() and bc:CanAttack() and not bc:IsStatus(STATUS_BATTLE_DESTROYED) then
+	and tc:IsType(TYPE_SYNCHRO)) and not (bc:IsDisabled() and bc:IsStatus(STATUS_BATTLE_DESTROYED))and bc:CanAttack() then
 		e:SetLabelObject(bc)
 		return true
 	else return false end
 end
 function s.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local bc=e:GetLabelObject()	
-	if chk==0 then return bc and not bc:IsDisabled() and bc:CanAttack() and not bc:IsStatus(STATUS_BATTLE_DESTROYED) end
+	if chk==0 then return bc and not (bc:IsDisabled() and bc:IsStatus(STATUS_BATTLE_DESTROYED)) and bc:CanAttack() end
 	Duel.SetOperationInfo(0,CATEGORY_DISABLE,bc,1,0,0)
 end
 function s.op(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
 	local bc=e:GetLabelObject()
-	if bc and bc:IsRelateToBattle() then
+	if bc and bc:IsRelateToBattle() and not bc:IsStatus(STATUS_BATTLE_DESTROYED) then
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(EFFECT_DISABLE)
