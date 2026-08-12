@@ -50,8 +50,8 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	if #g>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		if Duel.ConfirmCards(1-tp,g)~=0 then
-			local atk=g:GetBaseAttack()
-			local def=g:GetBaseDefense()
+			local atk=tc:GetBaseAttack()
+			local def=tc:GetBaseDefense()
 			local val=math.min(atk,def)
 				Duel.Damage(1-tp,val/2,REASON_EFFECT)
 			end
