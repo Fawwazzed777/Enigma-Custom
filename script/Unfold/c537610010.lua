@@ -58,6 +58,12 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetValue(1)
 			e1:SetReset(RESET_PHASE+PHASE_DAMAGE)
 			tc:RegisterEffect(e1)
+			local e2=Effect.CreateEffect(c)
+			e2:SetType(EFFECT_TYPE_SINGLE)
+			e2:SetCode(EFFECT_UPDATE_ATTACK)
+			e2:SetValue(1000)
+			e2:SetReset(RESET_EVENT|RESETS_STANDARD)
+			tc:RegisterEffect(e2)
 end
 end
 end
