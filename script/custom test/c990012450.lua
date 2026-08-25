@@ -1,4 +1,4 @@
---Enigmation Force - Dissonance Wing Layra
+--Enigmation Force - Dark Wing Layra
 local s,id=GetID()
 function s.initial_effect(c)
 	--Special Summon from hand by sending 1 archetype monster to GY
