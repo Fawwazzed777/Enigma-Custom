@@ -112,9 +112,10 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil)
 	if #g>0 and Duel.SendtoHand(g,nil,REASON_EFFECT)>0 and g:GetFirst():IsLocation(LOCATION_HAND) then
 		Duel.ConfirmCards(1-tp,g)
-		if c:IsRelateToEffect(e) and c:IsFaceup() and c:HasLevel() then
+		local acc=g:GetFirst()
+		if c:IsRelateToEffect(e) and c:IsFaceup() and acc:HasLevel() then
 			Duel.BreakEffect()
-			local atk=c:GetLevel()*200
+			local atk=acc:GetLevel()*200
 			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_UPDATE_ATTACK)
