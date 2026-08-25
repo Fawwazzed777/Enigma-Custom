@@ -53,8 +53,9 @@ function s.cfilter(c,e,tp)
         and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil,e,tp,c:GetAttribute())
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-    if chk==0 then return Duel.CheckReleaseGroupCost(tp,s.cfilter,1,false,nil,nil,e,tp) end
-    local g=Duel.SelectReleaseGroupCost(tp,s.cfilter,1,1,false,nil,nil,e,tp)
+	local c=e:GetHandler()
+    if chk==0 then return Duel.CheckReleaseGroupCost(tp,s.cfilter,1,false,nil,c,e,tp) end
+    local g=Duel.SelectReleaseGroupCost(tp,s.cfilter,1,1,false,nil,c,e,tp)
     e:SetLabel(g:GetFirst():GetAttribute())
     Duel.Release(g,REASON_COST)
 end
