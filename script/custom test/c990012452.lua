@@ -7,7 +7,7 @@ function s.initial_effect(c)
     --This card is also a DARK Attribute while on the field or GY (This effect cannot be negated).
     local e1=Effect.CreateEffect(c)
     e1:SetType(EFFECT_TYPE_SINGLE)
-    e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+    e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
     e1:SetCode(EFFECT_ADD_ATTRIBUTE)
     e1:SetRange(LOCATION_MZONE+LOCATION_GRAVE)
     e1:SetValue(ATTRIBUTE_DARK)
