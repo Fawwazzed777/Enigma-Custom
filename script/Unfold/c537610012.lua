@@ -2,7 +2,7 @@
 local s,id=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()
-	Fusion.AddProcMix(c,true,true,aux.FilterBoolFunctionEx(Card.IsSetCard,0x391),aux.FilterBoolFunctionEx(Card.IsLocation,LOCATION_ONFIELD))
+	Fusion.AddProcMixN(c,true,true,aux.FilterBoolFunctionEx(Card.IsSetCard,0x391),1,s.wfilter,1)
 	--Buff
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
@@ -33,6 +33,9 @@ end
 s.listed_series={0x391}
 function s.bcon()
 	return Duel.IsMainPhase()
+end
+function s.wfilter(c,fc,sumtype,tp)
+	return c:IsAttribute(ATTRIBUTE_WIND,fc,sumtype,tp) and c:IsOnField()
 end
 function s.dfilter(c)
 	return c:IsAbleToHand() and c:IsSetCard(0x391)
