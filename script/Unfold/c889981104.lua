@@ -41,9 +41,11 @@ function s.initial_effect(c)
 	c:RegisterEffect(e4)
 	--Unaffected by other cards' effects that would make it leave the field
 	local e5=Effect.CreateEffect(c)
-	e5:SetType(EFFECT_TYPE_EQUIP)
+	e5:SetType(EFFECT_TYPE_FIELD)
 	e5:SetCode(EFFECT_IMMUNE_EFFECT)
-	e5:SetCondition(s.immcon)
+	e5:SetRange(LOCATION_SZONE)
+	e5:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
+	e5:SetTarget(s.immtg)
 	e5:SetValue(s.efilter)
 	c:RegisterEffect(e5)
 end
@@ -100,9 +102,9 @@ function s.gyop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Equip(tp,c,tc)
 	end
 end
-function s.immcon(e)
+function s.immtg(e,c)
 	local ec=e:GetHandler():GetEquipTarget()
-	return ec and ec:IsAttribute(ATTRIBUTE_DIVINE)
+	return c==ec and ec:IsAttribute(ATTRIBUTE_DIVINE)
 end
 function s.leaveChk(c,category)
 	local ex,tg=Duel.GetOperationInfo(0,category)
@@ -111,5 +113,5 @@ end
 function s.efilter(e,te)
 	local c=e:GetHandler()
 	if te:GetOwnerPlayer()==c:GetControler() then return false end
-	return te:IsHasCategory(CATEGORY_DESTROY+CATEGORY_REMOVE+CATEGORY_TOHAND+CATEGORY_TODECK+CATEGORY_TOGRAVE+CATEGORY_RELEASE)
+	return te:IsHasCategory(CATEGORY_DESTROY+CATEGORY_RELEASE+CATEGORY_REMOVE+CATEGORY_TOHAND+CATEGORY_TODECK+CATEGORY_TOGRAVE+CATEGORY_TOEXTRA)
 end
