@@ -38,12 +38,7 @@ function s.initial_effect(c)
 	e4:SetTarget(s.gytg)
 	e4:SetOperation(s.gyop)
 	c:RegisterEffect(e4)
-	local e5=Effect.CreateEffect(c)
-	e5:SetType(EFFECT_TYPE_EQUIP)
-	e5:SetCode(EFFECT_IMMUNE_EFFECT)
-	e5:SetCondition(s.immcon)
-	e5:SetValue(s.efilter)
-	c:RegisterEffect(e5)
+
 end
 function s.tgeq(e,tp,eg,ev,ep,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and chkc:IsFaceup() end
@@ -54,8 +49,19 @@ function s.tgeq(e,tp,eg,ev,ep,re,r,rp,chk,chkc)
 end
 function s.opeq(e,tp,eg,ev,ep,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if e:GetHandler():IsRelateToEffect(e) and tc:IsRelateToEffect(e) and tc:IsFaceup() then
-		Duel.Equip(tp,e:GetHandler(),tc)
+	local c=e:GetHandler()
+	if c:IsRelateToEffect(e) and tc:IsRelateToEffect(e) and tc:IsFaceup() then
+		Duel.Equip(tp,c,tc)
+		--Protection for the equipped monster
+		local e5=Effect.CreateEffect(c)
+		e5:SetType(EFFECT_TYPE_SINGLE)
+		e5:SetCode(EFFECT_IMMUNE_EFFECT)
+		e5:SetRange(LOCATION_MZONE)
+		e5:SetCondition(s.immcon)
+		e5:SetValue(s.efilter)
+		e5:SetReset(RESET_EVENT+RESETS_STANDARD)
+		e5:SetLabelObject(c)
+		tc:RegisterEffect(e5)
 	end
 end
 function s.tscon(e,tp,eg,ev,ep,re,r,rp)
@@ -97,8 +103,9 @@ function s.gyop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.immcon(e)
-	local ec=e:GetHandler():GetEquipTarget()
-    return ec and ec:IsAttribute(ATTRIBUTE_DIVINE)
+	local ec=e:GetLabelObject()
+	local tc=e:GetHandler()
+	return ec and ec:IsFaceup() and ec:GetEquipTarget()==tc and tc:IsAttribute(ATTRIBUTE_DIVINE)
 end
 function s.leaveChk(c,category)
 	local ex,tg=Duel.GetOperationInfo(0,category)

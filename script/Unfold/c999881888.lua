@@ -1,7 +1,7 @@
---Vertak (Token)
+--Vacuosa the Unformed Deity
 local s,id=GetID()
 function s.initial_effect(c)
-	--Copy Stat and Summon another "Vertak"
+	--Copy Stat and Summon another "Vacuosa"
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TOKEN)
