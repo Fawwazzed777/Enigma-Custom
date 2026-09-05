@@ -84,6 +84,9 @@ function s.hdcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.hdtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
+	if e:GetHandler():IsLocation(LOCATION_DECK) then
+		Duel.ConfirmCards(1-tp,e:GetHandler())
+	end
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,0,1-tp,1)
 end
 function s.hdop(e,tp,eg,ep,ev,re,r,rp)
