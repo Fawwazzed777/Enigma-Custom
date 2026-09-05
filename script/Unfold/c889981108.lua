@@ -71,7 +71,7 @@ function s.dtcon(e,tp,eg,ep,ev,re,r,rp)
 		and ep~=tp and re:GetHandler():IsLocation(LOCATION_ONFIELD) and re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsSpellTrapEffect()
 end
 function s.posfilter(c)
-	return c:IsCanChangePosition()
+	return c:IsCanChangePosition() and c:IsDefensePos() or c:IsFacedown()
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.posfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
@@ -80,8 +80,8 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.drop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(s.posfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
-	Duel.ChangePosition(g,POS_FACEUP_ATTACK,0,POS_FACEUP_ATTACK,0)
 	if #g==0 then return end
+	Duel.ChangePosition(g,0,0,POS_FACEUP_ATTACK,POS_FACEUP_ATTACK,true)
 	local c=e:GetHandler()
 	for tc in g:Iter() do
 		--Cannot be destroyed
