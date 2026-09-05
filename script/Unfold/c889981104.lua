@@ -39,7 +39,13 @@ function s.initial_effect(c)
 	e4:SetTarget(s.gytg)
 	e4:SetOperation(s.gyop)
 	c:RegisterEffect(e4)
-
+	--Unaffected by other cards' effects that would make it leave the field
+	local e5=Effect.CreateEffect(c)
+	e5:SetType(EFFECT_TYPE_EQUIP)
+	e5:SetCode(EFFECT_IMMUNE_EFFECT)
+	e5:SetCondition(s.immcon)
+	e5:SetValue(s.efilter)
+	c:RegisterEffect(e5)
 end
 function s.tgeq(e,tp,eg,ev,ep,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and chkc:IsFaceup() end
@@ -53,16 +59,7 @@ function s.opeq(e,tp,eg,ev,ep,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) and tc:IsRelateToEffect(e) and tc:IsFaceup() then
 		Duel.Equip(tp,c,tc)
-		--Protection for the equipped monster
-		local e5=Effect.CreateEffect(c)
-		e5:SetType(EFFECT_TYPE_SINGLE)
-		e5:SetCode(EFFECT_IMMUNE_EFFECT)
-		e5:SetRange(LOCATION_MZONE)
-		e5:SetCondition(s.immcon)
-		e5:SetValue(s.efilter)
-		e5:SetReset(RESET_EVENT+RESETS_STANDARD)
-		e5:SetLabelObject(c)
-		tc:RegisterEffect(e5)
+
 	end
 end
 function s.tscon(e,tp,eg,ev,ep,re,r,rp)
@@ -104,39 +101,35 @@ function s.gyop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.immcon(e)
-	local ec=e:GetLabelObject()
-	local tc=e:GetHandler()
-	return ec and ec:IsFaceup() and ec:GetEquipTarget()==tc and tc:IsAttribute(ATTRIBUTE_DIVINE)
+	local ec=e:GetHandler():GetEquipTarget()
+	return ec and ec:IsAttribute(ATTRIBUTE_DIVINE)
 end
 function s.leaveChk(c,category)
 	local ex,tg=Duel.GetOperationInfo(0,category)
 	return ex and tg~=nil and tg:IsContains(c)
 end
 function s.efilter(e,te)
-	local ec=e:GetLabelObject()
-	if not ec or te:GetOwnerPlayer()==ec:GetControler() then return false end
-	local ex,tg=Duel.GetOperationInfo(0,CATEGORY_DESTROY)
-	if ex and tg and tg:IsContains(e:GetHandler()) then
+	local c=e:GetHandler()
+	local tc=c:GetEquipTarget()
+	if not tc then return false end
+	--Your own cards can still affect the equipped monster
+	if te:GetOwnerPlayer()==c:GetControler() then return false end
+	if s.leaveChk(tc,CATEGORY_DESTROY) then
 		return true
 	end
-	local ex,tg=Duel.GetOperationInfo(0,CATEGORY_REMOVE)
-	if ex and tg and tg:IsContains(e:GetHandler()) then
+	if s.leaveChk(tc,CATEGORY_REMOVE) then
 		return true
 	end
-	local ex,tg=Duel.GetOperationInfo(0,CATEGORY_TOHAND)
-	if ex and tg and tg:IsContains(e:GetHandler()) then
+	if s.leaveChk(tc,CATEGORY_TOHAND) then
 		return true
 	end
-	local ex,tg=Duel.GetOperationInfo(0,CATEGORY_TODECK)
-	if ex and tg and tg:IsContains(e:GetHandler()) then
+	if s.leaveChk(tc,CATEGORY_TODECK) then
 		return true
 	end
-	local ex,tg=Duel.GetOperationInfo(0,CATEGORY_TOGRAVE)
-	if ex and tg and tg:IsContains(e:GetHandler()) then
+	if s.leaveChk(tc,CATEGORY_TOGRAVE) then
 		return true
 	end
-	local ex,tg=Duel.GetOperationInfo(0,CATEGORY_RELEASE)
-	if ex and tg and tg:IsContains(e:GetHandler()) then
+	if s.leaveChk(tc,CATEGORY_RELEASE) then
 		return true
 	end
 	return false
