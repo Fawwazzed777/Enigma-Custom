@@ -113,6 +113,31 @@ function s.leaveChk(c,category)
 	return ex and tg~=nil and tg:IsContains(c)
 end
 function s.efilter(e,te)
-	if te:GetOwnerPlayer()==ec:GetControler() then return false end
-	return te:IsHasCategory(CATEGORY_TOHAND+CATEGORY_TODECK+CATEGORY_REMOVE+CATEGORY_TOGRAVE+CATEGORY_DESTROY+CATEGORY_RELEASE)
+	local ec=e:GetLabelObject()
+	if not ec or te:GetOwnerPlayer()==ec:GetControler() then return false end
+	local ex,tg=Duel.GetOperationInfo(0,CATEGORY_DESTROY)
+	if ex and tg and tg:IsContains(e:GetHandler()) then
+		return true
+	end
+	local ex,tg=Duel.GetOperationInfo(0,CATEGORY_REMOVE)
+	if ex and tg and tg:IsContains(e:GetHandler()) then
+		return true
+	end
+	local ex,tg=Duel.GetOperationInfo(0,CATEGORY_TOHAND)
+	if ex and tg and tg:IsContains(e:GetHandler()) then
+		return true
+	end
+	local ex,tg=Duel.GetOperationInfo(0,CATEGORY_TODECK)
+	if ex and tg and tg:IsContains(e:GetHandler()) then
+		return true
+	end
+	local ex,tg=Duel.GetOperationInfo(0,CATEGORY_TOGRAVE)
+	if ex and tg and tg:IsContains(e:GetHandler()) then
+		return true
+	end
+	local ex,tg=Duel.GetOperationInfo(0,CATEGORY_RELEASE)
+	if ex and tg and tg:IsContains(e:GetHandler()) then
+		return true
+	end
+	return false
 end
