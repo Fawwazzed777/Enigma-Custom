@@ -110,27 +110,6 @@ function s.leaveChk(c,category)
 end
 function s.efilter(e,te)
 	local c=e:GetHandler()
-	local tc=c:GetEquipTarget()
-	if not tc then return false end
-	--Your own cards can still affect the equipped monster
 	if te:GetOwnerPlayer()==c:GetControler() then return false end
-	if s.leaveChk(tc,CATEGORY_DESTROY) then
-		return true
-	end
-	if s.leaveChk(tc,CATEGORY_REMOVE) then
-		return true
-	end
-	if s.leaveChk(tc,CATEGORY_TOHAND) then
-		return true
-	end
-	if s.leaveChk(tc,CATEGORY_TODECK) then
-		return true
-	end
-	if s.leaveChk(tc,CATEGORY_TOGRAVE) then
-		return true
-	end
-	if s.leaveChk(tc,CATEGORY_RELEASE) then
-		return true
-	end
-	return false
+	return te:IsHasCategory(CATEGORY_DESTROY+CATEGORY_REMOVE+CATEGORY_TOHAND+CATEGORY_TODECK+CATEGORY_TOGRAVE+CATEGORY_RELEASE)
 end
