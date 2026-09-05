@@ -113,6 +113,6 @@ function s.leaveChk(c,category)
 	return ex and tg~=nil and tg:IsContains(c)
 end
 function s.efilter(e,te)
-	if te:GetOwnerPlayer()==e:GetHandlerPlayer() then return false end
+	if te:GetOwnerPlayer()==ec:GetControler() then return false end
 	return te:IsHasCategory(CATEGORY_TOHAND+CATEGORY_TODECK+CATEGORY_REMOVE+CATEGORY_TOGRAVE+CATEGORY_DESTROY+CATEGORY_RELEASE)
 end
