@@ -74,7 +74,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.thcon1filter(c,tp)
-	return c:IsAttribute(ATTRIBUTE_WIND) and c:IsType(TYPE_FUSION) and c:IsControler(tp) and c:IsFaceup()
+	return c:IsAttribute(ATTRIBUTE_WIND) and c:IsType(TYPE_FUSION) and c:IsFaceup()
 end
 function s.thcon1(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.thcon1filter,1,nil,tp)
@@ -83,7 +83,6 @@ function s.thtg1(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return c:IsAbleToHand() end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,c,1,tp,0)
-	Duel.SetPossibleOperationInfo(0,CATEGORY_SUMMON,nil,1,tp,LOCATION_HAND)
 end
 function s.thop1(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
