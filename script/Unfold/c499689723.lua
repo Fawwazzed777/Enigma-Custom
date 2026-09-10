@@ -32,8 +32,9 @@ end
 s.material={499689705}
 s.listed_names={499689705}
 function s.spfilter(c,e,tp,ft)
-	return c:IsMonster() and c:IsType(TYPE_SYNCHRO) and c:IsFaceup() 
-	and c:IsCanBeEffectTarget(e) and ft>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	return ft>0 and c:IsMonster() and c:IsType(TYPE_SYNCHRO) and c:IsFaceup() 
+	and c:IsCanBeEffectTarget(e) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.lpcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckLPCost(tp,1000) end
