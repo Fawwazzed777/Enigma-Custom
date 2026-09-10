@@ -31,9 +31,9 @@ function s.initial_effect(c)
 end
 s.material={499689705}
 s.listed_names={499689705}
-function s.spfilter(c,e,tp)
+function s.spfilter(c,e,tp,ft)
 	return c:IsMonster() and c:IsType(TYPE_SYNCHRO) and c:IsFaceup() 
-	and c:IsCanBeEffectTarget(e) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	and c:IsCanBeEffectTarget(e) and ft>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.lpcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckLPCost(tp,1000) end
@@ -49,8 +49,9 @@ end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local lp=e:GetLabel()
 	if lp<=0 then return end
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local sc=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil,e,tp):GetFirst()
+	local sc=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil,e,tp,ft):GetFirst()
 	if not sc then return end
 	if Duel.SpecialSummon(sc,0,tp,tp,false,false,POS_FACEUP_ATTACK)>0 then
 		--ATK gain
