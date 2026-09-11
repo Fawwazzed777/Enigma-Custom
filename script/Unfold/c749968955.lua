@@ -1,22 +1,23 @@
 --Stellar Aero Dragon
 --Scripted by fawwazzed
+Duel.EnableUnofficialProc(PROC_CANNOT_BATTLE_INDES)
 local s,id=GetID()
 function s.initial_effect(c)
 	--1 Synchro Tuner + "Accel Aero Dragon"
 	Synchro.AddProcedure(c,aux.FilterBoolFunctionEx(Card.IsType,TYPE_SYNCHRO),1,1,aux.FilterSummonCode(749968954),1,1)
 	c:EnableReviveLimit()
-	--Negate & Shuffle
+	--Negate & Buff
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
-	e1:SetCategory(CATEGORY_DISABLE+CATEGORY_TODECK)
+	e1:SetCategory(CATEGORY_DISABLE)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(1,{id,0})
 	e1:SetHintTiming(0,TIMINGS_CHECK_MONSTER_E)
-	e1:SetCost(s.shfcost)
-	e1:SetTarget(s.shftg)
-	e1:SetOperation(s.shfop)
+	e1:SetCost(s.fcost)
+	e1:SetTarget(s.ftg)
+	e1:SetOperation(s.fop)
 	c:RegisterEffect(e1)
 	--Once per Chain Bounce
 	local e2=Effect.CreateEffect(c)
@@ -65,7 +66,7 @@ s.synchro_nt_required=1
 function s.costfilter(c)
 	return c:IsType(TYPE_SYNCHRO) and c:IsAbleToExtraAsCost()
 end
-function s.shfcost(e,tp,eg,ep,ev,re,r,rp,chk)
+function s.fcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.costfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 	local g=Duel.SelectMatchingCard(tp,s.costfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil)
@@ -75,12 +76,12 @@ end
 function s.negfilter(c,e)
 	return (c:IsNegatableMonster() or c:IsNegatableSpellTrap())
 end
-function s.shftg(e,tp,eg,ep,ev,re,r,rp,chk)
+function s.ftg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.negfilter,tp,0,LOCATION_ONFIELD,1,nil) end
 	local g=Duel.GetMatchingGroup(s.negfilter,tp,0,LOCATION_ONFIELD,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DISABLE,g,#g,0,0)
 end
-function s.shfop(e,tp,eg,ep,ev,re,r,rp)
+function s.fop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(s.negfilter,tp,0,LOCATION_ONFIELD,nil)
 	local count=0
 	for tc in aux.Next(g) do
@@ -90,13 +91,13 @@ function s.shfop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_DISABLE)
 		e1:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
-		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_CHAIN)
 		tc:RegisterEffect(e1,true)
 		local e2=Effect.CreateEffect(e:GetHandler())
 		e2:SetType(EFFECT_TYPE_SINGLE)
 		e2:SetCode(EFFECT_DISABLE_EFFECT)
 		e2:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
-		e2:SetReset(RESET_EVENT+RESETS_STANDARD)
+		e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_CHAIN)
 		tc:RegisterEffect(e2,true)
 		local e3=Effect.CreateEffect(e:GetHandler())
 		e3:SetType(EFFECT_TYPE_SINGLE)
@@ -106,22 +107,38 @@ function s.shfop(e,tp,eg,ep,ev,re,r,rp)
 		e3:SetValue(function(e,te) return te:GetOwner()~=e:GetOwner() end)
 		e3:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_CHAIN)
 		tc:RegisterEffect(e3,true)
+		local ed1=Effect.CreateEffect(e:GetHandler())
+		ed1:SetType(EFFECT_TYPE_SINGLE)
+		ed1:SetTargetRange(0,LOCATION_MZONE)
+		ed1:SetCode(EFFECT_UPDATE_ATTACK)
+		ed1:SetValue(0)
+		ed1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+		tc:RegisterEffect(ed1,true)
+		local ed2=ed1:Clone()
+		ed2:SetCode(EFFECT_UPDATE_DEFENSE)
+		tc:RegisterEffect(ed2,true)
 		Duel.AdjustInstantly(tc)
 		e:SetProperty(e:GetProperty()&~EFFECT_FLAG_IGNORE_IMMUNE)
 	end
 	if count>0 then
-		Duel.BreakEffect()
-		local sg=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,0,nil)
-		for sc in aux.Next(sg) do
-			local e4=Effect.CreateEffect(e:GetHandler())
-			e4:SetType(EFFECT_TYPE_SINGLE)
-			e4:SetCode(EFFECT_UPDATE_ATTACK)
-			e4:SetValue(count*1000)
-			e4:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
-			sc:RegisterEffect(e4)
+		Duel.BreakEffect()	
+		--always Battle destroy
+		local eb=Effect.CreateEffect(e:GetHandler())
+		eb:SetType(EFFECT_TYPE_FIELD)
+		eb:SetCode(EFFECT_CANNOT_BATTLE_INDES)
+		eb:SetRange(LOCATION_MZONE)
+		eb:SetTargetRange(0,LOCATION_MZONE)
+		eb:SetTarget(s.battg)
+		eb:SetValue(s.batval)
+		Duel.RegisterEffect(eb,true)
+		end
+		function s.battg(e,c)
+			return not c:IsStatus(STATUS_BATTLE_DESTROYED)
+		end
+		function s.batval(e,re)
+			return re:GetOwnerPlayer()~=e:GetHandlerPlayer()
 		end
 	end
-end
 
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return ep~=tp and not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED)
