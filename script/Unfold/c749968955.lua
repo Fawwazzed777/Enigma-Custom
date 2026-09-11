@@ -132,13 +132,13 @@ function s.fop(e,tp,eg,ep,ev,re,r,rp)
 		eb:SetValue(s.batval)
 		Duel.RegisterEffect(eb,true)
 		end
-		function s.battg(e,c)
-			return not c:IsStatus(STATUS_BATTLE_DESTROYED)
-		end
-		function s.batval(e,re)
-			return re:GetOwnerPlayer()~=e:GetHandlerPlayer()
-		end
 	end
+function s.battg(e,c)
+	return not c:IsStatus(STATUS_BATTLE_DESTROYED)
+end
+function s.batval(e,re)
+	return re:GetOwnerPlayer()~=e:GetHandlerPlayer()
+end
 
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return ep~=tp and not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED)
