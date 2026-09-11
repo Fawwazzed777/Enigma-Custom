@@ -130,7 +130,7 @@ function s.fop(e,tp,eg,ep,ev,re,r,rp)
 		eb:SetTargetRange(0,LOCATION_MZONE)
 		eb:SetTarget(s.battg)
 		eb:SetValue(s.batval)
-		Duel.RegisterEffect(eb,true)
+		Duel.RegisterEffect(eb,e:GetHandlerPlayer())
 		end
 	end
 function s.battg(e,c)
