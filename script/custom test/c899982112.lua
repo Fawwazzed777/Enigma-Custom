@@ -128,5 +128,5 @@ function s.reccon(e,tp,eg,ep,ev,re,r,rp)
 	return c:IsPreviousPosition(POS_FACEUP) and not c:IsLocation(LOCATION_DECK)
 end
 function s.recop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Recover(tp,1500,REASON_EFFECT)
+	Duel.Recover(tp,500,REASON_EFFECT)
 end
