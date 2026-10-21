@@ -27,7 +27,7 @@ function s.initial_effect(c)
 end
 s.listed_series={0xfc13}
 function s.spfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0xfc13) and c:HasNonZeroAttack() and c:HasNonZeroDefense()
+    return c:IsFaceup() and c:IsSetCard(0xfc13) and (c:GetAttack()>0 or c:GetDefense()>0)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
