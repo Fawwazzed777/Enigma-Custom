@@ -20,7 +20,7 @@ function s.initial_effect(c)
     e1:SetTarget(s.sctg)
     e1:SetOperation(s.scop)
     c:RegisterEffect(e1)
-    --Send 1 Soul to bottom of Deck, return 1 other card on field
+    --Send 1 Soul to GY, shuffle 1 other card on field
     local e2=Effect.CreateEffect(c)
     e2:SetDescription(aux.Stringid(id,1))
     e2:SetCategory(CATEGORY_TODECK+CATEGORY_TOHAND)
