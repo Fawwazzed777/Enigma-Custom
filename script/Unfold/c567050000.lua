@@ -99,22 +99,23 @@ function s.rmfilter(c)
 end
 function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
     local c=e:GetHandler()
-    if chk==0 then return c:GetOverlayGroup():IsExists(Card.IsCode,1,nil,id) and Duel.IsExistingMatchingCard(s.rmfilter,tp,0,LOCATION_ONFIELD,1,nil) end
-    Duel.SetOperationInfo(0,CATEGORY_REMOVE,c,1,tp,LOCATION_OVERLAY)
+    if chk==0 then return c:GetOverlayCount()>=2 and Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,1,nil) end
+    Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,2,tp,LOCATION_OVERLAY)
     Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,1-tp,LOCATION_ONFIELD)
 end
 function s.rmop(e,tp,eg,ep,ev,re,r,rp)
     local c=e:GetHandler()
-    local g=c:GetOverlayGroup():Filter(Card.IsCode,nil,id)
-    if #g>0 then
+    local g=c:GetOverlayGroup()
+    if #g>=2 then
         Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-        if Duel.Remove(g,POS_FACEUP,REASON_EFFECT)>0 then
+        local sg=g:Select(tp,2,2,nil)
+        if #sg>0 and Duel.Remove(sg,POS_FACEUP,REASON_EFFECT)>0 then
             Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-            local sg=Duel.SelectMatchingCard(tp,s.rmfilter,tp,0,LOCATION_ONFIELD,1,1,nil)
-            if #sg>0 then
-                Duel.HintSelection(sg)
+            local tg=Duel.SelectMatchingCard(tp,Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,1,1,nil)
+            if #tg>0 then
+                Duel.HintSelection(tg)
                 Duel.BreakEffect()
-                Duel.Remove(sg,POS_FACEUP,REASON_EFFECT)
+                Duel.Remove(tg,POS_FACEUP,REASON_EFFECT)
             end
         end
     end
