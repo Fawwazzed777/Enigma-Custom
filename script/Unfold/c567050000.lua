@@ -29,13 +29,13 @@ function s.initial_effect(c)
     e3:SetCondition(s.indcon)
     e3:SetValue(1)
     c:RegisterEffect(e3)
-	--Granted Effect 2: Banish "Phantasm Dragon Rhapsody" to banish 1 face-up card
+	--Granted Effect 2: Detach 2 materials to banish 1 card
     local e4=Effect.CreateEffect(c)
     e4:SetDescription(aux.Stringid(id,2))
     e4:SetCategory(CATEGORY_REMOVE)
     e4:SetType(EFFECT_TYPE_XMATERIAL+EFFECT_TYPE_IGNITION)
-    e4:SetCountLimit(1)
     e4:SetCondition(s.rmcon)
+    e4:SetCost(Cost.DetachFromSelf(2,2,nil))
     e4:SetTarget(s.rmtg)
     e4:SetOperation(s.rmop)
     c:RegisterEffect(e4)
@@ -84,39 +84,26 @@ function s.atop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.indcon(e)
     local c=e:GetHandler()
-    local xyz=c:GetOverlayTarget()
-    return c:IsLocation(LOCATION_OVERLAY) and xyz and xyz:GetOverlayCount()>=2 and s.xyzfilter(xyz)
+    return c:IsType(TYPE_XYZ) and s.xyzfilter(c) and c:GetOverlayCount()>=2
 end
 function s.rmcon(e)
-    return s.xyzfilter(e:GetHandler())
-end
-function s.indcon(e)
     local c=e:GetHandler()
-    return s.xyzfilter(c) and c:GetOverlayCount()>=2
+    return c:IsType(TYPE_XYZ) and s.xyzfilter(c)
 end
 function s.rmfilter(c)
     return c:IsFaceup() and c:IsAbleToRemove()
 end
 function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
-    local c=e:GetHandler()
-    if chk==0 then return c:GetOverlayCount()>=2 and Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,1,nil) end
-    Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,2,tp,LOCATION_OVERLAY)
+    if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,1,nil) end
     Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,1-tp,LOCATION_ONFIELD)
 end
-function s.rmop(e,tp,eg,ep,ev,re,r,rp)
-    local c=e:GetHandler()
-    local g=c:GetOverlayGroup()
-    if #g>=2 then
-        Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-        local sg=g:Select(tp,2,2,nil)
-        if #sg>0 and Duel.Remove(sg,POS_FACEUP,REASON_EFFECT)>0 then
-            Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-            local tg=Duel.SelectMatchingCard(tp,Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,1,1,nil)
-            if #tg>0 then
-                Duel.HintSelection(tg)
-                Duel.BreakEffect()
-                Duel.Remove(tg,POS_FACEUP,REASON_EFFECT)
-            end
-        end
+function s.rmop(e,tp,eg,ep,ev,re,r,rp)   
+    local tg=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,nil)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	local gd=tg:Select(tp,1,1,nil)
+    if #gd>0 then
+        Duel.HintSelection(gd)
+		Duel.BreakEffect()
+        Duel.Remove(tg,POS_FACEUP,REASON_EFFECT)
     end
 end
