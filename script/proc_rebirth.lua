@@ -8,9 +8,6 @@ end
 if not SUMMON_TYPE_REBIRTH then 
     SUMMON_TYPE_REBIRTH =SUMMON_TYPE_SPECIAL|0x189
 end
-if not REASON_REBIRTH then
-    REASON_REBIRTH =0x400000000
-end
 if not aux.RebirthProcedure then
     aux.RebirthProcedure =Rebirth
 end
