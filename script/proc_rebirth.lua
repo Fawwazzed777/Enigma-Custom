@@ -141,7 +141,7 @@ function Rebirth.SelectMaterials(mg,tp,target,min_mat,max_mat,val_func,cancelabl
             end
         end
         if #cg==0 and not finish then return nil end
-        Duel.Hint(HINT_SELECTMSG,tp,hint or HINTMSG_MATERIAL)
+        Duel.Hint(HINT_SELECTMSG,tp,hint or HINTMSG_CONFIRM)
         local tc=Group.SelectUnselect(cg+sg,sg,tp,finish,cancel)
         if not tc then break end
         if not sg:IsContains(tc) then
@@ -198,7 +198,7 @@ function Rebirth.StandardTarget(grade,filter,min,max)
         if chk==0 then return Rebirth.StandardCondition(grade,filter,min,max)(e,c,nil) end
         local mg=Duel.GetMatchingGroup(Rebirth.TraceFilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,nil,c,filter,false)
 		local cancelable=Duel.IsSummonCancelable()
-        local sg=Rebirth.SelectMaterials(mg,tp,grade,min,max,Rebirth.GetMaterialValue,cancelable,HINTMSG_MATERIAL)
+        local sg=Rebirth.SelectMaterials(mg,tp,grade,min,max,Rebirth.GetMaterialValue,cancelable,HINTMSG_CONFIRM)
         if sg then
             sg:KeepAlive()
             e:SetLabelObject(sg)
