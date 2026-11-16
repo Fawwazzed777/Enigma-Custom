@@ -273,7 +273,7 @@ end
 function Rebirth.EvoCandFilter(tc,sg,mg_std,f_prime,grade,cur_sum)
     if #sg==0 and f_prime(tc) then return true end
     if not mg_std:IsContains(tc) then return false end
-    local v=Rebirth.GetMixValue(tc)
+    local v=Rebirth.GetMaterialValue(tc)
     local rem=grade-cur_sum
     if v<=0 or v>rem then return false end
     if v==rem then return true end
@@ -363,7 +363,7 @@ function Rebirth.AddGenericProcedure(c,min,max,filter)
     local e1=Effect.CreateEffect(c)
     e1:SetType(EFFECT_TYPE_FIELD)
     e1:SetCode(EFFECT_SPSUMMON_PROC)
-    e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE)
+    e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
     e1:SetRange(LOCATION_EXTRA)
     e1:SetCondition(Rebirth.GenericCondition(min,max,filter))
     e1:SetTarget(Rebirth.GenericTarget(min,max,filter))
@@ -409,7 +409,7 @@ function Rebirth.AddCombinationProcedure(c,min,max,filter,special_con,grade)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_SPSUMMON_PROC)
-	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE)
+	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
 	e1:SetRange(LOCATION_EXTRA)
 	e1:SetCondition(Rebirth.CombinationCondition(min,max,filter,special_con))
 	e1:SetTarget(Rebirth.CombinationTarget(min,max,filter,special_con))
