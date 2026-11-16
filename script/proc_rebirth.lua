@@ -33,7 +33,7 @@ function Rebirth.InitGlobalTracker()
 end
 
 function Rebirth.IsProperlySummoned(tc)
-    if tc:IsStatus(STATUS_REVIVE_LIMIT) then
+    if tc:IsHasEffect(EFFECT_REVIVE_LIMIT) or tc:IsType(TYPE_RITUAL|TYPE_FUSION|TYPE_SYNCHRO|TYPE_XYZ|TYPE_LINK|TYPE_EXTRA) then
         return tc:IsStatus(STATUS_PROC_COMPLETE)
     end
     return tc:GetFlagEffect(REBIRTH_FLAG_ON_FIELD)>0
@@ -212,7 +212,6 @@ function Rebirth.StandardTarget(grade,filter,min,max)
     end
 end
 
-
 function Rebirth.StandardOperation(e,tp,eg,ep,ev,re,r,rp,c)
     local sg=e:GetLabelObject()
     if not sg then return end
@@ -222,7 +221,6 @@ function Rebirth.StandardOperation(e,tp,eg,ep,ev,re,r,rp,c)
     c:RegisterFlagEffect(c:GetCode(),RESET_EVENT+RESETS_STANDARD-RESET_TOFIELD,0,1,res)
     sg:DeleteGroup()
 end
-
 --------------------------------------------------------------------------------
 -- EVOLUTION (PRIME REBIRTH)
 --------------------------------------------------------------------------------
@@ -406,7 +404,6 @@ function Rebirth.GenericTarget(min,max,filter)
 	return false
 	end
 end
-
 --------------------------------------------------------------------------------
 --COMBINATION
 --------------------------------------------------------------------------------
@@ -509,7 +506,6 @@ function Rebirth.Operation(e,tp,eg,ep,ev,re,r,rp,c)
     c:RegisterFlagEffect(c:GetCode(),RESET_EVENT+RESETS_STANDARD-RESET_TOFIELD,0,1)
     g:DeleteGroup()
 end
-
 --------------------------------------------------------------------------------
 --COMMON EFFECTS
 --------------------------------------------------------------------------------
