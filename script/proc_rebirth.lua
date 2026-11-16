@@ -295,10 +295,13 @@ function Rebirth.EvolutionTarget(grade,material_filter,filter)
             local cur_sum=sg:GetSum(Rebirth.GetMaterialValue)
             local is_prime=(#sg==1 and f_prime(sg:GetFirst()))
             local finish=is_prime or (cur_sum==grade and #sg>=1)
-            local cg=is_prime and Group.CreateGroup() or mg:Filter(Rebirth.EvoCandFilter,sg,sg,mg_std,f_prime,grade,cur_sum)
-            if #cg==0 and not finish then return false end
+            local cg=Group.CreateGroup()
+            if not is_prime then
+                cg=mg:Filter(Rebirth.EvoCandFilter,sg,sg,mg_std,f_prime,grade,cur_sum)
+            end
+            if #cg==0 and not finish then break end
             Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
-            local tc=Group.SelectUnselect(cg+sg,sg,tp,finish,cancelable and #sg==0,1,grade)
+            local tc=Group.SelectUnselect(cg,sg,tp,finish,cancelable and #sg==0,1,1)
             if not tc then break end
             if not sg:IsContains(tc) then sg:AddCard(tc) else sg:RemoveCard(tc) end
         end
@@ -476,9 +479,9 @@ function Rebirth.CombinationTarget(min,max,filter,special_con)
             local rem_g=mg:Clone()
             rem_g:Sub(sg)
             local cg=rem_g:Filter(Rebirth.ComboCandFilter,nil,sg,rem_g,grade,min,eff_max)
-            if #cg==0 and not finish then return false end
+            if #cg==0 and not finish then break end
             Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
-            local tc=Group.SelectUnselect(cg+sg,sg,tp,finish,cancelable and #sg==0,min,eff_max)
+            local tc=Group.SelectUnselect(cg,sg,tp,finish,cancelable and #sg==0,1,1)
             if not tc then break end
             if not sg:IsContains(tc) then sg:AddCard(tc) else sg:RemoveCard(tc) end
         end
@@ -514,7 +517,8 @@ function Rebirth.AddCommonEffects(c,grade)
     e0:SetValue(TYPE_FUSION)
     c:RegisterEffect(e0)   
     local e1=Effect.CreateEffect(c)
-    e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+    e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SET_AVAILABLE)
+    e1:SetRange(LOCATION_ALL)
     e1:SetType(EFFECT_TYPE_SINGLE)
     e1:SetCode(EFFECT_REBIRTH_GRADE)
     e1:SetValue(grade or 0)
