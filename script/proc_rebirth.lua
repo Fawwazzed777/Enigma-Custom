@@ -33,7 +33,7 @@ function Rebirth.InitGlobalTracker()
 end
 
 function Rebirth.IsProperlySummoned(tc)
-    if tc:IsStatus(STATUS_REVIVE_LIMIT) then
+    if tc:IsReviveLimit() then
         return tc:IsStatus(STATUS_PROC_COMPLETE)
     end
     return tc:GetFlagEffect(REBIRTH_FLAG_ON_FIELD)>0
