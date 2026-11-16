@@ -31,14 +31,12 @@ function Rebirth.InitGlobalTracker()
     end)
     Duel.RegisterEffect(ge1,0)
 end
-
 function Rebirth.IsProperlySummoned(tc)
     if tc:IsHasEffect(EFFECT_REVIVE_LIMIT) or tc:IsType(TYPE_RITUAL|TYPE_FUSION|TYPE_SYNCHRO|TYPE_XYZ|TYPE_LINK|TYPE_EXTRA) then
         return tc:IsStatus(STATUS_PROC_COMPLETE)
     end
     return tc:GetFlagEffect(REBIRTH_FLAG_ON_FIELD)>0
 end
-
 function Rebirth.FastCanSum(mg,target,min_mat,max_mat,val_func)
     if not target or target<=0 then return false end
     local vals={}
@@ -186,7 +184,6 @@ function Rebirth.AddProcedure(c,grade,filter,min,max)
     c:RegisterEffect(e1)
     Rebirth.AddCommonEffects(c,grade)
 end
-
 function Rebirth.StandardCondition(grade,filter,min,max)
     return function(e,c,og)
         if c==nil then return true end
@@ -196,7 +193,6 @@ function Rebirth.StandardCondition(grade,filter,min,max)
         return Rebirth.FastCanSum(mg,grade,min,max,Rebirth.GetMaterialValue)
     end
 end
-
 function Rebirth.StandardTarget(grade,filter,min,max)
     return function(e,tp,eg,ep,ev,re,r,rp,chk,c)
         if chk==0 then return Rebirth.StandardCondition(grade,filter,min,max)(e,c,nil) end
@@ -254,7 +250,6 @@ function Rebirth.GetEvoFilter(material_filter)
             and Rebirth.IsProperlySummoned(tc) and base_f(tc)
     end
 end
-
 function Rebirth.EvolutionCondition(grade,material_filter,filter)
 	return function(e,c)
 		if c==nil then return true end
@@ -266,13 +261,11 @@ function Rebirth.EvolutionCondition(grade,material_filter,filter)
 		return Rebirth.FastCanSum(mg_std,grade,1,grade,Rebirth.GetMaterialValue)
 	end
 end
-
 function Rebirth.EvolutionFilter(tc,base_id) 
     --ID Check
     return (tc:IsLocation(LOCATION_GRAVE) or tc:IsLocation(LOCATION_REMOVED)) 
     and Rebirth.IsProperlySummoned(tc) and tc:IsCode(base_id)
 end
-
 function Rebirth.EvoCandFilter(tc,sg,mg_std,f_prime,grade,cur_sum)
     if #sg==0 and f_prime(tc) then return true end
     if not mg_std:IsContains(tc) then return false end
@@ -350,7 +343,6 @@ function Rebirth.TraceFilter_ValueSum(tc,c,filter)
     if filter and type(filter)=="function" and not filter(tc,c) then return false end
     return Rebirth.GetOriginalValue(tc)>0
 end
-
 function Rebirth.GetMaterialValue(tc)
     local eff=tc:IsHasEffect(EFFECT_REBIRTH_GRADE)
     if eff then
@@ -536,5 +528,4 @@ function Rebirth.AddCommonEffects(c,grade)
     end)
     c:RegisterEffect(e2)
 end
-
 PROC_REBIRTH_LOADED = true
