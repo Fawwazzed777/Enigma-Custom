@@ -140,9 +140,9 @@ function Rebirth.SelectMaterials(mg,tp,target,min_mat,max_mat,val_func,cancelabl
                 end
             end
         end
-        if #cg==0 and not finish then return nil end
+        if #cg==0 and not finish then break end
         Duel.Hint(HINT_SELECTMSG,tp,hint or HINTMSG_CONFIRM)
-        local tc=Group.SelectUnselect(cg+sg,sg,tp,finish,cancel,min_mat,eff_max)
+        local tc=Group.SelectUnselect(cg,sg,tp,finish,cancel,min_mat,eff_max)
         if not tc then break end
         if not sg:IsContains(tc) then
             sg:AddCard(tc)
