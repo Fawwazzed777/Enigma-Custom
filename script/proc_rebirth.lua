@@ -391,7 +391,7 @@ function Rebirth.GenericTarget(min,max,filter)
         local target_grade=eff and eff:GetValue() or c:GetOriginalLevel()
         local cancelable=Duel.IsSummonCancelable()
         local mg=Duel.GetMatchingGroup(Rebirth.TraceFilter_Mix,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,nil,c,filter)        
-        local sg=Rebirth.SelectMaterials(mg,tp,target_grade,min,max,Rebirth.GetMixValue,cancelable,HINTMSG_REMOVED)
+        local sg=Rebirth.SelectMaterials(mg,tp,target_grade,min,max,Rebirth.GetMixValue,cancelable,HINTMSG_CONFIRM)
 		if sg then
 			sg:KeepAlive()
 			e:SetLabelObject(sg)
@@ -477,7 +477,7 @@ function Rebirth.CombinationTarget(min,max,filter,special_con)
             rem_g:Sub(sg)
             local cg=rem_g:Filter(Rebirth.ComboCandFilter,nil,sg,rem_g,grade,min,eff_max)
             if #cg==0 and not finish then return false end
-            Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVED)
+            Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
             local tc=Group.SelectUnselect(cg+sg,sg,tp,finish,cancelable and #sg==0,min,eff_max)
             if not tc then break end
             if not sg:IsContains(tc) then sg:AddCard(tc) else sg:RemoveCard(tc) end
