@@ -3,7 +3,7 @@ local s,id=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()
 	--Fusion Material: 5 Level 10 Rock Effect monsters
-	Fusion.AddProcMixN(c,true,true,function(c) return c:IsLevel(10) and c:IsRace(RACE_ROCK) and c:IsType(TYPE_EFFECT) end,2)
+	Fusion.AddProcMixN(c,true,true,function(c) return c:IsLevel(10) and c:IsRace(RACE_ROCK) and c:IsType(TYPE_EFFECT) end,5)
 	c:AddMustFirstBeFusionSummoned()	
 	--Special Summon procedure from Extra Deck by tributing 3 Level 10 Rock monsters you control + 1 Special Summoned monster from opponent's field
 	local e2=Effect.CreateEffect(c)
