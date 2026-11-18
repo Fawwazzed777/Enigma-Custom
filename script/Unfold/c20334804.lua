@@ -150,15 +150,7 @@ function s.xyzop(e,tp,eg,ep,ev,re,r,rp)
 	if #xyzg>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local xyz=xyzg:Select(tp,1,1,nil):GetFirst()
-		local _,mat=xyz:IsXyzSummonable(nil,mg)
-		if mat then
-			local hand_mat=mat:Filter(Card.IsLocation,nil,LOCATION_HAND)
-			if #hand_mat>0 then
-				Duel.ConfirmCards(1-tp,hand_mat)
-			end
-		end
 		Duel.XyzSummon(tp,xyz,nil,mg)
-		Duel.ConfirmCards(1-tp,mg)
 		Duel.ShuffleHand(tp)
 	end
 end
