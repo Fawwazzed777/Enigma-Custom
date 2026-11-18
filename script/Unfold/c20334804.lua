@@ -24,7 +24,7 @@ function s.initial_effect(c)
 	e2:SetTarget(s.destg)
 	e2:SetOperation(s.desop)
 	c:RegisterEffect(e2)
-	--Fusion , Synchro, Xyz
+	--Fusion,Synchro,Xyz
 	local params = {aux.FilterBoolFunction(Card.IsSetCard,0x344)}
 	local ef=Effect.CreateEffect(c)
 	ef:SetDescription(aux.Stringid(id,2))
@@ -52,7 +52,6 @@ function s.initial_effect(c)
 	c:RegisterEffect(exy)
 end
 s.listed_series={0x344}
---
 function s.actfilter(c)
 	return c:IsAttribute(ATTRIBUTE_DARK) and c:IsType(TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ)
 end
@@ -149,15 +148,13 @@ function s.xyzop(e,tp,eg,ep,ev,re,r,rp)
 	local mg=Duel.GetMatchingGroup(s.xyzs,tp,LOCATION_MZONE+LOCATION_HAND,0,e:GetHandler())
 	local xyzg=Duel.GetMatchingGroup(s.xyzfilter,tp,LOCATION_EXTRA,0,e:GetHandler(),nil,mg)
 	if #xyzg>0 then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+		Duel.Hint(HINT_CONFIRM,tp,HINTMSG_SPSUMMON)
 		local xyz=xyzg:Select(tp,1,1,nil):GetFirst()
+		local hand_mat=mg:Filter(Card.IsLocation,nil,LOCATION_HAND)
+		if #hand_mat>0 then
+			Duel.ConfirmCards(1-tp, hand_mat)
+		end
 		Duel.XyzSummon(tp,xyz,nil,mg)
-		local e1=Effect.CreateEffect(e:GetHandler())
-		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		e1:SetCode(EVENT_ADJUST)
-		e1:SetCountLimit(1)
-		e1:SetOperation(function() Duel.ShuffleHand(tp) end)
-		e1:SetReset(RESET_CHAIN)
-		Duel.RegisterEffect(e1,tp)
+		Duel.ShuffleHand(tp)
 	end
 end
