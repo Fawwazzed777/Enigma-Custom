@@ -71,9 +71,11 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local atk=tc:GetTextAttack()
 	if tc then
 		Duel.HintSelection(g)
-		if Duel.Destroy(tc,REASON_EFFECT)~=0 and aux.FilterBoolFunction(Card.IsOriginalType,TYPE_MONSTER) then
+		if Duel.Destroy(tc,REASON_EFFECT)~=0 then
 		Duel.BreakEffect()
-		Duel.Damage(tc:GetPreviousControler(),atk/2,REASON_EFFECT)
+			if Duel.SendtoHand(e:GetHandler(),nil,REASON_EFFECT)>0 and c:IsLocation(LOCATION_HAND) then
+				Duel.ShuffleHand(tp)
+			end
 		end
 	end
 end
