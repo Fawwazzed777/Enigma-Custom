@@ -49,7 +49,7 @@ if not Vortex.GlobalCheck then
     end)
     Duel.RegisterEffect(ge1,0)
 end
-function Vortex.AddProcedure(c,f1,f2,min_core,extra_con)
+function Vortex.AddProcedure(c,f1,f2,min_core,extra_con,alt_filter)
 	if type(min_core)=="function" then
         extra_con=min_core
         min_core= 1
