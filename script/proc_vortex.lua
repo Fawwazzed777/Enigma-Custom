@@ -142,7 +142,10 @@ function Vortex.Target(e,tp,eg,ep,ev,re,r,rp,chk,c)
 	--Alternative
     local rg=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,0,nil)
 	if alt_filter then
-        local alt_g=Duel.GetMatchingGroup(function(tc) return alt_filter(tc,c,tp) end,tp,LOCATION_GRAVE,0,nil)
+        local alt_g=Duel.GetMatchingGroup(function(tc) 
+            if tc:IsLocation(LOCATION_REMOVED) and not tc:IsFaceup() then return false end
+            return alt_filter(tc,c,tp) 
+        end,tp,LOCATION_GRAVE|LOCATION_REMOVED,0,nil)
         rg:Merge(alt_g)
     end
     local sg=Group.CreateGroup()
