@@ -88,22 +88,21 @@ function Vortex.ResconFilter(g,e,tp,mg,c)
     local f1=info[1]
     local f2=info[2]
     local min_core=e:GetLabel()
-    local sc=e:GetHandler()                
+    local sc=e:GetHandler()                   
     local core_filter=function(tc) return Vortex.CheckFilter(tc,f1,sc,tp,true) end
-    local fuel_filter=function(tc) return Vortex.CheckFilter(tc,f2,sc,tp,false) end        
+    local fuel_filter=function(tc) return Vortex.CheckFilter(tc,f2,sc,tp,false) end           
     if g:IsExists(function(tc) return not (core_filter(tc) or fuel_filter(tc)) end,1,nil) then 
         return false 
-    end   
-    local core_count=g:FilterCount(core_filter,nil)  
-    local fuel_group=g:Filter(function(tc) return not core_filter(tc)end,nil)
-    if #fuel_group>0 and fuel_group:IsExists(function(tc) return not tc:IsLocation(LOCATION_MZONE)end,1,nil) then
-        return false
+    end    
+    local core_count=g:FilterCount(core_filter,nil) 
+    if core_count>min_core then 
+        return false 
     end
     local total_value=0
     for tc in aux.Next(g) do
         total_value=total_value+Vortex.GetValue(tc)
-    end    
-    return core_count>=min_core and total_value==sc:GetLevel()
+    end      
+    return core_count==min_core and total_value==sc:GetLevel()
 end
 function Vortex.CheckFilter(tc,f,sc,tp,is_core)
     if not f then return true end   
