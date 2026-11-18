@@ -126,7 +126,9 @@ function Vortex.Condition(e,c)
 	local alt_filter=info[4]
     local rg=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,0,nil)
 	if alt_filter then
-        local alt_g=Duel.GetMatchingGroup(function(tc) return tc:IsFaceup() and alt_filter(tc,c,tp) end,tp,LOCATION_GRAVE,0,nil)
+        local alt_g=Duel.GetMatchingGroup(function(tc) 
+            if tc:IsLocation(LOCATION_REMOVED) and not tc:IsFaceup() then return false end
+            return alt_filter(tc,c,tp) end,tp,LOCATION_GRAVE|LOCATION_REMOVED,0,nil)
         rg:Merge(alt_g)
     end
     local has_vcore=rg:IsExists(function(tc) return tc.Vcore or tc:IsType(TYPE_XYZ) or tc:GetRank()>0 end,1,nil)
@@ -140,7 +142,7 @@ function Vortex.Target(e,tp,eg,ep,ev,re,r,rp,chk,c)
 	--Alternative
     local rg=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,0,nil)
 	if alt_filter then
-        local alt_g=Duel.GetMatchingGroup(function(tc) return tc:IsFaceup() and alt_filter(tc,c,tp) end,tp,LOCATION_GRAVE,0,nil)
+        local alt_g=Duel.GetMatchingGroup(function(tc) return alt_filter(tc,c,tp) end,tp,LOCATION_GRAVE,0,nil)
         rg:Merge(alt_g)
     end
     local sg=Group.CreateGroup()
