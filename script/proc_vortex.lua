@@ -138,16 +138,14 @@ function Vortex.Condition(e,c)
 end
 function Vortex.Target(e,tp,eg,ep,ev,re,r,rp,chk,c)
 	local info=e:GetLabelObject()
-	local alt_filter=info and info[4] or nil
-	--Alternative
+	local alt_filter=info and info[4] or nil	
     local rg=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,0,nil)
 	if alt_filter then
         local alt_g=Duel.GetMatchingGroup(function(tc) 
             if tc:IsLocation(LOCATION_REMOVED) and not tc:IsFaceup() then return false end
-            return alt_filter(tc,c,tp) 
-        end,tp,LOCATION_GRAVE|LOCATION_REMOVED,0,nil)
+            return alt_filter(tc,c,tp) end,tp,LOCATION_GRAVE|LOCATION_REMOVED,0,nil)
         rg:Merge(alt_g)
-    end
+    end   
     local sg=Group.CreateGroup()
     local cancelable=Duel.IsSummonCancelable()
     local min_core=e:GetLabel()
@@ -159,7 +157,7 @@ function Vortex.Target(e,tp,eg,ep,ev,re,r,rp,chk,c)
             break
         end
         local finish=valid_met
-        local g2=rg:Filter(function(tc)if sg:IsContains(tc) then return false end return true end,nil)                     
+        local g2=rg:Filter(function(tc) if sg:IsContains(tc) then return false end return true end,nil)                     
         if #g2==0 and not finish then break end                   
         Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
         local tc=Group.SelectUnselect(g2,sg,tp,finish,cancel)
