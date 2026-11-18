@@ -158,6 +158,6 @@ function s.xyzop(e,tp,eg,ep,ev,re,r,rp)
 			end
 		end
 		Duel.XyzSummon(tp,xyz,nil,mg)
-		Duel.ShuffleHand(tp)
 	end
+	Duel.ShuffleHand(tp)
 end
