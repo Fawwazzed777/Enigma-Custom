@@ -25,8 +25,10 @@ if not REASON_VORTEX then
     REASON_VORTEX = 0x400000000
 end
 function Vortex.GetValue(c)
-    local rk=c:GetRank()
-    if rk>0 then return rk end
+    if c.Vcore or c:GetRank()>0 then
+        local rk=c:GetRank()
+        if rk>0 then return rk end
+    end    
     if c:IsType(TYPE_LINK) then return c:GetLink() end
     return c:GetLevel()
 end
