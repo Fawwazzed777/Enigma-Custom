@@ -123,9 +123,10 @@ function Vortex.Condition(e,c)
     local info=e:GetLabelObject()
     if not info then return false end
     local extra_con=info[3]   
-    if Duel.GetFlagEffect(tp,VORTEX_ACTIVITY_FLAG)==0 then return false end
-    if extra_con and not extra_con(e,c) then return false end  
     local rg=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,0,nil)
+    local has_vcore=rg:IsExists(function(tc) return tc.Vcore or tc:IsType(TYPE_XYZ) or tc:GetRank()>0 end,1,nil)
+    if not has_vcore and Duel.GetFlagEffect(tp,VORTEX_ACTIVITY_FLAG)==0 then return false end  
+    if extra_con and not extra_con(e,c) then return false end  
     return aux.SelectUnselectGroup(rg,e,tp,1,99,Vortex.ResconFilter,0,c)
 end
 function Vortex.Target(e,tp,eg,ep,ev,re,r,rp,chk,c)
@@ -134,27 +135,29 @@ function Vortex.Target(e,tp,eg,ep,ev,re,r,rp,chk,c)
     local cancelable=Duel.IsSummonCancelable()
     local info=e:GetLabelObject()
     local min_core=e:GetLabel()
-    local sc=e
+    local sc=e:GetHandler()
     while true do
         local cancel=cancelable and #sg==0
-        local finish=Vortex.ResconFilter(sg,e,tp,rg,c) and (#sg >= 1)
-        local g2=rg:Filter(function(tc)
-            if sg:IsContains(tc) then return false end
-            local test_g=sg:Clone()
-            test_g:AddCard(tc)
-            return true
-        end, nil)       
-        if #g2==0 and not finish then break end       
+        local valid_met=Vortex.ResconFilter(sg,e,tp,rg,c)
+        if valid_met and #sg>=1 then
+            break
+        end
+        local finish=valid_met
+        local g2=rg:Filter(function(tc)if sg:IsContains(tc) then return false end return true end,nil)                     
+        if #g2==0 and not finish then break end                   
         Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
         local tc=Group.SelectUnselect(g2,sg,tp,finish,cancel)
         if not tc then
             if finish then break end
             return false
-        end      
+        end                   
         if sg:IsContains(tc) then
             sg:RemoveCard(tc)
         else
             sg:AddCard(tc)
+        end
+        if Vortex.ResconFilter(sg,e,tp,rg,c) and #sg>=1 then
+            break
         end
     end
     if sg and #sg>0 then
@@ -168,8 +171,7 @@ function Vortex.Operation(e,tp,eg,ep,ev,re,r,rp,c)
     local data=e:GetLabelObject()
     local info=data[1]
     local sg=data[2]
-    local f1=info[1]
-    
+    local f1=info[1]   
     c:SetMaterial(sg) 
     local g_core=sg:Filter(function(tc) return Vortex.CheckFilter(tc,f1,c,tp,true) end,nil)
     local g_fuel=sg:Filter(function(tc) return not g_core:IsContains(tc) end,nil)      
