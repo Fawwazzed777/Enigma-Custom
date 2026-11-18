@@ -69,11 +69,12 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,Card.IsDestructable,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
 	local tc=g:GetFirst()
 	local atk=tc:GetTextAttack()
+	local c=e:GetHandler()
 	if tc then
 		Duel.HintSelection(g)
 		if Duel.Destroy(tc,REASON_EFFECT)~=0 then
 		Duel.BreakEffect()
-			if Duel.SendtoHand(e:GetHandler(),nil,REASON_EFFECT)>0 and c:IsLocation(LOCATION_HAND) then
+			if Duel.SendtoHand(c,nil,REASON_EFFECT)>0 and c:IsLocation(LOCATION_HAND) then
 				Duel.ShuffleHand(tp)
 			end
 		end
