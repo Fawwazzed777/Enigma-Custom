@@ -152,6 +152,12 @@ function s.xyzop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local xyz=xyzg:Select(tp,1,1,nil):GetFirst()
 		Duel.XyzSummon(tp,xyz,nil,mg)
-		Duel.ShuffleHand(tp)
-end
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e1:SetCode(EVENT_ADJUST)
+		e1:SetCountLimit(1)
+		e1:SetOperation(function() Duel.ShuffleHand(tp) end)
+		e1:SetReset(RESET_CHAIN)
+		Duel.RegisterEffect(e1,tp)
+	end
 end
