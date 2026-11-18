@@ -122,18 +122,29 @@ function Vortex.Condition(e,c)
     local tp=c:GetControler()
     local info=e:GetLabelObject()
     if not info then return false end
-    local extra_con=info[3]   
+    local extra_con=info[3]
+	local alt_filter=info[4]
     local rg=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,0,nil)
+	if alt_filter then
+        local alt_g=Duel.GetMatchingGroup(function(tc) return tc:IsFaceup() and alt_filter(tc,c,tp) end,tp,LOCATION_GRAVE,0,nil)
+        rg:Merge(alt_g)
+    end
     local has_vcore=rg:IsExists(function(tc) return tc.Vcore or tc:IsType(TYPE_XYZ) or tc:GetRank()>0 end,1,nil)
     if not has_vcore and Duel.GetFlagEffect(tp,VORTEX_ACTIVITY_FLAG)==0 then return false end  
     if extra_con and not extra_con(e,c) then return false end  
     return aux.SelectUnselectGroup(rg,e,tp,1,99,Vortex.ResconFilter,0,c)
 end
 function Vortex.Target(e,tp,eg,ep,ev,re,r,rp,chk,c)
+	local info=e:GetLabelObject()
+	local alt_filter=info and info[4] or nil
+	--Alternative
     local rg=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,0,nil)
+	if alt_filter then
+        local alt_g=Duel.GetMatchingGroup(function(tc) return tc:IsFaceup() and alt_filter(tc,c,tp) end,tp,LOCATION_GRAVE,0,nil)
+        rg:Merge(alt_g)
+    end
     local sg=Group.CreateGroup()
     local cancelable=Duel.IsSummonCancelable()
-    local info=e:GetLabelObject()
     local min_core=e:GetLabel()
     local sc=e:GetHandler()
     while true do
