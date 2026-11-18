@@ -1,7 +1,6 @@
 if not Vortex then 
-	Vortex = {} 
+	Vortex={} 
 end
-
 if not SUMMON_TYPE_VORTEX then 
     SUMMON_TYPE_VORTEX=SUMMON_TYPE_SPECIAL|0x609
 end
@@ -14,7 +13,6 @@ end
 if not aux.VortexProcedure then 
 	aux.VortexProcedure = Vortex 
 end
-
 SUMMON_TYPE_VORTEX   = SUMMON_TYPE_SPECIAL|0x609
 TYPE_VORTEX          = 0x210000000
 VORTEX_ACTIVITY_FLAG = 109090901
@@ -32,7 +30,6 @@ function Vortex.GetValue(c)
     if c:IsType(TYPE_LINK) then return c:GetLink() end
     return c:GetLevel()
 end
-
 function Vortex.AddCoreSubstitute(c)
     local e1=Effect.CreateEffect(c)
     e1:SetType(EFFECT_TYPE_SINGLE)
@@ -40,7 +37,6 @@ function Vortex.AddCoreSubstitute(c)
     e1:SetCode(EFFECT_LEVEL_RANK_S)
     c:RegisterEffect(e1)
 end
-
 --Global Check for Vortex Energy
 if not Vortex.GlobalCheck then
     Vortex.GlobalCheck=true
@@ -53,7 +49,6 @@ if not Vortex.GlobalCheck then
     end)
     Duel.RegisterEffect(ge1,0)
 end
-
 function Vortex.AddProcedure(c,f1,f2,min_core,extra_con)
 	if type(min_core)=="function" then
         extra_con=min_core
@@ -104,7 +99,6 @@ function Vortex.ResconFilter(g,e,tp,mg,c)
     end    
     return core_count>=min_core and total_value==sc:GetLevel()
 end
-
 function Vortex.CheckFilter(tc,f,sc,tp,is_core)
     if not f then return true end   
     local val=Vortex.GetValue(tc)    
@@ -118,40 +112,58 @@ function Vortex.CheckFilter(tc,f,sc,tp,is_core)
             return val==f
         end
     end
-
     if type(f)=="function" then
         return f(tc,sc,tp)
     end 
     return true
 end
-
 function Vortex.Condition(e,c)
     if c==nil then return true end
     local tp=c:GetControler()
     local info=e:GetLabelObject()
     if not info then return false end
-    local extra_con=info[3]
-    
+    local extra_con=info[3]   
     if Duel.GetFlagEffect(tp,VORTEX_ACTIVITY_FLAG)==0 then return false end
-    if extra_con and not extra_con(e,c) then return false end
-    
+    if extra_con and not extra_con(e,c) then return false end  
     local rg=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,0,nil)
     return aux.SelectUnselectGroup(rg,e,tp,1,99,Vortex.ResconFilter,0,c)
 end
-
 function Vortex.Target(e,tp,eg,ep,ev,re,r,rp,chk,c)
     local rg=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,0,nil)
+    local sg=Group.CreateGroup()
     local cancelable=Duel.IsSummonCancelable()
-    local sg=aux.SelectUnselectGroup(rg,e,tp,1,99,Vortex.ResconFilter,1,tp,HINTMSG_REMOVE,Vortex.ResconFilter,nil,cancelable)
+    local info=e:GetLabelObject()
+    local min_core=e:GetLabel()
+    local sc=e
+    while true do
+        local cancel=cancelable and #sg==0
+        local finish=Vortex.ResconFilter(sg,e,tp,rg,c) and (#sg >= 1)
+        local g2=rg:Filter(function(tc)
+            if sg:IsContains(tc) then return false end
+            local test_g=sg:Clone()
+            test_g:AddCard(tc)
+            return true
+        end, nil)       
+        if #g2==0 and not finish then break end       
+        Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+        local tc=Group.SelectUnselect(g2,sg,tp,finish,cancel)
+        if not tc then
+            if finish then break end
+            return false
+        end      
+        if sg:IsContains(tc) then
+            sg:RemoveCard(tc)
+        else
+            sg:AddCard(tc)
+        end
+    end
     if sg and #sg>0 then
         sg:KeepAlive()
-        local info=e:GetLabelObject()
         e:SetLabelObject({info,sg})
         return true
     end
     return false
 end
-
 function Vortex.Operation(e,tp,eg,ep,ev,re,r,rp,c)
     local data=e:GetLabelObject()
     local info=data[1]
@@ -166,5 +178,4 @@ function Vortex.Operation(e,tp,eg,ep,ev,re,r,rp,c)
     e:SetLabelObject(info) 
     sg:DeleteGroup()
 end
-
 VORTEX_IMPORTED = true
